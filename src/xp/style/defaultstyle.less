@@ -1,0 +1,95 @@
+﻿/*@back: #222;
+@back-hover: #444;
+@back-active: #555;*/
+@back: transparent;
+@back-hover: rgba(255,255,255,0.1);
+@back-active: rgba(255,255,255,0.2);
+@fore: #ddd;
+@font: 'Segoe UI',sans-serif;
+
+.noindent() {
+    padding: 0;
+    margin: 0;
+}
+
+.stretched() {
+    width: 100%;
+    height: 100%;
+}
+
+/*--------
+    GLOBAL
+----------*/
+
+html, body {
+    .noindent();
+    .stretched();
+}
+
+div, span, a, p {
+    .noindent();
+    box-sizing: border-box;
+}
+
+body {
+    font-family: @font;
+}
+
+
+/*--------
+    BUTTON
+----------*/
+
+.button {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 0.5em;
+    background-color: @back;
+}
+
+.button:hover {
+    background-color: @back-hover;
+}
+
+.button .icon {
+    display: inline-block;
+    width: 1em;
+    height: 1em;
+}
+
+.button .text {
+    display: inline-block;
+    line-height: 1em;
+    color: @fore;
+}
+
+.button > span {
+    margin-left: 0.375em;
+}
+
+.button > span:first-child {
+    margin-left: 0;
+}
+
+
+/*--------
+    BOXES
+----------*/
+
+.hbox {
+    .stretched();
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+}
+
+.vbox {
+    .stretched();
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+}

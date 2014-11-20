@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="Markup"
+    targetNamespace="http://tempuri.org/Markup.xsd"
+    elementFormDefault="qualified"
+    xmlns="http://tempuri.org/Markup.xsd"
+    xmlns:mstns="http://tempuri.org/Markup.xsd"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+>
+  <!-- Base -->
+
+  <xs:attributeGroup name="attrs">
+    <xs:attribute name="name" type="xs:ID"/>
+    <xs:attribute name="width" type="xs:float"/>
+    <xs:attribute name="height" type="xs:float"/>
+  </xs:attributeGroup>
+
+  <xs:complexType name="element">
+    <xs:attributeGroup ref="attrs"/>
+  </xs:complexType>
+
+  <xs:complexType name="container" mixed="true">
+    <xs:complexContent>
+      <xs:extension base="element">
+        <xs:choice minOccurs="0" maxOccurs="unbounded">
+          <xs:element ref="button"/>
+          <xs:element ref="view"/>
+          <!--<xs:any/>-->
+        </xs:choice>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  
+  <!-- Containers -->
+
+  <xs:element name="window">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="container">
+          <xs:attribute name="title" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="view">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="container"/>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
+  <!-- Elements -->
+
+  <xs:element name="button">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="element">
+          <xs:attribute name="icon" type="xs:string"/>
+          <xs:attribute name="text" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>
