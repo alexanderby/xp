@@ -1,20 +1,17 @@
 ﻿module xp.Ui {
 
-    export interface ControlTagDictionary {
-        [name: string]: {
-            type: typeof Element; // TODO: Replace with Base...
-        }
-    }
-
     export var Tags: { [tag: string]: typeof Element } = {};
 
 
-    // TODO: Non-export interfaces and protected fields.
-    export interface AttributeMap {
+    interface AttrValueDictionary {
+        [attr: string]: string;
+    }
+
+    interface AttributeMap {
         [attr: string]: ValueMap;
     }
 
-    export interface ValueMap {
+    interface ValueMap {
         [value: string]: (value?: string) => void;
     }
 
@@ -26,10 +23,14 @@
 
         /**
          * Creates UI element.
+         * @param xmlElement Markup XML-element.
          */
-        constructor() {
+        constructor(xmlElement?: JQuery) {
             // Create element
             this.domElement = $(this.template);
+            if (xmlElement) {
+                this.processXml(xmlElement);
+            }
             this.afterCreateTemplate();
 
             // Init events
@@ -128,6 +129,51 @@
         //------------------
 
         /**
+         * Processes XML node (applies attributes, creates children etc).
+         * @param xmlElement Markup XML-element.
+         */
+        protected processXml(xmlElement: JQuery) {
+            this.applyAttributes(xmlElement);
+        }
+
+        /**
+         * Applies the attributes' values.
+         * @param xmlElement Markup XML-element.
+         */
+        protected applyAttributes(xmlElement: JQuery) {
+
+            // Get attribute values
+            var attributes = xmlElement.get(0).attributes;
+            var values: AttrValueDictionary = {};
+            $.each(attributes, (i, attr: Attr) => {
+                values[attr.name] = attr.value;
+            });
+
+            var map = this.getAttributeMap();
+            for (var key in values) {
+                // Find attribute
+                if (!map[key]) {
+                    throw new Error(xp.formatString('Illegal attribute "{0}" of element "{1}".', key, xmlElement[0].nodeName.toLowerCase()));
+                }
+
+                if (map[key]['*']) {
+                    // If accepts any value -> call setter with value
+                    var setter = map[key]['*'];
+                    setter(values[key]);
+                }
+                else {
+                    // Find value
+                    if (!map[key][values[key]] && !map['*']) {
+                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, xmlElement[0].nodeName.toLowerCase()));
+                    }
+                    // Call setter
+                    var setter = map[key][values[key]];
+                    setter();
+                }
+            }
+        }
+
+        /**
         * Defines the way of setting control's properties through the XML attributes.
         */
         protected getAttributeMap(): AttributeMap {
@@ -142,39 +188,10 @@
             };
         }
 
-        /**
-         * Applies the attributes' values.
-         * @param values attr/value dictionary.
-         */
-        protected applyAttributes(values: { [attr: string]: string }) {
-            var map = this.getAttributeMap();
-            for (var key in values) {
-                // Find attribute
-                if (!map[key]) {
-                    throw new Error(xp.formatString('Illegal attribute "{0}".', key));
-                }
 
-                if (map[key]['*']) {
-                    // If accepts any value -> call setter with value
-                    var setter = map[key]['*'];
-                    setter(values[key]);
-                }
-                else {
-                    // Find value
-                    if (!map[key][values[key]] && !map['*']) {
-                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}".', values[key], key));
-                    }
-                    // Call setter
-                    var setter = map[key][values[key]];
-                    setter();
-                }
-            }
-        }
-
-
-        //-------------
-        // MANIPULATION
-        //-------------
+        //----------
+        // RELATIONS
+        //----------
 
         /**
          * Parent.
@@ -243,6 +260,16 @@
      */
     export /*abstract*/ class Container extends Element {
 
+        /**
+         * Creates UI container.
+         * @param xmlElement Markup XML-element. 
+         */
+        constructor(xmlElement?: JQuery) {
+            super(xmlElement);
+            this.children = [];
+            alert(this.children);
+        }
+
         //----
         // DOM
         //------
@@ -265,6 +292,28 @@
         //------------------
 
         /**
+         * Processes XML node (applies attributes, creates children etc).
+         * @param xmlElement Markup XML-element.
+         */
+        protected processXml(xmlElement: JQuery) {
+            this.applyAttributes(xmlElement);
+
+            // Create children
+            $.each(xmlElement.children(), (i, childXmlNode) => {
+                // Create child
+                var tagName = childXmlNode.nodeName.toLowerCase();
+                if (!xp.Ui.Tags[tagName]) {
+                    throw new Error('Tags dictionary has no mathes for tag "' + tagName + '".');
+                }
+                var type = xp.Ui.Tags[tagName];
+                var child = new type($(childXmlNode));
+
+                // Append child
+                this.appendElement(child);
+            });
+        }
+
+        /**
         * Defines the way of setting control's properties through the XML attributes.
         */
         protected getAttributeMap(): AttributeMap {
@@ -277,19 +326,20 @@
         }
 
 
-        //-------------
-        // MANIPULATION
-        //-------------
+        //----------
+        // RELATIONS
+        //----------
 
         /**
          * Children.
          */
-        children: Element[] = [];
+        children: Element[] = new Array<Element>();
 
         /**
          * Adds an element at container's end.
          */
         appendElement(element: Element) {
+            debugger;
             if (element.parent) {
                 element.parent.children.splice(element.parent.children.indexOf(element), 1);
             }
@@ -344,6 +394,7 @@
 
         /**
          * Searches for an element with given name.
+         * @param name Element's name.
          */
         findElement(name: string): Element {
             name = name.toLowerCase();
@@ -425,6 +476,25 @@
             }
         }
         protected _text: string;
+
+
+        //------------------
+        // ATTRIBUTE MAPPING
+        //------------------
+
+        /**
+        * Defines the way of setting control's properties through the XML attributes.
+        */
+        protected getAttributeMap(): AttributeMap {
+            return xp.extendObject(super.getAttributeMap(), {
+                'icon': {
+                    '*': (value) => this.icon = value
+                },
+                'text': {
+                    '*': (value) => this.text = value
+                },
+            });
+        }
     }
     Tags['button'] = Button;
 
@@ -442,7 +512,55 @@
      * Window.
      */
     export class Window extends Container {
+
+        constructor(xmlElement?: JQuery) {
+            super(xmlElement);
+            this.children = [];
+            alert(this.children);
+        }
+
+        children: Element[] = new Array<Element>();
+
+        //----
+        // DOM
+        //----
+
         protected template = '<body></body>';
+
+
+        //-------
+        // EVENTS
+        //-------
+
+
+        //------------------
+        // GETTERS / SETTERS
+        //------------------
+
+        /**
+         * Gets or sets app title.
+         */
+        get title() {
+            return this._title;
+        }
+        set title(title: string) {
+            this._title = title;
+            document.title = title;
+        }
+        protected _title: string;
+
+
+        //------------------
+        // ATTRIBUTE MAPPING
+        //------------------
+
+        protected getAttributeMap(): AttributeMap {
+            return xp.extendObject(super.getAttributeMap(), {
+                'title': {
+                    '*': (value) => this.title = value
+                }
+            });
+        }
     }
     Tags['window'] = Window;
 

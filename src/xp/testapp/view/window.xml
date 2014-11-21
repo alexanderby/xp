@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<window xmlns="http://tempuri.org/Markup.xsd">
+<window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
   <button name="button1" text="Click me"/>
   <button name="button2"/>
   <view name="view1">

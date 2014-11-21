@@ -1,4 +1,9 @@
 ﻿module xp {
+    // TODO: Replace jQuery.
+
+    /**
+     * Application base.
+     */
     export class Application {
 
         protected windowHref: string;
@@ -27,17 +32,22 @@
 
 
         protected parseMarkup() {
+            var windowXml: JQuery;
+
             // Load window
             $.ajax({
                 url: this.windowHref,
                 dataType: 'text',
                 async: false,
                 error: (req, text, err) => {
-                    alert(text);
+                    throw err;
                 },
-                success: (response) => {
-                    var window = $($.parseXML(response)).find('window');
-                    alert(window.children().length);
+                success: (response: string) => {
+                    // Remove namespace
+                    response = response.replace(/<([a-zA-Z0-9 ]+)(?:xml)ns=\".*\"(.*)>/g, "<$1$2>");
+
+                    // Get window element
+                    windowXml = $($.parseXML(response)).find('window');
                 }
             });
             //var req = new XMLHttpRequest();
@@ -51,12 +61,19 @@
             //};
             //req.send(null);
 
-            // Load views
+            // Load views / templates
+
+            // Create window
+            this.window = new xp.Ui.Window(windowXml);
 
             // Replace body
+            $('body').replaceWith(this.window.domElement);
         }
     }
 
+    /**
+     * Base application config.
+     */
     export interface AppConfig {
         windowHref?: string;
     }
