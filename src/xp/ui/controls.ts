@@ -26,15 +26,19 @@
          * @param xmlElement Markup XML-element.
          */
         constructor(xmlElement?: JQuery) {
-            // Create element
-            this.domElement = $(this.template);
+            this.initElement(xmlElement);
+            this.initEvents();
+        }
+
+        /**
+         * Initializes UI element.
+         * @param xmlElement Markup XML-element.
+         */
+        protected initElement(xmlElement?: JQuery) {
+            this.domElement = $(this.getTemplate());
             if (xmlElement) {
                 this.processXml(xmlElement);
             }
-            this.afterCreateTemplate();
-
-            // Init events
-            this.initEvents();
         }
 
 
@@ -46,20 +50,25 @@
          * DOM element of a control.
          */
         domElement: JQuery;
-        protected template = '<div></div>';
-        protected afterCreateTemplate() { }
+
+        /**
+         * Returns element's HTML template.
+         */
+        protected getTemplate() {
+            return '<div></div>';
+        }
 
 
         //-------
         // EVENTS
         //-------
 
-        onClick = new Event<EventArgs>();
-        onMouseDown = new Event<EventArgs>();
-        onMouseUp = new Event<EventArgs>();
-        onMouseMove = new Event<EventArgs>();
-        onMouseEnter = new Event<EventArgs>();
-        onMouseLeave = new Event<EventArgs>();
+        onClick = new Event<UiEventArgs>();
+        onMouseDown = new Event<UiEventArgs>();
+        onMouseUp = new Event<UiEventArgs>();
+        onMouseMove = new Event<UiEventArgs>();
+        onMouseEnter = new Event<UiEventArgs>();
+        onMouseLeave = new Event<UiEventArgs>();
 
         /**
          * Initializes control's events.
@@ -73,7 +82,7 @@
             this.initEvent('mouseleave', this.onMouseLeave);
         }
         protected initEvent(eventName: string, event: UiEvent) {
-            this.domElement.on(eventName, (e: EventArgs) => {
+            this.domElement.on(eventName, (e: UiEventArgs) => {
                 if (this.enabled) {
                     var args = createEventArgs(this, e);
                     event.invoke(args);
@@ -100,10 +109,10 @@
 
             // DOM
             if (value === true) {
-                this.domElement.addClass('disabled');
+                this.domElement.removeClass('disabled');
             }
             else {
-                this.domElement.removeClass('disabled');
+                this.domElement.addClass('disabled');
             }
         }
         protected _enabled = true;
@@ -202,10 +211,7 @@
          * Removes element.
          */
         remove() {
-            if (this.parent) {
-                this.parent.children.splice(this.parent.children.indexOf(this), 1);
-                this.parent = null;
-            }
+            this.detach();
 
             // DOM
             this.domElement.remove();
@@ -213,34 +219,31 @@
 
         /**
          * Inserts element before target element.
+         * @param target Target element.
          */
         insertBefore(target: Element) {
-            if (this.parent) {
-                this.parent.children.splice(this.parent.children.indexOf(this), 1);
+            if (!target.parent) {
+                throw new Error('Target element has no parent.');
             }
-            target.parent.children.splice(target.parent.children.indexOf(target), 0, this);
-            this.parent = target.parent;
-
-            // DOM
-            this.domElement.insertBefore(target.domElement);
+            var index = target.parent.children.indexOf(target);
+            target.parent.insertElement(this, index);
         }
 
         /**
          * Inserts element after target element.
+         * @param target Target element.
          */
         insertAfter(target: Element) {
-            if (this.parent) {
-                this.parent.children.splice(this.parent.children.indexOf(this), 1);
+            if (!target.parent) {
+                throw new Error('Target element has no parent.');
             }
-            target.parent.children.splice(target.parent.children.indexOf(target) + 1, 0, this);
-            this.parent = target.parent;
-
-            // DOM
-            this.domElement.insertAfter(target.domElement);
+            var index = target.parent.children.indexOf(target) + 1;
+            target.parent.insertElement(this, index);
         }
 
         /**
          * Adds an element at container's end.
+         * @param container Container element.
          */
         appendTo(container: Container) {
             container.appendElement(this);
@@ -248,9 +251,19 @@
 
         /**
          * Adds an element at container's beginning.
+         * @param container Container element.
          */
         prependTo(container: Container) {
             container.prependElement(this);
+        }
+
+        /*
+         * Detaches the element, but doesn't remove it.
+         */
+        detach() {
+            if (this.parent) {
+                this.parent.detachChild(this);
+            }
         }
     }
 
@@ -261,13 +274,15 @@
     export /*abstract*/ class Container extends Element {
 
         /**
-         * Creates UI container.
-         * @param xmlElement Markup XML-element. 
+         * Initializes UI container.
+         * @param xmlElement Markup XML-element.
          */
-        constructor(xmlElement?: JQuery) {
-            super(xmlElement);
+        protected initElement(xmlElement?: JQuery) {
+            this.domElement = $(this.getTemplate());
             this.children = [];
-            alert(this.children);
+            if (xmlElement) {
+                this.processXml(xmlElement);
+            }
         }
 
         //----
@@ -333,15 +348,15 @@
         /**
          * Children.
          */
-        children: Element[] = new Array<Element>();
+        children: Element[];
 
         /**
          * Adds an element at container's end.
+         * @param element Element to append.
          */
         appendElement(element: Element) {
-            debugger;
             if (element.parent) {
-                element.parent.children.splice(element.parent.children.indexOf(element), 1);
+                element.parent.detachChild(element);
             }
             this.children.push(element);
             element.parent = this;
@@ -352,16 +367,63 @@
 
         /**
          * Adds an element at container's beginning.
+         * @param element Element to prepend.
          */
         prependElement(element: Element) {
             if (element.parent) {
-                element.parent.children.splice(element.parent.children.indexOf(element), 1);
+                element.parent.detachChild(element);
             }
             this.children.splice(0, 0, element);
             element.parent = this;
 
             // DOM
             this.getContainerElement().prepend(element.domElement);
+        }
+
+        /**
+         * Inserts element at index.
+         * Be accurate: if element is already listed in the container, the resulting index may differ.
+         * Use 'insertBefore' or 'insertAfter' instead.
+         * @param element Element to prepend.
+         * @param index Index to insert at.
+         */
+        insertElement(element: Element, index: number) {
+            if (element.parent === this && this.children.indexOf(element) == index) {
+                // Don't do anything.
+            }
+            else {
+                var target = this.children[index];
+                if (!target) {
+                    // Append at end
+                    this.appendElement(element);
+                }
+                else {
+                    var targetIndex = (element.parent === this && this.children.indexOf(element) < index) ?
+                        index - 1
+                        : index;
+                    element.parent.detachChild(element);
+                    this.children.splice(targetIndex, 0, element);
+
+                    // DOM
+                    element.domElement.insertBefore(target.domElement);
+                }
+            }
+        }
+
+        /**
+         * Detaches the child element, but doesn't remove it.
+         * @param child Element to detach.
+         */
+        detachChild(child: Element) {
+            var index = this.children.indexOf(child);
+            if (index < 0) {
+                throw new Error('Element is not a child of this container.');
+            }
+            this.children.splice(index, 1);
+            child.parent = null;
+
+            // DOM
+            this.domElement.detach();
         }
 
         /**
@@ -413,9 +475,18 @@
         // DOM
         //----
 
-        protected template = '<span class="button"></span>';
-        protected iconTemplate = '<span class="icon"></span>';
-        protected textTemplate = '<span class="text"></span>';
+        /**
+        * Returns element's HTML template.
+        */
+        protected getTemplate() {
+            return '<span class="button"></span>';
+        }
+        protected getIconTemplate() {
+            return '<span class="icon"></span>';
+        }
+        protected getTextTemplate() {
+            return '<span class="text"></span>';
+        }
 
         protected iconElement: JQuery;
         protected textElement: JQuery;
@@ -438,7 +509,7 @@
             if (!!path === true) {
                 if (!this.iconElement) {
                     // Add icon
-                    this.iconElement = $(this.iconTemplate)
+                    this.iconElement = $(this.getIconTemplate())
                         .prependTo(this.domElement);
                 }
                 // Set background image
@@ -464,7 +535,7 @@
             if (!!text === true) {
                 if (!this.textElement) {
                     // Add text
-                    this.textElement = $(this.textTemplate)
+                    this.textElement = $(this.getTextTemplate())
                         .appendTo(this.domElement);
                 }
                 // Set text
@@ -503,7 +574,14 @@
      * View.
      */
     export class View extends Container {
-        protected template = '<div class="view"></div>';
+
+        //----
+        // DOM
+        //----
+
+        protected getTemplate() {
+            return '<div class="view"></div>';
+        }
     }
     Tags['view'] = View;
 
@@ -513,19 +591,13 @@
      */
     export class Window extends Container {
 
-        constructor(xmlElement?: JQuery) {
-            super(xmlElement);
-            this.children = [];
-            alert(this.children);
-        }
-
-        children: Element[] = new Array<Element>();
-
         //----
         // DOM
         //----
 
-        protected template = '<body></body>';
+        protected getTemplate() {
+            return '<body></body>';
+        }
 
 
         //-------
@@ -569,7 +641,9 @@
      * Horizontal stack panel.
      */
     export class HBox extends Container {
-        protected template = '<div class="hbox"></div>';
+        protected getTemplate() {
+            return '<div class="hbox"></div>';
+        }
     }
     Tags['hbox'] = HBox;
 
@@ -578,7 +652,9 @@
      * Vertical stack panel.
      */
     export class VBox extends Container {
-        protected template = '<div class="vbox"></div>';
+        protected getTemplate() {
+            return '<div class="vbox"></div>';
+        }
     }
     Tags['vbox'] = VBox;
 } 

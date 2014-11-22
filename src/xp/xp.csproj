@@ -18,6 +18,12 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="style\defaultstyle.css">
+      <DependentUpon>defaultstyle.less</DependentUpon>
+    </Content>
+    <Content Include="style\defaultstyle.min.css">
+      <DependentUpon>defaultstyle.css</DependentUpon>
+    </Content>
     <Content Include="testapp\app.css" />
     <Content Include="testapp\index.html" />
     <Content Include="lib\jquery.js" />
@@ -32,7 +38,7 @@
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="ui\controls.ts" />
-    <TypeScriptCompile Include="ui\event.ts" />
+    <TypeScriptCompile Include="ui\uievent.ts" />
     <TypeScriptCompile Include="utils\utils.ts" />
   </ItemGroup>
   <ItemGroup>
@@ -40,6 +46,9 @@
       <SubType>Designer</SubType>
     </None>
     <Content Include="style\defaultstyle.less" />
+    <Content Include="style\defaultstyle.css.map">
+      <DependentUpon>defaultstyle.css</DependentUpon>
+    </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

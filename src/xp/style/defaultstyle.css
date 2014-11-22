@@ -1,0 +1,74 @@
+﻿/*@back: #222;
+@back-hover: #444;
+@back-active: #555;*/
+/*--------
+    GLOBAL
+----------*/
+html,
+body {
+  padding: 0;
+  margin: 0;
+  width: 100%;
+  height: 100%;
+}
+div,
+span,
+a,
+p {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: 'Segoe UI', sans-serif;
+}
+/*--------
+    BUTTON
+----------*/
+.button {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em;
+  background-color: transparent;
+}
+.button:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+.button .icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+}
+.button .text {
+  display: inline-block;
+  line-height: 1em;
+  color: #dddddd;
+}
+.button > span {
+  margin-left: 0.375em;
+}
+.button > span:first-child {
+  margin-left: 0;
+}
+/*--------
+    BOXES
+----------*/
+.hbox {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+.vbox {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: flex-start;
+}
+/*# sourceMappingURL=defaultstyle.css.map */
