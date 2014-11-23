@@ -33,6 +33,7 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
+    <TypeScriptCompile Include="core\binding.ts" />
     <TypeScriptCompile Include="testapp\app.ts" />
     <TypeScriptCompile Include="core\app.ts" />
     <TypeScriptCompile Include="core\event.ts" />

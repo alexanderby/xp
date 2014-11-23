@@ -1,6 +1,6 @@
-﻿/*@back: #222;
-@back-hover: #444;
-@back-active: #555;*/
+﻿/*@back: transparent;
+@back-hover: rgba(255,255,255,0.1);
+@back-active: rgba(255,255,255,0.2);*/
 /*--------
     GLOBAL
 ----------*/
@@ -31,10 +31,10 @@ body {
   align-items: center;
   justify-content: center;
   padding: 0.5em;
-  background-color: transparent;
+  background-color: #222222;
 }
 .button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
+  background-color: #444444;
 }
 .button .icon {
   display: inline-block;
