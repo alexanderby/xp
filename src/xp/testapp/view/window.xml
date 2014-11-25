@@ -3,8 +3,10 @@
   <button name="button1" text="Click me"/>
   <button name="button2"/>
   <view name="view1">
-    <button name="button3"/>
-    <button name="button4"/>
+    <stack flow="horizontal" items-align="stretch">
+      <button name="button3"/>
+      <button name="button4"/>
+    </stack>
     <view name="view2"/>
   </view>
 </window>

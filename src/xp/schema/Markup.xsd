@@ -6,7 +6,7 @@
     xmlns:mstns="http://tempuri.org/Markup.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
-  <!-- Base -->
+  <!-- BASE -->
 
   <xs:attributeGroup name="attrs">
     <xs:attribute name="name" type="xs:ID"/>
@@ -24,18 +24,39 @@
         <xs:choice minOccurs="0" maxOccurs="unbounded">
           <xs:element ref="button"/>
           <xs:element ref="view"/>
+          <xs:element ref="stack"/>
           <!--<xs:any/>-->
         </xs:choice>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
-  <!-- Containers -->
+
+
+  <!-- CONTAINERS -->
+
+  <xs:complexType name="stack">
+    <xs:complexContent>
+      <xs:extension base="container">
+        <xs:attribute name="flow" type="flow"/>
+        <xs:attribute name="content-align" type="content-align"/>
+        <xs:attribute name="items-align" type="items-align"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+
+  <xs:element name="stack">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="stack">
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
 
   <xs:element name="window">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="container">
+        <xs:extension base="stack">
           <xs:attribute name="title" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
@@ -45,12 +66,38 @@
   <xs:element name="view">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="container"/>
+        <xs:extension base="stack">
+          <xs:attribute name="href" type="xs:string"/>
+        </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
-  
-  <!-- Elements -->
+
+  <!-- Enums -->
+  <xs:simpleType name="flow">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="horizontal"/>
+      <xs:enumeration value="vertical"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="content-align">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="start"/>
+      <xs:enumeration value="end"/>
+      <xs:enumeration value="center"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="items-align">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="start"/>
+      <xs:enumeration value="end"/>
+      <xs:enumeration value="center"/>
+      <xs:enumeration value="stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+
+  <!-- ELEMENTS -->
 
   <xs:element name="button">
     <xs:complexType>

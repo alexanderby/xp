@@ -1,6 +1,7 @@
 ﻿module xp.Ui {
 
     export var Tags: { [tag: string]: typeof Element } = {};
+    export var HrefElements: typeof Element[] = [];
 
 
     interface AttrValueDictionary {
@@ -27,7 +28,6 @@
          */
         constructor(xmlElement?: JQuery) {
             this.initElement(xmlElement);
-            this.initEvents();
         }
 
         /**
@@ -36,9 +36,11 @@
          */
         protected initElement(xmlElement?: JQuery) {
             this.domElement = $(this.getTemplate());
+            this.setDefaults();
             if (xmlElement) {
                 this.processXml(xmlElement);
             }
+            this.initEvents();
         }
 
 
@@ -81,6 +83,7 @@
             this.initEvent('mouseenter', this.onMouseEnter);
             this.initEvent('mouseleave', this.onMouseLeave);
         }
+
         protected initEvent(eventName: string, event: UiEvent) {
             this.domElement.on(eventName, (e: UiEventArgs) => {
                 if (this.enabled) {
@@ -99,7 +102,12 @@
         //------------------
 
         /**
-         * Gets or sets value indicating control is enabled or disabled.
+         * Sets default values.
+         */
+        protected setDefaults() { }
+
+        /**
+         * Gets or sets value indicating control being enabled or disabled.
          */
         get enabled() {
             return this._enabled;
@@ -280,14 +288,16 @@
         protected initElement(xmlElement?: JQuery) {
             this.domElement = $(this.getTemplate());
             this.children = [];
+            this.setDefaults();
             if (xmlElement) {
                 this.processXml(xmlElement);
             }
+            this.initEvents();
         }
 
         //----
         // DOM
-        //------
+        //----
 
         /**
          * Returns the DOM-element where children are placed.
@@ -571,9 +581,95 @@
 
 
     /**
+     * Stack panel.
+     */
+    export class Stack extends Container {
+
+        //----
+        // DOM
+        //----
+
+        protected getTemplate() {
+            return '<div class="stack"></div>';
+        }
+
+
+        //------------------
+        // GETTERS / SETTERS
+        //------------------
+
+        /**
+         * Gets or sets content flow.
+         */
+        get flow() {
+            return this._flow;
+        }
+        set flow(flow: Flow) {
+            this._flow = flow;
+
+            // DOM
+        }
+        protected _flow: Flow;
+
+        /**
+         * Gets or sets content alignment.
+         */
+        get contentAlignment() {
+            return this._contentAlignment;
+        }
+        set contentAlignment(align: ContentAlignment) {
+            this._contentAlignment = align;
+
+            // DOM
+        }
+        protected _contentAlignment: ContentAlignment;
+
+        /**
+         * Gets or sets items alignment.
+         */
+        get itemsAlignment() {
+            return this._itemsAlignment;
+        }
+        set itemsAlignment(align: ItemsAlignment) {
+            this._itemsAlignment = align;
+
+            // DOM
+        }
+        protected _itemsAlignment: ItemsAlignment;
+
+
+        //------------------
+        // ATTRIBUTE MAPPING
+        //------------------
+
+        protected getAttributeMap() {
+            return xp.extendObject(super.getAttributeMap(), {
+                'flow': {
+                    'horizontal': () => this.flow = Flow.horizontal,
+                    'vertical': () => this.flow = Flow.vertical
+                },
+                'content-align': {
+                    'start': () => this.contentAlignment = ContentAlignment.start,
+                    'center': () => this.contentAlignment = ContentAlignment.center,
+                    'end': () => this.contentAlignment = ContentAlignment.end
+                },
+                'items-align': {
+                    'start': () => this.itemsAlignment = ItemsAlignment.start,
+                    'center': () => this.itemsAlignment = ItemsAlignment.center,
+                    'end': () => this.itemsAlignment = ItemsAlignment.end,
+                    'stretch': () => this.itemsAlignment = ItemsAlignment.stretch
+                }
+            });
+        }
+
+    }
+    Tags['stack'] = Stack;
+
+
+    /**
      * View.
      */
-    export class View extends Container {
+    export class View extends Stack {
 
         //----
         // DOM
@@ -584,12 +680,13 @@
         }
     }
     Tags['view'] = View;
+    HrefElements.push(View);
 
 
     /**
      * Window.
      */
-    export class Window extends Container {
+    export class Window extends Stack {
 
         //----
         // DOM
@@ -638,23 +735,29 @@
 
 
     /**
-     * Horizontal stack panel.
+     * Content alignment values.
      */
-    export class HBox extends Container {
-        protected getTemplate() {
-            return '<div class="hbox"></div>';
-        }
+    export enum ContentAlignment {
+        start,
+        center,
+        end
     }
-    Tags['hbox'] = HBox;
-
 
     /**
-     * Vertical stack panel.
-     */
-    export class VBox extends Container {
-        protected getTemplate() {
-            return '<div class="vbox"></div>';
-        }
+    * Items alignment values.
+    */
+    export enum ItemsAlignment {
+        start,
+        center,
+        end,
+        stretch
     }
-    Tags['vbox'] = VBox;
+
+    /**
+     * Content flow orientation.
+     */
+    export enum Flow {
+        horizontal,
+        vertical
+    }
 } 
