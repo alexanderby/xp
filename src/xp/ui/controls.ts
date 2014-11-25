@@ -1,7 +1,6 @@
 ﻿module xp.Ui {
 
     export var Tags: { [tag: string]: typeof Element } = {};
-    export var HrefElements: typeof Element[] = [];
 
 
     interface AttrValueDictionary {
@@ -678,9 +677,19 @@
         protected getTemplate() {
             return '<div class="view"></div>';
         }
+
+
+        protected processXml(xmlElement: JQuery) {
+            // Load from external file, if 'href' attribute specified.
+            var url: string = xmlElement.get(0).getAttribute('href');
+            if (url) {
+                xmlElement = xp.loadMarkupSync(url);
+            }
+
+            super.processXml(xmlElement);
+        }
     }
     Tags['view'] = View;
-    HrefElements.push(View);
 
 
     /**
