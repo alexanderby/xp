@@ -44,7 +44,7 @@
             var windowXml: JQuery;
 
             // Load window
-            xp.loadMarkupSync(this.windowHref);
+            windowXml = xp.loadMarkupSync(this.windowHref);
 
             // Create window
             this.window = new xp.Ui.Window(windowXml);
@@ -83,9 +83,7 @@
                 response = response.replace(/<([a-zA-Z0-9 ]+)(?:xml)ns=\".*\"(.*)>/g, "<$1$2>");
 
                 // Get root element
-                xml = $($.parseXML(response)).find('window'); // TODO: Simplify.
-
-                console.log(xml);
+                xml = $($.parseXML(response)).children().first();
             }
         });
         //var req = new XMLHttpRequest();
