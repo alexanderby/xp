@@ -34,7 +34,7 @@
          * @param xmlElement Markup XML-element.
          */
         protected initElement(xmlElement?: JQuery) {
-            this.domElement = $(this.getTemplate());
+            this.domElement = this.getTemplate();
             this.setDefaults();
             if (xmlElement) {
                 this.processXml(xmlElement);
@@ -53,10 +53,10 @@
         domElement: JQuery;
 
         /**
-         * Returns element's HTML template.
+         * Returns element's template.
          */
-        protected getTemplate() {
-            return '<div></div>';
+        protected getTemplate(): JQuery {
+            return $('<div></div>');
         }
 
 
@@ -285,7 +285,7 @@
          * @param xmlElement Markup XML-element.
          */
         protected initElement(xmlElement?: JQuery) {
-            this.domElement = $(this.getTemplate());
+            this.domElement = this.getTemplate();
             this.children = [];
             this.setDefaults();
             if (xmlElement) {
@@ -487,14 +487,14 @@
         /**
         * Returns element's HTML template.
         */
-        protected getTemplate() {
-            return '<span class="button"></span>';
+        protected getTemplate(): JQuery {
+            return $('<span class="button"></span>');
         }
-        protected getIconTemplate() {
-            return '<span class="icon"></span>';
+        protected getIconTemplate(): JQuery {
+            return $('<span class="icon"></span>');
         }
-        protected getTextTemplate() {
-            return '<span class="text"></span>';
+        protected getTextTemplate(): JQuery {
+            return $('<span class="text"></span>');
         }
 
         protected iconElement: JQuery;
@@ -588,8 +588,8 @@
         // DOM
         //----
 
-        protected getTemplate() {
-            return '<div class="stack"></div>';
+        protected getTemplate(): JQuery {
+            return $('<div class="stack"></div>');
         }
 
 
@@ -665,6 +665,11 @@
     Tags['stack'] = Stack;
 
 
+    export class ScrollPanel extends Container {
+
+    }
+
+
     /**
      * View.
      */
@@ -674,8 +679,8 @@
         // DOM
         //----
 
-        protected getTemplate() {
-            return '<div class="view"></div>';
+        protected getTemplate(): JQuery {
+            return $('<div class="view"></div>');
         }
 
 
@@ -701,8 +706,8 @@
         // DOM
         //----
 
-        protected getTemplate() {
-            return '<body></body>';
+        protected getTemplate(): JQuery {
+            return $('<body></body>');
         }
 
 
