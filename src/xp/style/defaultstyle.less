@@ -42,11 +42,15 @@ body {
 
 .button {
     display: inline-flex;
-    flex-direction: row;
+    flex-flow: row nowrap;
     align-items: center;
     justify-content: center;
-    padding: 0.5em;
+    padding: 0.375em;
+    min-height: 2em;
+    min-width: 2em;
+    cursor: default;
     background-color: @back;
+    overflow:hidden;
 }
 
 .button:hover {
@@ -57,20 +61,18 @@ body {
     display: inline-block;
     width: 1em;
     height: 1em;
+    background-color: @fore; // Temp
 }
 
 .button .text {
     display: inline-block;
     line-height: 1em;
+    font-size: 1em;
     color: @fore;
 }
 
 .button > span {
-    margin-left: 0.375em;
-}
-
-.button > span:first-child {
-    margin-left: 0;
+    margin: 0.125em;
 }
 
 

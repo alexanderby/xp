@@ -488,13 +488,10 @@
         * Returns element's HTML template.
         */
         protected getTemplate(): JQuery {
-            return $('<span class="button"></span>');
-        }
-        protected getIconTemplate(): JQuery {
-            return $('<span class="icon"></span>');
-        }
-        protected getTextTemplate(): JQuery {
-            return $('<span class="text"></span>');
+            var template = $('<span class="button"><span class="icon"></span><span class="text"></span></span>');
+            this.iconElement = template.find('.icon');
+            this.textElement = template.find('.text');
+            return template;
         }
 
         protected iconElement: JQuery;
@@ -504,6 +501,11 @@
         //------------------
         // GETTERS / SETTERS
         //------------------
+
+        protected setDefaults() {
+            this.icon = '';
+            this.text = '';
+        }
 
         /**
          * Gets or sets the icon image.
@@ -516,17 +518,12 @@
 
             // DOM
             if (!!path === true) {
-                if (!this.iconElement) {
-                    // Add icon
-                    this.iconElement = $(this.getIconTemplate())
-                        .prependTo(this.domElement);
-                }
                 // Set background image
                 this.iconElement.css('background-image', path);
+                this.iconElement.show();
             }
             else {
-                // Remove icon
-                this.iconElement.remove();
+                this.iconElement.hide();
             }
         }
         protected _iconPath: string;
@@ -542,17 +539,12 @@
 
             // DOM
             if (!!text === true) {
-                if (!this.textElement) {
-                    // Add text
-                    this.textElement = $(this.getTextTemplate())
-                        .appendTo(this.domElement);
-                }
                 // Set text
                 this.textElement.text(text);
+                this.textElement.show();
             }
             else {
-                // Remove text
-                this.textElement.remove();
+                this.textElement.hide();
             }
         }
         protected _text: string;

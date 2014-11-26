@@ -1,7 +1,8 @@
-﻿window.onload = () => {
-    var app = new xp.Application({
-        windowHref: 'view/window.xml'
-    });
+﻿var app = new xp.Application({
+    windowHref: 'view/window.xml'
+});
+
+window.onload = () => {
     app.start();
     //var person = {
     //    id: 123,
