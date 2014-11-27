@@ -30,7 +30,7 @@
     <Content Include="testapp\view\window.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="ui\htmltemplate\button.html" />
+    <Content Include="ui\html\button.html" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -40,7 +40,7 @@
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="ui\controls.ts" />
-    <TypeScriptCompile Include="ui\htmltemplate\htmltemplate.ts" />
+    <TypeScriptCompile Include="ui\html\html.ts" />
     <TypeScriptCompile Include="ui\uievent.ts" />
     <TypeScriptCompile Include="utils\utils.ts" />
   </ItemGroup>

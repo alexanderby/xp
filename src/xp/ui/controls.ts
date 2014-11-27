@@ -497,7 +497,7 @@
 
         private static _template: JQuery;
         private static _loadTemplate = (() => {
-            Button._template = xp.Ui.loadHtmlTemplateSync('../ui/htmltemplate/button.html', 'button');
+            Button._template = xp.Ui.loadHtmlTemplateSync('../ui/html/button.html', 'button');
         })();
 
         protected iconElement: JQuery;
