@@ -488,11 +488,17 @@
         * Returns element's HTML template.
         */
         protected getTemplate(): JQuery {
-            var template = $('<span class="button"><span class="icon"></span><span class="text"></span></span>');
+            //var template = $('<span class="button"><span class="icon"></span><span class="text"></span></span>');
+            var template = Button._template.clone();
             this.iconElement = template.find('.icon');
             this.textElement = template.find('.text');
             return template;
         }
+
+        private static _template: JQuery;
+        private static _loadTemplate = (() => {
+            Button._template = xp.Ui.loadHtmlTemplateSync('../ui/htmltemplate/button.html', 'button');
+        })();
 
         protected iconElement: JQuery;
         protected textElement: JQuery;

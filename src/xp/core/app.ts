@@ -68,11 +68,11 @@
      * @param href URL of markup file.
      * @return XML node.
      */
-    export function loadMarkupSync(href: string): JQuery {
+    export function loadMarkupSync(url: string): JQuery {
         var xml: JQuery;
 
         $.ajax({
-            url: href,
+            url: url,
             dataType: 'text',
             async: false,
             error: (req, text, err) => {
