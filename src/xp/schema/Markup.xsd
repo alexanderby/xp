@@ -10,8 +10,10 @@
 
   <xs:attributeGroup name="attrs">
     <xs:attribute name="name" type="xs:ID"/>
-    <xs:attribute name="width" type="xs:float"/>
-    <xs:attribute name="height" type="xs:float"/>
+    <!--<xs:attribute name="width" type="xs:float"/>
+    <xs:attribute name="height" type="xs:float"/>-->
+    <xs:attribute name="width" type="xs:string"/>
+    <xs:attribute name="height" type="xs:string"/>
   </xs:attributeGroup>
 
   <xs:complexType name="element">

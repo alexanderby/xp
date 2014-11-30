@@ -61,4 +61,14 @@
         var uuid = s.join("");
         return uuid;
     }
+
+    /**
+     * Gets class name of object.
+     * @param obj Object.
+     */
+    export function getClassName(obj) {
+        var funcNameRegex = /function (.{1,})\(/;
+        var results = funcNameRegex.exec(obj['constructor'].toString());
+        return (results && results.length > 1) ? results[1] : '';
+    }
 }

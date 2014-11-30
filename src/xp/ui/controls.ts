@@ -139,6 +139,34 @@
         }
         protected _name: string;
 
+        /**
+         * Gets or sets width of the element (using CSS syntax).
+         */
+        get width() {
+            return this._width;
+        }
+        set width(width: string) {
+            this._width = width;
+
+            // DOM
+            this.domElement.css('width', width);
+        }
+        protected _width: string;
+
+        /**
+         * Gets or sets height of the element (using CSS syntax).
+         */
+        get height() {
+            return this._height;
+        }
+        set height(height: string) {
+            this._height = height;
+
+            // DOM
+            this.domElement.css('height', height);
+        }
+        protected _height: string;
+
 
         //------------------
         // ATTRIBUTE MAPPING
@@ -199,7 +227,13 @@
                     'false': () => this.enabled = false
                 },
                 'name': {
-                    '*': (name) => this.enabled = true,
+                    '*': (name) => this.name = name,
+                },
+                'width': {
+                    '*': (width) => this.width = width
+                },
+                'height': {
+                    '*': (height) => this.height = height
                 }
             };
         }
@@ -379,6 +413,7 @@
 
             // DOM
             this.getContainerElement().append(element.domElement);
+            console.log(xp.formatString('Appended {0}:{1} to {2}:{3}', xp.getClassName(element), element.name || '-', xp.getClassName(this), this.name || '-'));
         }
 
         /**
@@ -590,7 +625,10 @@
         }
 
         protected getContainerElement(): JQuery {
-            return this.domElement.find('.content');
+            //return this.domElement.closest('.content'); // Bug with <body>
+
+            // Get only nearest '.content'.
+            return $(this.domElement.find('.content').get(0));
         }
 
 
@@ -759,7 +797,7 @@
                     'end': () => this.itemsAlignment = ItemsAlignment.end,
                     'stretch': () => this.itemsAlignment = ItemsAlignment.stretch
                 },
-                'scroll': {
+                'scrollbar': {
                     'none': () => this.scrollBar = ScrollBar.none,
                     'horizontal': () => this.scrollBar = ScrollBar.horizontal,
                     'vertical': () => this.scrollBar = ScrollBar.vertical,

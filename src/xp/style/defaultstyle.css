@@ -54,6 +54,7 @@ body {
 }
 .button > span {
   margin: 0 0.125em;
+  flex: none;
 }
 /*--------
     STACK
@@ -65,9 +66,11 @@ body {
 }
 .stack > .content {
   display: flex;
+  min-width: 100%;
+  min-height: 100%;
 }
 .stack > .content > div,
-.stack .content > span {
+.stack > .content > span {
   flex: none;
 }
 /* Flow */
@@ -99,6 +102,7 @@ body {
 }
 .stack.items-align-stretch > .content {
   align-items: stretch;
+  -ms-flex-line-pack: stretch;
 }
 /* Scroll bar */
 .stack.scrollbar-none {
