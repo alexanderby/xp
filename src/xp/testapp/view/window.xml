@@ -1,7 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
-  <button name="button1" text="Click me" icon="http://cdn.css-tricks.com/favicon.ico"/>
-  <button name="button2"/>
+  <stack flow="horizontal">
+    <button name="button1" text="Click me" icon="http://cdn.css-tricks.com/favicon.ico"/>
+    <button name="button2"/>
+  </stack>
   <view name="view1">
     <stack flow="horizontal" items-align="stretch">
       <button name="button3"/>

@@ -16,3 +16,7 @@ window.onload = () => {
     //bs.data.name = 'Nick';
     //alert(bs.source.id);
 };
+
+//window.onerror = (e) => {
+//    console.log(xp.getStackTrace());
+//};

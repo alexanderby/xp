@@ -286,12 +286,19 @@
          */
         protected initElement(xmlElement?: JQuery) {
             this.domElement = this.getTemplate();
-            this.children = [];
+            this.initContent();
             this.setDefaults();
             if (xmlElement) {
                 this.processXml(xmlElement);
             }
             this.initEvents();
+        }
+
+        /**
+         * Initializes empty content.
+         */
+        protected initContent() {
+            this.children = [];
         }
 
         //----
@@ -484,9 +491,6 @@
         // DOM
         //----
 
-        /**
-        * Returns element's HTML template.
-        */
         protected getTemplate(): JQuery {
             var template = $('<span class="button"><span class="icon"></span><span class="text"></span></span>');
             this.iconElement = template.find('.icon');
@@ -581,13 +585,25 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<div class="stack"></div>');
+            var template = $('<div class="stack"><div class="content"></div></div>');
+            return template;
+        }
+
+        protected getContainerElement(): JQuery {
+            return this.domElement.find('.content');
         }
 
 
         //------------------
         // GETTERS / SETTERS
         //------------------
+
+        protected setDefaults() {
+            this.flow = Flow.vertical;
+            this.contentAlignment = ContentAlignment.start;
+            this.itemsAlignment = ItemsAlignment.stretch;
+            this.scrollBar = ScrollBar.both;
+        }
 
         /**
          * Gets or sets content flow.
@@ -599,8 +615,23 @@
             this._flow = flow;
 
             // DOM
+            switch (flow) {
+                case Flow.horizontal:
+                    this.removeFlowClasses();
+                    this.domElement.addClass('flow-x');
+                    break;
+                case Flow.vertical:
+                    this.removeFlowClasses();
+                    this.domElement.addClass('flow-y');
+                    break;
+                default:
+                    throw new Error('Unknown flow value: ' + flow);
+            }
         }
         protected _flow: Flow;
+        protected removeFlowClasses() {
+            this.domElement.removeClass('flow-x flow-y');
+        }
 
         /**
          * Gets or sets content alignment.
@@ -612,8 +643,27 @@
             this._contentAlignment = align;
 
             // DOM
+            switch (align) {
+                case ContentAlignment.start:
+                    this.removeContentAlignmentClasses();
+                    this.domElement.addClass('content-align-start');
+                    break;
+                case ContentAlignment.center:
+                    this.removeContentAlignmentClasses();
+                    this.domElement.addClass('content-align-center');
+                    break;
+                case ContentAlignment.end:
+                    this.removeContentAlignmentClasses();
+                    this.domElement.addClass('content-align-end');
+                    break;
+                default:
+                    throw new Error('Unknown content alignment value: ' + align);
+            }
         }
         protected _contentAlignment: ContentAlignment;
+        protected removeContentAlignmentClasses() {
+            this.domElement.removeClass('content-align-start content-align-center content-align-end');
+        }
 
         /**
          * Gets or sets items alignment.
@@ -625,8 +675,67 @@
             this._itemsAlignment = align;
 
             // DOM
+            switch (align) {
+                case ItemsAlignment.start:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-align-start');
+                    break;
+                case ItemsAlignment.center:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-align-center');
+                    break;
+                case ItemsAlignment.end:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-align-end');
+                    break;
+                case ItemsAlignment.stretch:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-align-stretch');
+                    break;
+                default:
+                    throw new Error('Unknown items alignment value: ' + align);
+            }
         }
         protected _itemsAlignment: ItemsAlignment;
+        protected removeItemsAlignmentClasses() {
+            this.domElement.removeClass('items-align-start items-align-center items-align-end items-align-stretch');
+        }
+
+        /**
+         * Gets or sets container's scroll bar options.
+         */
+        get scrollBar() {
+            return this._scrollBar;
+        }
+        set scrollBar(scroll: ScrollBar) {
+            this._scrollBar = scroll;
+
+            // DOM
+            switch (scroll) {
+                case ScrollBar.none:
+                    this.removeScrollBarClasses();
+                    this.domElement.addClass('scrollbar-none');
+                    break;
+                case ScrollBar.horizontal:
+                    this.removeScrollBarClasses();
+                    this.domElement.addClass('scrollbar-x');
+                    break;
+                case ScrollBar.vertical:
+                    this.removeScrollBarClasses();
+                    this.domElement.addClass('scrollbar-y');
+                    break;
+                case ScrollBar.both:
+                    this.removeScrollBarClasses();
+                    this.domElement.addClass('scrollbar-both');
+                    break;
+                default:
+                    throw new Error('Unknown scroll bar value: ' + scroll);
+            }
+        }
+        protected _scrollBar: ScrollBar;
+        protected removeScrollBarClasses() {
+            this.domElement.removeClass('scrollbar-none scrollbar-x scrollbar-y scrollbar-both');
+        }
 
 
         //------------------
@@ -649,6 +758,12 @@
                     'center': () => this.itemsAlignment = ItemsAlignment.center,
                     'end': () => this.itemsAlignment = ItemsAlignment.end,
                     'stretch': () => this.itemsAlignment = ItemsAlignment.stretch
+                },
+                'scroll': {
+                    'none': () => this.scrollBar = ScrollBar.none,
+                    'horizontal': () => this.scrollBar = ScrollBar.horizontal,
+                    'vertical': () => this.scrollBar = ScrollBar.vertical,
+                    'both': () => this.scrollBar = ScrollBar.both
                 }
             });
         }
@@ -657,9 +772,9 @@
     Tags['stack'] = Stack;
 
 
-    export class ScrollPanel extends Container {
+    //export class ScrollPanel extends Container {
 
-    }
+    //}
 
 
     /**
@@ -672,7 +787,9 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<div class="view"></div>');
+            //return $('<div class="view stack"></div>');
+            var template = $('<div class="view stack"><div class="content"></div></div>');
+            return template;
         }
 
 
@@ -699,7 +816,11 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<body></body>');
+            var template = $('<body></body>') // Bug when defining class in html on body
+                .addClass('window')
+                .addClass('stack')
+                .append('<div class="content"></div>');
+            return template;
         }
 
 
@@ -765,5 +886,15 @@
     export enum Flow {
         horizontal,
         vertical
+    }
+
+    /**
+     * Scroll bar options.
+     */
+    export enum ScrollBar {
+        none,
+        horizontal,
+        vertical,
+        both
     }
 } 
