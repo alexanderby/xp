@@ -53,6 +53,7 @@
         propertyName: string;
         oldValue: any;
         newValue: any;
+        //invoker?: any;
     }
 
     /**

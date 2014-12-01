@@ -9,7 +9,6 @@
             var template = $('<span class="label"><span class="text"></span></span>');
             this.textElement = template.find('.text');
             return template;
-            //return $('<span class="label"><span class="text"></span></span>');
         }
 
         protected textElement: JQuery;
@@ -26,6 +25,7 @@
             return this._text;
         }
         set text(text) {
+            console.log('Set text: ' + text);
             this._text = text;
 
             // DOM
@@ -48,6 +48,26 @@
                 },
             });
         }
+
+
+        //--------
+        // BINDING
+        //--------
+
+        //protected bind: BindableObject<any>;
+
+        ///**
+        // * Binds label to bindable object 
+        // */
+        //bindTo(bind: BindableObject<any>, objPropertyName: string) {
+        //    this.bind = bind;
+        //    this.text = bind.data[propertyName];
+        //    bind.onPropertyChanged.addHandler((args) => {
+        //        if (args.propertyName === propertyName) {
+        //            this.text = args.newValue;
+        //        }
+        //    }, this);
+        //}
     }
     Tags['label'] = Label;
 } 

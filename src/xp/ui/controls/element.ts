@@ -18,11 +18,11 @@
          */
         protected initElement(xmlElement?: JQuery) {
             this.domElement = this.getTemplate();
+            this.initEvents();
             this.setDefaults();
             if (xmlElement) {
                 this.processXml(xmlElement);
             }
-            this.initEvents();
         }
 
 
@@ -58,6 +58,8 @@
          * Initializes control's events.
          */
         protected initEvents() {
+            //this.onPropertyChanged = new Event<PropertyChangedArgs>();
+            this.bindingRegistar = new EventRegistar();
             this.initEvent('click', this.onClick);
             this.initEvent('mousedown', this.onMouseDown);
             this.initEvent('mouseup', this.onMouseUp);
@@ -95,7 +97,12 @@
             return this._enabled;
         }
         set enabled(value) {
-            this._enabled = value;
+            this._enabled = value
+            //this.onPropertyChanged.invoke({
+            //    propertyName: 'enabled',
+            //    oldValue: value,
+            //    newValue: this._enabled = value
+            //});
 
             // DOM
             if (value === true) {
@@ -236,6 +243,7 @@
          */
         remove() {
             this.detach();
+            this.bindingRegistar.unsubscribeAll();
 
             // DOM
             this.domElement.remove();
@@ -289,6 +297,74 @@
                 this.parent.detachChild(this);
             }
         }
+
+        /**
+         * Bubbles up through all parents invoking a function.
+         * Stops when function returns 'truthy' value.
+         * @param fn Function to execute on each parent.
+         * @returns Element which lead to returning 'truthy' value.
+         */
+        bubbleBy(fn: (el: Container) => any): Container {
+            var parent = this.parent;
+            do {
+                if (!!fn(parent) === true) {
+                    return parent;
+                }
+                parent = parent.parent;
+            }
+            while (!parent);
+
+            return null;
+        }
+
+
+        //--------
+        // BINDING
+        //--------
+
+        ///**
+        // * Fires when ANY possible property is changed.
+        // */
+        //onPropertyChanged: Event<PropertyChangedArgs>;
+
+
+        bind(controlProperty: string, objectProperty: string, binding?: BindableObject<any>) {
+            // If binding object is not defined - bubble up and find one.
+            if (binding) {
+                this._binding = binding;
+            }
+            else {
+                var el = this.bubbleBy((el) => el.binding);
+                if (el) {
+                    this._binding = el.binding;
+                }
+                else {
+                    throw new Error(xp.formatString('No binding found for {0}:{1}, property:{2}.', xp.getClassName(this), this.name || '-', objectProperty));
+                }
+            }
+
+            // Set current value
+            this[controlProperty] = this.binding.data[objectProperty];
+
+            // Subscribe to object's event
+            this.bindingRegistar.subscribe(this.binding.onPropertyChanged, (args) => {
+                if (args.propertyName === objectProperty) {
+                    this[controlProperty] = args.newValue;
+                }
+            }, this);
+
+            console.log(xp.formatString('Binded property "{0}" to "{1}:{2}.{3}".', objectProperty, xp.getClassName(this), this.name || '-', controlProperty));
+        }
+
+        protected bindingRegistar: EventRegistar;
+
+        /**
+         * Gets element's binded object.
+         */
+        get binding(): BindableObject<any> {
+            return this._binding;
+        }
+        protected _binding;
     }
 
 
