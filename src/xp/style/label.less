@@ -4,7 +4,18 @@
     LABEL
 ----------*/
 
-.label{
+.label {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    cursor: default;
     background-color: @back;
+    min-height: 2em;
+    overflow: hidden;
+    padding: 0 0.5em;
+}
+
+.label > .text {
+    font-size: 1em;
     color: @fore;
 }

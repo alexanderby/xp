@@ -1,17 +1,18 @@
 ﻿module xp.Ui {
     export class Label extends Element {
-        
+
         //----
         // DOM
         //----
 
         protected getTemplate(): JQuery {
-            //var template = $('<span class="label"></span>');
-            //this.textElement=
-            return $('<span class="label"></span>');
+            var template = $('<span class="label"><span class="text"></span></span>');
+            this.textElement = template.find('.text');
+            return template;
+            //return $('<span class="label"><span class="text"></span></span>');
         }
 
-        //protected textElement: JQuery;
+        protected textElement: JQuery;
 
 
         //------------------
@@ -28,7 +29,7 @@
             this._text = text;
 
             // DOM
-            this.domElement.text(text);
+            this.textElement.text(text);
         }
         protected _text: string;
 
