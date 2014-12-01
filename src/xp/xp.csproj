@@ -38,7 +38,13 @@
     <TypeScriptCompile Include="core\app.ts" />
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
-    <TypeScriptCompile Include="ui\controls.ts" />
+    <TypeScriptCompile Include="ui\controls\button.ts" />
+    <TypeScriptCompile Include="ui\controls\container.ts" />
+    <TypeScriptCompile Include="ui\controls\element.ts" />
+    <TypeScriptCompile Include="ui\controls\stack.ts" />
+    <TypeScriptCompile Include="ui\controls\view.ts" />
+    <TypeScriptCompile Include="ui\controls\window.ts" />
+    <TypeScriptCompile Include="ui\ui.ts" />
     <TypeScriptCompile Include="ui\uievent.ts" />
     <TypeScriptCompile Include="utils\utils.ts" />
   </ItemGroup>
