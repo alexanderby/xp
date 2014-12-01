@@ -40,7 +40,7 @@
             // DOM
             if (!!path === true) {
                 // Set background image
-                this.iconElement.css('background-image', path);
+                this.iconElement.css('background-image', xp.formatString('url({0})', path));
                 this.iconElement.show();
             }
             else {

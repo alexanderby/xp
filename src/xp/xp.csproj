@@ -49,6 +49,8 @@
       <DependentUpon>stack.css</DependentUpon>
     </Content>
     <Content Include="testapp\app.css" />
+    <Content Include="testapp\icon-16-black.svg" />
+    <Content Include="testapp\icon-16-white.svg" />
     <Content Include="testapp\index.html" />
     <Content Include="lib\jquery.js" />
     <Content Include="testapp\view\window.xml">

@@ -1,13 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
   <stack flow="horizontal" name="stack1" width="5em" height="4em" items-align="stretch">
-    <button name="button1" text="Click me" icon="http://cdn.css-tricks.com/favicon.ico"/>
+    <button name="button1" text="Click me" icon="icon-16-white.svg"/>
     <button name="button2" text="Button 2"/>
   </stack>
   <view name="view1">
     <stack flow="horizontal" items-align="center" content-align="center" name="stack2">
       <button name="button3" text="Button3" height="4em"/>
-      <button name="button4"/>
+      <button name="button4" icon="icon-16-white.svg"/>
     </stack>
     <view name="view2"/>
   </view>
