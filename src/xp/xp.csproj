@@ -18,11 +18,29 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="style\button.css">
+      <DependentUpon>button.less</DependentUpon>
+    </Content>
+    <Content Include="style\button.min.css">
+      <DependentUpon>button.css</DependentUpon>
+    </Content>
     <Content Include="style\defaultstyle.css">
       <DependentUpon>defaultstyle.less</DependentUpon>
     </Content>
     <Content Include="style\defaultstyle.min.css">
       <DependentUpon>defaultstyle.css</DependentUpon>
+    </Content>
+    <Content Include="style\global.css">
+      <DependentUpon>global.less</DependentUpon>
+    </Content>
+    <Content Include="style\global.min.css">
+      <DependentUpon>global.css</DependentUpon>
+    </Content>
+    <Content Include="style\stack.css">
+      <DependentUpon>stack.less</DependentUpon>
+    </Content>
+    <Content Include="style\stack.min.css">
+      <DependentUpon>stack.css</DependentUpon>
     </Content>
     <Content Include="testapp\app.css" />
     <Content Include="testapp\index.html" />
@@ -55,6 +73,18 @@
     <Content Include="style\defaultstyle.less" />
     <Content Include="style\defaultstyle.css.map">
       <DependentUpon>defaultstyle.css</DependentUpon>
+    </Content>
+    <Content Include="style\global.less" />
+    <Content Include="style\button.less" />
+    <Content Include="style\global.css.map">
+      <DependentUpon>global.css</DependentUpon>
+    </Content>
+    <Content Include="style\button.css.map">
+      <DependentUpon>button.css</DependentUpon>
+    </Content>
+    <Content Include="style\stack.less" />
+    <Content Include="style\stack.css.map">
+      <DependentUpon>stack.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
