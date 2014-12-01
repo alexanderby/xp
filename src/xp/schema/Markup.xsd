@@ -10,8 +10,10 @@
 
   <xs:attributeGroup name="attrs">
     <xs:attribute name="name" type="xs:ID"/>
-    <xs:attribute name="width" type="xs:float"/>
-    <xs:attribute name="height" type="xs:float"/>
+    <!--<xs:attribute name="width" type="xs:float"/>
+    <xs:attribute name="height" type="xs:float"/>-->
+    <xs:attribute name="width" type="xs:string"/>
+    <xs:attribute name="height" type="xs:string"/>
   </xs:attributeGroup>
 
   <xs:complexType name="element">
@@ -40,6 +42,7 @@
         <xs:attribute name="flow" type="flow"/>
         <xs:attribute name="content-align" type="content-align"/>
         <xs:attribute name="items-align" type="items-align"/>
+        <xs:attribute name="scrollbar" type="scrollbar"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -93,6 +96,14 @@
       <xs:enumeration value="end"/>
       <xs:enumeration value="center"/>
       <xs:enumeration value="stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="scrollbar">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="horizontal"/>
+      <xs:enumeration value="vertical"/>
+      <xs:enumeration value="both"/>
     </xs:restriction>
   </xs:simpleType>
 

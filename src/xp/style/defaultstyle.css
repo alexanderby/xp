@@ -54,24 +54,69 @@ body {
 }
 .button > span {
   margin: 0 0.125em;
+  flex: none;
 }
 /*--------
-    BOXES
+    STACK
 ----------*/
-.hbox {
+.stack {
   width: 100%;
   height: 100%;
+  overflow: hidden;
+}
+.stack > .content {
   display: flex;
-  flex-direction: row;
-  align-items: stretch;
+  min-width: 100%;
+  min-height: 100%;
+}
+.stack > .content > div,
+.stack > .content > span {
+  flex: none;
+}
+/* Flow */
+.stack.flow-x > .content {
+  flex-flow: row nowrap;
+}
+.stack.flow-y > .content {
+  flex-flow: column nowrap;
+}
+/* Content alignment */
+.stack.content-align-start > .content {
   justify-content: flex-start;
 }
-.vbox {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
+.stack.content-align-center > .content {
+  justify-content: center;
+}
+.stack.content-align-end > .content {
+  justify-content: flex-end;
+}
+/* Items alignment */
+.stack.items-align-start > .content {
+  align-items: flex-start;
+}
+.stack.items-align-center > .content {
+  align-items: center;
+}
+.stack.items-align-end > .content {
+  align-items: flex-end;
+}
+.stack.items-align-stretch > .content {
   align-items: stretch;
-  justify-content: flex-start;
+  -ms-flex-line-pack: stretch;
+}
+/* Scroll bar */
+.stack.scrollbar-none {
+  overflow: hidden;
+}
+.stack.scrollbar-x {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.stack.scrollbar-y {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.stack.scrollbar-both {
+  overflow: auto;
 }
 /*# sourceMappingURL=defaultstyle.css.map */
