@@ -24,9 +24,10 @@
     <xs:complexContent>
       <xs:extension base="element">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element ref="button"/>
           <xs:element ref="view"/>
           <xs:element ref="stack"/>
+          <xs:element ref="button"/>
+          <xs:element ref="label"/>
           <!--<xs:any/>-->
         </xs:choice>
       </xs:extension>
@@ -120,4 +121,15 @@
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
+
+  <xs:element name="label">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="element">
+          <xs:attribute name="text" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  
 </xs:schema>

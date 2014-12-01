@@ -23,40 +23,6 @@ body {
   font-family: 'Segoe UI', sans-serif;
 }
 /*--------
-    BUTTON
-----------*/
-.button {
-  display: inline-flex;
-  flex-flow: row nowrap;
-  align-items: center;
-  justify-content: center;
-  padding: 0.5em 0.375em;
-  min-height: 2em;
-  min-width: 2em;
-  cursor: default;
-  background-color: #222222;
-  overflow: hidden;
-}
-.button:hover {
-  background-color: #444444;
-}
-.button .icon {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  background-color: #dddddd;
-}
-.button .text {
-  display: inline-block;
-  line-height: 1em;
-  font-size: 1em;
-  color: #dddddd;
-}
-.button > span {
-  margin: 0 0.125em;
-  flex: none;
-}
-/*--------
     STACK
 ----------*/
 .stack {
@@ -118,5 +84,46 @@ body {
 }
 .stack.scrollbar-both {
   overflow: auto;
+}
+/*--------
+    BUTTON
+----------*/
+.button {
+  display: inline-flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5em 0.375em;
+  min-height: 2em;
+  min-width: 2em;
+  cursor: default;
+  background-color: #222222;
+  overflow: hidden;
+}
+.button:hover {
+  background-color: #444444;
+}
+.button .icon {
+  display: inline-block;
+  width: 1em;
+  height: 1em;
+  background-color: #dddddd;
+}
+.button .text {
+  display: inline-block;
+  line-height: 1em;
+  font-size: 1em;
+  color: #dddddd;
+}
+.button > span {
+  margin: 0 0.125em;
+  flex: none;
+}
+/*--------
+    LABEL
+----------*/
+.label {
+  background-color: #222222;
+  color: #dddddd;
 }
 /*# sourceMappingURL=defaultstyle.css.map */

@@ -36,6 +36,12 @@
     <Content Include="style\global.min.css">
       <DependentUpon>global.css</DependentUpon>
     </Content>
+    <Content Include="style\label.css">
+      <DependentUpon>label.less</DependentUpon>
+    </Content>
+    <Content Include="style\label.min.css">
+      <DependentUpon>label.css</DependentUpon>
+    </Content>
     <Content Include="style\stack.css">
       <DependentUpon>stack.less</DependentUpon>
     </Content>
@@ -59,6 +65,7 @@
     <TypeScriptCompile Include="ui\controls\button.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />
     <TypeScriptCompile Include="ui\controls\element.ts" />
+    <TypeScriptCompile Include="ui\controls\label.ts" />
     <TypeScriptCompile Include="ui\controls\stack.ts" />
     <TypeScriptCompile Include="ui\controls\view.ts" />
     <TypeScriptCompile Include="ui\controls\window.ts" />
@@ -85,6 +92,10 @@
     <Content Include="style\stack.less" />
     <Content Include="style\stack.css.map">
       <DependentUpon>stack.css</DependentUpon>
+    </Content>
+    <Content Include="style\label.less" />
+    <Content Include="style\label.css.map">
+      <DependentUpon>label.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

@@ -11,4 +11,5 @@
     </stack>
     <view name="view2"/>
   </view>
+  <label text="Label"/>
 </window>
