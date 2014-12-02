@@ -1,0 +1,28 @@
+﻿@import "global.less";
+
+/*-----------
+    TEXT BOX
+-------------*/
+
+.textbox {
+    box-sizing: border-box;
+    background-color: @back-hover;
+    color: @fore;
+    font-family: @font;
+    font-size: 1em;
+    line-height: 2em;
+    min-height: 2em;
+    padding: 0 0.5em;
+    outline: none;
+    border: none;
+    overflow: hidden;
+}
+
+.textbox:hover {
+    background-color: @back-hover;
+}
+
+.textbox:focus {
+    background-color: @back-active;
+    outline: none;
+}

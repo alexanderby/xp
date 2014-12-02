@@ -60,6 +60,7 @@
         protected initEvents() {
             //this.onPropertyChanged = new Event<PropertyChangedArgs>();
             this.bindingRegistar = new EventRegistar();
+            this._bindings = {};
             this.initEvent('click', this.onClick);
             this.initEvent('mousedown', this.onMouseDown);
             this.initEvent('mouseup', this.onMouseUp);
@@ -329,7 +330,6 @@
 
 
         bind(controlProperty: string, objectProperty: string, binding?: BindableObject<any>) {
-            // If binding object is not defined - bubble up and find one.
             if (binding) {
                 this._bindings[controlProperty] = {
                     binding: binding,
@@ -337,20 +337,21 @@
                 };
             }
             else {
-                var el = this.bubbleBy((el) => el.bindings[controlProperty]);
-                if (el) {
-                    this._binding = el.binding;
-                }
-                else {
-                    throw new Error(xp.formatString('No binding found for {0}:{1}, property:{2}.', xp.getClassName(this), this.name || '-', objectProperty));
-                }
+                // If binding object is not defined - bubble up and find one.
+                //var el = this.bubbleBy((el) => el.bindings[controlProperty]);
+                //if (el) {
+                //    this._binding = el.binding;
+                //}
+                //else {
+                //    throw new Error(xp.formatString('No binding found for {0}:{1}, property:{2}.', xp.getClassName(this), this.name || '-', objectProperty));
+                //}
             }
 
             // Set current value
-            this[controlProperty] = this.binding.data[objectProperty];
+            this[controlProperty] = this.bindings[controlProperty].binding.data[objectProperty];
 
             // Subscribe to object's event
-            this.bindingRegistar.subscribe(this.binding.onPropertyChanged, (args) => {
+            this.bindingRegistar.subscribe(this.bindings[controlProperty].binding.onPropertyChanged, (args) => {
                 if (args.propertyName === objectProperty) {
                     this[controlProperty] = args.newValue;
                 }

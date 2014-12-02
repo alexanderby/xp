@@ -6,9 +6,10 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<span class="label"><span class="text"></span></span>');
-            this.textElement = template.find('.text');
-            return template;
+            //var template = $('<span class="label"><span class="text"></span></span>');
+            //this.textElement = template.find('.text');
+            //return template;
+            return $('<span class="label"></span>');
         }
 
         protected textElement: JQuery;
@@ -29,7 +30,8 @@
             this._text = text;
 
             // DOM
-            this.textElement.text(text);
+            //this.textElement.text(text);
+            this.domElement.text(text);
         }
         protected _text: string;
 

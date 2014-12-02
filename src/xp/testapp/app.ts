@@ -15,6 +15,9 @@ window.onload = () => {
     var label = app.window.findElement('label1');
     label.bind('text', 'name', bs);
 
+    var textbox1 = app.window.findElement('textbox1');
+    textbox1.bind('text', 'name', bs);
+
     //console.log(bs.data.name);
     //bs.data.name = 'Nick';
     //console.log(bs.data.name);

@@ -48,6 +48,12 @@
     <Content Include="style\stack.min.css">
       <DependentUpon>stack.css</DependentUpon>
     </Content>
+    <Content Include="style\textbox.css">
+      <DependentUpon>textbox.less</DependentUpon>
+    </Content>
+    <Content Include="style\textbox.min.css">
+      <DependentUpon>textbox.css</DependentUpon>
+    </Content>
     <Content Include="testapp\app.css" />
     <Content Include="testapp\icon-16-black.svg" />
     <Content Include="testapp\icon-16-white.svg" />
@@ -99,6 +105,10 @@
     <Content Include="style\label.less" />
     <Content Include="style\label.css.map">
       <DependentUpon>label.css</DependentUpon>
+    </Content>
+    <Content Include="style\textbox.less" />
+    <Content Include="style\textbox.css.map">
+      <DependentUpon>textbox.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

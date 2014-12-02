@@ -21,16 +21,17 @@
 
         protected initEvents() {
             super.initEvents();
+
+            // On text value change
             this.domElement.on('change', (e) => {
-                if (this.binding) {
-                    this.binding.onPropertyChanged.invoke({
+                if (this.bindings['text']) {
+                    this.bindings['text'].binding.onPropertyChanged.invoke({
                         oldValue: this.text,
                         newValue: <string>this.domElement.val(),
-                        propertyName: '' //???
+                        propertyName: this.bindings['text'].objectProperty
                     });
                 }
             });
-
         }
 
 
