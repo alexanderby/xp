@@ -44,6 +44,7 @@
         <xs:attribute name="content-align" type="content-align"/>
         <xs:attribute name="items-align" type="items-align"/>
         <xs:attribute name="scrollbar" type="scrollbar"/>
+        <xs:attribute name="wrapping" type="wrapping"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -105,6 +106,12 @@
       <xs:enumeration value="horizontal"/>
       <xs:enumeration value="vertical"/>
       <xs:enumeration value="both"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="wrapping">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="nowrap"/>
+      <xs:enumeration value="wrap"/>
     </xs:restriction>
   </xs:simpleType>
 

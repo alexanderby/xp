@@ -10,7 +10,7 @@ window.onload = () => {
         id: 123,
         name: 'John'
     };
-    var bs = xp.createBindableObject(person, ['name']);
+    var bs = xp.createBindableObject(person/*, ['name']*/);
 
     var label = app.window.findElement('label1');
     label.bind('text', 'name', bs);

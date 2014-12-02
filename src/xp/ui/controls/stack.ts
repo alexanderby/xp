@@ -30,6 +30,7 @@
             this.contentAlignment = ContentAlignment.start;
             this.itemsAlignment = ItemsAlignment.stretch;
             this.scrollBar = ScrollBar.both;
+            this.wrapping = Wrapping.nowrap;
         }
 
         /**
@@ -164,6 +165,34 @@
             this.domElement.removeClass('scrollbar-none scrollbar-x scrollbar-y scrollbar-both');
         }
 
+        /**
+         * Gets or sets content wrapping.
+         */
+        get wrapping() {
+            return this._wrapping;
+        }
+        set wrapping(wrap: Wrapping) {
+            this._wrapping = wrap;
+
+            // DOM
+            switch (wrap) {
+                case Wrapping.nowrap:
+                    this.removeWrappingClasses();
+                    this.domElement.addClass('wrapping-nowrap');
+                    break;
+                case Wrapping.wrap:
+                    this.removeWrappingClasses();
+                    this.domElement.addClass('wrapping-wrap');
+                    break;
+                default:
+                    throw new Error('Unknown wrapping value: ' + wrap);
+            }
+        }
+        protected _wrapping: Wrapping;
+        protected removeWrappingClasses() {
+            this.domElement.removeClass('wrapping-nowrap wrapping-wrap');
+        }
+
 
         //------------------
         // ATTRIBUTE MAPPING
@@ -191,6 +220,10 @@
                     'horizontal': () => this.scrollBar = ScrollBar.horizontal,
                     'vertical': () => this.scrollBar = ScrollBar.vertical,
                     'both': () => this.scrollBar = ScrollBar.both
+                },
+                'wrapping': {
+                    'nowrap': () => this.wrapping = Wrapping.nowrap,
+                    'wrap': () => this.wrapping = Wrapping.wrap
                 }
             });
         }
@@ -234,5 +267,13 @@
         horizontal,
         vertical,
         both
+    }
+
+    /**
+     * Content wrapping.
+     */
+    export enum Wrapping {
+        nowrap,
+        wrap
     }
 } 
