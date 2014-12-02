@@ -331,10 +331,13 @@
         bind(controlProperty: string, objectProperty: string, binding?: BindableObject<any>) {
             // If binding object is not defined - bubble up and find one.
             if (binding) {
-                this._binding = binding;
+                this._bindings[controlProperty] = {
+                    binding: binding,
+                    objectProperty: objectProperty
+                };
             }
             else {
-                var el = this.bubbleBy((el) => el.binding);
+                var el = this.bubbleBy((el) => el.bindings[controlProperty]);
                 if (el) {
                     this._binding = el.binding;
                 }
@@ -359,12 +362,12 @@
         protected bindingRegistar: EventRegistar;
 
         /**
-         * Gets element's binded object.
+         * Gets element's bindings.
          */
-        get binding(): BindableObject<any> {
-            return this._binding;
+        get bindings(): UiBindingDictionary {
+            return this._bindings;
         }
-        protected _binding;
+        protected _bindings: UiBindingDictionary;
     }
 
 
@@ -378,5 +381,12 @@
 
     export interface ValueMap {
         [value: string]: (value?: string) => void;
+    }
+
+    export interface UiBindingDictionary {
+        [controlProperty: string]: {
+            binding: BindableObject<any>;
+            objectProperty: string;
+        }
     }
 }

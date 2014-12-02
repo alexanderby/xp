@@ -11,7 +11,6 @@
     </stack>
     <view name="view2"/>
   </view>
-  <label text="Label" name="label1"/>
   <stack flow="horizontal" items-align="center" content-align="start" name="stack3" wrapping="wrap">
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
@@ -26,4 +25,5 @@
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
   </stack>
+  <label text="Label" name="label1"/>
 </window>

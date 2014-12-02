@@ -19,7 +19,7 @@
         //------------------
 
         /**
-         * Gets or sets button's text.
+         * Gets or sets label's text.
          */
         get text() {
             return this._text;

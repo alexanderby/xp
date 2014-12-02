@@ -69,6 +69,7 @@
     <TypeScriptCompile Include="ui\controls\element.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
     <TypeScriptCompile Include="ui\controls\stack.ts" />
+    <TypeScriptCompile Include="ui\controls\textbox.ts" />
     <TypeScriptCompile Include="ui\controls\view.ts" />
     <TypeScriptCompile Include="ui\controls\window.ts" />
     <TypeScriptCompile Include="ui\ui.ts" />
