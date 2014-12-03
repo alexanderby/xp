@@ -60,7 +60,7 @@
         protected initEvents() {
             //this.onPropertyChanged = new Event<PropertyChangedArgs>();
             this.bindingRegistar = new EventRegistar();
-            this._bindings = {};
+            this.bindings = {};
             this.initEvent('click', this.onClick);
             this.initEvent('mousedown', this.onMouseDown);
             this.initEvent('mouseup', this.onMouseUp);
@@ -196,6 +196,9 @@
                     var setter = map[key]['*'];
                     setter(values[key]);
                 }
+                else if (map[key]['{*}']) {
+                    // TODO: Bind to *...
+                }
                 else {
                     // Find value
                     if (!map[key][values[key]] && !map['*']) {
@@ -323,52 +326,70 @@
         // BINDING
         //--------
 
-        ///**
-        // * Fires when ANY possible property is changed.
-        // */
-        //onPropertyChanged: Event<PropertyChangedArgs>;
+        /**
+         * Binds control's property to data context property.
+         * @param controlProperty Control's property name.
+         * @param objectProperty Object's property name.
+         * @param context If specified, sets the data context.
+         */
+        bind(controlProperty: string, objectProperty: string, context?: BindableObject<any>) {
+            this.bindings[controlProperty] = objectProperty;
+            if (context)
+                this.dataContext = context;
 
-
-        bind(controlProperty: string, objectProperty: string, binding?: BindableObject<any>) {
-            if (binding) {
-                this._bindings[controlProperty] = {
-                    binding: binding,
-                    objectProperty: objectProperty
-                };
+            if (this.dataContext) {
+                // Set current value
+                this[controlProperty] = this.dataContext.data[objectProperty];
             }
-            else {
-                // If binding object is not defined - bubble up and find one.
-                //var el = this.bubbleBy((el) => el.bindings[controlProperty]);
-                //if (el) {
-                //    this._binding = el.binding;
-                //}
-                //else {
-                //    throw new Error(xp.formatString('No binding found for {0}:{1}, property:{2}.', xp.getClassName(this), this.name || '-', objectProperty));
-                //}
-            }
-
-            // Set current value
-            this[controlProperty] = this.bindings[controlProperty].binding.data[objectProperty];
-
-            // Subscribe to object's event
-            this.bindingRegistar.subscribe(this.bindings[controlProperty].binding.onPropertyChanged, (args) => {
-                if (args.propertyName === objectProperty) {
-                    this[controlProperty] = args.newValue;
-                }
-            }, this);
 
             console.log(xp.formatString('Binded property "{0}" to "{1}:{2}.{3}".', objectProperty, xp.getClassName(this), this.name || '-', controlProperty));
         }
 
-        protected bindingRegistar: EventRegistar;
+        unbind(controlProperty: string) {
+            // TODO...
+        }
 
         /**
-         * Gets element's bindings.
+         * Gets or sets control's binding data context.
          */
-        get bindings(): UiBindingDictionary {
-            return this._bindings;
+        get dataContext() {
+            return this._dataContext;
         }
-        protected _bindings: UiBindingDictionary;
+        set dataContext(context) {
+            this._dataContext = context;
+
+            if (context) {
+                this.initDataContext();
+            }
+            else {
+                // TODO: Unbind...
+            }
+        }
+        protected _dataContext: BindableObject<any>;
+
+        protected initDataContext() {
+            // Re-init context changes handler 
+            this.bindingRegistar.unsubscribeAll();
+            this.bindingRegistar.subscribe(this.dataContext.onPropertyChanged, (objProp) => {
+                for (var controlProp in this.bindings) {
+                    if (this.bindings[controlProp] === objProp) {
+                        this[controlProp] = this.dataContext.data[objProp];
+                    }
+                }
+            }, this);
+        }
+
+        protected bindingRegistar: EventRegistar;
+        protected bindings: UiBindingDictionary;
+
+        /**
+         * Is invoked when user performs an input.
+         */
+        protected onInput(controlProperty: string, value) {
+            if (this.bindings[controlProperty]) {
+                this.dataContext.data[this.bindings[controlProperty]] = value;
+            }
+        }
     }
 
 
@@ -384,10 +405,10 @@
         [value: string]: (value?: string) => void;
     }
 
+    /**
+     * Represents "control property name":"object property name" dictionary.
+     */
     export interface UiBindingDictionary {
-        [controlProperty: string]: {
-            binding: BindableObject<any>;
-            objectProperty: string;
-        }
+        [controlProperty: string]: string;
     }
 }

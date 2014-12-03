@@ -22,15 +22,9 @@
         protected initEvents() {
             super.initEvents();
 
-            // On text value change
+            // On text input
             this.domElement.on('change', (e) => {
-                if (this.bindings['text']) {
-                    this.bindings['text'].binding.onPropertyChanged.invoke({
-                        oldValue: this.text,
-                        newValue: <string>this.domElement.val(),
-                        propertyName: this.bindings['text'].objectProperty
-                    });
-                }
+                this.onInput('text', this.domElement.val());
             });
         }
 

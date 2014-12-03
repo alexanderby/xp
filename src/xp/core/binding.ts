@@ -8,7 +8,7 @@
      */
     export function createBindableObject<T>(obj: T, propertyNames?: string[]): BindableObject<T> {
         var b: BindableObject<T> = {
-            onPropertyChanged: new Event<PropertyChangedArgs>(),
+            onPropertyChanged: new Event<string>(),
             data: <T>{},
             source: obj
         };
@@ -33,13 +33,8 @@
                 return bObj.source[name];
             },
             set: function (value) {
-                var oldValue = bObj.source[name];
                 bObj.source[name] = value;
-                bObj.onPropertyChanged.invoke({
-                    propertyName: name,
-                    oldValue: oldValue,
-                    newValue: value
-                });
+                bObj.onPropertyChanged.invoke(name);
             },
             enumerable: true,
             configurable: true
@@ -47,42 +42,25 @@
     }
 
     /**
-     * Arguments of object's property changed event.
-     */
-    export interface PropertyChangedArgs {
-        propertyName: string;
-        oldValue: any;
-        newValue: any;
-        //invoker?: any;
-    }
-
-    /**
-     * Represents an object which notifies of it's properties' changes.
-     */
-    export interface INotifier {
-        /**
-         * Is invoked when any object's property is changed.
-         */
-        onPropertyChanged: Event<PropertyChangedArgs>;
-    }
-
-    /**
      * Bindable object.
      * Change-notifications can be reached by subscribing to 'onPropertyChanged' event.
      * Values should be changed through 'data' property object.
      */
-    export interface BindableObject<T> extends INotifier {
+    export interface BindableObject<T> {
         /**
          * Is invoked when any object's property is changed.
          */
-        onPropertyChanged: Event<PropertyChangedArgs>;
+        onPropertyChanged: Event<string>;
         /**
          * Changes should be made through this object.
          */
-        data: T;
+        data: T; // Needed to support intellisence for T.
         /**
          * Source object. Changes made to 'data' property will be reflected on this property too.
          */
         source: T;
     }
+
+    // NOTE:
+    // What is better: "BO<T>{ onPC; data }" or "INotifier{ onPC }"?
 } 
