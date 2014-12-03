@@ -57,11 +57,21 @@
     }
 
     /**
+     * Represents an object which notifies of it's properties' changes.
+     */
+    export interface INotifier {
+        /**
+         * Is invoked when any object's property is changed.
+         */
+        onPropertyChanged: Event<PropertyChangedArgs>;
+    }
+
+    /**
      * Bindable object.
      * Change-notifications can be reached by subscribing to 'onPropertyChanged' event.
      * Values should be changed through 'data' property object.
      */
-    export interface BindableObject<T> {
+    export interface BindableObject<T> extends INotifier {
         /**
          * Is invoked when any object's property is changed.
          */
