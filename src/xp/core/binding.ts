@@ -51,10 +51,12 @@
          * Is invoked when any object's property is changed.
          */
         onPropertyChanged: Event<string>;
+
         /**
          * Changes should be made through this object.
          */
-        data: T; // Needed to support intellisence for T.
+        data: T; // Needed for supporting intellisence for T.
+
         /**
          * Source object. Changes made to 'data' property will be reflected on this property too.
          */

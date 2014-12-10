@@ -204,5 +204,18 @@
             var result = this.cascadeBy((e) => e.name === name);
             return result;
         }
+
+
+        //--------
+        // BINDING
+        //--------
+
+        protected initDataContext() {
+            super.initDataContext();
+            this.children.forEach((el) => {
+                el.dataContext = this.dataContext;
+            })
+        }
+
     }
 } 
