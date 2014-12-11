@@ -191,6 +191,14 @@
                     throw new Error(xp.formatString('Illegal attribute "{0}" of element "{1}".', key, xmlElement[0].nodeName.toLowerCase()));
                 }
 
+                // Check for binding
+                var matches = values[key].match(/^\{(.*)\}$/);
+                if (matches && matches[1]) {
+                    var path = matches[1];
+                    // Bind control property to data context property
+                    this.bind(key, path, this.dataContext);
+                }
+
                 if (map[key]['*']) {
                     // If accepts any value -> call setter with value
                     var setter = map[key]['*'];
@@ -329,24 +337,30 @@
         /**
          * Binds control's property to data context property.
          * @param controlProperty Control's property name.
-         * @param objectProperty Object's property name.
+         * @param objectPropertyPath Object's property name.
          * @param context If specified, sets the data context.
          */
-        bind(controlProperty: string, objectProperty: string, context?: INotifier) {
-            this.bindings[controlProperty] = objectProperty;
+        bind(controlProperty: string, objectPropertyPath: string, context?: INotifier) {
+            this.bindings[controlProperty] = objectPropertyPath;
             if (context)
                 this.dataContext = context;
 
             if (this.dataContext) {
                 // Set current value
-                this[controlProperty] = this.dataContext[objectProperty];
+                this[controlProperty] = xp.getPropertyByPath(this.dataContext, objectPropertyPath);
             }
 
-            console.log(xp.formatString('Binded property "{0}" to "{1}:{2}.{3}".', objectProperty, xp.getClassName(this), this.name || '-', controlProperty));
+            console.log(xp.formatString('Binded property "{0}" to "{1}:{2}.{3}".', objectPropertyPath, xp.getClassName(this), this.name || '-', controlProperty));
         }
 
+        /**
+         * Unbinds control property from data context.
+         * @param controlProperty Name of the property to unbind.
+         */
         unbind(controlProperty: string) {
-            // TODO...
+            if (this.bindings[controlProperty]) {
+                delete this.bindings[controlProperty];
+            }
         }
 
         /**
@@ -362,7 +376,7 @@
                 this.initDataContext();
             }
             else {
-                // TODO: Unbind...
+                this.bindingRegistar.unsubscribeAll();
             }
         }
         protected _dataContext: INotifier;

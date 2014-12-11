@@ -11,7 +11,7 @@
     }
 
     /**
-     * Creates object, which notifies of it's properties changes.
+     * Creates plain object, which notifies of it's properties changes.
      * @param propertiesNames Names of properties.
      */
     export function createNotifier(propertiesNames: string[]): INotifier {
@@ -24,12 +24,20 @@
 
     /**
      * Creates object, which notifies of it's properties changes.
-     * @param plainSource Plain source object.
+     * @param plainSource Source object.
+     * @param [deep] If specified and property is object, then property will be able to notify of it's changes.
+     * @param [path] Path from [grand]parent object to source object.
      */
-    export function createNotifierFromObject(plainSource): INotifier {
+    export function createNotifierFromObject(source: Object, deep?: boolean, path?: string): INotifier {
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
-        for (var key in plainSource) {
-            addNotificationProperty(obj, key, obj[key]);
+        for (var key in source) {
+            if (deep && typeof source[key] === 'object') {
+                // If property is object and deep creation enabled.
+                var propObj = createNotifierFromObject(source[key], true, path);
+            }
+
+            // Create notification property
+            addNotificationProperty(obj, key, path, propObj || source[key]);
         }
         return obj;
     }
@@ -43,9 +51,10 @@
      * Adds property to INotifier.
      * @param obj Notifier.
      * @param name Name of the property to create.
+     * @param [path] Path from [grand]parent object to source object.
      * @param [value] Default property value.
      */
-    function addNotificationProperty(obj: INotifier, name: string, value?) {
+    function addNotificationProperty(obj: INotifier, name: string, path?: string, value?) {
         // Ensure property is not already present.
         if (obj[name] !== void 0) {
             throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
@@ -61,6 +70,20 @@
             obj[fieldName] = value;
         }
 
+        // If nested object - combine path.
+        var path = (path !== void 0 ? path + '.' : '') + name;
+
+        //var getter = function () {
+        //    return obj[fieldName];
+        //};
+        //var setter = function (value) {
+        //    obj[fieldName] = value;
+        //    obj.onPropertyChanged.invoke(name);
+        //};
+        //var deepSetter = function (newObj) {
+
+        //}
+
         // Define property
         Object.defineProperty(obj, name, {
             get: function () {
@@ -68,7 +91,7 @@
             },
             set: function (value) {
                 obj[fieldName] = value;
-                obj.onPropertyChanged.invoke(name);
+                obj.onPropertyChanged.invoke(path);
             },
             enumerable: true,
             configurable: true

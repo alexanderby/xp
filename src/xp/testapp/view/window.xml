@@ -25,8 +25,8 @@
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
   </stack>
-  <label text="Label" name="label1" height="4em"/>
-  <textbox text="Wrong text" name="textbox1"/>
+  <label text="{name}" name="label1" height="4em"/>
+  <textbox text="{city.name}" name="textbox1"/>
   <stack flow="horizontal">
     <label text="Label"/>
     <textbox width="10em" text="Text"/>

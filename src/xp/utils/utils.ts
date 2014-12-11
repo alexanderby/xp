@@ -71,4 +71,24 @@
         var results = funcNameRegex.exec(obj['constructor'].toString());
         return (results && results.length > 1) ? results[1] : '';
     }
+
+    /**
+     * Returns object's property.
+     * @param obj Source object.
+     * @param path Dotted path to property. If path='.', then source object will be returned.
+     */
+    export function getPropertyByPath(obj, path) {
+        if (path === '' || path === '.') {
+            return obj;
+        }
+        var parts = path.split('.');
+        var current = obj;
+        parts.forEach(function (p) {
+            if (current[p] === void 0) {
+                throw new Error('Unable to get property by path "' + path + '".');
+            }
+            current = current[p];
+        });
+        return current;
+    }
 }
