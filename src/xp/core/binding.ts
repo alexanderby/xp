@@ -31,9 +31,10 @@
     export function createNotifierFromObject(source: Object, deep?: boolean, path?: string): INotifier {
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
         for (var key in source) {
+            var propObj = null;
             if (deep && typeof source[key] === 'object') {
                 // If property is object and deep creation enabled.
-                var propObj = createNotifierFromObject(source[key], true, path);
+                propObj = createNotifierFromObject(source[key], true, path);
             }
 
             // Create notification property

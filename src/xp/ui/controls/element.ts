@@ -198,14 +198,10 @@
                     // Bind control property to data context property
                     this.bind(key, path, this.dataContext);
                 }
-
-                if (map[key]['*']) {
+                else if (map[key]['*']) {
                     // If accepts any value -> call setter with value
                     var setter = map[key]['*'];
                     setter(values[key]);
-                }
-                else if (map[key]['{*}']) {
-                    // TODO: Bind to *...
                 }
                 else {
                     // Find value

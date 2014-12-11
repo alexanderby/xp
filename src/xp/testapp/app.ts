@@ -2,6 +2,8 @@
     windowHref: 'view/window.xml'
 });
 
+var bs;
+
 window.onload = () => {
 
     app.start();
@@ -14,7 +16,7 @@ window.onload = () => {
             name: 'New York'
         }
     };
-    var bs = xp.createNotifierFromObject(person, true);
+    bs = xp.createNotifierFromObject(person, true);
 
     app.window.dataContext = bs;
 
