@@ -332,14 +332,14 @@
          * @param objectProperty Object's property name.
          * @param context If specified, sets the data context.
          */
-        bind(controlProperty: string, objectProperty: string, context?: BindableObject<any>) {
+        bind(controlProperty: string, objectProperty: string, context?: INotifier) {
             this.bindings[controlProperty] = objectProperty;
             if (context)
                 this.dataContext = context;
 
             if (this.dataContext) {
                 // Set current value
-                this[controlProperty] = this.dataContext.data[objectProperty];
+                this[controlProperty] = this.dataContext[objectProperty];
             }
 
             console.log(xp.formatString('Binded property "{0}" to "{1}:{2}.{3}".', objectProperty, xp.getClassName(this), this.name || '-', controlProperty));
@@ -365,7 +365,7 @@
                 // TODO: Unbind...
             }
         }
-        protected _dataContext: BindableObject<any>;
+        protected _dataContext: INotifier;
 
         protected initDataContext() {
             // Re-init context changes handler 
@@ -373,7 +373,7 @@
             this.bindingRegistar.subscribe(this.dataContext.onPropertyChanged, (objProp) => {
                 for (var controlProp in this.bindings) {
                     if (this.bindings[controlProp] === objProp) {
-                        this[controlProp] = this.dataContext.data[objProp];
+                        this[controlProp] = this.dataContext[objProp];
                     }
                 }
             }, this);
@@ -387,7 +387,7 @@
          */
         protected onInput(controlProperty: string, value) {
             if (this.bindings[controlProperty]) {
-                this.dataContext.data[this.bindings[controlProperty]] = value;
+                this.dataContext[this.bindings[controlProperty]] = value;
             }
         }
     }

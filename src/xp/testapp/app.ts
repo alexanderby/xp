@@ -10,7 +10,7 @@ window.onload = () => {
         id: 123,
         name: 'John'
     };
-    var bs = xp.createBindableObject(person/*, ['name']*/);
+    var bs = xp.createNotifierFromObject(person);
 
     var label = app.window.findElement('label1');
     label.bind('text', 'name', bs);
@@ -22,7 +22,7 @@ window.onload = () => {
     //bs.data.name = 'Nick';
     //console.log(bs.data.name);
     setTimeout(() => {
-        bs.data.name = 'Nick';
+        bs['name'] = 'Nick';
     }, 1000);
 
     //bs.onPropertyChanged.addHandler((args) => {

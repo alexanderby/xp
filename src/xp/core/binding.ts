@@ -1,68 +1,77 @@
 ﻿module xp {
+
     /**
-     * Creates bindable object.
-     * Change-notifications can be reached by subscribing to 'onPropertyChanged' event.
-     * Values should be changed through 'data' property object.
-     * @param obj Source object.
-     * @param [propertyNames] If specified, determines which properties' changes should be tracked. In other case all properties' changes would be tracked.
+     * Defines an object, which notifies of it's properties changes.
      */
-    export function createBindableObject<T>(obj: T, propertyNames?: string[]): BindableObject<T> {
-        var b: BindableObject<T> = {
-            onPropertyChanged: new Event<string>(),
-            data: <T>{},
-            source: obj
-        };
-        if (propertyNames) {
-            // Track specified properties
-            propertyNames.forEach((name) => {
-                createProperty(b, name);
-            });
-        }
-        else {
-            // Track all properties
-            for (var key in obj) {
-                createProperty(b, key);
-            }
-        }
-        return b;
+    export interface INotifier {
+        /**
+         * Is invoked when any object's property is changed.
+         */
+        onPropertyChanged: Event<string>;
     }
 
-    function createProperty<T>(bObj: BindableObject<T>, name: string) {
-        Object.defineProperty(bObj.data, name, {
+    /**
+     * Creates object, which notifies of it's properties changes.
+     * @param propertiesNames Names of properties.
+     */
+    export function createNotifier(propertiesNames: string[]): INotifier {
+        var obj: INotifier = { onPropertyChanged: new Event<string>() };
+        propertiesNames.forEach((name) => {
+            addNotificationProperty(obj, name);
+        });
+        return obj;
+    }
+
+    /**
+     * Creates object, which notifies of it's properties changes.
+     * @param plainSource Plain source object.
+     */
+    export function createNotifierFromObject(plainSource): INotifier {
+        var obj: INotifier = { onPropertyChanged: new Event<string>() };
+        for (var key in plainSource) {
+            addNotificationProperty(obj, key, obj[key]);
+        }
+        return obj;
+    }
+
+
+    //--------
+    // PRIVATE
+    //--------
+
+    /**
+     * Adds property to INotifier.
+     * @param obj Notifier.
+     * @param name Name of the property to create.
+     * @param [value] Default property value.
+     */
+    function addNotificationProperty(obj: INotifier, name: string, value?) {
+        // Ensure property is not already present.
+        if (obj[name] !== void 0) {
+            throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
+        }
+        if (name === 'onPropertyChanged') {
+            throw new Error('Unable to create notification property. Reserved name is used.');
+        }
+        var fieldName = '_' + name;
+        if (obj[fieldName]) {
+            throw new Error('Unable to create field for notification property. Object already has "' + fieldName + '" property.');
+        }
+        if (value !== void 0) {
+            obj[fieldName] = value;
+        }
+
+        // Define property
+        Object.defineProperty(obj, name, {
             get: function () {
-                return bObj.source[name];
+                return obj[fieldName];
             },
             set: function (value) {
-                bObj.source[name] = value;
-                bObj.onPropertyChanged.invoke(name);
+                obj[fieldName] = value;
+                obj.onPropertyChanged.invoke(name);
             },
             enumerable: true,
             configurable: true
         });
     }
-
-    /**
-     * Bindable object.
-     * Change-notifications can be reached by subscribing to 'onPropertyChanged' event.
-     * Values should be changed through 'data' property object.
-     */
-    export interface BindableObject<T> {
-        /**
-         * Is invoked when any object's property is changed.
-         */
-        onPropertyChanged: Event<string>;
-
-        /**
-         * Changes should be made through this object.
-         */
-        data: T; // Needed for supporting intellisence for T.
-
-        /**
-         * Source object. Changes made to 'data' property will be reflected on this property too.
-         */
-        source: T;
-    }
-
-    // NOTE:
-    // What is better: "BO<T>{ onPC; data }" or "INotifier{ onPC }"?
 } 
