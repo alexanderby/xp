@@ -377,6 +377,17 @@
         }
         protected _dataContext: INotifier;
 
+        /**
+         * Gets or sets binding data context path.
+         */
+        get dataPath() {
+            return this._dataPath;
+        }
+        set dataPath(path) {
+            this._dataPath = path;
+        }
+        protected _dataPath: string;
+
         protected initDataContext() {
             // Re-init context changes handler 
             this.bindingRegistar.unsubscribeAll();

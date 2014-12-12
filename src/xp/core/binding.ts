@@ -26,19 +26,18 @@
      * Creates object, which notifies of it's properties changes.
      * @param plainSource Source object.
      * @param [deep] If specified and property is object, then property will be able to notify of it's changes.
-     * @param [path] Path from [grand]parent object to source object.
      */
-    export function createNotifierFromObject(source: Object, deep?: boolean, path?: string): INotifier {
+    export function createNotifierFromObject(source: Object, deep?: boolean): INotifier {
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
         for (var key in source) {
             var propObj = null;
             if (deep && typeof source[key] === 'object') {
                 // If property is object and deep creation enabled.
-                propObj = createNotifierFromObject(source[key], true, path);
+                propObj = createNotifierFromObject(source[key], true);
             }
 
             // Create notification property
-            addNotificationProperty(obj, key, path, propObj || source[key]);
+            addNotificationProperty(obj, key, propObj || source[key]);
         }
         return obj;
     }
@@ -52,10 +51,9 @@
      * Adds property to INotifier.
      * @param obj Notifier.
      * @param name Name of the property to create.
-     * @param [path] Path from [grand]parent object to source object.
      * @param [value] Default property value.
      */
-    function addNotificationProperty(obj: INotifier, name: string, path?: string, value?) {
+    function addNotificationProperty(obj: INotifier, name: string, value?) {
         // Ensure property is not already present.
         if (obj[name] !== void 0) {
             throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
