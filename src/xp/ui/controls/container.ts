@@ -210,10 +210,10 @@
         // BINDING
         //--------
 
-        protected initDataContext() {
-            super.initDataContext();
+        protected initContext() {
+            super.initContext();
             this.children.forEach((el) => {
-                el.dataContext = this.dataContext;
+                el.context = this.context;
             })
         }
 

@@ -19,7 +19,7 @@
                 handler: handler,
                 scope: thisArg
             };
-            if (!this.handlers.filter((h) => h.handler === handler && h.scope === thisArg)[0]) {
+            if (this.handlers.filter((h) => h.handler === handler && h.scope === thisArg)[0]) {
                 var stackTrace = xp.getStackTrace();
                 var msg = xp.formatString('Warning: Duplicate subscription. {0}', stackTrace);
                 console.log(msg);

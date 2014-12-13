@@ -16,9 +16,9 @@ window.onload = () => {
             name: 'New York'
         }
     };
-    bs = xp.createNotifierFromObject(person, true);
+    bs = xp.createNotifierFromObject(person);
 
-    app.window.dataContext = bs;
+    app.window.context = bs;
 
     setTimeout(() => {
         bs['name'] = 'Nick';

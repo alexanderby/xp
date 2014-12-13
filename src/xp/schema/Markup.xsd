@@ -14,6 +14,7 @@
     <xs:attribute name="height" type="xs:float"/>-->
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
+    <xs:attribute name="context" type="xs:string"/>
   </xs:attributeGroup>
 
   <xs:complexType name="element">
@@ -149,5 +150,5 @@
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
-  
+
 </xs:schema>

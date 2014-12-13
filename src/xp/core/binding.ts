@@ -25,19 +25,12 @@
     /**
      * Creates object, which notifies of it's properties changes.
      * @param plainSource Source object.
-     * @param [deep] If specified and property is object, then property will be able to notify of it's changes.
      */
-    export function createNotifierFromObject(source: Object, deep?: boolean): INotifier {
+    export function createNotifierFromObject(source: Object): INotifier {
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
         for (var key in source) {
-            var propObj = null;
-            if (deep && typeof source[key] === 'object') {
-                // If property is object and deep creation enabled.
-                propObj = createNotifierFromObject(source[key], true);
-            }
-
             // Create notification property
-            addNotificationProperty(obj, key, propObj || source[key]);
+            addNotificationProperty(obj, key, source[key]);
         }
         return obj;
     }
@@ -54,6 +47,7 @@
      * @param [value] Default property value.
      */
     function addNotificationProperty(obj: INotifier, name: string, value?) {
+        //
         // Ensure property is not already present.
         if (obj[name] !== void 0) {
             throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
@@ -69,29 +63,60 @@
             obj[fieldName] = value;
         }
 
-        // If nested object - combine path.
-        var path = (path !== void 0 ? path + '.' : '') + name;
+        //
+        // Check if property is an object.
+        // If so -> make it Notifier.
 
-        //var getter = function () {
-        //    return obj[fieldName];
-        //};
-        //var setter = function (value) {
-        //    obj[fieldName] = value;
-        //    obj.onPropertyChanged.invoke(name);
-        //};
-        //var deepSetter = function (newObj) {
+        if (typeof value === 'object') {
+            value = createNotifierFromObject(value);
+            var isNestedObject = true;
+        }
 
-        //}
+        //
+        // Getters/setters
 
+        var getter = function () {
+            return obj[fieldName];
+        };
+
+        // Simple setter
+        var setter = function (value) {
+            obj[fieldName] = value;
+            obj.onPropertyChanged.invoke(name);
+        };
+
+        if (isNestedObject) {
+            // Nested object setter
+            var nestedSetter = function (newObj: INotifier) {
+                if (!newObj.onPropertyChanged) {
+                    //throw new Error('Object must be Notifier.');
+                    newObj = createNotifierFromObject(newObj);
+                }
+
+                if (obj[fieldName] && obj[fieldName].onPropertyChanged) {
+                    // Pass event with all it's handlers
+                    newObj.onPropertyChanged = obj[fieldName].onPropertyChanged;
+                }
+
+                // Set new value, announce the change
+                obj[fieldName] = newObj;
+                obj.onPropertyChanged.invoke(name);
+
+                // Invoke all nested properties has changed
+                for (var key in newObj) {
+                    if (key !== 'onPropertyChanged') {
+                        newObj.onPropertyChanged.invoke(key);
+                    }
+                }
+            }
+        }
+
+        //
         // Define property
+
         Object.defineProperty(obj, name, {
-            get: function () {
-                return obj[fieldName];
-            },
-            set: function (value) {
-                obj[fieldName] = value;
-                obj.onPropertyChanged.invoke(path);
-            },
+            get: getter,
+            set: isNestedObject ? nestedSetter : setter,
             enumerable: true,
             configurable: true
         });
