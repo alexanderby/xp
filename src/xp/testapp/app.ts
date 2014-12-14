@@ -45,3 +45,9 @@ window.onload = () => {
     //    bs['name'] = 'Nick';
     //}, 1000);
 };
+
+window.onerror = (message: any, uri: string, lineNumber: number, columnNumber?: number, e?: Error) => {
+    if (e && (<any>e).stack) {
+        console.log((<any>e).stack);
+    }
+};

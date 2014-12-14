@@ -68,7 +68,7 @@
         // If so -> make it Notifier.
 
         if (typeof value === 'object') {
-            value = createNotifierFromObject(value);
+            obj[fieldName] = createNotifierFromObject(value);
             var isNestedObject = true;
         }
 
@@ -88,27 +88,38 @@
         if (isNestedObject) {
             // Nested object setter
             var nestedSetter = function (newObj: INotifier) {
-                if (!newObj.onPropertyChanged) {
-                    //throw new Error('Object must be Notifier.');
-                    newObj = createNotifierFromObject(newObj);
-                }
+                throw new Error('Replacement of nested object property breaks the binding.');
+            };
+            //var nestedSetter = function (newObj: INotifier) {
+            //    if (!newObj.onPropertyChanged) {
+            //        //throw new Error('Object must be Notifier.');
+            //        newObj = createNotifierFromObject(newObj);
+            //    }
 
-                if (obj[fieldName] && obj[fieldName].onPropertyChanged) {
-                    // Pass event with all it's handlers
-                    newObj.onPropertyChanged = obj[fieldName].onPropertyChanged;
-                }
+            //    if (obj[fieldName] && obj[fieldName].onPropertyChanged) {
+            //        // Pass event with all it's handlers
+            //        newObj.onPropertyChanged = obj[fieldName].onPropertyChanged;
+            //    }
 
-                // Set new value, announce the change
-                obj[fieldName] = newObj;
-                obj.onPropertyChanged.invoke(name);
+            //    // Set new value, announce the change
+            //    obj[fieldName] = newObj;
+            //    obj.onPropertyChanged.invoke(name);
 
-                // Invoke all nested properties has changed
-                for (var key in newObj) {
-                    if (key !== 'onPropertyChanged') {
-                        newObj.onPropertyChanged.invoke(key);
-                    }
-                }
-            }
+            //    // Invoke all nested properties has changed
+            //    for (var key in newObj) {
+            //        if (key !== 'onPropertyChanged') {
+            //            newObj.onPropertyChanged.invoke(key);
+            //        }
+            //    }
+            //};
+
+            //function passChangeEvents(obj:INotifier) {
+            //    for (var key in obj) {
+            //        if (key !== 'onPropertyChanged') {
+            //            newObj.onPropertyChanged.invoke(key);
+            //        }
+            //    }
+            //}
         }
 
         //
