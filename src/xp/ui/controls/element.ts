@@ -183,9 +183,17 @@
             var contextPath: string;
             $.each(attributes, (i, attr: Attr) => {
                 if (attr.name === 'context') {
-                    contextPath = attr.value;
+                    // Get data context path
+                    var matches = attr.value.match(/^\{(.*)\}$/);
+                    if (matches && matches[1]) {
+                        contextPath = matches[1];
+                    }
+                    else {
+                        throw new Error('Unrecognized "context" attribute value "' + attr.value + '".');
+                    }
                 }
                 else {
+                    // Add attribute's name and value into dictionary
                     values[attr.name] = attr.value;
                 }
             });

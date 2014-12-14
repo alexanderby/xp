@@ -13,7 +13,10 @@ window.onload = () => {
         name: 'John',
         city: {
             id: 4,
-            name: 'New York'
+            name: 'New York',
+            country: {
+                name:'USA'
+            }
         }
     };
     bs = xp.createNotifierFromObject(person);
@@ -25,7 +28,12 @@ window.onload = () => {
         bs['city']['name'] = 'Los Angeles';
 
         setTimeout(() => {
-            bs['city'] = { id: 5, name: 'Gomel' };
+            bs['city'] = {
+                id: 5,
+                name: 'Gomel',
+                country: {
+                    name: 'Belarus'
+                } };
         }, 2000);
     }, 2000);
 
