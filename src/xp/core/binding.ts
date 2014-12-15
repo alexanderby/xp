@@ -35,6 +35,53 @@
         return obj;
     }
 
+    export class BindingManager {
+        root;
+        path: string;
+        target: xp.Ui.Element;
+        targetProperty: string;
+
+        constructor(target: xp.Ui.Element, targetProperty: string, sourceProperty: string, source, sourcePath?: string) {
+            this.target = target;
+            this.targetProperty = targetProperty;
+            this.root = source;
+            this.path = sourcePath ? sourcePath + '.' + sourceProperty : sourceProperty;
+
+            // Subscribe for source change
+
+            // Subscribe for source property change
+        }
+
+        get source() {
+            var srcPath = xp.Path.getObjectPath(this.path);
+            var src = xp.Path.getPropertyByPath(this.root, srcPath, false);
+            return src;
+        }
+
+        protected isNotifier(obj) {
+            return (<INotifier>obj).onPropertyChanged;
+        }
+
+        protected getNotifier(obj): INotifier {
+            if (this.isNotifier(obj))
+                return <INotifier>obj;
+            else
+                return null;
+        }
+
+        updateSource() {
+            var source = this.source;
+            if (source) {
+                var value = this.target[this.targetProperty];
+                source
+            }
+        }
+
+        updateTarget() { }
+
+        unbind() { }
+    }
+
 
     //--------
     // PRIVATE

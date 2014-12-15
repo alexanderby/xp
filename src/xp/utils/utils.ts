@@ -71,24 +71,60 @@
         var results = funcNameRegex.exec(obj['constructor'].toString());
         return (results && results.length > 1) ? results[1] : '';
     }
+}
 
+module xp.Path {
     /**
      * Returns object's property.
      * @param obj Source object.
-     * @param path Dotted path to property. If path='.', then source object will be returned.
+     * @param path Dotted path to property. If path='.' or '', then source object will be returned.
+     * @param [throwErr=true] Throws an error if object not found.
      */
-    export function getPropertyByPath(obj, path) {
+    export function getPropertyByPath(obj, path, throwErr = true) {
         if (path === '' || path === '.') {
             return obj;
         }
         var parts = path.split('.');
         var current = obj;
-        parts.forEach(function (p) {
+        parts.every((p) => {
             if (current[p] === void 0) {
-                throw new Error('Unable to get property by path "' + path + '".');
+                if (throwErr) {
+                    throw new Error('Unable to get property by path "' + path + '".');
+                }
+                current = null;
+                return false;
             }
             current = current[p];
+            return true;
         });
         return current;
+    }
+
+    /**
+     * Gets object path from property path.
+     * @param propertyPath Property path.
+     */
+    export function getObjectPath(propertyPath: string): string {
+        var matches = propertyPath.match(/^(.*)\.[^\.]*$/);
+        if (matches && matches[1]) {
+            return matches[1];
+        }
+        else {
+            return '';
+        }
+    }
+
+    /**
+     * Gets property name from property path.
+     * @param propertyPath Property path.
+     */
+    export function getPropertyName(propertyPath: string): string {
+        var matches = propertyPath.match(/(^.*\.)?([^\.]*)$/);
+        if (matches && matches[2]) {
+            return matches[2];
+        }
+        else {
+            return '';
+        }
     }
 }

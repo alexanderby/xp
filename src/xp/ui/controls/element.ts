@@ -406,13 +406,15 @@
             }
         }
 
+        protected contextPath: string;
+
         /**
          * Registers single control's property binding.
          * @param controlProp Name of control's property.
          */
         protected registerBinding(controlProp: string) {
             var path = this.bindings[controlProp].path;
-            var obj = <INotifier>xp.getPropertyByPath(this.context, getObjectPath(path));
+            var obj = <INotifier>xp.Path.getPropertyByPath(this.context, getObjectPath(path));
             var objPropName = getPropertyName(path);
             if (!obj || !objPropName) {
                 throw new Error(xp.formatString('Unable to register binding for property "{0}" of {1}:{2}. Binding path: "{3}"', controlProp, xp.getClassName(this), this.name || '-', path));
@@ -446,7 +448,7 @@
         protected onInput(controlProp: string, value) {
             if (this.bindings[controlProp]) {
                 var path = this.bindings[controlProp].path;
-                var obj = <INotifier>xp.getPropertyByPath(this.context, getObjectPath(path));
+                var obj = <INotifier>xp.Path.getPropertyByPath(this.context, getObjectPath(path));
                 var objPropName = getPropertyName(path);
                 obj[objPropName] = value;
             }
