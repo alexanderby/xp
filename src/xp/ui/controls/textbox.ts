@@ -29,9 +29,9 @@
         }
 
 
-        //------------------
-        // GETTERS / SETTERS
-        //------------------
+        //-----------
+        // PROPERTIES
+        //-----------
 
         /**
          * Gets or sets button's text.

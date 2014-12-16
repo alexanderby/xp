@@ -21,9 +21,9 @@
         }
 
 
-        //------------------
-        // GETTERS / SETTERS
-        //------------------
+        //-----------
+        // PROPERTIES
+        //-----------
 
         protected setDefaults() {
             this.flow = Flow.vertical;

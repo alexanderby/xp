@@ -59,8 +59,9 @@
          */
         protected initEvents() {
             //this.onPropertyChanged = new Event<PropertyChangedArgs>();
-            this.bindingRegistar = new EventRegistar();
+            //this.bindingRegistar = new EventRegistar();
             this.bindings = {};
+            this.onContextChanged = new Event<any>();
             this.initEvent('click', this.onClick);
             this.initEvent('mousedown', this.onMouseDown);
             this.initEvent('mouseup', this.onMouseUp);
@@ -82,9 +83,9 @@
         }
 
 
-        //------------------
-        // GETTERS / SETTERS
-        //------------------
+        //-----------
+        // PROPERTIES
+        //-----------
 
         /**
          * Sets default values.
@@ -182,17 +183,7 @@
             var values: AttrValueDictionary = {};
             var contextPath: string;
             $.each(attributes, (i, attr: Attr) => {
-                if (attr.name === 'context') {
-                    // Get data context path
-                    var matches = attr.value.match(/^\{(.*)\}$/);
-                    if (matches && matches[1]) {
-                        contextPath = matches[1];
-                    }
-                    else {
-                        throw new Error('Unrecognized "context" attribute value "' + attr.value + '".');
-                    }
-                }
-                else {
+                if (attr.name !== 'context') {
                     // Add attribute's name and value into dictionary
                     values[attr.name] = attr.value;
                 }
@@ -213,7 +204,13 @@
                         path = contextPath + '.' + path;
                     }
                     // Bind control property
-                    this.bind(key, path);
+                    if (key === 'context') {
+                        this.bind(key, path, this.parent.context);
+                    }
+                    else {
+                        this.bind(key, path);
+                    }
+                    //this.bindingPaths[key] = path;
                 }
                 else if (map[key]['*']) {
                     // If accepts any value -> call setter with value
@@ -262,13 +259,31 @@
          * Parent.
          */
         parent: Container;
+        //get parent() {
+        //    return this._parent;
+        //}
+        //set parent(p) {
+        //    if (this._parent) {
+        //        this._parent.onContextChanged.removeHandler(this.contextChangeHandler);
+        //    }
+        //    this._parent = p;
+        //    this._parent.onContextChanged.addHandler(this.contextChangeHandler, this);
+        //}
+
+        //protected contextChangeHandler = (ctx) => this.context = ctx;
+
+        //protected _parent: Container;
 
         /**
          * Removes element.
          */
         remove() {
             this.detach();
-            this.bindingRegistar.unsubscribeAll();
+            //this.bindingRegistar.unsubscribeAll();
+            for (var cp in this.bindings) {
+                this.bindings[cp].unbind();
+                delete this.bindings[cp];
+            }
 
             // DOM
             this.domElement.remove();
@@ -348,23 +363,27 @@
         //--------
 
         /**
-         * Binds control's property to data context property.
+         * Binds control's property to source property.
          * @param controlProperty Control's property name.
          * @param objectPropertyPath Object's property name.
+         * @param [source] Binding source object.
          */
-        bind(controlProperty: string, objectPropertyPath: string) {
-            if (this.bindings[controlProperty] && this.bindings[controlProperty].handler) {
+        bind(controlProperty: string, objectPropertyPath: string, source?) {
+            if (this.bindings[controlProperty]) {
                 // Unsubscribe from prev changes
-                this.bindingRegistar.unsubscribe(s=> s.handler === this.bindings[controlProperty].handler);
+                this.bindings[controlProperty].unbind();
             }
-            this.bindings[controlProperty] = {
-                path: objectPropertyPath,
-                handler: null
-            };
 
-            if (this.context) {
-                this.registerBinding(controlProperty);
-            }
+            this.bindings[controlProperty] = new BindingManager(
+                this,
+                controlProperty,
+                source || this.context,
+                objectPropertyPath);
+
+
+            //if (this.context) {
+            //    this.registerBinding(controlProperty);
+            //}
         }
 
         /**
@@ -373,6 +392,7 @@
          */
         unbind(controlProperty: string) {
             if (this.bindings[controlProperty]) {
+                this.bindings[controlProperty].unbind();
                 delete this.bindings[controlProperty];
             }
         }
@@ -381,64 +401,82 @@
          * Gets or sets control's binding data context.
          */
         get context() {
-            return this._context;
+            if (this._context) {
+                return this._context;
+            }
+            else {
+                if (this.parent) {
+                    return this.parent.context;
+                }
+                else {
+                    return null;
+                }
+            }
         }
         set context(context) {
             this._context = context;
 
-            if (context) {
-                this.initContext();
+            for (var cp in this.bindings) {
+                this.bindings[cp].unbind();
+                var path = this.bindings[cp].sourcePropertyPath;
+                this.bindings[cp] = new BindingManager(this, cp, context, path);
             }
-            else {
-                this.bindingRegistar.unsubscribeAll();
-            }
+            this.onContextChanged.invoke(context);
+
+            //if (context) {
+            //    this.initContext();
+            //}
+            //else {
+            //    this.bindingRegistar.unsubscribeAll();
+            //}
         }
         protected _context: INotifier;
 
-        /**
-         * Registers data context for all defined bindings.
-         */
-        protected initContext() {
-            // Re-init event handlers
-            this.bindingRegistar.unsubscribeAll();
-            for (var propName in this.bindings) {
-                this.registerBinding(propName);
-            }
-        }
+        ///**
+        // * Registers data context for all defined bindings.
+        // */
+        //protected initContext() {
+        //    // Re-init event handlers
+        //    this.bindingRegistar.unsubscribeAll();
+        //    for (var propName in this.bindings) {
+        //        this.registerBinding(propName);
+        //    }
+        //}
 
-        protected contextPath: string;
+        //protected contextPath: string;
 
-        /**
-         * Registers single control's property binding.
-         * @param controlProp Name of control's property.
-         */
-        protected registerBinding(controlProp: string) {
-            var path = this.bindings[controlProp].path;
-            var obj = <INotifier>xp.Path.getPropertyByPath(this.context, getObjectPath(path));
-            var objPropName = getPropertyName(path);
-            if (!obj || !objPropName) {
-                throw new Error(xp.formatString('Unable to register binding for property "{0}" of {1}:{2}. Binding path: "{3}"', controlProp, xp.getClassName(this), this.name || '-', path));
-            }
+        ///**
+        // * Registers single control's property binding.
+        // * @param controlProp Name of control's property.
+        // */
+        //protected registerBinding(controlProp: string) {
+        //    var path = this.bindings[controlProp].sourcePropertyPath;
+        //    var obj = <INotifier>xp.Path.getPropertyByPath(this.context, getObjectPath(path));
+        //    var objPropName = getPropertyName(path);
+        //    if (!obj || !objPropName) {
+        //        throw new Error(xp.formatString('Unable to register binding for property "{0}" of {1}:{2}. Binding path: "{3}"', controlProp, xp.getClassName(this), this.name || '-', path));
+        //    }
 
-            // Function which handles property change.
-            var handler = (prop: string) => {
-                if (prop === objPropName) {
-                    this[controlProp] = obj[objPropName];
-                }
-            };
-            this.bindings[controlProp].handler = handler;
+        //    // Function which handles property change.
+        //    var handler = (prop: string) => {
+        //        if (prop === objPropName) {
+        //            this[controlProp] = obj[objPropName];
+        //        }
+        //    };
+        //    this.bindings[controlProp].handler = handler;
 
-            // Subscribe for change
-            this.bindingRegistar.subscribe(obj.onPropertyChanged, handler, this);
+        //    // Subscribe for change
+        //    this.bindingRegistar.subscribe(obj.onPropertyChanged, handler, this);
 
-            // Set current value
-            this[controlProp] = obj[objPropName];
+        //    // Set current value
+        //    this[controlProp] = obj[objPropName];
 
-            console.log(xp.formatString('Binded property "{0}" to property "{1}" of "{2}:{3}".', path, xp.getClassName(this), controlProp, this.name || '-'));
-        }
+        //    console.log(xp.formatString('Binded property "{0}" to property "{1}" of "{2}:{3}".', path, xp.getClassName(this), controlProp, this.name || '-'));
+        //}
 
-        protected bindingRegistar: EventRegistar;
+        //protected bindingRegistar: EventRegistar;
         protected bindings: UiBindingDictionary;
+        protected bindingPaths: { [controlProperty: string]: string };
 
         /**
          * Is invoked when user performs an input action.
@@ -446,13 +484,19 @@
          * @param value Value, that user inputs.
          */
         protected onInput(controlProp: string, value) {
+            //if (this.bindings[controlProp]) {
+            //    var path = this.bindings[controlProp].sourcePropertyPath;
+            //    var obj = <INotifier>xp.Path.getPropertyByPath(this.context, getObjectPath(path));
+            //    var objPropName = getPropertyName(path);
+            //    obj[objPropName] = value;
+            //}
+            this[controlProp] = value;
             if (this.bindings[controlProp]) {
-                var path = this.bindings[controlProp].path;
-                var obj = <INotifier>xp.Path.getPropertyByPath(this.context, getObjectPath(path));
-                var objPropName = getPropertyName(path);
-                obj[objPropName] = value;
+                this.bindings[controlProp].updateSource();
             }
         }
+
+        onContextChanged: Event<any>;
     }
 
 
@@ -472,10 +516,7 @@
      * Represents "control property name":"object property path" dictionary.
      */
     export interface UiBindingDictionary {
-        [controlProperty: string]: {
-            path: string;
-            handler: (propName: string) => void;
-        }
+        [controlProperty: string]: BindingManager;
     }
 
     /**

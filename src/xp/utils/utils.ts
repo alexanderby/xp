@@ -81,6 +81,16 @@ module xp.Path {
      * @param [throwErr=true] Throws an error if object not found.
      */
     export function getPropertyByPath(obj, path, throwErr = true) {
+        if (!obj) {
+            if (throwErr) {
+                throw new Error('Unable to get property by path "' + path + '".');
+            }
+            else {
+                return null;
+            }
+        }
+
+        // TODO: Collections...
         if (path === '' || path === '.') {
             return obj;
         }

@@ -15,9 +15,9 @@
         protected textElement: JQuery;
 
 
-        //------------------
-        // GETTERS / SETTERS
-        //------------------
+        //-----------
+        // PROPERTIES
+        //-----------
 
         /**
          * Gets or sets label's text.

@@ -19,9 +19,9 @@
         protected textElement: JQuery;
 
 
-        //------------------
-        // GETTERS / SETTERS
-        //------------------
+        //-----------
+        // PROPERTIES
+        //-----------
 
         protected setDefaults() {
             this.icon = '';

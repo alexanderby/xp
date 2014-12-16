@@ -37,9 +37,18 @@
         }
 
 
-        //------------------
-        // GETTERS / SETTERS
-        //------------------
+        //-------
+        // EVENTS
+        //-------
+
+        protected initEvents() {
+            super.initEvents();
+            this.onContextChanged.addHandler(() => {
+                this.children.forEach((c) => {
+                    c.context = this.context;
+                });
+            }, this);
+        }
 
 
         //------------------
@@ -206,16 +215,16 @@
         }
 
 
-        //--------
-        // BINDING
-        //--------
+        ////--------
+        //// BINDING
+        ////--------
 
-        protected initContext() {
-            super.initContext();
-            this.children.forEach((el) => {
-                el.context = this.context;
-            })
-        }
+        //protected initContext() {
+        //    super.initContext();
+        //    this.children.forEach((el) => {
+        //        el.context = this.context;
+        //    })
+        //}
 
     }
 } 

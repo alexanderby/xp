@@ -27,7 +27,7 @@
   </stack>
   <label text="{name}" name="label1" height="4em"/>
   <textbox text="{city.name}" name="textbox1"/>
-  <stack flow="horizontal" context="{city}">
+  <stack flow="horizontal" context="{city}" name="stack_ctx">
     <textbox context="{country}" text="{name}" name="textbox2"/>
   </stack>
   <stack flow="horizontal">
