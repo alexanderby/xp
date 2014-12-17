@@ -33,7 +33,9 @@
   <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true"/>
   <stack flow="horizontal">
     <label text="Label"/>
-    <textbox width="10em" text="Text"/>
+    <textbox width="10em" text="{books[0].pages}"/>
     <button text="Button"/>
   </stack>
+  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true"/>
+  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true"/>
 </window>

@@ -58,8 +58,7 @@
             this.root = source;
             this.sourcePropertyPath = sourcePropertyPath;
             this.dafaultValue = defaultValue;
-            // TODO: Collections..
-            this.pathParts = sourcePropertyPath.split('.');
+            this.pathParts = sourcePropertyPath.replace(/\[(.+)\]/g, '.$1').split('.');
             this.sourceProperty = this.pathParts[this.pathParts.length - 1];
 
             // Subscribe for all path changes
@@ -68,7 +67,7 @@
         }
 
         /**
-         * Resets binding with new binding source.
+         * Resets binding with new binding source (with the same hierarchy).
          */
         resetWith(source) {
             console.log(xp.formatString('BM of "{0}.{1}": Reset with "{2}".', this.target['name'], this.targetProperty, source));

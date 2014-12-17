@@ -90,7 +90,7 @@ module xp.Path {
             }
         }
 
-        // TODO: Collections...
+        path = path.replace(/\[(.+)\]/g, '.$1');
         if (path === '' || path === '.') {
             return obj;
         }

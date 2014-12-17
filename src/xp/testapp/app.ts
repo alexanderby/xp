@@ -20,6 +20,10 @@ window.onload = () => {
             },
             toString: () => 'City1'
         },
+        books: [
+            { pages: 5 },
+            { pages: 44 }
+        ],
         toString: () => 'Person1'
     };
     bs = xp.createNotifierFromObject(person);
