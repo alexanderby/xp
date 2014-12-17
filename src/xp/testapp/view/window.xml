@@ -30,6 +30,7 @@
   <stack flow="horizontal" context="{city}" name="stack_ctx">
     <textbox context="{country}" text="{name}" name="textbox2"/>
   </stack>
+  <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true"/>
   <stack flow="horizontal">
     <label text="Label"/>
     <textbox width="10em" text="Text"/>

@@ -15,43 +15,37 @@ window.onload = () => {
             id: 4,
             name: 'New York',
             country: {
-                name:'USA'
-            }
-        }
+                name: 'USA',
+                toString: () => 'Country1'
+            },
+            toString: () => 'City1'
+        },
+        toString: () => 'Person1'
     };
     bs = xp.createNotifierFromObject(person);
 
+    console.log('App: Set window context.');
     app.window.context = bs;
 
     setTimeout(() => {
+        console.log('App: Set person name.');
         bs['name'] = 'Nick';
+        console.log('App: Set city name.');
         bs['city']['name'] = 'Los Angeles';
 
         setTimeout(() => {
+            console.log('App: Set city.');
             bs['city'] = {
                 id: 5,
                 name: 'Gomel',
                 country: {
-                    name: 'Belarus'
-                } };
+                    name: 'Belarus',
+                    toString: () => 'Country2'
+                },
+                toString: () => 'City2'
+            };
         }, 2000);
     }, 2000);
-
-    //var person = {
-    //    id: 123,
-    //    name: 'John'
-    //};
-    //var bs = xp.createNotifierFromObject(person);
-
-    //var label = app.window.findElement('label1');
-    //label.bind('text', 'name', bs);
-
-    //var textbox1 = app.window.findElement('textbox1');
-    //textbox1.bind('text', 'name', bs);
-
-    //setTimeout(() => {
-    //    bs['name'] = 'Nick';
-    //}, 1000);
 };
 
 window.onerror = (message: any, uri: string, lineNumber: number, columnNumber?: number, e?: Error) => {

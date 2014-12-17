@@ -10,12 +10,12 @@
          */
         protected initElement(xmlElement?: JQuery) {
             this.domElement = this.getTemplate();
+            this.initEvents();
             this.initContent();
             this.setDefaults();
             if (xmlElement) {
                 this.processXml(xmlElement);
             }
-            this.initEvents();
         }
 
         /**
@@ -24,6 +24,7 @@
         protected initContent() {
             this.children = [];
         }
+
 
         //----
         // DOM
@@ -34,20 +35,6 @@
          */
         protected getContainerElement(): JQuery {
             return this.domElement;
-        }
-
-
-        //-------
-        // EVENTS
-        //-------
-
-        protected initEvents() {
-            super.initEvents();
-            this.onContextChanged.addHandler(() => {
-                this.children.forEach((c) => {
-                    c.context = this.context;
-                });
-            }, this);
         }
 
 
@@ -213,18 +200,5 @@
             var result = this.cascadeBy((e) => e.name === name);
             return result;
         }
-
-
-        ////--------
-        //// BINDING
-        ////--------
-
-        //protected initContext() {
-        //    super.initContext();
-        //    this.children.forEach((el) => {
-        //        el.context = this.context;
-        //    })
-        //}
-
     }
 } 
