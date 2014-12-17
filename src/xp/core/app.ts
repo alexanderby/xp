@@ -80,7 +80,7 @@
             },
             success: (response: string) => {
                 // Remove namespace
-                response = response.replace(/<([a-zA-Z0-9 ]+)(?:xml)ns=\".*\"(.*)>/g, "<$1$2>");
+                response = response.replace(/<([a-zA-Z0-9 ]+)(?:xml)ns=\".*?\"(.*)>/g, "<$1$2>");
 
                 // Get root element
                 xml = $($.parseXML(response)).children().first();
