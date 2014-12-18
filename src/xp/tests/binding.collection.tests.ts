@@ -16,7 +16,7 @@
     // Subscribe
 
     nc.onCollectionChanged.addHandler((args) => {
-        console.log(xp.formatString('Test: Collection changed. Type: {0}, new index: {1}, old index: {2}, new item: {3}, old item: {4}.', CollectionChangeAction[args.change], args.newIndex, args.oldIndex, args.newItem, args.oldItem));
+        console.log(xp.formatString('Test: Collection changed. Type: {0}, new index: {1}, old index: {2}, new item: {3}, old item: {4}.', CollectionChangeAction[args.action], args.newIndex, args.oldIndex, args.newItem, args.oldItem));
     }, window);
     nc.onPropertyChanged.addHandler((prop) => {
         console.log(xp.formatString('Test: Collection property changed: "{0}".', prop));

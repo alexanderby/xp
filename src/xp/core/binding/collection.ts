@@ -14,12 +14,13 @@
         add,
         remove,
         //move,
-        //set, // TODO: 'set' vs 'onPropertyChanged'.
+        set, // TODO: 'set' vs 'onPropertyChanged'.
         reset
     }
 
     export interface CollectionChangeArgs {
-        change: CollectionChangeAction;
+        action: CollectionChangeAction;
+        //index?: number;
         newIndex?: number;
         oldIndex?: number;
         newItem?: any;
@@ -38,18 +39,16 @@
          * @param [collection] Source collection.
          */
         constructor(collection?: Array<T>) {
+            this.onPropertyChanged = new Event<string>();
+            this.onCollectionChanged = new Event<CollectionChangeArgs>();
+
             this.inner = [];
             if (collection) {
                 // Copy collection
-                collection.forEach((item) => {
-                    item = this.createNotifier(item);
-                    this.inner.push(item);
-                    this.appendIndexProperty();
+                collection.forEach((item, i) => {
+                    this.add(item, i);
                 });
             }
-
-            this.onPropertyChanged = new Event<string>();
-            this.onCollectionChanged = new Event<CollectionChangeArgs>();
         }
 
         //-------
@@ -60,25 +59,62 @@
         onCollectionChanged: Event<CollectionChangeArgs>;
 
 
-        //-----------
-        // Properties
-        //-----------
+        //--------------------
+        // Handling operations
+        //--------------------
 
-        get length(): number {
-            return this.inner.length;
+        /**
+         * Handles addition item into collection.
+         */
+        protected add(item: T, index) {
+            item = this.createNotifier(item);
+            this.inner.splice(index, 0, item);
+            this.appendIndexProperty();
+
+            // Notify
+            this.onCollectionChanged.invoke({
+                action: CollectionChangeAction.add,
+                newIndex: index,
+                newItem: item
+            });
+            this.onPropertyChanged.invoke('length');
+        }
+
+        /**
+         * Handles removal of item from collection. 
+         */
+        protected remove(index): T {
+            var item = this.inner.splice(index, 1)[0];
+            this.deleteIndexProperty();
+
+            // Notify
+            this.onCollectionChanged.invoke({
+                action: CollectionChangeAction.remove,
+                oldIndex: index,
+                oldItem: item
+            });
+            this.onPropertyChanged.invoke('length');
+
+            return item;
         }
 
         // Must be called after inner collection change.
-        //
         protected appendIndexProperty() {
             var index = this.inner.length - 1;
             Object.defineProperty(this, index.toString(), {
                 get: () => this.inner[index],
                 set: (value: T) => {
-                    this.inner[index] = value;
+                    //this.inner[index] = value;
 
                     // Notify
-                    this.onPropertyChanged.invoke(index.toString());
+                    this.onCollectionChanged.invoke({
+                        action: CollectionChangeAction.set,
+                        oldIndex: index,
+                        newIndex: index,
+                        oldItem: this.inner[index],
+                        newItem: this.inner[index] = value
+                    });
+                    //this.onPropertyChanged.invoke(index.toString());
                 },
                 enumerable: true,
                 configurable: true
@@ -86,7 +122,6 @@
         }
 
         // Must be called after inner collection change.
-        //
         protected deleteIndexProperty() {
             delete this[this.inner.length];
         }
@@ -99,133 +134,76 @@
         }
 
 
+        //-----------
+        // Properties
+        //-----------
+
+        get length(): number {
+            return this.inner.length;
+        }
+
+
         //----------------
         // Mutator methods
         //----------------
 
         pop(): T {
-            var item = this.inner.pop();
-            this.deleteIndexProperty();
-
-            // Notify
-            this.onCollectionChanged.invoke({
-                change: CollectionChangeAction.remove,
-                oldIndex: this.inner.length,
-                oldItem: item
-            });
-            this.onPropertyChanged.invoke('length');
-
+            var item = this.remove(this.inner.length - 1);
             return item;
         }
 
         push(...items: T[]): number {
             items.forEach((item) => {
-                item = this.createNotifier(item);
-                var index = this.inner.push(item) - 1;
-                this.appendIndexProperty();
-
-                // Notify
-                this.onCollectionChanged.invoke({
-                    change: CollectionChangeAction.add,
-                    newIndex: this.inner.length,
-                    newItem: item
-                });
-                this.onPropertyChanged.invoke('length');
+                this.add(item, this.inner.length);
             });
-
             return this.inner.length;
         }
 
-        reverse(): T[] { throw new Error('Not implemented.'); }
-
-        shift(): T {
-            var item = this.inner.shift();
-            this.deleteIndexProperty();
-
+        reverse(): T[] {
+            this.inner.reverse();
             // Notify
             this.onCollectionChanged.invoke({
-                change: CollectionChangeAction.remove,
-                oldIndex: 0,
-                oldItem: item
+                action: CollectionChangeAction.reset
             });
-            this.onPropertyChanged.invoke('length');
+            return this.inner;
+        }
 
+        shift(): T {
+            var item = this.remove(0);
             return item;
         }
 
         sort(compareFn?: (a: T, b: T) => number): T[] {
             this.inner.sort(compareFn);
-
             // Notify
             this.onCollectionChanged.invoke({
-                change: CollectionChangeAction.reset
+                action: CollectionChangeAction.reset
             });
-
             return this.inner;
         }
 
         splice(start: number): T[];
         splice(start: number, deleteCount: number, ...items: T[]);
         splice(start: number, deleteCount?: number, ...items: T[]): T[] {
-            //
             // Delete
-
             var deleted = new Array<T>();
             for (var i = 0; i < deleteCount; i++) {
-                var item = this.inner.splice(start, 1)[0];
+                var item = this.remove(start);
                 deleted.push(item);
-                this.deleteIndexProperty();
-
-                // Notify
-                this.onCollectionChanged.invoke({
-                    change: CollectionChangeAction.remove,
-                    oldIndex: start,
-                    oldItem: item
-                });
-                this.onPropertyChanged.invoke('length');
             }
-
-            //
             // Add
-
             var index = start;
             items.forEach((item) => {
-                item = this.createNotifier(item);
-                this.inner.splice(index, 0, item);
-                this.appendIndexProperty();
-
-                // Notify
-                this.onCollectionChanged.invoke({
-                    change: CollectionChangeAction.add,
-                    newIndex: index,
-                    newItem: item
-                });
-                this.onPropertyChanged.invoke('length');
-
+                this.add(item, index);
                 index++;
             })
-
             return deleted;
         }
 
         unshift(...items: T[]): number {
-            var index = 0;
-            items.forEach((item) => {
-                item = this.createNotifier(item);
-                this.inner.splice(index, 0, item);
-                this.appendIndexProperty();
-
-                // Notify
-                this.onCollectionChanged.invoke({
-                    change: CollectionChangeAction.add,
-                    newIndex: index,
-                    newItem: item
-                });
-                this.onPropertyChanged.invoke('length');
-
-                index++
-            });
-
+            for (var i = 0; i < items.length; i++) {
+                this.add(items[i], i);
+            }
             return this.inner.length;
         }
 
@@ -233,6 +211,8 @@
         //-----------------
         // Accessor methods
         //-----------------
+
+        // TODO: Return new ObservableCollection?
 
         concat<U extends T[]>(...items: U[]): T[];
         concat(...items: T[]): T[] { return this.inner.concat(items); }
