@@ -28,7 +28,9 @@
      * created for every source property.
      * @param source Source object.
      */
-    export function createNotifierFromObject(source: Object): INotifier {
+    export function createNotifierFrom(source: Object): INotifier { // TODO: Mixin<T, INotifier>?
+        if (isNotifier(source))
+            throw new Error('Source is notifier already.');
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
         for (var key in source) {
             // Create notification property
@@ -66,7 +68,7 @@
         //if (name === 'onPropertyChanged') {
         //    throw new Error('Unable to create notification property. Reserved name is used.');
         //}
-        var fieldName = '_' + name;
+        var fieldName = getFieldName(name);
         //if (obj[fieldName]) {
         //    throw new Error('Unable to create field for notification property. Object already has "' + fieldName + '" property.');
         //}
@@ -79,7 +81,7 @@
         // If so -> make it Notifier.
 
         if (typeof value === 'object') {
-            obj[fieldName] = createNotifierFromObject(value);
+            obj[fieldName] = createNotifierFrom(value);
             var isNestedObject = true;
         }
 
@@ -100,7 +102,7 @@
             // Nested object setter
             var nestedSetter = function (newObj: INotifier) {
                 if (!isNotifier(newObj)) {
-                    newObj = createNotifierFromObject(newObj);
+                    newObj = createNotifierFrom(newObj);
                 }
                 obj[fieldName] = newObj;
                 obj.onPropertyChanged.invoke(name);
@@ -116,5 +118,9 @@
             enumerable: true,
             configurable: true
         });
+    }
+
+    function getFieldName(name: string) {
+        return '_' + name;
     }
 } 

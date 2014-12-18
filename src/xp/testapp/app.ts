@@ -2,13 +2,14 @@
     windowHref: 'view/window.xml'
 });
 
+var person;
 var bs;
 
 window.onload = () => {
 
     app.start();
 
-    var person = {
+    person = {
         id: 123,
         name: 'John',
         city: {
@@ -26,7 +27,7 @@ window.onload = () => {
         ],
         toString: () => 'Person1'
     };
-    bs = xp.Binding.createNotifierFromObject(person);
+    bs = xp.Binding.createNotifierFrom(person);
 
     console.log('App: Set window context.');
     app.window.context = bs;
