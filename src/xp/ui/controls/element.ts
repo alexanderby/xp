@@ -380,7 +380,7 @@
                 this.bindings[controlProperty].unbind();
             }
 
-            this.bindings[controlProperty] = new BindingManager(
+            this.bindings[controlProperty] = new Binding.BindingManager(
                 this,
                 controlProperty,
                 source || this.context,
@@ -425,7 +425,7 @@
             }
             this.onContextChanged.invoke(context);
         }
-        protected _context: INotifier;
+        protected _context: Binding.INotifier;
 
         /**
          * Is invoked when user performs an input action.
@@ -463,6 +463,6 @@
      * Represents "control property name":"binding manager" dictionary.
      */
     export interface UiBindingDictionary {
-        [controlProperty: string]: BindingManager;
+        [controlProperty: string]: Binding.BindingManager;
     }
 }

@@ -26,7 +26,7 @@ window.onload = () => {
         ],
         toString: () => 'Person1'
     };
-    bs = xp.createNotifierFromObject(person);
+    bs = xp.Binding.createNotifierFromObject(person);
 
     console.log('App: Set window context.');
     app.window.context = bs;

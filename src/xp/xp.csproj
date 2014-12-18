@@ -65,7 +65,9 @@
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="core\binding.ts" />
+    <TypeScriptCompile Include="core\binding\collection.ts" />
+    <TypeScriptCompile Include="core\binding\manager.ts" />
+    <TypeScriptCompile Include="core\binding\notifier.ts" />
     <TypeScriptCompile Include="testapp\app.ts" />
     <TypeScriptCompile Include="core\app.ts" />
     <TypeScriptCompile Include="core\event.ts" />
