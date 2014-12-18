@@ -38,24 +38,14 @@
          * @param [collection] Source collection.
          */
         constructor(collection?: Array<T>) {
+            this.inner = [];
             if (collection) {
                 // Copy collection
-                this.inner = [];
                 collection.forEach((item) => {
-                    if (typeof item === 'object') {
-                        item = <T><any>createNotifierFrom(item);
-                    }
+                    item = this.createNotifier(item);
                     this.inner.push(item);
                     this.appendIndexProperty();
                 });
-            }
-            else {
-                this.inner = [];
-            }
-
-            // Create properties
-            for (var i = 0; i < this.inner.length; i++) {
-                this.appendIndexProperty();
             }
 
             this.onPropertyChanged = new Event<string>();
@@ -78,6 +68,8 @@
             return this.inner.length;
         }
 
+        // Must be called after inner collection change.
+        //
         protected appendIndexProperty() {
             var index = this.inner.length - 1;
             Object.defineProperty(this, index.toString(), {
@@ -93,8 +85,17 @@
             });
         }
 
+        // Must be called after inner collection change.
+        //
         protected deleteIndexProperty() {
-            delete this[this.inner.length - 1];
+            delete this[this.inner.length];
+        }
+
+        protected createNotifier(item: T): T {
+            if (typeof item === 'object' && !isNotifier(item)) {
+                item = <T><any>createNotifierFrom(item);
+            }
+            return item;
         }
 
 
@@ -119,6 +120,7 @@
 
         push(...items: T[]): number {
             items.forEach((item) => {
+                item = this.createNotifier(item);
                 var index = this.inner.push(item) - 1;
                 this.appendIndexProperty();
 
@@ -188,6 +190,8 @@
 
             var index = start;
             items.forEach((item) => {
+                item = this.createNotifier(item);
+                this.inner.splice(index, 0, item);
                 this.appendIndexProperty();
 
                 // Notify
@@ -207,6 +211,7 @@
         unshift(...items: T[]): number {
             var index = 0;
             items.forEach((item) => {
+                item = this.createNotifier(item);
                 this.inner.splice(index, 0, item);
                 this.appendIndexProperty();
 
@@ -236,7 +241,8 @@
 
         slice(start?: number, end?: number): T[] { return this.inner.slice(start, end); }
 
-        toString(): string { return this.inner.toString(); }
+        //toString(): string { return this.inner.toString(); }
+        toString(): string { return Object.prototype.toString.call(this); }
 
         toLocaleString(): string { return this.inner.toLocaleString(); }
 
