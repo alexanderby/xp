@@ -39,7 +39,7 @@
 
 
         //------------------
-        // ATTRIBUTE MAPPING
+        // MARKUP PROCESSING
         //------------------
 
         /**
@@ -83,6 +83,7 @@
 
         /**
          * Children.
+         * WARNING: Must be set only by itself.
          */
         children: Element[];
 

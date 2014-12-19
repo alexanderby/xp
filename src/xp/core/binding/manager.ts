@@ -47,7 +47,10 @@
             if (source) {
                 var value = this.target[this.targetProperty];
                 console.log(xp.formatString('BM of "{0}.{1}": Update source "{2}.{3}" property with value "{4}".', this.target['name'], this.targetProperty, source, this.sourceProperty, value));
-                source[this.sourceProperty] = value;
+                if (this.sourceProperty === '')
+                    source = value; // TODO: setPropertyByPath
+                else
+                    source[this.sourceProperty] = value;
             }
             else {
                 console.log(xp.formatString('BM of "{0}.{1}": Can\'t update source. Source "{2}" not found.', this.target['name'], this.targetProperty, source));
@@ -60,7 +63,7 @@
         updateTarget() {
             var source = this.getSource();
             if (source) {
-                var value = source[this.sourceProperty];
+                var value = xp.Path.getPropertyByPath(source, this.sourceProperty);
                 console.log(xp.formatString('BM of "{0}.{1}": Update target with "{2}.{3}" property value "{4}".', this.target['name'], this.targetProperty, source, this.sourceProperty, value));
                 this.target[this.targetProperty] = value;
             }
@@ -120,7 +123,7 @@
                     }
                     // Set path object
                     po[i + 1] = {
-                        obj: po[i].obj[parts[i]]
+                        obj: xp.Path.getPropertyByPath(po[i].obj, parts[i])
                     };
                     if (isNotifier(po[i].obj)) {
                         // Handle path object replacement

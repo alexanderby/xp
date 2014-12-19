@@ -38,4 +38,10 @@
   </stack>
   <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true"/>
   <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true"/>
+  <list flow="vertical" name="list1" items="{books}">
+    <stack flow="horizontal">
+      <label text="book"/>
+      <textbox text="{pages}"/>
+    </stack>
+  </list>
 </window>

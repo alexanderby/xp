@@ -39,7 +39,6 @@
         return obj;
     }
     
-
     /**
      * Determines whether object implements INotifier.
      * @param obj Object.
@@ -80,7 +79,11 @@
         // Check if property is an object.
         // If so -> make it Notifier.
 
-        if (typeof value === 'object') {
+        if (Array.isArray(value)) {
+            obj[fieldName] = new ObservableCollection(value);
+            var isNestedObject = true;
+        }
+        else if (typeof value === 'object') {
             obj[fieldName] = createNotifierFrom(value);
             var isNestedObject = true;
         }

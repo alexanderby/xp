@@ -72,7 +72,7 @@
 
 
         //------------------
-        // ATTRIBUTE MAPPING
+        // MARKUP PROCESSING
         //------------------
 
         /**

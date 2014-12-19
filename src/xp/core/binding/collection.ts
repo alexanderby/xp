@@ -15,7 +15,8 @@
         remove,
         //move,
         set, // TODO: 'set' vs 'onPropertyChanged'.
-        reset
+        reset,
+        //sort
     }
 
     export interface CollectionChangeArgs {
@@ -31,7 +32,6 @@
      * A collection which notifies of it's changes.
      */
     export class ObservableCollection<T> implements Array<T>, ICollectionNotifier, INotifier {
-
         private inner: Array<T>;
 
         /**
@@ -64,7 +64,7 @@
         //--------------------
 
         /**
-         * Handles addition item into collection.
+         * Handles item's addition into collection.
          */
         protected add(item: T, index) {
             item = this.createNotifier(item);
@@ -81,7 +81,7 @@
         }
 
         /**
-         * Handles removal of item from collection. 
+         * Handles item's removal item from collection. 
          */
         protected remove(index): T {
             var item = this.inner.splice(index, 1)[0];
@@ -104,7 +104,7 @@
             Object.defineProperty(this, index.toString(), {
                 get: () => this.inner[index],
                 set: (value: T) => {
-                    //this.inner[index] = value;
+                    this.inner[index] = value;
 
                     // Notify
                     this.onCollectionChanged.invoke({
@@ -114,7 +114,7 @@
                         oldItem: this.inner[index],
                         newItem: this.inner[index] = value
                     });
-                    //this.onPropertyChanged.invoke(index.toString());
+                    this.onPropertyChanged.invoke(index.toString());
                 },
                 enumerable: true,
                 configurable: true
@@ -163,7 +163,7 @@
             this.inner.reverse();
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.reset
+                action: CollectionChangeAction.reset // TODO: move?
             });
             return this.inner;
         }
@@ -177,7 +177,7 @@
             this.inner.sort(compareFn);
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.reset
+                action: CollectionChangeAction.reset // TODO: move?
             });
             return this.inner;
         }
@@ -253,5 +253,13 @@
 
 
         [n: number]: T;
+    }
+
+    /**
+     * Determines whether object implements ICollectionNotifier.
+     * @param obj Object.
+     */
+    export function isCollectionNotifier(obj) {
+        return !!(<ICollectionNotifier>obj).onCollectionChanged;
     }
 } 

@@ -74,10 +74,12 @@
 }
 
 module xp.Path {
+    // TODO: setPropertyByPath
+
     /**
      * Returns object's property.
      * @param obj Source object.
-     * @param path Dotted path to property. If path='.' or '', then source object will be returned.
+     * @param path Dotted path to property. If path='', then source object will be returned.
      * @param [throwErr=true] Throws an error if object not found.
      */
     export function getPropertyByPath(obj, path, throwErr = true) {
@@ -91,7 +93,7 @@ module xp.Path {
         }
 
         path = path.replace(/\[(.+)\]/g, '.$1');
-        if (path === '' || path === '.') {
+        if (path === '') {
             return obj;
         }
         var parts = path.split('.');

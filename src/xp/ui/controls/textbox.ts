@@ -73,7 +73,7 @@
 
 
         //------------------
-        // ATTRIBUTE MAPPING
+        // MARKUP PROCESSING
         //------------------
 
         protected getAttributeMap(): AttributeMap {

@@ -154,7 +154,7 @@
 
 
         //------------------
-        // ATTRIBUTE MAPPING
+        // MARKUP PROCESSING
         //------------------
 
         /**
@@ -243,7 +243,7 @@
 
         /**
          * Gets or sets element's parent.
-         * WARNING: Must be used only by parent.
+         * WARNING: Must be set only by parent.
          */
         //parent: Container;
         get parent() {
