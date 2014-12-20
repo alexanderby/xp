@@ -50,6 +50,7 @@ window.onload = () => {
                 },
                 toString: () => 'City2'
             };
+            bs['numbers'].push(4);
         }, 2000);
     }, 2000);
 };

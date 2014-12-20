@@ -66,6 +66,9 @@
                 var manager = new BindingManager(this.params, params[i], this.source, path);
                 this.managers.push(manager);
             });
+
+            // Execute
+            this.exec();
         }
 
         /**
@@ -73,6 +76,9 @@
          */
         get result() {
             return this.resultField;
+        }
+        set result(v) {
+            throw new Error('');
         }
         private resultField;
         private exec() {
@@ -98,6 +104,7 @@
                 m.resetWith(source);
             });
             this.sourceSetToken = false;
+            this.exec();
         }
 
         /**

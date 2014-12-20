@@ -25,34 +25,36 @@
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
   </stack>
-  <label text="{name}" name="label1" height="4em"/>
-  <textbox text="{city.name}" name="textbox1"/>
-  <stack flow="horizontal" context="{city}" name="stack_ctx">
-    <textbox context="{country}" text="{name}" name="textbox2"/>
-  </stack>
-  <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true"/>
-  <stack flow="horizontal">
-    <label text="Label"/>
-    <textbox width="10em" text="{books[0].pages}" name="tb_0_pages"/>
-    <button text="Button"/>
-  </stack>
-  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_1"/>
-  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_2"/>
-  <list flow="vertical" name="list1" items="{books}">
-    <stack flow="horizontal">
-      <label text="book"/>
-      <textbox text="{pages}"/>
+  <stack width="20em" items-align="stretch">
+    <label text="{name}" name="label1" height="4em"/>
+    <textbox text="{city.name}" name="textbox1"/>
+    <stack flow="horizontal" context="{city}" name="stack_ctx" items-align="stretch">
+      <textbox context="{country}" text="{name}" name="textbox2"/>
     </stack>
-  </list>
-  <list flow="vertical" name="list2" items="{numbers}">
-    <stack flow="horizontal">
-      <label text="number"/>
-      <textbox text="{}"/>
+    <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true"/>
+    <stack flow="horizontal" items-align="stretch">
+      <label text="Label"/>
+      <textbox width="10em" text="{books[0].pages}" name="tb_0_pages"/>
+      <button text="Button"/>
     </stack>
-  </list>
-  <stack flow="horizontal">
-    <label text="length"/>
-    <!--<textbox text="({numbers.length})"/>-->
-    <textbox text="(5)"/>
+    <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_1"/>
+    <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_2"/>
+    <list flow="vertical" name="list1" items="{books}">
+      <stack flow="horizontal" items-align="stretch">
+        <label text="book"/>
+        <textbox text="{pages}"/>
+      </stack>
+    </list>
+    <list flow="vertical" name="list2" items="{numbers}" items-align="stretch">
+      <stack flow="horizontal">
+        <label text="number"/>
+        <textbox text="{}"/>
+      </stack>
+    </list>
+    <stack flow="horizontal" items-align="stretch">
+      <label text="length"/>
+      <textbox text="({numbers.length})" name="tb_len"/>
+      <textbox text="(5)"/>
+    </stack>
   </stack>
 </window>

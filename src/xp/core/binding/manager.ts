@@ -128,7 +128,7 @@
                     }
                     // Set path object
                     po[i + 1] = {
-                        obj: xp.Path.getPropertyByPath(po[i].obj, parts[i])
+                        obj: xp.Path.getPropertyByPath(po[i].obj, parts[i], false) || null
                     };
                     if (isNotifier(po[i].obj)) {
                         // Handle path object replacement

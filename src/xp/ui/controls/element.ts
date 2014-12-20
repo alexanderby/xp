@@ -505,7 +505,9 @@
 
             for (var cp in this.bindings) {
                 if (cp !== 'context') {
-                    this.bindings[cp].resetWith(context);
+                    if (!this.expressions[cp]) {
+                        this.bindings[cp].resetWith(context);
+                    }
                 }
             }
             for (var cp in this.expressions) {
