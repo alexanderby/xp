@@ -50,26 +50,6 @@
                 },
             });
         }
-
-
-        //--------
-        // BINDING
-        //--------
-
-        //protected bind: BindableObject<any>;
-
-        ///**
-        // * Binds label to bindable object 
-        // */
-        //bindTo(bind: BindableObject<any>, objPropertyName: string) {
-        //    this.bind = bind;
-        //    this.text = bind.data[propertyName];
-        //    bind.onPropertyChanged.addHandler((args) => {
-        //        if (args.propertyName === propertyName) {
-        //            this.text = args.newValue;
-        //        }
-        //    }, this);
-        //}
     }
     Tags['label'] = Label;
 } 

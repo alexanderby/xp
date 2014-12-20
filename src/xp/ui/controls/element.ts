@@ -63,8 +63,6 @@
             this.bindings = {};
             this.emptyPathBindings = {};
 
-            this.onRemove = new Event<Element>();
-
             // Control's events
             this.onContextChanged = new Event<any>();
             this.onClick = new Event<UiEventArgs>();
@@ -75,6 +73,7 @@
             this.onMouseLeave = new Event<UiEventArgs>();
 
             // Unregister events on remove?
+            this.onRemove = new Event<Element>();
             this.onRemove.addHandler(() => {
                 this.onContextChanged.removeAllHandlers();
                 this.onClick.removeAllHandlers();
@@ -213,12 +212,8 @@
                 }
 
                 // Check for binding
-                if (values[key].match(/^\{\}$/)) { // TODO: Single regex
-                    this.bind(key, '');
-                    return;
-                }
                 var matches = values[key].match(/^\{(.*)\}$/);
-                if (matches && matches[1]) {
+                if (matches && matches[1] !== void 0) {
                     var path = matches[1];
                     // Bind control property
                     this.bind(key, path);
