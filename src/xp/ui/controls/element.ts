@@ -61,6 +61,7 @@
          */
         protected initEvents() {
             this.bindings = {};
+            this.expressions = {};
             this.emptyPathBindings = {};
 
             // Control's events
@@ -212,11 +213,17 @@
                 }
 
                 // Check for binding
-                var matches = values[key].match(/^\{(.*)\}$/);
-                if (matches && matches[1] !== void 0) {
-                    var path = matches[1];
+                var bindings = values[key].match(/^\{(.*)\}$/);
+                var expressions = values[key].match(/^\((.*)\)$/);
+                if (bindings && bindings[1] !== void 0) {
+                    var path = bindings[1];
                     // Bind control property
                     this.bind(key, path);
+                }
+                else if (expressions && expressions[1] !== void 0) {
+                    var expr = expressions[1];
+                    // Register expression
+                    this.express(key, expr);
                 }
                 else if (map[key]['*']) {
                     // If accepts any value -> call setter with value
@@ -398,6 +405,10 @@
          * Holds control's properties' empty path bindings.
          */
         protected emptyPathBindings: { [controlProp: string]: () => void };
+        /**
+         * Holds control's properties' expressions.
+         */
+        protected expressions: UiExpressionDictionary;
 
         /**
          * Binds control's property to source property.
@@ -448,6 +459,28 @@
                 this.onContextChanged.removeHandler(this.emptyPathBindings[controlProperty]);
                 delete this.emptyPathBindings[controlProperty];
             }
+            if (this.expressions[controlProperty]) {
+                this.expressions[controlProperty].unbind();
+                delete this.expressions[controlProperty];
+            }
+        }
+
+        /**
+         * Binds control's property to expression.
+         * @param controlProperty Control's property name.
+         * @param expression Expression e.g. "{obj.a} * 2 + Math.round({b})".
+         * @param [source] Binding source object.
+         */
+        express(controlProperty: string, expression: string, source?) {
+            if (this.expressions[controlProperty]) {
+                this.expressions[controlProperty].unbind();
+            }
+            this.expressions[controlProperty] = new Binding.Expression(expression);
+            this.bindings[controlProperty] = new Binding.BindingManager(
+                this,
+                controlProperty,
+                this.expressions[controlProperty],
+                'result');
         }
 
         /**
@@ -473,6 +506,11 @@
             for (var cp in this.bindings) {
                 if (cp !== 'context') {
                     this.bindings[cp].resetWith(context);
+                }
+            }
+            for (var cp in this.expressions) {
+                if (cp !== 'context') {
+                    this.expressions[cp].resetWith(context);
                 }
             }
             this.onContextChanged.invoke(context);
@@ -519,5 +557,12 @@
      */
     export interface UiBindingDictionary {
         [controlProperty: string]: Binding.BindingManager;
+    }
+
+    /**
+     * Represents "control property name":"expression" dictionary.
+     */
+    export interface UiExpressionDictionary {
+        [controlProperty: string]: Binding.Expression;
     }
 }

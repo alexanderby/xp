@@ -50,4 +50,9 @@
       <textbox text="{}"/>
     </stack>
   </list>
+  <stack flow="horizontal">
+    <label text="length"/>
+    <!--<textbox text="({numbers.length})"/>-->
+    <textbox text="(5)"/>
+  </stack>
 </window>
