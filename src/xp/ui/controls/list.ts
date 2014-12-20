@@ -23,7 +23,7 @@
                 }
             });
         }
-           
+
 
         protected processXml(xmlElement: JQuery) {
             this.applyAttributes(xmlElement);
@@ -83,7 +83,9 @@
                                 this.children[args.oldIndex].remove();
                                 break;
                             case Binding.CollectionChangeAction.set:
+                                this.childContextChangeToken = true;
                                 this.children[args.newIndex].context = args.newItem;
+                                this.childContextChangeToken = false;
                                 break;
                             case Binding.CollectionChangeAction.reset:
                                 this.items = items;
@@ -97,6 +99,7 @@
         }
         protected _items: any[];
         protected itemsRegistar: EventRegistar;
+        protected childContextChangeToken = false; // Prevents cycling when set context
 
         protected initEvents() {
             super.initEvents();
@@ -123,14 +126,25 @@
             }
             var type = xp.Ui.Tags[tagName];
             var child = new type($(this.itemTemplateXml));
+            child.name = xp.createUuid();
+            child.useParentContext = false;
 
             // Append child
             this.insertElement(child, index);
 
             // Bind child by index
+            this.childContextChangeToken = true;
             child.context = item;
-            child.bind('context', '', item);
-            //child.bind('context', index.toString(), item);
+            this.childContextChangeToken = false;
+
+            // Subscribe for replacement
+            // TODO: Unsubscribe?
+            child.onContextChanged.addHandler((ctx) => {
+                if (!this.childContextChangeToken) {
+                    var i = this.children.indexOf(child);
+                    this.items[i] = ctx;
+                }
+            }, this);
         }
     }
     Tags['list'] = List;

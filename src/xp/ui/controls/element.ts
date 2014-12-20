@@ -47,19 +47,45 @@
         // EVENTS
         //-------
 
-        onClick = new Event<UiEventArgs>();
-        onMouseDown = new Event<UiEventArgs>();
-        onMouseUp = new Event<UiEventArgs>();
-        onMouseMove = new Event<UiEventArgs>();
-        onMouseEnter = new Event<UiEventArgs>();
-        onMouseLeave = new Event<UiEventArgs>();
+        protected onRemove: Event<Element>;
+
+        onClick: Event<UiEventArgs>;
+        onMouseDown: Event<UiEventArgs>;
+        onMouseUp: Event<UiEventArgs>;
+        onMouseMove: Event<UiEventArgs>;
+        onMouseEnter: Event<UiEventArgs>;
+        onMouseLeave: Event<UiEventArgs>;
 
         /**
          * Initializes control's events.
          */
         protected initEvents() {
             this.bindings = {};
+            this.emptyPathBindings = {};
+
+            this.onRemove = new Event<Element>();
+
+            // Control's events
             this.onContextChanged = new Event<any>();
+            this.onClick = new Event<UiEventArgs>();
+            this.onMouseDown = new Event<UiEventArgs>();
+            this.onMouseUp = new Event<UiEventArgs>();
+            this.onMouseMove = new Event<UiEventArgs>();
+            this.onMouseEnter = new Event<UiEventArgs>();
+            this.onMouseLeave = new Event<UiEventArgs>();
+
+            // Unregister events on remove?
+            this.onRemove.addHandler(() => {
+                this.onContextChanged.removeAllHandlers();
+                this.onClick.removeAllHandlers();
+                this.onMouseDown.removeAllHandlers();
+                this.onMouseUp.removeAllHandlers();
+                this.onMouseMove.removeAllHandlers();
+                this.onMouseEnter.removeAllHandlers();
+                this.onMouseLeave.removeAllHandlers();
+            }, this);
+
+            // DOM events.
             this.initEvent('click', this.onClick);
             this.initEvent('mousedown', this.onMouseDown);
             this.initEvent('mouseup', this.onMouseUp);
@@ -174,7 +200,6 @@
             // Get attribute values
             var attributes = xmlElement.get(0).attributes;
             var values: AttrValueDictionary = {};
-            var contextPath: string;
             $.each(attributes, (i, attr: Attr) => {
                 // Add attribute's name and value into dictionary
                 values[attr.name] = attr.value;
@@ -188,12 +213,13 @@
                 }
 
                 // Check for binding
+                if (values[key].match(/^\{\}$/)) { // TODO: Single regex
+                    this.bind(key, '');
+                    return;
+                }
                 var matches = values[key].match(/^\{(.*)\}$/);
                 if (matches && matches[1]) {
                     var path = matches[1];
-                    if (contextPath) {
-                        path = contextPath + '.' + path;
-                    }
                     // Bind control property
                     this.bind(key, path);
                 }
@@ -250,7 +276,6 @@
             return this._parent;
         }
         /*internal*/set parent(parent) {
-            // If there is no binding for 'context', than take parent's context.
             if (this._parent) {
                 this._parent.onContextChanged.removeHandler(this.parentContextChangeHandler);
             }
@@ -259,22 +284,27 @@
                 this._parent.onContextChanged.addHandler(this.parentContextChangeHandler, this);
             }
         }
+        protected _parent: Container;
 
         /**
          * Handles parent context change.
          */
         protected parentContextChangeHandler = () => {
-            if (!this.bindings['context']) {
-                // Use parent's context
-                this.context = this.parent.context;
-            }
-            else {
-                // Update context binding
-                this.bindings['context'].resetWith(this.parent.context);
+            if (this.useParentContext) {
+                if (!this.bindings['context']) {
+                    // Use parent's context
+                    this.context = this.parent.context;
+                }
+                else {
+                    // Update context binding
+                    this.bindings['context'].resetWith(this.parent.context);
+                }
             }
         };
-
-        protected _parent: Container;
+        /**
+         * Specifies whether element should use parent data context. 
+         */
+        useParentContext = true;
 
         /**
          * Removes element.
@@ -288,6 +318,8 @@
 
             // DOM
             this.domElement.remove();
+
+            this.onRemove.invoke(this);
         }
 
         /**
@@ -367,6 +399,10 @@
          * Holds control's properties' bindings.
          */
         protected bindings: UiBindingDictionary;
+        /**
+         * Holds control's properties' empty path bindings.
+         */
+        protected emptyPathBindings: { [controlProp: string]: () => void };
 
         /**
          * Binds control's property to source property.
@@ -380,11 +416,28 @@
                 this.bindings[controlProperty].unbind();
             }
 
-            this.bindings[controlProperty] = new Binding.BindingManager(
-                this,
-                controlProperty,
-                source || this.context,
-                objectPropertyPath);
+            if (objectPropertyPath === '') {
+                // If empty path
+                if (controlProperty === 'context') {
+                    throw new Error('Context binding path cannot be empty.');
+                }
+                else {
+                    if (this.emptyPathBindings[controlProperty]) {
+                        // Unsubscribe from prev changes
+                        this.onContextChanged.removeHandler(this.emptyPathBindings[controlProperty]);
+                    }
+                    var handler = () => this[controlProperty] = this.context;
+                    this.onContextChanged.addHandler(handler, this);
+                    this.emptyPathBindings[controlProperty] = handler;
+                }
+            }
+            else {
+                this.bindings[controlProperty] = new Binding.BindingManager(
+                    this,
+                    controlProperty,
+                    source || this.context,
+                    objectPropertyPath);
+            }
         }
 
         /**
@@ -395,6 +448,10 @@
             if (this.bindings[controlProperty]) {
                 this.bindings[controlProperty].unbind();
                 delete this.bindings[controlProperty];
+            }
+            if (this.emptyPathBindings[controlProperty]) {
+                this.onContextChanged.removeHandler(this.emptyPathBindings[controlProperty]);
+                delete this.emptyPathBindings[controlProperty];
             }
         }
 
@@ -437,6 +494,9 @@
             this[controlProp] = value;
             if (this.bindings[controlProp]) {
                 this.bindings[controlProp].updateSource();
+            }
+            if (this.emptyPathBindings[controlProp]) {
+                this.context = this.emptyPathBindings[controlProp];
             }
         }
 

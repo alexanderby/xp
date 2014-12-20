@@ -22,6 +22,11 @@
             this.sourcePropertyPath = sourcePropertyPath;
             this.dafaultValue = defaultValue;
             this.pathParts = sourcePropertyPath.replace(/\[(.+)\]/g, '.$1').split('.');
+            this.pathParts.forEach((part) => {
+                if (part === '')
+                    throw new Error(
+                        xp.formatString('Binding for empty path will not work. Path "{0}".', sourcePropertyPath));
+            });
             this.sourceProperty = this.pathParts[this.pathParts.length - 1];
 
             // Subscribe for all path changes
@@ -63,9 +68,9 @@
         updateTarget() {
             var source = this.getSource();
             if (source) {
-                var value = xp.Path.getPropertyByPath(source, this.sourceProperty);
+                var value = xp.Path.getPropertyByPath(source, this.sourceProperty, false);
                 console.log(xp.formatString('BM of "{0}.{1}": Update target with "{2}.{3}" property value "{4}".', this.target['name'], this.targetProperty, source, this.sourceProperty, value));
-                this.target[this.targetProperty] = value;
+                this.target[this.targetProperty] = value || this.dafaultValue;
             }
             else {
                 this.target[this.targetProperty] = this.dafaultValue;

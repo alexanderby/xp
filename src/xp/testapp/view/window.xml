@@ -33,15 +33,21 @@
   <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true"/>
   <stack flow="horizontal">
     <label text="Label"/>
-    <textbox width="10em" text="{books[0].pages}"/>
+    <textbox width="10em" text="{books[0].pages}" name="tb_0_pages"/>
     <button text="Button"/>
   </stack>
-  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true"/>
-  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true"/>
+  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_1"/>
+  <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_2"/>
   <list flow="vertical" name="list1" items="{books}">
     <stack flow="horizontal">
       <label text="book"/>
       <textbox text="{pages}"/>
+    </stack>
+  </list>
+  <list flow="vertical" name="list2" items="{numbers}">
+    <stack flow="horizontal">
+      <label text="number"/>
+      <textbox text="{}"/>
     </stack>
   </list>
 </window>

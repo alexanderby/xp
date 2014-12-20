@@ -25,6 +25,7 @@ window.onload = () => {
             { pages: 5 },
             { pages: 44 }
         ],
+        numbers: [3, 5, 7],
         toString: () => 'Person1'
     };
     bs = xp.Binding.createNotifierFrom(person);
