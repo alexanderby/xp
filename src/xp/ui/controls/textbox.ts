@@ -32,7 +32,16 @@
             });
             this.domElement.on('input', (e) => {
                 if (this.notifyOnKeyDown) {
-                    this.onInput('text', this.domElement.val());
+                    var value;
+                    switch (this.type) {
+                        case TextBoxType.string:
+                            value = this.domElement.val();
+                            break;
+                        case TextBoxType.number:
+                            value = parseFloat(this.domElement.val());
+                            break;
+                    }
+                    this.onInput('text', value);
                 }
             });
 
@@ -67,6 +76,17 @@
         protected _text: string;
 
         /**
+         * Gets or sets textbox type.
+         */
+        get type() {
+            return this._type;
+        }
+        set type(type) {
+            this._type = type;
+        }
+        protected _type: TextBoxType;
+
+        /**
          * If enabled, listeners will be notified of changes on every input key is down.
          */
         notifyOnKeyDown;
@@ -84,6 +104,10 @@
                 'notify-on-keydown': {
                     'true': () => this.notifyOnKeyDown = true,
                     'false': () => this.notifyOnKeyDown = false
+                },
+                'type': {
+                    'string': () => this.type = TextBoxType.string,
+                    'number': () => this.type = TextBoxType.number
                 }
             });
         }
@@ -94,6 +118,11 @@
     export interface TextChangeArgs {
         oldValue: string;
         newValue: string;
+    }
+
+    export enum TextBoxType {
+        string,
+        number
     }
 
 } 

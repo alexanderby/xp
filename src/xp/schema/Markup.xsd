@@ -155,9 +155,16 @@
         <xs:extension base="element">
           <xs:attribute name="text" type="xs:string"/>
           <xs:attribute name="notify-on-keydown" type="xs:string"/>
+          <xs:attribute name="type" type="textbox-type"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
+  <xs:simpleType name="textbox-type">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="string"/>
+      <xs:enumeration value="number"/>
+    </xs:restriction>
+  </xs:simpleType>
 
 </xs:schema>

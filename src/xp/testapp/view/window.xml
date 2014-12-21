@@ -27,34 +27,37 @@
   </stack>
   <stack width="20em" items-align="stretch">
     <label text="{name}" name="label1" height="4em"/>
-    <textbox text="{city.name}" name="textbox1"/>
+    <textbox text="{city.name}" name="textbox1" width="100%"/>
     <stack flow="horizontal" context="{city}" name="stack_ctx" items-align="stretch">
-      <textbox context="{country}" text="{name}" name="textbox2"/>
+      <textbox context="{country}" text="{name}" name="textbox2" width="100%"/>
     </stack>
-    <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true"/>
-    <stack flow="horizontal" items-align="stretch">
+    <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true" width="100%"/>
+    <stack flow="horizontal">
       <label text="Label"/>
-      <textbox width="10em" text="{books[0].pages}" name="tb_0_pages"/>
+      <textbox width="100%" text="{books[0].pages}" name="tb_0_pages"/>
       <button text="Button"/>
     </stack>
-    <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_1"/>
-    <textbox width="10em" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_2"/>
+    <textbox width="100%" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_1"/>
+    <textbox width="100%" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_2"/>
     <list flow="vertical" name="list1" items="{books}">
       <stack flow="horizontal" items-align="stretch">
         <label text="book"/>
-        <textbox text="{pages}"/>
+        <textbox text="{pages}" width="100%"/>
       </stack>
     </list>
     <list flow="vertical" name="list2" items="{numbers}" items-align="stretch">
       <stack flow="horizontal">
         <label text="number"/>
-        <textbox text="{}"/>
+        <textbox text="{}" width="100%"/>
       </stack>
     </list>
-    <stack flow="horizontal" items-align="stretch">
+    <stack flow="horizontal">
       <label text="length"/>
-      <textbox text="({numbers.length})" name="tb_len"/>
-      <textbox text="(5)"/>
+      <textbox text="({numbers.length})" name="tb_len" width="100%"/>
+    </stack>
+    <stack flow="horizontal">
+      <label text="sum"/>
+      <textbox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%"/>
     </stack>
   </stack>
 </window>
