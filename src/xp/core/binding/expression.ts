@@ -12,6 +12,8 @@
         private propsPaths: string[];
         private managers: BindingManager[];
         private params: INotifier;
+        // Holds change handlers for collection parameters.
+        private collectionRegistrations: { [paramName: string]: EventRegistar };
 
         /**
          * Creates control's property bindable expression.
@@ -38,6 +40,7 @@
             var body = expression;
             var params: string[] = [];
             this.params = { onPropertyChanged: new Event<string>() };
+            this.collectionRegistrations = {};
             propsPaths.forEach((p, i) => {
                 var param = 'p' + i;
                 body = body.replace('{' + p + '}', param);
@@ -48,6 +51,22 @@
                 Object.defineProperty(this.params, param, {
                     get: () => this.params[fieldName],
                     set: (value) => {
+                        if (this.collectionRegistrations[param]) {
+                            // Unsubscribe from collection changes
+                            this.collectionRegistrations[param].unsubscribeAll();
+                            delete this.collectionRegistrations[param];
+                        }
+
+                        if (value !== void 0 && isCollectionNotifier(value)) {
+                            // Register for collection changes
+                            var registar = new EventRegistar();
+                            var cn = <ICollectionNotifier>value;
+                            registar.subscribe(cn.onCollectionChanged, (args) => {
+                                this.exec();
+                            }, this);
+                            this.collectionRegistrations[param] = registar
+                        }
+
                         this.params[fieldName] = value;
                         // Execute function
                         if (!this.sourceSetToken) {
@@ -77,27 +96,38 @@
         get result() {
             return this.resultField;
         }
-        set result(v) {
-            throw new Error('');
-        }
+
         private resultField;
-        private exec() {
+
+        /**
+         * Executes the expression.
+         */
+        exec() {
+            // Get parameters
             var params = [];
             for (var key in this.params) {
-                if (key[0] === 'p') { // HACK.
-                    params.push(this.params[key]);
+                // TODO: Use "Object.defineProperty" with "enumerable:false"
+                // for properties, which should not be listed.
+                if (key[0] === 'p') {
+                    var p = this.params[key];
+                    if (p instanceof ObservableCollection) {
+                        p = (<ObservableCollection<any>>p).slice();
+                    }
+                    params.push(p);
                 }
             }
             try {
+                // Execute
                 this.resultField = this.func.apply(this, params);
             }
             catch (e) {
                 console.log('Expression error: ' + e);
                 this.resultField = null;
             }
-            this.onPropertyChanged.invoke('result') || null;
+            this.onPropertyChanged.invoke('result');
         }
-        private sourceSetToken = false;
+
+        private sourceSetToken = false; // Prevents multiple evaluations on reset.
 
         /**
          * Resets source and causes expression evaluation.

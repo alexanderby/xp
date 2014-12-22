@@ -48,16 +48,16 @@
     <list flow="vertical" name="list2" items="{numbers}" items-align="stretch">
       <stack flow="horizontal">
         <label text="number"/>
-        <textbox text="{}" width="100%"/>
+        <textbox text="{}" width="100%" type="number"/>
       </stack>
     </list>
     <stack flow="horizontal">
       <label text="length"/>
-      <textbox text="({numbers.length})" name="tb_len" width="100%"/>
+      <textbox text="({numbers.length})" name="tb_len" width="100%" type="number" readonly="true"/>
     </stack>
     <stack flow="horizontal">
       <label text="sum"/>
-      <textbox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%"/>
+      <textbox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%" readonly="true"/>
     </stack>
   </stack>
 </window>

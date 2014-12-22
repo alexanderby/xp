@@ -114,7 +114,9 @@
         /**
          * Sets default values.
          */
-        protected setDefaults() { }
+        protected setDefaults() {
+            this.enabled = true;
+        }
 
         /**
          * Gets or sets value indicating control being enabled or disabled.
@@ -531,7 +533,12 @@
                 this.bindings[controlProp].updateSource();
             }
             if (this.emptyPathBindings[controlProp]) {
-                this.context = this.emptyPathBindings[controlProp];
+                // Set highest parent's context if it is the same
+                var current = this;
+                while (current.parent && current.parent.context === current.context) {
+                    current = current.parent;
+                }
+                current.context = value;
             }
         }
 

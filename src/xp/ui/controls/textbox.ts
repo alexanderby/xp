@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<input class="textbox" type="text"></input>');
+            return $('<input class="textbox" type="text" placeholder="Abc"></input>');
         }
 
 
@@ -28,20 +28,11 @@
 
             // On text input
             this.domElement.on('change', (e) => {
-                this.onInput('text', this.domElement.val());
+                this.onInput('text', this.value);
             });
             this.domElement.on('input', (e) => {
                 if (this.notifyOnKeyDown) {
-                    var value;
-                    switch (this.type) {
-                        case TextBoxType.string:
-                            value = this.domElement.val();
-                            break;
-                        case TextBoxType.number:
-                            value = parseFloat(this.domElement.val());
-                            break;
-                    }
-                    this.onInput('text', value);
+                    this.onInput('text', this.value);
                 }
             });
 
@@ -53,10 +44,42 @@
             });
         }
 
+        //protected isValid(value) {
+        //    switch (this.type) {
+        //        case TextBoxType.string:
+        //            return true;
+        //        case TextBoxType.number:
+        //            return !!(<string>value.toString()).match(/^\d+\.{0,1}\d*?$/);
+        //        default:
+        //            throw new Error('TextBoxType value is not implemented.');
+        //    }
+        //}
+
 
         //-----------
         // PROPERTIES
         //-----------
+
+        protected setDefaults() {
+            super.setDefaults();
+            this.type = TextBoxType.string;
+            this.readonly = false;
+            this.placeholder = '';
+        }
+
+        /**
+         * Returns the value of the text box according to it's type.
+         */
+        get value(): any {
+            switch (this.type) {
+                case TextBoxType.string:
+                    return this.domElement.val();
+                case TextBoxType.number:
+                    return parseFloat(this.domElement.val());
+                default:
+                    throw new Error('TextBoxType value is not implemented.');
+            }
+        }
 
         /**
          * Gets or sets button's text.
@@ -65,6 +88,7 @@
             return this._text;
         }
         set text(text) {
+            //if (text) text = text.toString();
             this.onTextChanged.invoke({
                 oldValue: this._text,
                 newValue: this._text = text
@@ -85,6 +109,44 @@
             this._type = type;
         }
         protected _type: TextBoxType;
+
+        /**
+         * Gets or sets value, indicating whether text box is readonly.
+         */
+        get readonly() {
+            return this._readonly;
+        }
+        set readonly(readonly) {
+            this._readonly = readonly;
+
+            // DOM
+            if (readonly) {
+                this.domElement.attr('readonly', 'true');
+            }
+            else {
+                this.domElement.removeAttr('readonly');
+            }
+        }
+        protected _readonly: boolean;
+
+        /**
+         * Gets or sets text placeholder.
+         */
+        get placeholder() {
+            return this._placeholder;
+        }
+        set placeholder(placeholder) {
+            this._placeholder = placeholder;
+
+            // DOM
+            if (placeholder) {
+                this.domElement.attr('placeholder', placeholder);
+            }
+            else {
+                this.domElement.removeAttr('placeholder');
+            }
+        }
+        protected _placeholder: string;
 
         /**
          * If enabled, listeners will be notified of changes on every input key is down.
@@ -108,6 +170,13 @@
                 'type': {
                     'string': () => this.type = TextBoxType.string,
                     'number': () => this.type = TextBoxType.number
+                },
+                'readonly': {
+                    'true': () => this.readonly = true,
+                    'false': () => this.readonly = false
+                },
+                'placeholder': {
+                    '*': (value) => this.placeholder = value
                 }
             });
         }

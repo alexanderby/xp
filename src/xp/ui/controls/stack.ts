@@ -26,6 +26,7 @@
         //-----------
 
         protected setDefaults() {
+            super.setDefaults();
             this.flow = Flow.vertical;
             this.contentAlignment = ContentAlignment.start;
             this.itemsAlignment = ItemsAlignment.stretch;

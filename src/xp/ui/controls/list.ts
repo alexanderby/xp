@@ -37,6 +37,9 @@
 
             var childXmlNode = xmlElement.children().get(0);
             this.itemTemplateXml = childXmlNode;
+
+            // TODO: Ability to set template from code.
+
             //var tagName = childXmlNode.nodeName.toLowerCase();
             //if (!xp.Ui.Tags[tagName]) {
             //    throw new Error('Tags dictionary has no mathes for tag "' + tagName + '".');
@@ -110,6 +113,8 @@
         //----------
         // RELATIONS
         //----------
+
+        // TODO: Ability to set template from code.
 
         ///**
         // * Gets or sets list item template.
