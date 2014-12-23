@@ -91,14 +91,17 @@
             return this._text;
         }
         set text(text) {
-            //if (text) text = text.toString();
-            this.onTextChanged.invoke({
-                oldValue: this._text,
-                newValue: this._text = text
-            });
+            var old = this._text;
+            this._text = text;
 
             // DOM
             this.domElement.val(text);
+
+            //if (text) text = text.toString();
+            this.onTextChanged.invoke({
+                oldValue: old,
+                newValue: text
+            });
         }
         protected _text: string;
 

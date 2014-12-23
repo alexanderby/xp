@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<window xmlns="http://tempuri.org/Markup.xsd" title="Test App" content-align="center" items-align="center">
+  <stack width="20em">
+    <label text="TODO"/>
+    <textbox name="textbox" placeholder="TODO:"/>
+    <list name="list" items="{todos}">
+      <stack flow="horizontal">
+        <checkbox checked="{isDone}"/>
+        <label text="{name}"/>
+        <button key="delete" text="Delete"/>
+      </stack>
+    </list>
+    <stack flow="horizontal">
+      <!--<label text="({todos.length} + ' items left')"/>-->
+      <label text="({todos}.finter(function(t){return t.isDone;}).length + ' items left')"/>
+      <!--RadioButtons: All, active, completed.-->
+      <button name="button_ClearCompleted" text="Clear completed"/>
+    </stack>
+  </stack>
+</window>

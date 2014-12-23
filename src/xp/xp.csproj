@@ -68,6 +68,10 @@
     <Content Include="testapp\view\window.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="todo\index.html" />
+    <Content Include="todo\view\window.xml">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -79,6 +83,7 @@
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="tests\binding.collection.tests.ts" />
+    <TypeScriptCompile Include="todo\app.ts" />
     <TypeScriptCompile Include="ui\controls\button.ts" />
     <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />
