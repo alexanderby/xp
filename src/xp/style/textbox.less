@@ -16,13 +16,13 @@
     outline: none;
     border: none;
     overflow: hidden;
-}
 
-.textbox:hover {
-    background-color: @back-hover;
-}
+    &:hover {
+        background-color: @back-hover;
 
-.textbox:focus {
-    background-color: @back-active;
-    outline: none;
+        &:focus {
+            background-color: @back-active;
+            outline: none;
+        }
+    }
 }

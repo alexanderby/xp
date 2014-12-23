@@ -7,17 +7,16 @@
 .stack {
     .stretched();
     overflow: hidden;
-}
 
-.stack > .content {
-    display: flex;
-    min-width: 100%;
-    min-height: 100%; // Doesn't work in IE http://jsfiddle.net/kevinsbennett/LXwF8/1/
-}
-
-.stack > .content > div,
-.stack > .content > span {
-    flex: none;
+    > .content {
+        display: flex;
+        min-width: 100%;
+        min-height: 100%; // Doesn't work in IE http://jsfiddle.net/kevinsbennett/LXwF8/1/
+        > div,
+        > span {
+            flex: none;
+        }
+    }
 }
 
 /* Flow */
