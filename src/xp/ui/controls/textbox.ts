@@ -39,12 +39,12 @@
                 }
             });
 
-            // Remove focus on 'Enter' key press
-            this.domElement.on('keypress', (e) => {
-                if (e.keyCode === 13) {
-                    (<any>document.activeElement).blur();
-                }
-            });
+            //// Remove focus on 'Enter' key press
+            //this.domElement.on('keypress', (e) => {
+            //    if (e.keyCode === 13) {
+            //        (<any>document.activeElement).blur();
+            //    }
+            //});
         }
 
         //protected isValid(value) {

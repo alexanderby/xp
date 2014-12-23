@@ -25,8 +25,8 @@
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
   </stack>
-  <stack width="20em" items-align="stretch">
-    <stack flow="horizontal">
+  <stack width="20em" items-align="center" content-align="center">
+    <stack flow="horizontal" height="4em">
       <checkbox name="ch1" checked="({numbers.length} > 3)"/>
       <label text="Length > 3"/>
     </stack>

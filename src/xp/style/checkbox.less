@@ -6,7 +6,7 @@
 
 .checkbox {
     -webkit-appearance: none;
-    background-color: @back-hover;
+    background-color: @color-input-back;
     border: none;
     box-sizing: border-box;
     cursor: default;
@@ -21,13 +21,13 @@
     width: 1em;
 
     &:hover {
-        background-color: @back-hover2;
+        background-color: @color-input-hover;
     }
 
     &:checked {
 
         &:before {
-            background-color: @fore;
+            background-color: @color-input-fore;
             content: "";
             display: inline-block;
             height: 0.1875em;
@@ -39,7 +39,7 @@
         }
 
         &:after {
-            background-color: @fore;
+            background-color: @color-input-fore;
             content: "";
             display: inline-block;
             height: 0.1875em;
