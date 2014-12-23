@@ -31,6 +31,7 @@
           <xs:element ref="label"/>
           <xs:element ref="textbox"/>
           <xs:element ref="list"/>
+          <xs:element ref="checkbox"/>
         </xs:choice>
       </xs:extension>
     </xs:complexContent>
@@ -170,6 +171,17 @@
       <xs:enumeration value="number"/>
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:element name="checkbox">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="element">
+          <xs:attribute name="checked" type="xs:string"/>
+          <xs:attribute name="readonly" type="boolean"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
 
   <!-- Enums -->
   <xs:simpleType name="boolean">

@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<input class="textbox" type="text" placeholder="Abc"></input>');
+            var template = $('<input class="textbox" type="text"></input>');
             //template.attr('tabindex', TabIndex++);
             return template;
         }
@@ -27,6 +27,7 @@
         protected initEvents() {
             super.initEvents();
             this.onTextChanged = new Event<TextChangeArgs>();
+            this.onRemove.addHandler(() => this.onTextChanged.removeAllHandlers(), this);
 
             // On text input
             this.domElement.on('change', (e) => {
@@ -84,7 +85,7 @@
         }
 
         /**
-         * Gets or sets button's text.
+         * Gets or sets text.
          */
         get text() {
             return this._text;

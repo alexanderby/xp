@@ -59,5 +59,9 @@
       <label text="sum"/>
       <textbox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%" readonly="true"/>
     </stack>
+    <stack flow="horizontal">
+      <checkbox name="ch1" checked="({numbers.length} > 3)"/>
+      <label text="Length > 3"/>
+    </stack>
   </stack>
 </window>

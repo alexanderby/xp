@@ -74,6 +74,7 @@
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="tests\binding.collection.tests.ts" />
     <TypeScriptCompile Include="ui\controls\button.ts" />
+    <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />
     <TypeScriptCompile Include="ui\controls\element.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
