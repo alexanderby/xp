@@ -5,49 +5,72 @@
 ----------*/
 
 .checkbox {
-    -webkit-appearance: none;
-    background-color: @color-input-back;
-    border: none;
+    align-items: center;
     box-sizing: border-box;
     cursor: default;
-    display: inline-block;
+    display: inline-flex;
     flex: none;
+    flex-flow: row nowrap;
     font-size: 1em;
-    height: 1em;
-    line-height: 1em;
-    margin: 0.5em 0;
-    outline: none;
-    position: relative;
-    width: 1em;
+    //height: 2em; // IE
+    justify-content: center;
+    min-height: 2em;
+    min-width: 2em;
+    overflow: hidden;
+    padding: 0 0.5em;
 
-    &:hover {
-        background-color: @color-input-hover;
+    > input[type=checkbox] {
+        display: none;
+
+        &:checked + .check {
+            &:before {
+                background-color: @color-input-fore;
+                content: "";
+                display: inline-block;
+                height: 0.25em;
+                left: 0.125em;
+                position: absolute;
+                top: 0.5em;
+                transform: skewY(45deg);
+                width: 0.25em;
+            }
+
+            &:after {
+                background-color: @color-input-fore;
+                content: "";
+                display: inline-block;
+                height: 0.25em;
+                position: absolute;
+                top: 0.375em;
+                transform: skewY(-45deg);
+                width: 0.5em;
+                left: 0.375em;
+            }
+        }
     }
 
-    &:checked {
+    > .check {
+        background-color: @color-input-back;
+        display: inline-block;
+        flex: none;
+        font-size: 1em;
+        height: 1em;
+        margin: 0.5em 0;
+        position: relative;
+        width: 1em;
+    }
 
-        &:before {
-            background-color: @color-input-fore;
-            content: "";
-            display: inline-block;
-            height: 0.1875em;
-            left: 0.125em;
-            position: absolute;
-            top: 0.5em;
-            transform: skewY(45deg);
-            width: 0.3125em;
-        }
+    &:hover > .check {
+        background-color: @color-input-active;
+    }
 
-        &:after {
-            background-color: @color-input-fore;
-            content: "";
-            display: inline-block;
-            height: 0.1875em;
-            position: absolute;
-            top: 0.4375em;
-            transform: skewY(-45deg);
-            width: 0.4375em;
-            left: 0.4375em;
-        }
+    > .text {
+        margin-left: 0.25em;
+        color: @color-fore;
+        display: inline-block;
+        flex: none;
+        font-size: 1em;
+        line-height: 1em;
+        pointer-events: none;
     }
 }

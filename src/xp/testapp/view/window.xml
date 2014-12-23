@@ -11,7 +11,8 @@
     </stack>
     <view name="view2"/>
   </view>
-  <stack flow="horizontal" items-align="center" content-align="start" name="stack3" wrapping="wrap">
+  <stack flow="horizontal" items-align="stretch" content-align="start" name="stack3" wrapping="wrap">
+    <button text="Button" icon="icon-16-white.svg" height="3em"/>
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
@@ -19,17 +20,14 @@
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
+    <checkbox text="Check"/>
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
     <button text="Button" icon="icon-16-white.svg"/>
   </stack>
   <stack width="20em" items-align="center" content-align="center">
-    <stack flow="horizontal" height="4em">
-      <checkbox name="ch1" checked="({numbers.length} > 3)"/>
-      <label text="Length > 3"/>
-    </stack>
+    <checkbox name="ch1" checked="({numbers.length} > 3)" text="Length > 3" readonly="true"/>
     <label text="{name}" name="label1" height="4em"/>
     <textbox text="{city.name}" name="textbox1" width="100%"/>
     <stack flow="horizontal" context="{city}" name="stack_ctx" items-align="stretch">

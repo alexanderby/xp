@@ -85,7 +85,7 @@
                 },
                 'text': {
                     '*': (value) => this.text = value
-                },
+                }
             });
         }
     }

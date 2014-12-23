@@ -9,10 +9,14 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<input class="checkbox" type="checkbox"></input>');
-            //template.attr('tabindex', TabIndex++);
+            var template = $('<label class="checkbox"><input type="checkbox"/><span class="check"></span><label class="text"></label></label>');
+            this.checkElement = template.find('input');
+            this.textElement = template.find('label');
             return template;
         }
+
+        protected checkElement: JQuery;
+        protected textElement: JQuery;
 
 
         //-------
@@ -31,7 +35,13 @@
 
             // On check change input
             this.domElement.on('change', (e) => {
-                this.onInput('checked', this.value);
+                if (!this.readonly) {
+                    this.onInput('checked', this.value);
+                }
+                else {
+                    // Fix for not working "readonly" attribute
+                    this.checkElement.prop('checked', !this.value);
+                }
             });
         }
 
@@ -44,13 +54,14 @@
             super.setDefaults();
             this.checked = false;
             this.readonly = false;
+            this.text = '';
         }
 
         /**
          * Returns the value of the text box according to it's type.
          */
         get value(): boolean {
-            return !!this.domElement.prop('checked');
+            return !!this.checkElement.prop('checked');
         }
 
         /**
@@ -64,9 +75,30 @@
             this.onCheckChanged.invoke(checked);
 
             // DOM
-            this.domElement.prop('checked', checked);
+            this.checkElement.prop('checked', checked);
         }
         protected _checked: boolean;
+
+        /**
+         * Gets or sets button's text.
+         */
+        get text() {
+            return this._text;
+        }
+        set text(text) {
+            this._text = text;
+
+            // DOM
+            if (!!text === true) {
+                // Set text
+                this.textElement.text(text);
+                this.textElement.show();
+            }
+            else {
+                this.textElement.hide();
+            }
+        }
+        protected _text: string;
 
         /**
          * Gets or sets value, indicating whether text box is readonly.
@@ -79,10 +111,11 @@
 
             // DOM
             if (readonly) {
-                this.domElement.attr('readonly', 'true');
+                this.domElement.attr('readonly', 'readonly');
+                this.checkElement.attr('readonly', 'readonly');
             }
             else {
-                this.domElement.removeAttr('readonly');
+                this.checkElement.removeAttr('readonly');
             }
         }
         protected _readonly: boolean;
@@ -97,6 +130,9 @@
                 'checked': {
                     'true': () => this.checked = true,
                     'false': () => this.checked = false
+                },
+                'text': {
+                    '*': (value) => this.text = value
                 },
                 'readonly': {
                     'true': () => this.readonly = true,
