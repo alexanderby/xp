@@ -1,0 +1,53 @@
+﻿@import "global.less";
+
+/*--------
+    CHECKBOX
+----------*/
+
+.checkbox {
+    -webkit-appearance: none;
+    background-color: @back-hover;
+    border: none;
+    box-sizing: border-box;
+    cursor: default;
+    display: inline-block;
+    flex: none;
+    font-size: 1em;
+    height: 1em;
+    line-height: 1em;
+    margin: 0.5em 0;
+    outline: none;
+    position: relative;
+    width: 1em;
+
+    &:hover {
+        background-color: @back-hover2;
+    }
+
+    &:checked {
+
+        &:before {
+            background-color: @fore;
+            content: "";
+            display: inline-block;
+            height: 0.1875em;
+            left: 0.125em;
+            position: absolute;
+            top: 0.5em;
+            transform: skewY(45deg);
+            width: 0.3125em;
+        }
+
+        &:after {
+            background-color: @fore;
+            content: "";
+            display: inline-block;
+            height: 0.1875em;
+            position: absolute;
+            top: 0.4375em;
+            transform: skewY(-45deg);
+            width: 0.4375em;
+            left: 0.4375em;
+        }
+    }
+}

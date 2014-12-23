@@ -193,7 +193,7 @@
         }
 
         /**
-         * Searches for an element with given name.
+         * Searches for the first element with given name, key or selector.
          * @param selector Element's selector (e.g. "#name", ".key" "ClassName").
          */
         findElement(selector: string): Element {
@@ -209,6 +209,39 @@
                 var className = selector.toLowerCase();
                 return this.cascadeBy((e) => xp.getClassName(e).toLowerCase() === className);
             }
+        }
+
+        /**
+         * Searches for all element with given name, key or selector.
+         * @param selector Elements' selector (e.g. "#name", ".key" "ClassName").
+         */
+        findElements(selector: string): Element[] {
+            var results: Element[] = [];
+            if (selector[0] === '#') {
+                var name = selector.substring(1);
+                this.cascadeBy((e) => {
+                    if (e.name === name) {
+                        results.push(e);
+                    }
+                });
+            }
+            else if (selector[0] === '.') {
+                var key = selector.substring(1);
+                this.cascadeBy((e) => {
+                    if (e.key === key) {
+                        results.push(e);
+                    }
+                });
+            }
+            else {
+                var className = selector.toLowerCase();
+                this.cascadeBy((e) => {
+                    if (xp.getClassName(e).toLowerCase() === className) {
+                        results.push(e);
+                    }
+                });
+            }
+            return results;
         }
     }
 } 

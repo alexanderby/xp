@@ -26,6 +26,10 @@
     <button text="Button" icon="icon-16-white.svg"/>
   </stack>
   <stack width="20em" items-align="stretch">
+    <stack flow="horizontal">
+      <checkbox name="ch1" checked="({numbers.length} > 3)"/>
+      <label text="Length > 3"/>
+    </stack>
     <label text="{name}" name="label1" height="4em"/>
     <textbox text="{city.name}" name="textbox1" width="100%"/>
     <stack flow="horizontal" context="{city}" name="stack_ctx" items-align="stretch">
@@ -58,10 +62,6 @@
     <stack flow="horizontal">
       <label text="sum"/>
       <textbox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%" readonly="true"/>
-    </stack>
-    <stack flow="horizontal">
-      <checkbox name="ch1" checked="({numbers.length} > 3)"/>
-      <label text="Length > 3"/>
     </stack>
   </stack>
 </window>

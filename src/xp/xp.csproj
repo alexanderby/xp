@@ -24,6 +24,12 @@
     <Content Include="style\button.min.css">
       <DependentUpon>button.css</DependentUpon>
     </Content>
+    <Content Include="style\checkbox.css">
+      <DependentUpon>checkbox.less</DependentUpon>
+    </Content>
+    <Content Include="style\checkbox.min.css">
+      <DependentUpon>checkbox.css</DependentUpon>
+    </Content>
     <Content Include="style\defaultstyle.css">
       <DependentUpon>defaultstyle.less</DependentUpon>
     </Content>
@@ -115,6 +121,10 @@
     <Content Include="style\textbox.less" />
     <Content Include="style\textbox.css.map">
       <DependentUpon>textbox.css</DependentUpon>
+    </Content>
+    <Content Include="style\checkbox.less" />
+    <Content Include="style\checkbox.css.map">
+      <DependentUpon>checkbox.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
