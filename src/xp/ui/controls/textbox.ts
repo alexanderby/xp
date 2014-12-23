@@ -9,7 +9,9 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<input class="textbox" type="text" placeholder="Abc"></input>');
+            var template = $('<input class="textbox" type="text" placeholder="Abc"></input>');
+            //template.attr('tabindex', TabIndex++);
+            return template;
         }
 
 
@@ -75,7 +77,7 @@
                 case TextBoxType.string:
                     return this.domElement.val();
                 case TextBoxType.number:
-                    return parseFloat(this.domElement.val());
+                    return parseFloat(this.domElement.val()) || 0;
                 default:
                     throw new Error('TextBoxType value is not implemented.');
             }
@@ -193,5 +195,4 @@
         string,
         number
     }
-
 } 

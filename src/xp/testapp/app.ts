@@ -17,16 +17,13 @@ window.onload = () => {
             name: 'New York',
             country: {
                 name: 'USA',
-                toString: () => 'Country1'
             },
-            toString: () => 'City1'
         },
         books: [
             { pages: 5 },
             { pages: 44 }
         ],
         numbers: [3, 5, 7],
-        toString: () => 'Person1'
     };
     bs = xp.Binding.createNotifierFrom(person);
 
@@ -46,9 +43,7 @@ window.onload = () => {
                 name: 'Gomel',
                 country: {
                     name: 'Belarus',
-                    toString: () => 'Country2'
                 },
-                toString: () => 'City2'
             };
             bs['numbers'].push(4);
         }, 2000);

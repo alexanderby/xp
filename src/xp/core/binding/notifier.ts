@@ -38,7 +38,7 @@
         }
         return obj;
     }
-    
+
     /**
      * Determines whether object implements INotifier.
      * @param obj Object.
@@ -61,16 +61,16 @@
     function addNotificationProperty(obj: INotifier, name: string, value?) {
         //
         // Ensure property is not already present.
-        //if (obj[name] !== void 0) {
-        //    throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
-        //}
-        //if (name === 'onPropertyChanged') {
-        //    throw new Error('Unable to create notification property. Reserved name is used.');
-        //}
+        if (obj[name] !== void 0) {
+            throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
+        }
+        if (name === 'onPropertyChanged') {
+            throw new Error('Unable to create notification property. Reserved name is used.');
+        }
         var fieldName = getFieldName(name);
-        //if (obj[fieldName]) {
-        //    throw new Error('Unable to create field for notification property. Object already has "' + fieldName + '" property.');
-        //}
+        if (obj[fieldName]) {
+            throw new Error('Unable to create field for notification property. Object already has "' + fieldName + '" property.');
+        }
         if (value !== void 0) {
             obj[fieldName] = value;
         }

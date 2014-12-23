@@ -194,12 +194,21 @@
 
         /**
          * Searches for an element with given name.
-         * @param name Element's name.
+         * @param selector Element's selector (e.g. "#name", ".key" "ClassName").
          */
-        findElement(name: string): Element {
-            name = name.toLowerCase();
-            var result = this.cascadeBy((e) => e.name === name);
-            return result;
+        findElement(selector: string): Element {
+            if (selector[0] === '#') {
+                var name = selector.substring(1);
+                return this.cascadeBy((e) => e.name === name);
+            }
+            else if (selector[0] === '.') {
+                var key = selector.substring(1);
+                return this.cascadeBy((e) => e.key === key);
+            }
+            else {
+                var className = selector.toLowerCase();
+                return this.cascadeBy((e) => xp.getClassName(e).toLowerCase() === className);
+            }
         }
     }
 } 

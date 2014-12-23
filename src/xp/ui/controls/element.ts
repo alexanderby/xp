@@ -153,6 +153,17 @@
         protected _name: string;
 
         /**
+         * Gets or sets element's key.
+         */
+        get key() {
+            return this._key;
+        }
+        set key(key) {
+            this._key = key.toLowerCase();
+        }
+        protected _key: string;
+
+        /**
          * Gets or sets width of the element (using CSS syntax).
          */
         get width() {
@@ -179,6 +190,21 @@
             this.domElement.css('height', height);
         }
         protected _height: string;
+
+        /**
+         * Gets or sets element's CSS class.
+         */
+        get style() {
+            return this._style;
+        }
+        set style(cssClass) {
+            this._style = cssClass;
+
+            // DOM
+            this.domElement.removeClass();
+            this.domElement.addClass(cssClass);
+        }
+        protected _style: string;
 
 
         //------------------
@@ -256,6 +282,12 @@
                 'name': {
                     '*': (name) => this.name = name,
                 },
+                'key': {
+                    '*': (key) => this.key = key,
+                },
+                'style': {
+                    '*': (cssClass) => this.style = cssClass,
+                },
                 'width': {
                     '*': (width) => this.width = width
                 },
@@ -324,6 +356,7 @@
             this.domElement.remove();
 
             this.onRemove.invoke(this);
+            this.onRemove.removeAllHandlers();
         }
 
         /**
@@ -489,7 +522,7 @@
          * Gets or sets control's data binding context.
          */
         get context() {
-            if (this._context) {
+            if (this._context !== void 0) {
                 return this._context;
             }
             else {
