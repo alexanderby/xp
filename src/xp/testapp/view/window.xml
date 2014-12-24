@@ -26,7 +26,7 @@
     <Button text="Button" icon="icon-16-white.svg"/>
     <Button text="Button" icon="icon-16-white.svg"/>
   </Stack>
-  <Stack width="20em" itemsAlign="center" contentAlign="center">
+  <Stack width="20em" itemsAlign="center" contentAlign="center" padding="0.5em">
     <CheckBox name="ch1" checked="({numbers.length} > 3)" text="Length > 3" readonly="true"/>
     <Label text="{name}" name="Label1" height="4em"/>
     <TextBox text="{city.name}" name="TextBox1" width="100%"/>

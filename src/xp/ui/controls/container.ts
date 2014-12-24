@@ -39,6 +39,25 @@
         }
 
 
+        //-----------
+        // PROPERTIES
+        //-----------
+
+        /**
+         * Gets or sets padding of the element (using CSS syntax).
+         */
+        get padding() {
+            return this._padding;
+        }
+        set padding(padding: string) {
+            this._padding = padding;
+
+            // DOM
+            this.domElement.css('padding', padding);
+        }
+        protected _padding: string;
+
+
         //------------------
         // MARKUP PROCESSING
         //------------------
@@ -73,6 +92,9 @@
                 'enabled': {
                     'true': () => this.cascadeBy((el) => el.enabled = true),
                     'false': () => this.cascadeBy((el) => el.enabled = true)
+                },
+                'padding': {
+                    '*': (padding) => this.padding = padding
                 }
             });
         }
