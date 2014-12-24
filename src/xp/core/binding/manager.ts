@@ -58,7 +58,7 @@
                     source[this.sourceProperty] = value;
             }
             else {
-                console.log(xp.formatString('BM of "{0}.{1}": Can\'t update source. Source "{2}" not found.', this.target['name'], this.targetProperty, source));
+                console.warn(xp.formatString('BM of "{0}.{1}": Can\'t update source. Source "{2}" not found.', this.target['name'], this.targetProperty, source));
             }
         }
 
@@ -74,7 +74,7 @@
             }
             else {
                 this.target[this.targetProperty] = this.dafaultValue;
-                console.log(xp.formatString('BM of "{0}.{1}": Can\'t update target. Source "{2}" not found.', this.target['name'], this.targetProperty, source));
+                console.warn(xp.formatString('BM of "{0}.{1}": Can\'t update target. Source "{2}" not found.', this.target['name'], this.targetProperty, source));
             }
         }
 

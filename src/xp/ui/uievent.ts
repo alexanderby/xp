@@ -1,22 +1,22 @@
-﻿module xp.Ui {
+﻿module xp.UI {
 
     export interface Coordinates {
         x: number;
         y: number;
     }
 
-    export interface UiEventArgs extends JQueryEventObject {
-        targetUiControl: Element;
+    export interface UIEventArgs extends JQueryEventObject {
+        targetUIControl: Element;
         elementX: number;
         elementY: number;
     }
 
     // TODO: How to use 'Event' interface?
-    export function createEventArgs(control: Element, domEventObject: any/*Event*/): UiEventArgs {
-        var e = <UiEventArgs>domEventObject;
+    export function createEventArgs(control: Element, domEventObject: any/*Event*/): UIEventArgs {
+        var e = <UIEventArgs>domEventObject;
 
         // Target element
-        e.targetUiControl = control;
+        e.targetUIControl = control;
 
         // Location relatively element
         var offset = control.domElement.offset();
@@ -26,5 +26,5 @@
         return e;
     }
 
-    export class UiEvent extends Event<UiEventArgs> { }
+    export class UIEvent extends Event<UIEventArgs> { }
 } 

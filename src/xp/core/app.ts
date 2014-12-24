@@ -6,19 +6,19 @@
      */
     export class Application {
 
-        protected windowHref: string;
+        protected windowUrl: string;
 
         constructor(config?: AppConfig) {
 
             //
             // Handle config
 
-            if (config && config.windowHref) {
-                this.windowHref = config.windowHref;
+            if (config && config.windowUrl) {
+                this.windowUrl = config.windowUrl;
             }
             else {
                 // Set default window path if not present.
-                this.windowHref = 'view/window.xml';
+                this.windowUrl = 'view/window.xml';
             }
         }
 
@@ -34,7 +34,7 @@
         /**
          * Application's window.
          */
-        window: Ui.Window;
+        window: UI.Window;
 
 
         /**
@@ -44,10 +44,10 @@
             var windowXml: JQuery;
 
             // Load window
-            windowXml = xp.loadMarkupSync(this.windowHref);
+            windowXml = xp.loadMarkupSync(this.windowUrl);
 
             // Create window
-            this.window = new xp.Ui.Window(windowXml);
+            this.window = <xp.UI.Window>new xp.UI.Tags['window'](windowXml));
 
             // Replace body
             $('body').replaceWith(this.window.domElement);
@@ -58,7 +58,7 @@
      * Base application config.
      */
     export interface AppConfig {
-        windowHref?: string;
+        windowUrl: string;
     }
 
 

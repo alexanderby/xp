@@ -1,5 +1,5 @@
 ﻿var app = new xp.Application({
-    windowHref: 'view/window.xml'
+    windowUrl: 'view/window.xml'
 });
 
 var person;

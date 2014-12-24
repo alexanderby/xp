@@ -15,6 +15,8 @@
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="context" type="xs:string"/>
+    <!--Events-->
+    <xs:attribute name="onclick" type="xs:string"/>
   </xs:attributeGroup>
 
   <xs:complexType name="element">

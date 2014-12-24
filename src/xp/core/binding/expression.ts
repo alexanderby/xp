@@ -23,7 +23,7 @@
             this.onPropertyChanged = new Event<string>();
 
             // Find paths
-            var regex = /\{([^\s]+?)\}/g;
+            var regex = /\{([^\s\(\)]+?)\}/g;
             var matches = expression.match(regex);
             var propsPaths: string[] = [];
             if (matches) {
@@ -121,7 +121,7 @@
                 this.resultField = this.func.apply(this, params);
             }
             catch (e) {
-                console.log('Expression error: ' + e);
+                console.warn('Expression error: ' + e);
                 this.resultField = null;
             }
             this.onPropertyChanged.invoke('result');

@@ -1,4 +1,4 @@
-﻿module xp.Ui {
+﻿module xp.UI {
     /**
      * List container.
      */
@@ -141,10 +141,10 @@
         protected addItem(index: number, item) {
             // Create child
             var tagName = this.itemTemplateXml.nodeName.toLowerCase();
-            if (!xp.Ui.Tags[tagName]) {
+            if (!xp.UI.Tags[tagName]) {
                 throw new Error('Tags dictionary has no mathes for tag "' + tagName + '".');
             }
-            var type = xp.Ui.Tags[tagName];
+            var type = xp.UI.Tags[tagName];
             var child = new type($(this.itemTemplateXml));
             child.name = xp.createUuid();
             child.useParentContext = false;

@@ -75,7 +75,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="todo\index.html" />
-    <Content Include="todo\window.xml">
+    <Content Include="todo\main.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="web.config" />
@@ -84,12 +84,14 @@
     <TypeScriptCompile Include="core\binding\collection.ts" />
     <TypeScriptCompile Include="core\binding\manager.ts" />
     <TypeScriptCompile Include="core\binding\notifier.ts" />
+    <TypeScriptCompile Include="core\controller.ts" />
     <TypeScriptCompile Include="testapp\app.ts" />
     <TypeScriptCompile Include="core\app.ts" />
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="tests\binding.collection.tests.ts" />
     <TypeScriptCompile Include="todo\app.ts" />
+    <TypeScriptCompile Include="todo\main.ts" />
     <TypeScriptCompile Include="ui\controls\button.ts" />
     <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />

@@ -1,4 +1,4 @@
-﻿module xp.Ui {
+﻿module xp.UI {
     /**
      * UI container.
      */
@@ -16,6 +16,7 @@
             if (xmlElement) {
                 this.processXml(xmlElement);
             }
+            this.setNamedChildren();
         }
 
         /**
@@ -53,10 +54,10 @@
             $.each(xmlElement.children(), (i, childXmlNode) => {
                 // Create child
                 var tagName = childXmlNode.nodeName.toLowerCase();
-                if (!xp.Ui.Tags[tagName]) {
+                if (!xp.UI.Tags[tagName]) {
                     throw new Error('Tags dictionary has no mathes for tag "' + tagName + '".');
                 }
-                var type = xp.Ui.Tags[tagName];
+                var type = xp.UI.Tags[tagName];
                 var child = new type($(childXmlNode));
 
                 // Append child
@@ -242,6 +243,21 @@
                 });
             }
             return results;
+        }
+
+        /**
+         * Sets named children to control's properties.
+         */
+        protected setNamedChildren() {
+            this.cascadeBy((el) => {
+                if (el.name) {
+                    if (this[el.name] !== void 0) {
+                        //throw new Error(xp.formatString('{0}:{1}: The name "{2}" conflicts with container\'s property.', xp.getClassName(this), this.name || '-', el.name));
+                    }
+                    this[el.name] = el;
+                }
+                return false;
+            });
         }
     }
 } 

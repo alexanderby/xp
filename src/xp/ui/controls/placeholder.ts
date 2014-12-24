@@ -1,4 +1,4 @@
-﻿module xp.Ui {
+﻿module xp.UI {
     /**
      * Dummy placeholder.
      */

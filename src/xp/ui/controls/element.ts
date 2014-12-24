@@ -1,4 +1,4 @@
-﻿module xp.Ui {
+﻿module xp.UI {
     /**
      * UI element.
      */
@@ -49,12 +49,12 @@
 
         protected onRemove: Event<Element>;
 
-        onClick: Event<UiEventArgs>;
-        onMouseDown: Event<UiEventArgs>;
-        onMouseUp: Event<UiEventArgs>;
-        onMouseMove: Event<UiEventArgs>;
-        onMouseEnter: Event<UiEventArgs>;
-        onMouseLeave: Event<UiEventArgs>;
+        onClick: Event<UIEventArgs>;
+        onMouseDown: Event<UIEventArgs>;
+        onMouseUp: Event<UIEventArgs>;
+        onMouseMove: Event<UIEventArgs>;
+        onMouseEnter: Event<UIEventArgs>;
+        onMouseLeave: Event<UIEventArgs>;
 
         /**
          * Initializes control's events.
@@ -66,12 +66,12 @@
 
             // Control's events
             this.onContextChanged = new Event<any>();
-            this.onClick = new Event<UiEventArgs>();
-            this.onMouseDown = new Event<UiEventArgs>();
-            this.onMouseUp = new Event<UiEventArgs>();
-            this.onMouseMove = new Event<UiEventArgs>();
-            this.onMouseEnter = new Event<UiEventArgs>();
-            this.onMouseLeave = new Event<UiEventArgs>();
+            this.onClick = new Event<UIEventArgs>();
+            this.onMouseDown = new Event<UIEventArgs>();
+            this.onMouseUp = new Event<UIEventArgs>();
+            this.onMouseMove = new Event<UIEventArgs>();
+            this.onMouseEnter = new Event<UIEventArgs>();
+            this.onMouseLeave = new Event<UIEventArgs>();
 
             // Unregister events on remove?
             this.onRemove = new Event<Element>();
@@ -86,16 +86,16 @@
             }, this);
 
             // DOM events.
-            this.initEvent('click', this.onClick);
-            this.initEvent('mousedown', this.onMouseDown);
-            this.initEvent('mouseup', this.onMouseUp);
-            this.initEvent('mousemove', this.onMouseMove);
-            this.initEvent('mouseenter', this.onMouseEnter);
-            this.initEvent('mouseleave', this.onMouseLeave);
+            this.initDomEvent('click', this.onClick);
+            this.initDomEvent('mousedown', this.onMouseDown);
+            this.initDomEvent('mouseup', this.onMouseUp);
+            this.initDomEvent('mousemove', this.onMouseMove);
+            this.initDomEvent('mouseenter', this.onMouseEnter);
+            this.initDomEvent('mouseleave', this.onMouseLeave);
         }
 
-        protected initEvent(eventName: string, event: UiEvent) {
-            this.domElement.on(eventName, (e: UiEventArgs) => {
+        protected initDomEvent(eventName: string, event: UIEvent) {
+            this.domElement.on(eventName, (e: UIEventArgs) => {
                 if (this.enabled) {
                     var args = createEventArgs(this, e);
                     event.invoke(args);
@@ -104,6 +104,10 @@
                     e.stopPropagation();
                 }
             });
+        }
+
+        protected getUIHandler(handlerName): EventHandler<UIEventArgs> {
+            return this.bubbleBy((el) => el[handlerName] !== void 0)[handlerName];
         }
 
 
@@ -294,7 +298,12 @@
                 'height': {
                     '*': (height) => this.height = height
                 },
-                'context': {} // ?
+                'context': {}, // ?
+
+                // Events
+                'onclick': {
+                    '*': (name) => this.onClick.addHandler(this.getUIHandler(name), this)
+                }
             };
         }
 

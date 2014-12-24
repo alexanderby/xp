@@ -1,4 +1,4 @@
-﻿module xp.Ui {
+﻿module xp.UI {
     /**
      * Text input.
      */
@@ -183,7 +183,10 @@
                 },
                 'placeholder': {
                     '*': (value) => this.placeholder = value
-                }
+                },
+                //'ontextchanged': {
+                //    '*': (value) => this.onTextChanged.addHandler(this.getUIHandler(value), this)
+                //}
             });
         }
     }
