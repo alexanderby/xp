@@ -46,6 +46,7 @@
         <xs:attribute name="flow" type="flow"/>
         <xs:attribute name="content-align" type="content-align"/>
         <xs:attribute name="items-align" type="items-align"/>
+        <xs:attribute name="items-intent" type="items-indent"/>
         <xs:attribute name="scrollbar" type="scrollbar"/>
         <xs:attribute name="wrapping" type="wrapping"/>
       </xs:extension>
@@ -111,6 +112,15 @@
       <xs:enumeration value="end"/>
       <xs:enumeration value="center"/>
       <xs:enumeration value="stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="items-indent">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="none"/>
+      <xs:enumeration value="0.5em"/>
+      <xs:enumeration value="1em"/>
+      <xs:enumeration value="2em"/>
+      <xs:enumeration value="4em"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="scrollbar">

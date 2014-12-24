@@ -3,7 +3,7 @@ var controller: Controller;
 
 window.onload = () => {
     app = new xp.Application({
-        windowHref: 'view/window.xml'
+        windowHref: 'window.xml'
     });
 
     app.start();

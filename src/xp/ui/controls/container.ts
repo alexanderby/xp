@@ -85,7 +85,7 @@
          * Children.
          * WARNING: Must be set only by itself.
          */
-        children: Element[];
+        children: Element[]; // TODO: ObservableCollection?
 
         /**
          * Adds an element at container's end.

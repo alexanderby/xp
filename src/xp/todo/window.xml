@@ -5,8 +5,7 @@
     <textbox name="textbox" placeholder="TODO:"/>
     <list name="list" items="{todos}">
       <stack flow="horizontal">
-        <checkbox checked="{isDone}"/>
-        <label text="{name}"/>
+        <checkbox checked="{isDone}" text="{name}"/>
         <button key="delete" text="Delete"/>
       </stack>
     </list>

@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<div class="view stack"><div class="content"></div></div>');
+            return $('<div class="list stack"><div class="content"></div></div>');
         }
 
         //------------------
@@ -97,6 +97,21 @@
                                 throw new Error('Not implemented.');
                         }
                     }, this);
+                }
+                if (Binding.isNotifier(items)) {
+                    var itemsLengthChangeHandler = (prop: string) => {
+                        if (prop === 'length') {
+                            if (this.items.length > 0) {
+                                this.domElement.show();
+                            }
+                            else {
+                                this.domElement.hide();
+                            }
+                        }
+                    };
+                    this.itemsRegistar.subscribe((<Binding.INotifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
+                    // Handle length for the first time
+                    itemsLengthChangeHandler('length');
                 }
             }
         }

@@ -318,6 +318,7 @@
             this._parent = parent;
             if (parent) {
                 this._parent.onContextChanged.addHandler(this.parentContextChangeHandler, this);
+                this.parentContextChangeHandler();
             }
         }
         protected _parent: Container;

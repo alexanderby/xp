@@ -69,7 +69,7 @@
       <SubType>Designer</SubType>
     </Content>
     <Content Include="todo\index.html" />
-    <Content Include="todo\view\window.xml">
+    <Content Include="todo\window.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="web.config" />

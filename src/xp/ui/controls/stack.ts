@@ -30,6 +30,7 @@
             this.flow = Flow.vertical;
             this.contentAlignment = ContentAlignment.start;
             this.itemsAlignment = ItemsAlignment.stretch;
+            this.itemsIndent = ItemsIndent._1em;
             this.scrollBar = ScrollBar.both;
             this.wrapping = Wrapping.nowrap;
         }
@@ -131,6 +132,45 @@
         }
 
         /**
+         * Gets or sets indent between children.
+         */
+        get itemsIndent() {
+            return this._itemsIndent;
+        }
+        set itemsIndent(indent: ItemsIndent) {
+            this._itemsIndent = indent;
+
+            // DOM
+            switch (indent) {
+                case ItemsIndent.none:
+                    this.removeItemsAlignmentClasses();
+                    break;
+                case ItemsIndent._0_5em:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-indent-05');
+                    break;
+                case ItemsIndent._1em:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-indent-1');
+                    break;
+                case ItemsIndent._2em:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-indent-2');
+                    break;
+                case ItemsIndent._4em:
+                    this.removeItemsAlignmentClasses();
+                    this.domElement.addClass('items-indent-4');
+                    break;
+                default:
+                    throw new Error('Unknown items indent value: ' + indent);
+            }
+        }
+        protected _itemsIndent: ItemsIndent;
+        protected removeItemsIndentClasses() {
+            this.domElement.removeClass('items-indent-05 items-indent-1 items-indent-2 items-indent-4');
+        }
+
+        /**
          * Gets or sets container's scroll bar options.
          */
         get scrollBar() {
@@ -216,6 +256,13 @@
                     'end': () => this.itemsAlignment = ItemsAlignment.end,
                     'stretch': () => this.itemsAlignment = ItemsAlignment.stretch
                 },
+                'items-indent': {
+                    'none': () => this.itemsIndent = ItemsIndent.none,
+                    '0.5em': () => this.itemsIndent = ItemsIndent._0_5em,
+                    '1em': () => this.itemsIndent = ItemsIndent._1em,
+                    '2em': () => this.itemsIndent = ItemsIndent._2em,
+                    '4em': () => this.itemsIndent = ItemsIndent._4em
+                },
                 'scrollbar': {
                     'none': () => this.scrollBar = ScrollBar.none,
                     'horizontal': () => this.scrollBar = ScrollBar.horizontal,
@@ -250,6 +297,17 @@
         center,
         end,
         stretch
+    }
+
+    /**
+    * Items indent values.
+    */
+    export enum ItemsIndent {
+        none,
+        _0_5em,
+        _1em,
+        _2em,
+        _4em
     }
 
     /**
