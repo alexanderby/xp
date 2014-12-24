@@ -32,6 +32,7 @@
           <xs:element ref="textbox"/>
           <xs:element ref="list"/>
           <xs:element ref="checkbox"/>
+          <xs:element ref="placeholder"/>
         </xs:choice>
       </xs:extension>
     </xs:complexContent>
@@ -190,6 +191,14 @@
           <xs:attribute name="readonly" type="boolean"/>
           <xs:attribute name="text" type="xs:string"/>
         </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="placeholder">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="element"/>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>

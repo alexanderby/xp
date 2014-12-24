@@ -48,6 +48,12 @@
     <Content Include="style\label.min.css">
       <DependentUpon>label.css</DependentUpon>
     </Content>
+    <Content Include="style\placeholder.css">
+      <DependentUpon>placeholder.less</DependentUpon>
+    </Content>
+    <Content Include="style\placeholder.min.css">
+      <DependentUpon>placeholder.css</DependentUpon>
+    </Content>
     <Content Include="style\stack.css">
       <DependentUpon>stack.less</DependentUpon>
     </Content>
@@ -88,6 +94,7 @@
     <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />
     <TypeScriptCompile Include="ui\controls\element.ts" />
+    <TypeScriptCompile Include="ui\controls\placeholder.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
     <TypeScriptCompile Include="ui\controls\list.ts" />
     <TypeScriptCompile Include="ui\controls\stack.ts" />
@@ -130,6 +137,10 @@
     <Content Include="style\checkbox.less" />
     <Content Include="style\checkbox.css.map">
       <DependentUpon>checkbox.css</DependentUpon>
+    </Content>
+    <Content Include="style\placeholder.less" />
+    <Content Include="style\placeholder.css.map">
+      <DependentUpon>placeholder.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
