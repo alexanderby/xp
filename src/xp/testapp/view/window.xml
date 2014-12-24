@@ -1,65 +1,65 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
-  <stack flow="horizontal" name="stack1" width="5em" height="4em" items-align="stretch">
-    <button name="button1" text="Click me" icon="icon-16-white.svg"/>
-    <button name="button2" text="Button 2"/>
-  </stack>
-  <view name="view1">
-    <stack flow="horizontal" items-align="center" content-align="center" name="stack2">
-      <button name="button3" text="Button3" height="4em"/>
-      <button name="button4" icon="icon-16-white.svg"/>
-    </stack>
-    <view name="view2"/>
-  </view>
-  <stack flow="horizontal" items-align="stretch" content-align="start" name="stack3" wrapping="wrap">
-    <button text="Button" icon="icon-16-white.svg" height="3em"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <checkbox text="Check"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-    <button text="Button" icon="icon-16-white.svg"/>
-  </stack>
-  <stack width="20em" items-align="center" content-align="center">
-    <checkbox name="ch1" checked="({numbers.length} > 3)" text="Length > 3" readonly="true"/>
-    <label text="{name}" name="label1" height="4em"/>
-    <textbox text="{city.name}" name="textbox1" width="100%"/>
-    <stack flow="horizontal" context="{city}" name="stack_ctx" items-align="stretch">
-      <textbox context="{country}" text="{name}" name="textbox2" width="100%"/>
-    </stack>
-    <textbox text="{city.country.name}" name="textbox3" notify-on-keydown="true" width="100%"/>
-    <stack flow="horizontal">
-      <label text="Label"/>
-      <textbox width="100%" text="{books[0].pages}" name="tb_0_pages"/>
-      <button text="Button"/>
-    </stack>
-    <textbox width="100%" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_1"/>
-    <textbox width="100%" text="{books[1].pages}" notify-on-keydown="true" name="tb_1_pages_2"/>
-    <list flow="vertical" name="list1" items="{books}">
-      <stack flow="horizontal" items-align="stretch">
-        <label text="book"/>
-        <textbox text="{pages}" width="100%"/>
-      </stack>
-    </list>
-    <list flow="vertical" name="list2" items="{numbers}" items-align="stretch">
-      <stack flow="horizontal">
-        <label text="number"/>
-        <textbox text="{}" width="100%" type="number"/>
-      </stack>
-    </list>
-    <stack flow="horizontal">
-      <label text="length"/>
-      <textbox text="({numbers.length})" name="tb_len" width="100%" type="number" readonly="true"/>
-    </stack>
-    <stack flow="horizontal">
-      <label text="sum"/>
-      <textbox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%" readonly="true"/>
-    </stack>
-  </stack>
-</window>
+<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
+  <Stack flow="horizontal" name="Stack1" width="5em" height="4em" itemsAlign="stretch">
+    <Button name="Button1" text="Click me" icon="icon-16-white.svg"/>
+    <Button name="Button2" text="Button 2"/>
+  </Stack>
+  <View name="view1">
+    <Stack flow="horizontal" itemsAlign="center" contentAlign="center" name="Stack2">
+      <Button name="Button3" text="Button3" height="4em"/>
+      <Button name="Button4" icon="icon-16-white.svg"/>
+    </Stack>
+    <View name="view2"/>
+  </View>
+  <Stack flow="horizontal" itemsAlign="stretch" contentAlign="start" name="Stack3" wrapping="wrap" itemsIndent="none">
+    <Button text="Button" icon="icon-16-white.svg" height="3em"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <CheckBox text="Check" margin="0 0.5em"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+    <Button text="Button" icon="icon-16-white.svg"/>
+  </Stack>
+  <Stack width="20em" itemsAlign="center" contentAlign="center">
+    <CheckBox name="ch1" checked="({numbers.length} > 3)" text="Length > 3" readonly="true"/>
+    <Label text="{name}" name="Label1" height="4em"/>
+    <TextBox text="{city.name}" name="TextBox1" width="100%"/>
+    <Stack flow="horizontal" context="{city}" name="Stack_ctx" itemsAlign="stretch">
+      <TextBox context="{country}" text="{name}" name="TextBox2" width="100%"/>
+    </Stack>
+    <TextBox text="{city.country.name}" name="TextBox3" notifyOnKeydown="true" width="100%"/>
+    <Stack flow="horizontal">
+      <Label text="Label"/>
+      <TextBox width="100%" text="{books[0].pages}" name="tb_0_pages"/>
+      <Button text="Button"/>
+    </Stack>
+    <TextBox width="100%" text="{books[1].pages}" notifyOnKeydown="true" name="tb_1_pages_1"/>
+    <TextBox width="100%" text="{books[1].pages}" notifyOnKeydown="true" name="tb_1_pages_2"/>
+    <List flow="vertical" name="List1" items="{books}">
+      <Stack flow="horizontal" itemsAlign="stretch">
+        <Label text="book"/>
+        <TextBox text="{pages}" width="100%"/>
+      </Stack>
+    </List>
+    <List flow="vertical" name="List2" items="{numbers}" itemsAlign="stretch">
+      <Stack flow="horizontal">
+        <Label text="number"/>
+        <TextBox text="{}" width="100%" type="number"/>
+      </Stack>
+    </List>
+    <Stack flow="horizontal">
+      <Label text="length"/>
+      <TextBox text="({numbers.length})" name="tb_len" width="100%" type="number" readonly="true"/>
+    </Stack>
+    <Stack flow="horizontal">
+      <Label text="sum"/>
+      <TextBox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%" readonly="true"/>
+    </Stack>
+  </Stack>
+</Window>

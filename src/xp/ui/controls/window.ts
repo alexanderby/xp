@@ -51,5 +51,5 @@
             });
         }
     }
-    Tags['window'] = Window;
+    Tags['Window'] = Window;
 } 

@@ -25,5 +25,5 @@
             super.processXml(xmlElement);
         }
     }
-    Tags['view'] = View;
+    Tags['View'] = View;
 } 

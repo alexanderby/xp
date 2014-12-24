@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<window xmlns="http://tempuri.org/Markup.xsd" title="Test App" content-align="center" items-align="center">
-  <stack width="20em">
-    <label text="TODO"/>
-    <textbox name="textbox" placeholder="TODO:" ontextchange="onTextboxTextChange"/>
-    <list name="list" items="{todos}">
-      <stack flow="horizontal">
-        <checkbox checked="{isDone}" text="{name}"/>
-        <placeholder/>
-        <button key="delete" text="Delete" onclick="onDeleteButtonClick"/>
-      </stack>
-    </list>
-    <stack flow="horizontal">
-      <label text="({todos}.filter(function(t){return !t.isDone;}).length + ' items left')"/>
+<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center">
+  <Stack width="20em">
+    <Label text="TODO"/>
+    <TextBox name="textbox" placeholder="TODO:" onTextChange="onTextboxTextChange"/>
+    <List name="list" items="{todos}">
+      <Stack flow="horizontal">
+        <CheckBox checked="{isDone}" text="{name}"/>
+        <Placeholder/>
+        <Button key="delete" text="Delete" onClick="onDeleteButtonClick"/>
+      </Stack>
+    </List>
+    <Stack flow="horizontal">
+      <Label text="({todos}.filter(function(t){return !t.isDone;}).length + ' items left')"/>
       <!--RadioButtons: All, active, completed.-->
-      <placeholder/>
-      <button name="button_ClearCompleted" text="Clear completed"/>
-    </stack>
-  </stack>
-</window>
+      <Placeholder/>
+      <Button name="button_ClearCompleted" text="Clear completed"/>
+    </Stack>
+  </Stack>
+</Window>

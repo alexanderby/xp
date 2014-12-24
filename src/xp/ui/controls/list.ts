@@ -18,9 +18,7 @@
 
         protected getAttributeMap(): AttributeMap {
             return xp.extendObject(super.getAttributeMap(), {
-                'items': {
-                    '*': (value) => this.items = value
-                }
+                'items': {} // ?
             });
         }
 
@@ -140,9 +138,9 @@
 
         protected addItem(index: number, item) {
             // Create child
-            var tagName = this.itemTemplateXml.nodeName.toLowerCase();
+            var tagName = this.itemTemplateXml.nodeName;
             if (!xp.UI.Tags[tagName]) {
-                throw new Error('Tags dictionary has no mathes for tag "' + tagName + '".');
+                throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
             }
             var type = xp.UI.Tags[tagName];
             var child = new type($(this.itemTemplateXml));
@@ -167,5 +165,5 @@
             }, this);
         }
     }
-    Tags['list'] = List;
+    Tags['List'] = List;
 }

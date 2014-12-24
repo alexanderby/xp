@@ -30,7 +30,7 @@
             this.flow = Flow.vertical;
             this.contentAlignment = ContentAlignment.start;
             this.itemsAlignment = ItemsAlignment.stretch;
-            this.itemsIndent = ItemsIndent._1em;
+            this.itemsIndent = ItemsIndent._0_5em;
             this.scrollBar = ScrollBar.both;
             this.wrapping = Wrapping.nowrap;
         }
@@ -143,22 +143,22 @@
             // DOM
             switch (indent) {
                 case ItemsIndent.none:
-                    this.removeItemsAlignmentClasses();
+                    this.removeItemsIndentClasses();
                     break;
                 case ItemsIndent._0_5em:
-                    this.removeItemsAlignmentClasses();
+                    this.removeItemsIndentClasses();
                     this.domElement.addClass('items-indent-05');
                     break;
                 case ItemsIndent._1em:
-                    this.removeItemsAlignmentClasses();
+                    this.removeItemsIndentClasses();
                     this.domElement.addClass('items-indent-1');
                     break;
                 case ItemsIndent._2em:
-                    this.removeItemsAlignmentClasses();
+                    this.removeItemsIndentClasses();
                     this.domElement.addClass('items-indent-2');
                     break;
                 case ItemsIndent._4em:
-                    this.removeItemsAlignmentClasses();
+                    this.removeItemsIndentClasses();
                     this.domElement.addClass('items-indent-4');
                     break;
                 default:
@@ -245,25 +245,25 @@
                     'horizontal': () => this.flow = Flow.horizontal,
                     'vertical': () => this.flow = Flow.vertical
                 },
-                'content-align': {
+                'contentAlign': {
                     'start': () => this.contentAlignment = ContentAlignment.start,
                     'center': () => this.contentAlignment = ContentAlignment.center,
                     'end': () => this.contentAlignment = ContentAlignment.end
                 },
-                'items-align': {
+                'itemsAlign': {
                     'start': () => this.itemsAlignment = ItemsAlignment.start,
                     'center': () => this.itemsAlignment = ItemsAlignment.center,
                     'end': () => this.itemsAlignment = ItemsAlignment.end,
                     'stretch': () => this.itemsAlignment = ItemsAlignment.stretch
                 },
-                'items-indent': {
+                'itemsIndent': {
                     'none': () => this.itemsIndent = ItemsIndent.none,
                     '0.5em': () => this.itemsIndent = ItemsIndent._0_5em,
                     '1em': () => this.itemsIndent = ItemsIndent._1em,
                     '2em': () => this.itemsIndent = ItemsIndent._2em,
                     '4em': () => this.itemsIndent = ItemsIndent._4em
                 },
-                'scrollbar': {
+                'scrollBar': {
                     'none': () => this.scrollBar = ScrollBar.none,
                     'horizontal': () => this.scrollBar = ScrollBar.horizontal,
                     'vertical': () => this.scrollBar = ScrollBar.vertical,
@@ -275,9 +275,9 @@
                 }
             });
         }
-
+        
     }
-    Tags['stack'] = Stack;
+    Tags['Stack'] = Stack;
 
 
     /**

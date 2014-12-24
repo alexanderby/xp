@@ -14,27 +14,28 @@
     <xs:attribute name="style" type="xs:string"/>
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
+    <xs:attribute name="margin" type="xs:string"/>
     <xs:attribute name="context" type="xs:string"/>
     <!--Events-->
-    <xs:attribute name="onclick" type="xs:string"/>
+    <xs:attribute name="onClick" type="xs:string"/>
   </xs:attributeGroup>
 
-  <xs:complexType name="element">
+  <xs:complexType name="Element">
     <xs:attributeGroup ref="attrs"/>
   </xs:complexType>
 
-  <xs:complexType name="container" mixed="true">
+  <xs:complexType name="Container" mixed="true">
     <xs:complexContent>
-      <xs:extension base="element">
+      <xs:extension base="Element">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element ref="view"/>
-          <xs:element ref="stack"/>
-          <xs:element ref="button"/>
-          <xs:element ref="label"/>
-          <xs:element ref="textbox"/>
-          <xs:element ref="list"/>
-          <xs:element ref="checkbox"/>
-          <xs:element ref="placeholder"/>
+          <xs:element ref="View"/>
+          <xs:element ref="Stack"/>
+          <xs:element ref="Button"/>
+          <xs:element ref="Label"/>
+          <xs:element ref="TextBox"/>
+          <xs:element ref="List"/>
+          <xs:element ref="CheckBox"/>
+          <xs:element ref="Placeholder"/>
         </xs:choice>
       </xs:extension>
     </xs:complexContent>
@@ -43,52 +44,52 @@
 
   <!-- CONTAINERS -->
 
-  <xs:complexType name="stack">
+  <xs:complexType name="Stack">
     <xs:complexContent>
-      <xs:extension base="container">
-        <xs:attribute name="flow" type="flow"/>
-        <xs:attribute name="content-align" type="content-align"/>
-        <xs:attribute name="items-align" type="items-align"/>
-        <xs:attribute name="items-intent" type="items-indent"/>
-        <xs:attribute name="scrollbar" type="scrollbar"/>
-        <xs:attribute name="wrapping" type="wrapping"/>
+      <xs:extension base="Container">
+        <xs:attribute name="flow" type="Flow"/>
+        <xs:attribute name="contentAlign" type="ContentAlign"/>
+        <xs:attribute name="itemsAlign" type="ItemsAlign"/>
+        <xs:attribute name="itemsIndent" type="ItemsIndent"/>
+        <xs:attribute name="scrollBar" type="ScrollBar"/>
+        <xs:attribute name="wrapping" type="Wrapping"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
-  <xs:element name="stack">
+  <xs:element name="Stack">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="stack">
+        <xs:extension base="Stack">
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="window">
+  <xs:element name="Window">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="stack">
+        <xs:extension base="Stack">
           <xs:attribute name="title" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="view">
+  <xs:element name="View">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="stack">
+        <xs:extension base="Stack">
           <xs:attribute name="href" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="list">
+  <xs:element name="List">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="stack">
+        <xs:extension base="Stack">
           <xs:attribute name="items" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
@@ -96,20 +97,20 @@
   </xs:element>
 
   <!-- Enums -->
-  <xs:simpleType name="flow">
+  <xs:simpleType name="Flow">
     <xs:restriction base="xs:string">
       <xs:enumeration value="horizontal"/>
       <xs:enumeration value="vertical"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="content-align">
+  <xs:simpleType name="ContentAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="start"/>
       <xs:enumeration value="end"/>
       <xs:enumeration value="center"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="items-align">
+  <xs:simpleType name="ItemsAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="start"/>
       <xs:enumeration value="end"/>
@@ -117,7 +118,7 @@
       <xs:enumeration value="stretch"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="items-indent">
+  <xs:simpleType name="ItemsIndent">
     <xs:restriction base="xs:string">
       <xs:enumeration value="none"/>
       <xs:enumeration value="0.5em"/>
@@ -126,7 +127,7 @@
       <xs:enumeration value="4em"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="scrollbar">
+  <xs:simpleType name="ScrollBar">
     <xs:restriction base="xs:string">
       <xs:enumeration value="none"/>
       <xs:enumeration value="horizontal"/>
@@ -134,7 +135,7 @@
       <xs:enumeration value="both"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="wrapping">
+  <xs:simpleType name="Wrapping">
     <xs:restriction base="xs:string">
       <xs:enumeration value="nowrap"/>
       <xs:enumeration value="wrap"/>
@@ -144,10 +145,10 @@
 
   <!-- ELEMENTS -->
 
-  <xs:element name="button">
+  <xs:element name="Button">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="element">
+        <xs:extension base="Element">
           <xs:attribute name="icon" type="xs:string"/>
           <xs:attribute name="text" type="xs:string"/>
         </xs:extension>
@@ -155,59 +156,59 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="label">
+  <xs:element name="Label">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="element">
+        <xs:extension base="Element">
           <xs:attribute name="text" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="textbox">
+  <xs:element name="TextBox">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="element">
+        <xs:extension base="Element">
           <xs:attribute name="text" type="xs:string"/>
-          <xs:attribute name="notify-on-keydown" type="boolean"/>
-          <xs:attribute name="type" type="textbox-type"/>
-          <xs:attribute name="readonly" type="boolean"/>
+          <xs:attribute name="notifyOnKeydown" type="Boolean"/>
+          <xs:attribute name="type" type="TextBoxType"/>
+          <xs:attribute name="readonly" type="Boolean"/>
           <xs:attribute name="placeholder" type="xs:string"/>
-          <xs:attribute name="ontextchange" type="xs:string"/>
+          <xs:attribute name="onTextChange" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
-  <xs:simpleType name="textbox-type">
+  <xs:simpleType name="TextBoxType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="string"/>
       <xs:enumeration value="number"/>
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:element name="checkbox">
+  <xs:element name="CheckBox">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="element">
+        <xs:extension base="Element">
           <xs:attribute name="checked" type="xs:string"/>
-          <xs:attribute name="readonly" type="boolean"/>
+          <xs:attribute name="readonly" type="Boolean"/>
           <xs:attribute name="text" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="placeholder">
+  <xs:element name="Placeholder">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="element"/>
+        <xs:extension base="Element"/>
       </xs:complexContent>
     </xs:complexType>
   </xs:element>
 
   <!-- Enums -->
-  <xs:simpleType name="boolean">
+  <xs:simpleType name="Boolean">
     <xs:restriction base="xs:string">
       <xs:enumeration value="true"/>
       <xs:enumeration value="false"/>

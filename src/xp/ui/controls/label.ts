@@ -51,5 +51,5 @@
             });
         }
     }
-    Tags['label'] = Label;
+    Tags['Label'] = Label;
 } 

@@ -15,5 +15,5 @@
         }
 
     }
-    Tags['placeholder'] = Placeholder;
+    Tags['Placeholder'] = Placeholder;
 }

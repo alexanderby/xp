@@ -89,5 +89,5 @@
             });
         }
     }
-    Tags['button'] = Button;
+    Tags['Button'] = Button;
 } 

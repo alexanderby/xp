@@ -53,9 +53,9 @@
             // Create children
             $.each(xmlElement.children(), (i, childXmlNode) => {
                 // Create child
-                var tagName = childXmlNode.nodeName.toLowerCase();
+                var tagName = childXmlNode.nodeName;
                 if (!xp.UI.Tags[tagName]) {
-                    throw new Error('Tags dictionary has no mathes for tag "' + tagName + '".');
+                    throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
                 }
                 var type = xp.UI.Tags[tagName];
                 var child = new type($(childXmlNode));

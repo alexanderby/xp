@@ -106,12 +106,14 @@
             });
         }
 
-        protected callUIHandler(handlerName: string, args: UIEventArgs) {
-            var elementWithHandler = this.bubbleBy((el) => el[handlerName] !== void 0);
-            if (!elementWithHandler) {
-                throw new Error(xp.formatString('{0}:{1}: Unable to find event handler "{2}".', xp.getClassName(this), this.name || '-', handlerName));
-            }
-            elementWithHandler[handlerName](args);
+        protected registerUIHandler(event: Event<UIEventArgs>, handlerName: string) {
+            event.addHandler((args) => {
+                var elementWithHandler = this.bubbleBy((el) => el[handlerName] !== void 0);
+                if (!elementWithHandler) {
+                    throw new Error(xp.formatString('{0}:{1}: Unable to find event handler "{2}".', xp.getClassName(this), this.name || '-', handlerName));
+                }
+                elementWithHandler[handlerName](args);
+            }, this);
         }
 
 
@@ -198,6 +200,20 @@
             this.domElement.css('height', height);
         }
         protected _height: string;
+
+        /**
+         * Gets or sets margin of the element (using CSS syntax).
+         */
+        get margin() {
+            return this._margin;
+        }
+        set margin(margin: string) {
+            this._margin = margin;
+
+            // DOM
+            this.domElement.css('margin', margin);
+        }
+        protected _margin: string;
 
         /**
          * Gets or sets element's CSS class.
@@ -302,11 +318,14 @@
                 'height': {
                     '*': (height) => this.height = height
                 },
+                'margin': {
+                    '*': (margin) => this.margin = margin
+                },
                 'context': {}, // ?
 
                 // Events
-                'onclick': {
-                    '*': (name) => this.onClick.addHandler((args) => this.callUIHandler(name, args), this)
+                'onClick': {
+                    '*': (name) => this.registerUIHandler(this.onClick, name)
                 }
             };
         }

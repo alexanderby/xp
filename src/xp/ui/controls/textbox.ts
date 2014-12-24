@@ -177,7 +177,7 @@
                 'text': {
                     '*': (value) => this.text = value
                 },
-                'notify-on-keydown': {
+                'notifyOnKeydown': {
                     'true': () => this.notifyOnKeyDown = true,
                     'false': () => this.notifyOnKeyDown = false
                 },
@@ -192,13 +192,13 @@
                 'placeholder': {
                     '*': (value) => this.placeholder = value
                 },
-                'ontextchange': {
-                    '*': (value) => this.onTextChange.addHandler((args) => this.callUIHandler(value, args), this)
+                'onTextChange': {
+                    '*': (value) => this.registerUIHandler(this.onTextChange, value)
                 }
             });
         }
     }
-    Tags['textbox'] = TextBox;
+    Tags['TextBox'] = TextBox;
 
 
     export interface TextChangeArgs extends UIEventArgs {

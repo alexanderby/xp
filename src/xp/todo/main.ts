@@ -54,5 +54,5 @@
             this.data.todos.splice(index, 1);
         }
     }
-    xp.UI.Tags['window'] = Main;
+    xp.UI.Tags['Window'] = Main;
 } 

@@ -140,11 +140,14 @@
                 'readonly': {
                     'true': () => this.readonly = true,
                     'false': () => this.readonly = false
+                },
+                'onCheckChange': {
+                    '*': (value) => this.registerUIHandler(this.onCheckChange, value)
                 }
             });
         }
     }
-    Tags['checkbox'] = CheckBox;
+    Tags['CheckBox'] = CheckBox;
 
     export interface CheckChangeArgs extends UI.UIEventArgs {
         checked: boolean;
