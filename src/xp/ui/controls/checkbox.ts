@@ -26,17 +26,21 @@
         /**
          * Fires when check box value is changed.
          */
-        onCheckChanged: Event<boolean>;
+        onCheckChange: Event<CheckChangeArgs>;
 
         protected initEvents() {
             super.initEvents();
-            this.onCheckChanged = new Event<boolean>();
-            this.onRemove.addHandler(() => this.onCheckChanged.removeAllHandlers(), this);
+            this.onCheckChange = new Event<CheckChangeArgs>();
+            this.onRemove.addHandler(() => this.onCheckChange.removeAllHandlers(), this);
 
             // On check change input
             this.domElement.on('change', (e) => {
                 if (!this.readonly) {
                     this.onInput('checked', this.value);
+
+                    var args = <CheckChangeArgs>UI.createEventArgs(this, e);
+                    args.checked = this.value;
+                    this.onCheckChange.invoke(args);
                 }
                 else {
                     // Fix for not working "readonly" attribute
@@ -72,7 +76,6 @@
         }
         set checked(checked) {
             this._checked = checked;
-            this.onCheckChanged.invoke(checked);
 
             // DOM
             this.checkElement.prop('checked', checked);
@@ -142,4 +145,8 @@
         }
     }
     Tags['checkbox'] = CheckBox;
+
+    export interface CheckChangeArgs extends UI.UIEventArgs {
+        checked: boolean;
+    }
 } 

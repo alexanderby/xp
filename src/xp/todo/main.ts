@@ -8,13 +8,6 @@
         constructor(xml) {
             super(xml);
 
-            this.textbox.onTextChanged.addHandler((args) => {
-                if (args.newValue) {
-                    this.addItem(args.newValue);
-                    this.textbox.text = '';
-                }
-            }, this);
-
             this.data = {
                 todos: new xp.Binding.ObservableCollection<TodoItem>(),
                 undone: 0
@@ -28,6 +21,13 @@
 
         private onDeleteButtonClick(args: xp.UI.UIEventArgs) {
             alert('Delete');
+        }
+
+        private onTextboxTextChange(args: xp.UI.TextChangeArgs) {
+            if (args.newText) {
+                this.addItem(args.newText);
+                this.textbox.text = '';
+            }
         }
 
         private textbox: xp.UI.TextBox;

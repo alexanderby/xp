@@ -106,8 +106,12 @@
             });
         }
 
-        protected getUIHandler(handlerName): EventHandler<UIEventArgs> {
-            return this.bubbleBy((el) => el[handlerName] !== void 0)[handlerName];
+        protected callUIHandler(handlerName: string, args: UIEventArgs) {
+            var elementWithHandler = this.bubbleBy((el) => el[handlerName] !== void 0);
+            if (!elementWithHandler) {
+                throw new Error(xp.formatString('{0}:{1}: Unable to find event handler "{2}".', xp.getClassName(this), this.name || '-', handlerName));
+            }
+            elementWithHandler[handlerName](args);
         }
 
 
@@ -302,7 +306,7 @@
 
                 // Events
                 'onclick': {
-                    '*': (name) => this.onClick.addHandler(this.getUIHandler(name), this)
+                    '*': (name) => this.onClick.addHandler((args) => this.callUIHandler(name, args), this)
                 }
             };
         }
@@ -424,15 +428,14 @@
          * @param fn Function to execute on each parent.
          * @returns Element which lead to returning 'truthy' value.
          */
-        bubbleBy(fn: (el: Container) => any): Container {
-            var parent = this.parent;
-            do {
-                if (!!fn(parent) === true) {
-                    return parent;
+        bubbleBy(fn: (el: Element) => any): Element {
+            var current = this;
+            while (current) {
+                if (!!fn(current) === true) {
+                    return current;
                 }
-                parent = parent.parent;
+                current = current.parent;
             }
-            while (!parent);
 
             return null;
         }

@@ -22,20 +22,28 @@
         /**
          * Fires when element's text is changed.
          */
-        onTextChanged: Event<TextChangeArgs>;
+        onTextChange: Event<TextChangeArgs>;
 
         protected initEvents() {
             super.initEvents();
-            this.onTextChanged = new Event<TextChangeArgs>();
-            this.onRemove.addHandler(() => this.onTextChanged.removeAllHandlers(), this);
+            this.onTextChange = new Event<TextChangeArgs>();
+            this.onRemove.addHandler(() => this.onTextChange.removeAllHandlers(), this);
 
             // On text input
             this.domElement.on('change', (e) => {
+                var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);
+                args.oldText = this.text;
                 this.onInput('text', this.value);
+                args.newText = this.value.toString();
+                this.onTextChange.invoke(args);
             });
             this.domElement.on('input', (e) => {
                 if (this.notifyOnKeyDown) {
+                    var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);
+                    args.oldText = this.text;
                     this.onInput('text', this.value);
+                    args.newText = this.value.toString();
+                    this.onTextChange.invoke(args);
                 }
             });
 
@@ -98,10 +106,10 @@
             this.domElement.val(text);
 
             //if (text) text = text.toString();
-            this.onTextChanged.invoke({
-                oldValue: old,
-                newValue: text
-            });
+            //this.onTextChanged.invoke({
+            //    oldText: old,
+            //    newText: text
+            //});
         }
         protected _text: string;
 
@@ -184,18 +192,18 @@
                 'placeholder': {
                     '*': (value) => this.placeholder = value
                 },
-                //'ontextchanged': {
-                //    '*': (value) => this.onTextChanged.addHandler(this.getUIHandler(value), this)
-                //}
+                'ontextchange': {
+                    '*': (value) => this.onTextChange.addHandler((args) => this.callUIHandler(value, args), this)
+                }
             });
         }
     }
     Tags['textbox'] = TextBox;
 
 
-    export interface TextChangeArgs {
-        oldValue: string;
-        newValue: string;
+    export interface TextChangeArgs extends UIEventArgs {
+        oldText: string;
+        newText: string;
     }
 
     export enum TextBoxType {

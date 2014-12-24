@@ -47,7 +47,7 @@
             windowXml = xp.loadMarkupSync(this.windowUrl);
 
             // Create window
-            this.window = <xp.UI.Window>new xp.UI.Tags['window'](windowXml));
+            this.window = <xp.UI.Window>new xp.UI.Tags['window'](windowXml);
 
             // Replace body
             $('body').replaceWith(this.window.domElement);

@@ -2,7 +2,7 @@
 <window xmlns="http://tempuri.org/Markup.xsd" title="Test App" content-align="center" items-align="center">
   <stack width="20em">
     <label text="TODO"/>
-    <textbox name="textbox" placeholder="TODO:"/>
+    <textbox name="textbox" placeholder="TODO:" ontextchange="onTextboxTextChange"/>
     <list name="list" items="{todos}">
       <stack flow="horizontal">
         <checkbox checked="{isDone}" text="{name}"/>
