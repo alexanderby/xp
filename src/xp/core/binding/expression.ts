@@ -22,6 +22,8 @@
         constructor(expression: string) {
             this.onPropertyChanged = new Event<string>();
 
+            // TODO: Empty path.
+
             // Find paths
             var regex = /\{([^\s\(\)]+?)\}/g;
             var matches = expression.match(regex);

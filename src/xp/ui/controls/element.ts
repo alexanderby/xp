@@ -112,6 +112,9 @@
                 if (!elementWithHandler) {
                     throw new Error(xp.formatString('{0}:{1}: Unable to find event handler "{2}".', xp.getClassName(this), this.name || '-', handlerName));
                 }
+                if (typeof elementWithHandler[handlerName] !== 'function') {
+                    throw new Error(xp.formatString('{0}:{1}: Property "{2}" is not a function.', xp.getClassName(this), this.name || '-', handlerName));
+                }
                 elementWithHandler[handlerName](args);
             }, this);
         }

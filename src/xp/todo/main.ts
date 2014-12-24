@@ -9,8 +9,7 @@
             super(xml);
 
             this.data = {
-                todos: new xp.Binding.ObservableCollection<TodoItem>(),
-                undone: 0
+                todos: new xp.Binding.ObservableCollection<TodoItem>()
             };
             this.context = this.data;
         }
@@ -19,15 +18,31 @@
         // Controls
         //---------
 
-        private onDeleteButtonClick(args: xp.UI.UIEventArgs) {
-            alert('Delete');
+        private onDeleteClick(args: xp.UI.UIEventArgs) {
+            //alert('Delete');
+            var index = this.data.todos.indexOf(args.targetUIControl.context);
+            if (index >= 0) {
+                this.removeItem(index);
+            }
         }
 
-        private onTextboxTextChange(args: xp.UI.TextChangeArgs) {
+        private onClearDoneClick(args: xp.UI.UIEventArgs) {
+            for (var i = this.data.todos.length - 1; i >= 0; i--) {
+                if (this.data.todos[i].isDone) {
+                    this.removeItem(i);
+                }
+            }
+        }
+
+        private onTextInput(args: xp.UI.TextChangeArgs) {
             if (args.newText) {
                 this.addItem(args.newText);
                 this.textbox.text = '';
             }
+        }
+
+        private onDoneChange(args: xp.UI.CheckChangeArgs) {
+            //this.undone = this.data.todos.filter((t) => !t.isDone).length;
         }
 
         private textbox: xp.UI.TextBox;

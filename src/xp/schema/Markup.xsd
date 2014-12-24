@@ -195,6 +195,7 @@
           <xs:attribute name="checked" type="xs:string"/>
           <xs:attribute name="readonly" type="Boolean"/>
           <xs:attribute name="text" type="xs:string"/>
+          <xs:attribute name="onCheckChange" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

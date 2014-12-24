@@ -184,7 +184,7 @@
             child.parent = null;
 
             // DOM
-            this.domElement.detach();
+            child.domElement.detach();
         }
 
         /**

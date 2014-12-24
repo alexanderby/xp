@@ -1,20 +1,20 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center">
+<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em">
   <Stack width="20em">
-    <Label text="TODO app"/>
-    <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextboxTextChange"/>
+    <Label text="TODO APP"/>
+    <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
     <List name="list" items="{todos}">
       <Stack flow="horizontal">
-        <CheckBox checked="{isDone}" text="{name}"/>
+        <CheckBox checked="{isDone}" text="{name}" onCheckChange="onDoneChange"/>
         <Placeholder/>
-        <Button key="delete" text="Delete" onClick="onDeleteButtonClick"/>
+        <Button key="delete" text="Delete" onClick="onDeleteClick"/>
       </Stack>
     </List>
     <Stack flow="horizontal">
       <Label text="({todos}.filter(function(t){return !t.isDone;}).length + ' items left')"/>
       <!--RadioButtons: All, active, completed.-->
       <Placeholder/>
-      <Button name="button_ClearCompleted" text="Clear done"/>
+      <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
     </Stack>
   </Stack>
 </Window>

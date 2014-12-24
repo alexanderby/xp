@@ -70,7 +70,7 @@
             if (source) {
                 var value = xp.Path.getPropertyByPath(source, this.sourceProperty, false);
                 console.log(xp.formatString('BM of "{0}.{1}": Update target with "{2}.{3}" property value "{4}".', this.target['name'], this.targetProperty, source, this.sourceProperty, value));
-                this.target[this.targetProperty] = value || this.dafaultValue;
+                this.target[this.targetProperty] = value !== void 0 ? value : this.dafaultValue;
             }
             else {
                 this.target[this.targetProperty] = this.dafaultValue;
