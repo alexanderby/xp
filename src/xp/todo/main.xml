@@ -17,4 +17,9 @@
       <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
     </Stack>
   </Stack>
+  <Stack width="10em">
+    <Label text="Item 0"/>
+    <TextBox text="{todos[0].name}" name="tb0"/>
+    <CheckBox text="Check" checked="{todos[0].isDone}" name="cb0"/>
+  </Stack>
 </Window>

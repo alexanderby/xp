@@ -41,7 +41,7 @@
             }
         }
 
-        private onDoneChange(args: xp.UI.CheckChangeArgs) {
+        private onDoneToggle(args: xp.UI.CheckChangeArgs) {
             //this.undone = this.data.todos.filter((t) => !t.isDone).length;
         }
 

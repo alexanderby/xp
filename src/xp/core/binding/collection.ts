@@ -78,6 +78,9 @@
                 newItem: item
             });
             this.onPropertyChanged.invoke('length');
+            for (var i = index; i < this.inner.length; i++) {
+                this.onPropertyChanged.invoke(i.toString());
+            }
         }
 
         /**
@@ -94,6 +97,9 @@
                 oldItem: item
             });
             this.onPropertyChanged.invoke('length');
+            for (var i = index; i < this.inner.length + 1; i++) {
+                this.onPropertyChanged.invoke(i.toString());
+            }
 
             return item;
         }
@@ -260,6 +266,6 @@
      * @param obj Object.
      */
     export function isCollectionNotifier(obj) {
-        return !!(<ICollectionNotifier>obj).onCollectionChanged;
+        return obj && !!(<ICollectionNotifier>obj).onCollectionChanged;
     }
 } 

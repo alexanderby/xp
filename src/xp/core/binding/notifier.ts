@@ -44,7 +44,7 @@
      * @param obj Object.
      */
     export function isNotifier(obj) {
-        return !!(<INotifier>obj).onPropertyChanged;
+        return obj && !!(<INotifier>obj).onPropertyChanged;
     }
 
 
