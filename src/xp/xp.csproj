@@ -89,6 +89,7 @@
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="tests\binding.collection.tests.ts" />
+    <TypeScriptCompile Include="tests\binding.manager.tests.ts" />
     <TypeScriptCompile Include="todo\app.ts" />
     <TypeScriptCompile Include="todo\main.ts" />
     <TypeScriptCompile Include="ui\controls\button.ts" />

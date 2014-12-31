@@ -14,7 +14,7 @@
             this.initContent();
             this.setDefaults();
             if (xmlElement) {
-                this.processXml(xmlElement);
+                this.processMarkup(xmlElement);
             }
             this.setNamedChildren();
         }
@@ -63,14 +63,14 @@
         //------------------
 
         /**
-         * Processes XML node (applies attributes, creates children etc).
-         * @param xmlElement Markup XML-element.
+         * Processes markup (applies attributes, creates children etc).
+         * @param markup Markup.
          */
-        protected processXml(xmlElement: JQuery) {
-            this.applyAttributes(xmlElement);
+        protected processMarkup(markup: JQuery) {
+            this.applyAttributes(markup);
 
             // Create children
-            $.each(xmlElement.children(), (i, childXmlNode) => {
+            $.each(markup.children(), (i, childXmlNode) => {
                 // Create child
                 var tagName = childXmlNode.nodeName;
                 if (!xp.UI.Tags[tagName]) {

@@ -23,7 +23,7 @@
         }
 
 
-        protected processXml(xmlElement: JQuery) {
+        protected processMarkup(xmlElement: JQuery) {
             this.applyAttributes(xmlElement);
 
             //

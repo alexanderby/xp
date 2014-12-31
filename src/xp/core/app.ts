@@ -6,6 +6,10 @@
      */
     export class Application {
 
+        /**
+         * Creates application.
+         * param config Application config.
+         */
         constructor(protected config: AppConfig) { }
 
 
@@ -13,7 +17,10 @@
          * Starts the application.
          */
         start() {
-            this.parseMarkup();
+            var markup = xp.loadMarkupSync(this.config.startupUrl);
+            var type = xp.UI.Tags[markup[0].nodeName];
+            this.window = <xp.UI.Window>new type(markup);
+            this.window.renderTo('body');
         }
 
 
@@ -21,30 +28,13 @@
          * Application's window.
          */
         window: UI.Window;
-
-
-        /**
-         * Parses markup from file.
-         */
-        protected parseMarkup() {
-            var windowXml: JQuery;
-
-            // Load window
-            windowXml = xp.loadMarkupSync(this.config.windowUrl);
-
-            // Create window
-            this.window = <xp.UI.Window>new xp.UI.Tags['Window'](windowXml);
-
-            // Replace body
-            $('body').replaceWith(this.window.domElement);
-        }
     }
 
     /**
      * Base application config.
      */
     export interface AppConfig {
-        windowUrl: string;
+        startupUrl: string;
     }
 
 

@@ -31,6 +31,8 @@
             if (matches) {
                 for (var i = 0; i < matches.length; i++) {
                     var path = matches[i].replace('{', '').replace('}', '');
+                    if (path === '')
+                        throw new Error('Empty path binding for expression is not supported. Expression: "' + expression + '"');
                     if (propsPaths.indexOf(path) < 0) {
                         propsPaths.push(path);
                     }
@@ -129,7 +131,7 @@
             this.onPropertyChanged.invoke('result');
         }
 
-        private sourceSetToken = false; // Prevents multiple evaluations on reset.
+        private sourceSetToken = false; // Prevents multiple evaluations on all bindings reset.
 
         /**
          * Resets source and causes expression evaluation.

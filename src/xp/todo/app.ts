@@ -2,7 +2,7 @@
 
 window.onload = () => {
     app = new xp.Application({
-        windowUrl: 'main.xml'
+        startupUrl: 'main.xml'
     });
     app.start();
 };

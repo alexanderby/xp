@@ -6,22 +6,22 @@
 
         /**
          * Creates UI element.
-         * @param xmlElement Markup XML-element.
+         * @param markup Markup.
          */
-        constructor(xmlElement?: JQuery) {
-            this.initElement(xmlElement);
+        constructor(markup?: JQuery) {
+            this.initElement(markup);
         }
 
         /**
          * Initializes UI element.
-         * @param xmlElement Markup XML-element.
+         * @param markup Markup.
          */
-        protected initElement(xmlElement?: JQuery) {
+        protected initElement(markup?: JQuery) {
             this.domElement = this.getTemplate();
             this.initEvents();
             this.setDefaults();
-            if (xmlElement) {
-                this.processXml(xmlElement);
+            if (markup) {
+                this.processMarkup(markup);
             }
         }
 
@@ -40,6 +40,26 @@
          */
         protected getTemplate(): JQuery {
             return $('<div></div>');
+        }
+
+        /**
+         * Renders control to the HTML element with given selector.
+         * @param selector Selector.
+         */
+        renderTo(selector: string);
+        /**
+         * Renders control to the HTML element.
+         * @param element HTML element.
+         */
+        renderTo(element: JQuery);
+
+        renderTo(elementOrSelector) {
+            var target: JQuery;
+            if (typeof elementOrSelector === 'string')
+                target = $(elementOrSelector);
+            else
+                target = elementOrSelector;
+            target.replaceWith(this.domElement);
         }
 
 
@@ -239,21 +259,21 @@
         //------------------
 
         /**
-         * Processes XML node (applies attributes, creates children etc).
-         * @param xmlElement Markup XML-element.
+         * Processes markup (applies attributes, creates children etc).
+         * @param markup Markup.
          */
-        protected processXml(xmlElement: JQuery) {
-            this.applyAttributes(xmlElement);
+        protected processMarkup(markup: JQuery) {
+            this.applyAttributes(markup);
         }
 
         /**
          * Applies the attributes' values.
-         * @param xmlElement Markup XML-element.
+         * @param markup Markup.
          */
-        protected applyAttributes(xmlElement: JQuery) {
+        protected applyAttributes(markup: JQuery) {
 
             // Get attribute values
-            var attributes = xmlElement.get(0).attributes;
+            var attributes = markup.get(0).attributes;
             var values: AttrValueDictionary = {};
             $.each(attributes, (i, attr: Attr) => {
                 // Add attribute's name and value into dictionary
@@ -264,7 +284,7 @@
             for (var key in values) {
                 // Find attribute
                 if (!map[key]) {
-                    throw new Error(xp.formatString('Illegal attribute "{0}" of element "{1}".', key, xmlElement[0].nodeName.toLowerCase()));
+                    throw new Error(xp.formatString('Illegal attribute "{0}" of element "{1}".', key, markup[0].nodeName.toLowerCase()));
                 }
 
                 // Check for binding
@@ -288,7 +308,7 @@
                 else {
                     // Find value
                     if (!map[key][values[key]] && !map['*']) {
-                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, xmlElement[0].nodeName.toLowerCase()));
+                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, markup[0].nodeName.toLowerCase()));
                     }
                     // Call setter
                     var setter = map[key][values[key]];

@@ -103,7 +103,10 @@
 
         if (isNestedObject) {
             // Nested object setter
-            var nestedSetter = function (newObj: INotifier) {
+            var nestedSetter = function (newObj) {
+                if (Array.isArray(newObj)) {
+                    newObj = new ObservableCollection(newObj);
+                }
                 if (!isNotifier(newObj)) {
                     newObj = createNotifierFrom(newObj);
                 }

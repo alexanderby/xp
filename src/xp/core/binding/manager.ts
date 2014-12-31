@@ -25,7 +25,7 @@
             this.pathParts.forEach((part) => {
                 if (part === '')
                     throw new Error(
-                        xp.formatString('Binding for empty path will not work. Path "{0}".', sourcePropertyPath));
+                        xp.formatString('Binding for empty path is not supported. Path "{0}".', sourcePropertyPath));
             });
             this.sourceProperty = this.pathParts[this.pathParts.length - 1];
 

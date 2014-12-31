@@ -49,6 +49,9 @@
             if (index >= 0) {
                 this.handlers.splice(index, 1);
             }
+            else {
+                throw new Error('Unable to remove event handler :\n' + handler.toString());
+            }
             return found;
         }
 

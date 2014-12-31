@@ -64,7 +64,7 @@
 
     console.info('Test: Observable collection. Finish.');
 
-    function assertEquals(a, b) {
+    export function assertEquals(a, b) {
         if (a !== b) {
             throw new Error(xp.formatString('"{0}" is not equal to "{1}".', a, b));
         }
