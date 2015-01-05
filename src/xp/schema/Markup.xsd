@@ -209,6 +209,20 @@
     </xs:complexType>
   </xs:element>
 
+  <xs:element name="RadioButton">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="Element">
+          <xs:attribute name="checked" type="xs:string"/>
+          <xs:attribute name="readonly" type="Boolean"/>
+          <xs:attribute name="text" type="xs:string"/>
+          <xs:attribute name="onCheckChange" type="xs:string"/>
+          <xs:attribute name="group" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
   <!-- Enums -->
   <xs:simpleType name="Boolean">
     <xs:restriction base="xs:string">

@@ -99,6 +99,7 @@
     <TypeScriptCompile Include="ui\controls\placeholder.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
     <TypeScriptCompile Include="ui\controls\list.ts" />
+    <TypeScriptCompile Include="ui\controls\radiobutton.ts" />
     <TypeScriptCompile Include="ui\controls\stack.ts" />
     <TypeScriptCompile Include="ui\controls\textbox.ts" />
     <TypeScriptCompile Include="ui\controls\view.ts" />
