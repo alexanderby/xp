@@ -5,7 +5,7 @@
     <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
     <List name="list" items="{todos}">
       <Stack flow="horizontal">
-        <CheckBox checked="{isDone}" text="{name}" onCheckChange="onDoneChange"/>
+        <CheckBox checked="{isDone}" text="{name}" onCheckChange="onDoneToggle"/>
         <Placeholder/>
         <Button key="delete" text="Delete" onClick="onDeleteClick"/>
       </Stack>

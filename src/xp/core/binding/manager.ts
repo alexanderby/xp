@@ -131,7 +131,7 @@
                         obj: xp.Path.getPropertyByPath(po[i].obj, parts[i], false) || null
                     };
                     if (isNotifier(po[i].obj)) {
-                        // Handle path object replacement
+                        // Handles path object replacement
                         var handler: (prop: string) => void;
 
                         if (i == parts.length - 1) {
@@ -153,7 +153,7 @@
                                         this.updateTarget();
                                     }
                                 };
-                            })(i + 1, parts[i]);
+                            })(i, parts[i]);
                         }
 
                         (<INotifier>po[i].obj).onPropertyChanged.addHandler(handler, this);
