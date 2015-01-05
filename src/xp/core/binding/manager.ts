@@ -70,11 +70,17 @@
             if (source) {
                 var value = xp.Path.getPropertyByPath(source, this.sourceProperty, false);
                 console.log(xp.formatString('BM of "{0}.{1}": Update target with "{2}.{3}" property value "{4}".', this.target['name'], this.targetProperty, source, this.sourceProperty, value));
-                this.target[this.targetProperty] = value !== void 0 ? value : this.dafaultValue;
+                if (value !== void 0 && value !== null) {
+                    this.target[this.targetProperty] = value
+                }
+                else {
+                    console.warn(xp.formatString('BM of "{0}.{1}": Unable to reach value "{2}.{3}". Using default value "{4}".', this.target['name'], this.targetProperty, source, this.sourcePropertyPath, this.dafaultValue));
+                    this.target[this.targetProperty] = this.dafaultValue;
+                }
             }
             else {
                 this.target[this.targetProperty] = this.dafaultValue;
-                console.warn(xp.formatString('BM of "{0}.{1}": Can\'t update target. Source "{2}" not found.', this.target['name'], this.targetProperty, source));
+                console.warn(xp.formatString('BM of "{0}.{1}": Can\'t update target. Source "{2}" not found. Using default value "{3}".', this.target['name'], this.targetProperty, source, this.dafaultValue));
             }
         }
 

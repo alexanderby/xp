@@ -50,6 +50,32 @@
     assertEquals(source.city.onPropertyChanged['handlers'].length, 1);
     assertEquals(oldCity.onPropertyChanged['handlers'].length, 0);
 
+    // Change city to null
+    console.log('Test: Change city to NULL.');
+    source.city = null;
+    assertEquals(target.cityName, 'unknown');
+
+    // Revert city
+    console.log('Test: Revert city.');
+    source.city = oldCity;
+    assertEquals(source.city.name, 'Moscow');
+    assertEquals(target.cityName, 'Moscow');
+    assertEquals(source.onPropertyChanged['handlers'].length, 1);
+    assertEquals(source.city.onPropertyChanged['handlers'].length, 1);
+
+    // Change source to null
+    console.log('Test: Change source to NULL.');
+    manager.resetWith(null);
+    assertEquals(target.cityName, 'unknown');
+
+    // Revert source
+    console.log('Test: Revert source.');
+    manager.resetWith(source);
+    assertEquals(source.city.name, 'Moscow');
+    assertEquals(target.cityName, 'Moscow');
+    assertEquals(source.onPropertyChanged['handlers'].length, 1);
+    assertEquals(source.city.onPropertyChanged['handlers'].length, 1);
+
 
     //
     // The End
