@@ -16,6 +16,20 @@
         }
 
 
+        //-------
+        // EVENTS
+        //-------
+
+        protected initEvents() {
+            super.initEvents();
+            this.onCheckChange.addHandler((args) => {
+                if (args.checked) {
+                    this.onInput('selectedItem', this.context);
+                }
+            }, this);
+        }
+
+
         //-----------
         // PROPERTIES
         //-----------
@@ -34,6 +48,21 @@
         }
         protected _group: string;
 
+        /**
+         * Gets or sets selected item.
+         * If item equals the context, than this control will be checked.
+         */
+        get selectedItem() {
+            return this._selectedItem;
+        }
+        set selectedItem(item) {
+            this.selectedItem = item;
+            if (item === this.context) {
+                this.checked = true;
+            }
+        }
+        private _selectedItem: any;
+
 
         //------------------
         // MARKUP PROCESSING
@@ -43,7 +72,8 @@
             return xp.extendObject(super.getAttributeMap(), {
                 'group': {
                     '*': (value) => this.group = value
-                }
+                },
+                'selectedItem': {} // Binding only
             });
         }
     }

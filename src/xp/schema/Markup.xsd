@@ -218,6 +218,7 @@
           <xs:attribute name="text" type="xs:string"/>
           <xs:attribute name="onCheckChange" type="xs:string"/>
           <xs:attribute name="group" type="xs:string"/>
+          <xs:attribute name="selectedItem" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>
