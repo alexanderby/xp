@@ -24,7 +24,8 @@
             super.initEvents();
             this.onCheckChange.addHandler((args) => {
                 if (args.checked) {
-                    this.onInput('selectedItem', this.context);
+                    console.info('Radiobutton: init selected item change');
+                    this.onInput('selectedItem', this.item);
                 }
             }, this);
         }
@@ -49,17 +50,30 @@
         protected _group: string;
 
         /**
-         * Gets or sets selected item.
+         * Gets or sets data item that is related to this control.
          * If item equals the context, than this control will be checked.
+         */
+        get item() {
+            return this._item;
+        }
+        set item(item) {
+            this._item = item;
+            if (this.checked != (item === this.selectedItem))
+                this.checked = item === this.selectedItem;
+        }
+        private _item: any;
+
+        /**
+         * Gets or sets selected item.
+         * If item equals to the related item, than this control will be checked.
          */
         get selectedItem() {
             return this._selectedItem;
         }
         set selectedItem(item) {
-            this.selectedItem = item;
-            if (item === this.context) {
-                this.checked = true;
-            }
+            this._selectedItem = item;
+            if (this.checked != (item === this.item))
+                this.checked = item === this.item;
         }
         private _selectedItem: any;
 
@@ -73,6 +87,7 @@
                 'group': {
                     '*': (value) => this.group = value
                 },
+                'item': {}, // Binding only
                 'selectedItem': {} // Binding only
             });
         }

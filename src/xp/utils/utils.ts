@@ -117,6 +117,7 @@ module xp.Path {
      * @param propertyPath Property path.
      */
     export function getObjectPath(propertyPath: string): string {
+        propertyPath = propertyPath.replace(/\[(.+)\]/g, '.$1');
         var matches = propertyPath.match(/^(.*)\.[^\.]*$/);
         if (matches && matches[1]) {
             return matches[1];
@@ -131,6 +132,7 @@ module xp.Path {
      * @param propertyPath Property path.
      */
     export function getPropertyName(propertyPath: string): string {
+        propertyPath = propertyPath.replace(/\[(.+)\]/g, '.$1');
         var matches = propertyPath.match(/(^.*\.)?([^\.]*)$/);
         if (matches && matches[2]) {
             return matches[2];

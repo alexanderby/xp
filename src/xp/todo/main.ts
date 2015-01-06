@@ -8,9 +8,10 @@
         constructor(xml) {
             super(xml);
 
-            this.data = {
-                todos: new xp.Binding.ObservableCollection<TodoItem>()
-            };
+            this.data = <any>xp.Binding.createNotifierFrom({
+                todos: new Array<TodoItem>(),
+                selected: null
+            });
             this.context = this.data;
         }
 
