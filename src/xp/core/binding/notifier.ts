@@ -44,7 +44,7 @@
      * @param obj Object.
      */
     export function isNotifier(obj) {
-        return obj && !!(<INotifier>obj).onPropertyChanged;
+        return obj && 'onPropertyChanged' in obj;
     }
 
 
@@ -61,14 +61,14 @@
     function addNotificationProperty(obj: INotifier, name: string, value?) {
         //
         // Ensure property is not already present.
-        if (obj[name] !== void 0) {
+        if (name in obj) {
             throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
         }
         if (name === 'onPropertyChanged') {
             throw new Error('Unable to create notification property. Reserved name is used.');
         }
         var fieldName = getFieldName(name);
-        if (obj[fieldName]) {
+        if (fieldName in obj) {
             throw new Error('Unable to create field for notification property. Object already has "' + fieldName + '" property.');
         }
         if (value !== void 0) {

@@ -102,7 +102,7 @@ module xp.Path {
                 throw new Error('Unable to get property by path "' + path + '".');
             }
             else {
-                return null;
+                return void 0;
             }
         }
 
@@ -117,7 +117,7 @@ module xp.Path {
                 if (throwErr) {
                     throw new Error('Unable to get property by path "' + path + '".');
                 }
-                current = null;
+                current = void 0;
                 return false;
             }
             current = current[p];

@@ -266,6 +266,6 @@
      * @param obj Object.
      */
     export function isCollectionNotifier(obj) {
-        return obj && !!(<ICollectionNotifier>obj).onCollectionChanged;
+        return obj && 'onCollectionChanged' in obj;
     }
 } 
