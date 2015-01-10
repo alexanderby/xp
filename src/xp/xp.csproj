@@ -82,6 +82,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="core\binding\collection.ts" />
+    <TypeScriptCompile Include="core\binding\scope.ts" />
     <TypeScriptCompile Include="core\binding\manager.ts" />
     <TypeScriptCompile Include="core\binding\notifier.ts" />
     <TypeScriptCompile Include="testapp\app.ts" />
