@@ -71,6 +71,20 @@
         var results = funcNameRegex.exec(obj['constructor'].toString());
         return (results && results.length > 1) ? results[1] : '';
     }
+
+    /**
+     * Converts enum into array.
+     * @param en Enum.
+     */
+    export function enumToArray(en: any): string[] {
+        var items = [];
+        for (var key in en) {
+            if (!isNaN(parseInt(key))) {
+                items.push(en[key]);
+            }
+        }
+        return items;
+    }
 }
 
 module xp.Path {

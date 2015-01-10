@@ -28,7 +28,7 @@
      * created for every source property.
      * @param source Source object.
      */
-    export function createNotifierFrom(source: Object): INotifier { // TODO: Mixin<T, INotifier>?
+    export function createNotifierFrom<T>(source: T/*Object*/): T /*INotifier*/ { // TODO: Mixin<T, INotifier>?
         if (isNotifier(source))
             throw new Error('Source is notifier already.');
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
@@ -36,7 +36,7 @@
             // Create notification property
             addNotificationProperty(obj, key, source[key]);
         }
-        return obj;
+        return <T><any>obj;
     }
 
     /**
