@@ -16,6 +16,14 @@
      */
     export function createNotifier(propertiesNames: string[]): INotifier {
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
+
+        // Create inner object
+        var inner = {};
+        propertiesNames.forEach((p) => {
+            inner[p] = null;
+        });
+        obj['__inner__'] = inner;
+
         propertiesNames.forEach((name) => {
             addNotificationProperty(obj, name);
         });
@@ -32,9 +40,10 @@
         if (isNotifier(source))
             throw new Error('Source is notifier already.');
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
+        obj['__inner__'] = source;
         for (var key in source) {
             // Create notification property
-            addNotificationProperty(obj, key, source[key]);
+            addNotificationProperty(obj, key);
         }
         return <T><any>obj;
     }
@@ -56,35 +65,30 @@
      * Adds property to INotifier.
      * @param obj Notifier.
      * @param name Name of the property to create.
-     * @param [value] Default property value.
      */
-    function addNotificationProperty(obj: INotifier, name: string, value?) {
+    function addNotificationProperty(obj: INotifier, name: string) {
         //
         // Ensure property is not already present.
         if (name in obj) {
             throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
         }
         if (name === 'onPropertyChanged') {
-            throw new Error('Unable to create notification property. Reserved name is used.');
+            throw new Error('Unable to create notification property. Reserved name "onPropertyChanged" is used.');
         }
-        var fieldName = getFieldName(name);
-        if (fieldName in obj) {
-            throw new Error('Unable to create field for notification property. Object already has "' + fieldName + '" property.');
-        }
-        if (value !== void 0) {
-            obj[fieldName] = value;
-        }
+
+        var inner = obj['__inner__'];
+        var value = inner[name];
 
         //
         // Check if property is an object.
         // If so -> make it Notifier.
 
         if (Array.isArray(value)) {
-            obj[fieldName] = new ObservableCollection(value);
+            inner[name] = new ObservableCollection(value);
             var isNestedObject = true;
         }
         else if (typeof value === 'object') {
-            obj[fieldName] = createNotifierFrom(value);
+            inner[name] = createNotifierFrom(value);
             var isNestedObject = true;
         }
 
@@ -92,12 +96,12 @@
         // Getters/setters
 
         var getter = function () {
-            return obj[fieldName];
+            return inner[name];
         };
 
         // Simple setter
         var setter = function (value) {
-            obj[fieldName] = value;
+            inner[name] = value;
             obj.onPropertyChanged.invoke(name);
         };
 
@@ -110,7 +114,7 @@
                 if (!isNotifier(newObj)) {
                     newObj = createNotifierFrom(newObj);
                 }
-                obj[fieldName] = newObj;
+                inner[name] = newObj;
                 obj.onPropertyChanged.invoke(name);
             };
         }
@@ -124,9 +128,5 @@
             enumerable: true,
             configurable: true
         });
-    }
-
-    function getFieldName(name: string) {
-        return '_' + name;
     }
 } 
