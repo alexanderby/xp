@@ -40,7 +40,10 @@
         if (isNotifier(source))
             throw new Error('Source is notifier already.');
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
-        obj['__inner__'] = source;
+
+        // Create inner object (source deep copy)
+        obj['__inner__'] = xp.clone(source);
+
         for (var key in source) {
             // Create notification property
             addNotificationProperty(obj, key);

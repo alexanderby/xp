@@ -159,7 +159,7 @@
                                         this.updateTarget();
                                     }
                                 };
-                            })(i, parts[i]);
+                            })(i/* + 1*/, parts[i]); // BUG: Binding by collection index bug (see Todo app, try checking the checkbox inside the List).
                         }
 
                         (<INotifier>po[i].obj).onPropertyChanged.addHandler(handler, this);
