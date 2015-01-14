@@ -60,9 +60,35 @@
         }
     }
 
-    export class BindingManager2 {
+    /**
+     * Manages the scope data binding.
+     */
+    export class ScopeBindingManager {
+
+        private target: any;
+        private targetPropertyPath: string;
+        private scope: Scope;
+        private path: string;
+
+        /**
+         * Creates the scope binding manager.
+         * @param target Target.
+         * @param targetPropertyPath Target property path.
+         * @param scope Scope object.
+         * @param path Path.
+         */
+        constructor(target: any, targetPropertyPath: string, scope: Scope, path: string) {
+            //
+            // Checks
+
+            if (!targetPropertyPath)
+                throw new Error('Target property path is not set.');
+
+            if (!path)
+                throw new Error('Unable to bind to empty path.');
 
 
+        }
 
     }
 }

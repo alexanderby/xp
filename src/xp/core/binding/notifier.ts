@@ -10,25 +10,25 @@
         onPropertyChanged: Event<string>;
     }
 
-    /**
-     * Creates plain object, which notifies of it's properties changes.
-     * @param propertiesNames Names of properties.
-     */
-    export function createNotifier(propertiesNames: string[]): INotifier {
-        var obj: INotifier = { onPropertyChanged: new Event<string>() };
+    ///**
+    // * Creates plain object, which notifies of it's properties changes.
+    // * @param propertiesNames Names of properties.
+    // */
+    //export function createNotifier(propertiesNames: string[]): INotifier {
+    //    var obj: INotifier = { onPropertyChanged: new Event<string>() };
 
-        // Create inner object
-        var inner = {};
-        propertiesNames.forEach((p) => {
-            inner[p] = null;
-        });
-        obj['__inner__'] = inner;
+    //    // Create inner object
+    //    var inner = {};
+    //    propertiesNames.forEach((p) => {
+    //        inner[p] = null;
+    //    });
+    //    obj['__inner__'] = inner;
 
-        propertiesNames.forEach((name) => {
-            addNotificationProperty(obj, name);
-        });
-        return obj;
-    }
+    //    propertiesNames.forEach((name) => {
+    //        addNotificationProperty(obj, name);
+    //    });
+    //    return obj;
+    //}
 
     /**
      * Creates object, which notifies of it's properties changes.
