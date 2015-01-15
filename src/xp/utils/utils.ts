@@ -194,4 +194,27 @@ module xp.Path {
             return '';
         }
     }
+
+    /**
+     * Replaces path indexers with properties.
+     * E.g. "obj[value].prop" transforms into "obj.value.prop".
+     * @param path Property path.
+     */
+    export function replaceIndexers(path: string): string {
+        // Without validation
+        //var result = path.replace(indexerRegex, '.$1');
+
+        // With property identifier validation.
+        var result = path.replace(indexerRegex, (match, m1) => {
+            if (!identifierRegex.test(m1)) {
+                throw new Error(
+                    xp.formatString('Wrong property identifier. Property: "{0}". Path: "{1}".', path, m1));
+            }
+            return '.' + m1;
+        });
+
+        return result;
+    }
+    var indexerRegex = /\[(.+?)\]/g;
+    var identifierRegex = /^[$A-Z_][0-9A-Z_$]*$/i;
 }
