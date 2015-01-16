@@ -10,26 +10,6 @@
         onPropertyChanged: Event<string>;
     }
 
-    ///**
-    // * Creates plain object, which notifies of it's properties changes.
-    // * @param propertiesNames Names of properties.
-    // */
-    //export function createNotifier(propertiesNames: string[]): INotifier {
-    //    var obj: INotifier = { onPropertyChanged: new Event<string>() };
-
-    //    // Create inner object
-    //    var inner = {};
-    //    propertiesNames.forEach((p) => {
-    //        inner[p] = null;
-    //    });
-    //    obj['__inner__'] = inner;
-
-    //    propertiesNames.forEach((name) => {
-    //        addNotificationProperty(obj, name);
-    //    });
-    //    return obj;
-    //}
-
     /**
      * Creates object, which notifies of it's properties changes.
      * Notification properties and fiels for storing data will be
@@ -58,6 +38,22 @@
     export function isNotifier(obj) {
         return obj && 'onPropertyChanged' in obj;
     }
+
+    ///**
+    // * Extends 
+    // */
+    //export function extendNotifier(obj: INotifier, propName: string, value?: any) {
+    //    if (!isNotifier(obj))
+    //        throw new Error('Object is not a notifier.');
+
+    //    // Add property
+    //    addNotificationProperty(obj, propName);
+
+    //    if (value !== void 0) {
+    //        // Set value
+    //        obj[propName] = value;
+    //    }
+    //}
 
 
     //--------
@@ -90,7 +86,7 @@
             inner[name] = new ObservableCollection(value);
             var isNestedObject = true;
         }
-        else if (typeof value === 'object') {
+        else if (typeof value === 'object' && !isNotifier(value)) {
             inner[name] = createNotifierFrom(value);
             var isNestedObject = true;
         }

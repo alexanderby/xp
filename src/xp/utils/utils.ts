@@ -216,5 +216,6 @@ module xp.Path {
         return result;
     }
     var indexerRegex = /\[(.+?)\]/g;
-    var identifierRegex = /^[$A-Z_][0-9A-Z_$]*$/i;
+    //var identifierRegex = /^[$A-Z_][0-9A-Z_$]*$/i;
+    var identifierRegex = /^[0-9A-Z_$]*$/i;
 }

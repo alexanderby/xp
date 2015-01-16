@@ -66,7 +66,7 @@
         /**
          * Handles item's addition into collection.
          */
-        protected add(item: T, index) {
+        protected add(item, index) {
             item = this.createNotifier(item);
             this.inner.splice(index, 0, item);
             this.appendIndexProperty();
@@ -132,9 +132,12 @@
             delete this[this.inner.length];
         }
 
-        protected createNotifier(item: T): T {
-            if (typeof item === 'object' && !isNotifier(item)) {
-                item = <T><any>createNotifierFrom(item);
+        protected createNotifier(item): INotifier {
+            if (Array.isArray(item)) {
+                item = new ObservableCollection(<Array<any>><any>item);
+            }
+            else if (typeof item === 'object' && !isNotifier(item)) {
+                item = createNotifierFrom(item);
             }
             return item;
         }

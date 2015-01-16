@@ -15,7 +15,7 @@
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="margin" type="xs:string"/>
-    <xs:attribute name="context" type="xs:string"/>
+    <xs:attribute name="scope" type="xs:string"/>
     <!--Events-->
     <xs:attribute name="onClick" type="xs:string"/>
   </xs:attributeGroup>
@@ -93,6 +93,7 @@
       <xs:complexContent>
         <xs:extension base="Stack">
           <xs:attribute name="items" type="xs:string"/>
+          <xs:attribute name="itemId" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

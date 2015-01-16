@@ -1,45 +1,164 @@
 ﻿module xp.Binding {
     /**
-     * Manages binding of source and target properties.
-     * This manager is hold by target and exists until
+     * Manages the scope data binding for a single property.
+     * This manager is hold by target and must exist until
      * target is disposed. Nested source properties are
      * not supposed to be always reachable.
      */
-    export /*sealed*/ class BindingManager {
-        private root;
-        private sourcePropertyPath: string;
-        private sourceProperty: string;
-        private target/*: xp.Ui.Element*/;
-        private targetProperty: string;
-        private dafaultValue;
-        private pathObjects: { obj: any; handler?: (name: string) => void; }[];
-        private pathParts: string[];
+    export class BindingManager {
 
-        constructor(target/*: xp.Ui.Element*/, targetProperty: string, source, sourcePropertyPath: string, defaultValue?) {
+        private target: any;
+        private targetPropertyPath: string;
+        private scope: Scope;
+        private path: string;
+        private defaultValue: any;
+
+        /**
+         * Creates the scope binding manager.
+         * @param target Target.
+         * @param targetPropertyPath Target property path.
+         * @param scope Scope object.
+         * @param path Path to bind to.
+         * @param [defaultValue] Value to use is case when source property is unreachable.
+         */
+        constructor(target: any, targetPropertyPath: string, scope: any, path: string, defaultValue?: any) {
+            //
+            // Checks
+
+            if (!targetPropertyPath)
+                throw new Error('Target property path is not set.');
+
+            if (!path)
+                throw new Error('Unable to bind to empty path.');
+
             this.target = target;
-            this.targetProperty = targetProperty;
-            this.root = source;
-            this.sourcePropertyPath = sourcePropertyPath;
-            this.dafaultValue = defaultValue;
-            this.pathParts = sourcePropertyPath.replace(/\[(.+)\]/g, '.$1').split('.');
+            this.targetPropertyPath = targetPropertyPath;
+            if (!(scope instanceof Scope)) {
+                scope = new Scope(scope);
+            }
+            this.scope = scope;
+            this.path = path;
+            this.defaultValue = defaultValue;
+
+            //
+            // Split path into parts
+
+            // TODO: Support for "$parent.path", "$root.path".
+            this.pathParts = xp.Path.replaceIndexers(path).split('.');
+            if (!this.pathParts || this.pathParts.length < 1) {
+                throw new Error(
+                    xp.formatString('Wrong binding path: "{0}".', path));
+            }
             this.pathParts.forEach((part) => {
                 if (part === '')
                     throw new Error(
-                        xp.formatString('Binding for empty path is not supported. Path "{0}".', sourcePropertyPath));
+                        xp.formatString('Unable to bind to empty path. Path: "{0}".', path));
             });
-            this.sourceProperty = this.pathParts[this.pathParts.length - 1];
 
             // Subscribe for all path changes
             this.registerPathObjects();
             this.updateTarget();
         }
 
+        private pathParts: string[];
+        private pathObjects: PathObjectInfo[];
+
+        /**
+         * Registers path objects' change handlers.
+         * @param [startIndex=0] Path index to start re-initialization from.
+         */
+        private registerPathObjects(startIndex = 0) {
+            //
+            // Unregister previous replacement handlers
+
+            if (this.pathObjects) {
+                var po = this.pathObjects;
+                for (var i = startIndex; i < po.length - 1; i++) {
+                    if (isNotifier(po[i].obj)) {
+                        (<INotifier>po[i].obj).onPropertyChanged.removeHandler(po[i].handler);
+                    }
+                }
+            }
+
+            //
+            // Register replacement handlers for path objects
+
+            // WARNING: If property is unreachable then the current scope will be used.
+            // WARNING: If property is reachable then the property holder will be used.
+            this.scope = this.scope.getPropertyHolder(this.path) || this.scope;
+            var parts = this.pathParts;
+
+            if (startIndex === 0) {
+                this.pathObjects = [];
+            }
+            this.pathObjects[startIndex] = {
+                obj: this.scope.get('')
+            };
+
+            var po: PathObjectInfo[] = this.pathObjects;
+            for (var i = startIndex; i < parts.length; i++) {
+                // Property name
+                var prop = parts[i];
+                po[i].prop = prop;
+
+                var current = po[i].obj;
+
+                if (!(prop in current)) {
+                    break;
+                }
+
+                // Next path object
+                po[i + 1] = {
+                    obj: current[prop]
+                };
+
+
+                //
+                // Create property replacement handler
+
+                if (isNotifier(current)) {
+
+                    var handler: (prop: string) => void;
+
+                    if (i == parts.length - 1) {
+                        // Only updates the target.
+                        handler = ((propNameToCompare: string) => {
+                            return (prop: string) => {
+                                if (prop === propNameToCompare) {
+                                    this.updateTarget();
+                                }
+                            };
+                        })(prop);
+                    }
+                    else {
+                        // Re-registers lower path objects and updates the target.
+                        handler = ((propNameToCompare: string, indexToReplaceFrom: number) => {
+                            return (prop: string) => {
+                                if (prop === propNameToCompare) {
+                                    this.registerPathObjects(indexToReplaceFrom);
+                                    this.updateTarget();
+                                }
+                            };
+                        })(prop, i + 1);
+                    }
+
+                    po[i].handler = handler;
+                }
+            }
+
+            this.pathObjects = po;
+        }
+
         /**
          * Resets binding with new binding source (with the same hierarchy).
+         * @param scope Scope to sync with.
          */
-        resetWith(source) {
-            console.log(xp.formatString('BM of "{0}.{1}": Reset with "{2}".', this.target['name'], this.targetProperty, source));
-            this.root = source;
+        resetWith(scope) {
+            if (!(scope instanceof Scope)) {
+                scope = new Scope(scope);
+            }
+            this.logMessage(xp.formatString('Reset with "{0}".', scope));
+            this.scope = scope;
             this.registerPathObjects();
             this.updateTarget();
         }
@@ -48,17 +167,14 @@
          * Updates source property.
          */
         updateSource() {
-            var source = this.getSource();
-            if (source) {
-                var value = this.target[this.targetProperty];
-                console.log(xp.formatString('BM of "{0}.{1}": Update source "{2}.{3}" property with value "{4}".', this.target['name'], this.targetProperty, source, this.sourceProperty, value));
-                if (this.sourceProperty === '')
-                    source = value; // TODO: setPropertyByPath
-                else
-                    source[this.sourceProperty] = value;
+            if (this.scope.get(this.path) !== void 0) {
+                this.logMessage(xp.formatString('Update source "{0}" property with value "{1}".', this.path, value));
+                var value = xp.Path.getPropertyByPath(this.target, this.targetPropertyPath);
+                var pathLength = this.pathParts.length;
+                this.pathObjects[pathLength][this.pathParts[pathLength]] = value;
             }
             else {
-                console.warn(xp.formatString('BM of "{0}.{1}": Can\'t update source. Source "{2}" not found.', this.target['name'], this.targetProperty, source));
+                this.logMessage(xp.formatString('Unable to update source property "{0}". It is unreachable.', this.path));
             }
         }
 
@@ -66,21 +182,18 @@
          * Updates target property.
          */
         updateTarget() {
-            var source = this.getSource();
-            if (source) {
-                var value = xp.Path.getPropertyByPath(source, this.sourceProperty, false);
-                console.log(xp.formatString('BM of "{0}.{1}": Update target with "{2}.{3}" property value "{4}".', this.target['name'], this.targetProperty, source, this.sourceProperty, value));
-                if (value !== void 0 && value !== null) {
-                    this.target[this.targetProperty] = value
-                }
-                else {
-                    console.warn(xp.formatString('BM of "{0}.{1}": Unable to reach value "{2}.{3}". Using default value "{4}".', this.target['name'], this.targetProperty, source, this.sourcePropertyPath, this.dafaultValue));
-                    this.target[this.targetProperty] = this.dafaultValue;
-                }
+            var value = this.scope.get(this.path);
+            var path = xp.Path.getObjectPath(this.targetPropertyPath);
+            var prop = xp.Path.getPropertyName(this.targetPropertyPath);
+            var targetObj = xp.Path.getPropertyByPath(this.target, path);
+
+            if (value !== void 0) {
+                this.logMessage(xp.formatString('Update target with "{0}" property value "{1}".', this.path, value));
+                targetObj[prop] = value
             }
             else {
-                this.target[this.targetProperty] = this.dafaultValue;
-                console.warn(xp.formatString('BM of "{0}.{1}": Can\'t update target. Source "{2}" not found. Using default value "{3}".', this.target['name'], this.targetProperty, source, this.dafaultValue));
+                this.logMessage(xp.formatString('Unable to reach value "{0}". Using default value "{1}".', this.path, this.defaultValue));
+                targetObj[prop] = this.defaultValue;
             }
         }
 
@@ -89,91 +202,42 @@
          * Must be called when target is being disposed or property path changes.
          */
         unbind() {
-            console.log(xp.formatString('BM of "{0}.{1}": Unbind.', this.target['name'], this.targetProperty));
+            this.logMessage('Unbind.');
             if (this.pathObjects) {
                 var po = this.pathObjects;
                 for (var i = 0; i < po.length - 1; i++) {
                     if (isNotifier(po[i].obj)) {
-                        (<INotifier>po[i].obj).onPropertyChanged.removeHandler(po[i + 1].handler);
+                        (<INotifier>po[i].obj).onPropertyChanged.removeHandler(po[i].handler);
                     }
                 }
             }
         }
 
+
+        private logMessage(message: string) {
+            console.log(xp.formatString('BM of "{0}#{1}.{2}": {3}',
+                xp.getClassName(this.target),
+                this.target['name'],
+                this.targetPropertyPath,
+                message));
+        }
+    }
+
+    /**
+     * Holds a path object property change listening info.
+     */
+    interface PathObjectInfo {
         /**
-         * Registers path objects' change handlers.
-         * @param [startIndex=0] Path index to start re-initialization from.
+         * Object.
          */
-        private registerPathObjects(startIndex = 0) {
-            //
-            // Remove previous path objects' handlers
-
-            if (this.pathObjects) {
-                var po = this.pathObjects;
-                for (var i = startIndex; i < po.length - 1; i++) {
-                    if (isNotifier(po[i].obj)) {
-                        (<INotifier>po[i].obj).onPropertyChanged.removeHandler(po[i + 1].handler);
-                        console.log(xp.formatString('BM of "{0}.{1}": Removed handler of "{2}.{3}" property change. Property value is "{4}".', this.target['name'], this.targetProperty, po[i].obj, this.pathParts[i], po[i].obj[this.pathParts[i]]));
-                    }
-                }
-            }
-
-            //
-            // Get all objects by path
-
-            // TODO: Collections...
-            var parts = this.pathParts;
-            if (startIndex === 0) {
-                this.pathObjects = [{ obj: this.root }];
-            }
-            var po = this.pathObjects;
-            for (var i = startIndex - 1; i < parts.length; i++) {
-                if (i >= 0) {
-                    if (!po[i].obj) {
-                        break;
-                    }
-                    // Set path object
-                    po[i + 1] = {
-                        obj: xp.Path.getPropertyByPath(po[i].obj, parts[i], false) || null
-                    };
-                    if (isNotifier(po[i].obj)) {
-                        // Handles path object replacement
-                        var handler: (prop: string) => void;
-
-                        if (i == parts.length - 1) {
-                            // Only updates target.
-                            handler = ((propName) => {
-                                return (prop: string) => {
-                                    if (prop === propName) {
-                                        this.updateTarget();
-                                    }
-                                };
-                            })(parts[i]);
-                        }
-                        else {
-                            // Re-registers lower path objects, updates target.
-                            handler = ((index, propName) => {
-                                return (prop: string) => {
-                                    if (prop === propName) {
-                                        this.registerPathObjects(index);
-                                        this.updateTarget();
-                                    }
-                                };
-                            })(i/* + 1*/, parts[i]); // BUG: Binding by collection index bug (see Todo app, try checking the checkbox inside the List).
-                        }
-
-                        (<INotifier>po[i].obj).onPropertyChanged.addHandler(handler, this);
-                        po[i + 1].handler = handler;
-                        console.log(xp.formatString('BM of "{0}.{1}": Added handler of "{2}.{3}" property change. Property value is "{4}".', this.target['name'], this.targetProperty, po[i].obj, this.pathParts[i], po[i].obj[this.pathParts[i]]));
-                    }
-                }
-            }
-        }
-
-        private getSource() {
-            var srcPath = xp.Path.getObjectPath(this.sourcePropertyPath);
-            var src = xp.Path.getPropertyByPath(this.root, srcPath, false);
-            return src;
-        }
+        obj: any;
+        /**
+         * Property name which changes should be listened to.
+         */
+        prop?: string;
+        /**
+         * Handles the replacement of the property.
+         */
+        handler?: (prop: string) => void;
     }
 } 

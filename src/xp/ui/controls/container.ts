@@ -164,6 +164,7 @@
                         : index;
                     element.parent.detachChild(element);
                     this.children.splice(targetIndex, 0, element);
+                    element.parent = this;
 
                     // DOM
                     element.domElement.insertBefore(target.domElement);

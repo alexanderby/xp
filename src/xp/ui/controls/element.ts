@@ -82,10 +82,9 @@
         protected initEvents() {
             this.bindings = {};
             this.expressions = {};
-            this.emptyPathBindings = {};
 
             // Control's events
-            this.onContextChanged = new Event<any>();
+            this.onScopeChanged = new Event<xp.Binding.Scope>();
             this.onClick = new Event<UIEventArgs>();
             this.onMouseDown = new Event<UIEventArgs>();
             this.onMouseUp = new Event<UIEventArgs>();
@@ -96,7 +95,7 @@
             // Unregister events on remove?
             this.onRemove = new Event<Element>();
             this.onRemove.addHandler(() => {
-                this.onContextChanged.removeAllHandlers();
+                this.onScopeChanged.removeAllHandlers();
                 this.onClick.removeAllHandlers();
                 this.onMouseDown.removeAllHandlers();
                 this.onMouseUp.removeAllHandlers();
@@ -344,7 +343,7 @@
                 'margin': {
                     '*': (margin) => this.margin = margin
                 },
-                'context': {}, // ?
+                'scope': {}, // Deserialize JSON?
 
                 // Events
                 'onClick': {
@@ -362,18 +361,20 @@
          * Gets or sets element's parent.
          * WARNING: Must be set only by parent.
          */
-        //parent: Container;
         get parent() {
             return this._parent;
         }
         /*internal*/set parent(parent) {
+            if (parent.children.indexOf(this) < 0)
+                throw new Error('The "parent" property must be set only by parent.');
+
             if (this._parent) {
-                this._parent.onContextChanged.removeHandler(this.parentContextChangeHandler);
+                this._parent.onScopeChanged.removeHandler(this.parentScopeChangeHandler);
             }
             this._parent = parent;
             if (parent) {
-                this._parent.onContextChanged.addHandler(this.parentContextChangeHandler, this);
-                this.parentContextChangeHandler();
+                this._parent.onScopeChanged.addHandler(this.parentScopeChangeHandler, this);
+                this.parentScopeChangeHandler();
             }
         }
         protected _parent: Container;
@@ -381,22 +382,22 @@
         /**
          * Handles parent context change.
          */
-        protected parentContextChangeHandler = () => {
-            if (this.useParentContext) {
-                if (!this.bindings['context']) {
-                    // Use parent's context
-                    this.context = this.parent.context;
+        protected parentScopeChangeHandler = () => {
+            if (this.useParentScope) {
+                if (!this.bindings['scope']) {
+                    // Use parent's scope
+                    this.scope = this.parent.scope;
                 }
                 else {
                     // Update context binding
-                    this.bindings['context'].resetWith(this.parent.context);
+                    this.bindings['scope'].resetWith(this.parent.scope);
                 }
             }
         };
         /**
-         * Specifies whether element should use parent data context. 
+         * Specifies whether element should use parent data scope. 
          */
-        useParentContext = true;
+        useParentScope = true;
 
         /**
          * Removes element.
@@ -492,10 +493,6 @@
          */
         protected bindings: UiBindingDictionary;
         /**
-         * Holds control's properties' empty path bindings.
-         */
-        protected emptyPathBindings: { [controlProp: string]: () => void };
-        /**
          * Holds control's properties' expressions.
          */
         protected expressions: UiExpressionDictionary;
@@ -504,7 +501,7 @@
          * Binds control's property to source property.
          * @param controlProperty Control's property name.
          * @param objectPropertyPath Object's property name.
-         * @param [source] Binding source object.
+         * @param [source] Binding source object. If not specified the element's scope will be used.
          */
         bind(controlProperty: string, objectPropertyPath: string, source?) {
             if (this.bindings[controlProperty]) {
@@ -513,27 +510,21 @@
             }
 
             if (objectPropertyPath === '') {
-                // If empty path
-                if (controlProperty === 'context') {
-                    throw new Error('Context binding path cannot be empty.');
-                }
-                else {
-                    if (this.emptyPathBindings[controlProperty]) {
-                        // Unsubscribe from prev changes
-                        this.onContextChanged.removeHandler(this.emptyPathBindings[controlProperty]);
-                    }
-                    var handler = () => this[controlProperty] = this.context;
-                    this.onContextChanged.addHandler(handler, this);
-                    this.emptyPathBindings[controlProperty] = handler;
-                }
+                throw new Error('Binding path cannot be empty.');
             }
-            else {
-                this.bindings[controlProperty] = new Binding.BindingManager(
-                    this,
-                    controlProperty,
-                    source || this.context,
-                    objectPropertyPath);
+
+            if (controlProperty === 'scope' && !source) {
+                if (!this.parent)
+                    throw new Error('Unable to bind "scope" property. Element has no parent.');
+
+                source = this.parent.scope;
             }
+
+            this.bindings[controlProperty] = new Binding.BindingManager(
+                this,
+                controlProperty,
+                source || this.scope,
+                objectPropertyPath);
         }
 
         /**
@@ -544,10 +535,6 @@
             if (this.bindings[controlProperty]) {
                 this.bindings[controlProperty].unbind();
                 delete this.bindings[controlProperty];
-            }
-            if (this.emptyPathBindings[controlProperty]) {
-                this.onContextChanged.removeHandler(this.emptyPathBindings[controlProperty]);
-                delete this.emptyPathBindings[controlProperty];
             }
             if (this.expressions[controlProperty]) {
                 this.expressions[controlProperty].unbind();
@@ -574,40 +561,35 @@
         }
 
         /**
-         * Gets or sets control's data binding context.
+         * Get's or sets control's data scope.
          */
-        get context() {
-            if (this._context !== void 0) {
-                return this._context;
-            }
-            else {
-                if (this.parent) {
-                    return this.parent.context;
-                }
-                else {
-                    return null;
-                }
-            }
+        get scope() {
+            return this._scope;
         }
-        set context(context) {
-            console.log(xp.formatString('{0}:{1}: Change context to "{2}".', xp.getClassName(this), this.name || '-', context));
-            this._context = context;
+        set scope(scope) {
+            if (!(scope instanceof xp.Binding.Scope))
+                scope = new xp.Binding.Scope(scope);
+            if (this.bindings['scope'])
+                scope = new xp.Binding.Scope(scope, this.parent.scope);
+
+            console.log(xp.formatString('{0}:{1}: Set data scope "{2}".', xp.getClassName(this), this.name || '-', scope));
+            this._scope = scope;
 
             for (var cp in this.bindings) {
-                if (cp !== 'context') {
+                if (cp !== 'scope') {
                     if (!this.expressions[cp]) {
-                        this.bindings[cp].resetWith(context);
+                        this.bindings[cp].resetWith(scope);
                     }
                 }
             }
             for (var cp in this.expressions) {
-                if (cp !== 'context') {
-                    this.expressions[cp].resetWith(context);
+                if (cp !== 'scope') {
+                    this.expressions[cp].resetWith(scope);
                 }
             }
-            this.onContextChanged.invoke(context);
+            this.onScopeChanged.invoke(scope);
         }
-        protected _context: Binding.INotifier;
+        private _scope: any;
 
         /**
          * Is invoked when user performs an input action.
@@ -620,20 +602,12 @@
             if (this.bindings[controlProp]) {
                 this.bindings[controlProp].updateSource();
             }
-            if (this.emptyPathBindings[controlProp]) {
-                // Set highest parent's context if it is the same
-                var current = this;
-                while (current.parent && current.parent.context === current.context) {
-                    current = current.parent;
-                }
-                current.context = value;
-            }
         }
 
         /**
-         * Fires when data context is changed.
+         * Fires when data scope is changed.
          */
-        onContextChanged: Event<any>;
+        onScopeChanged: Event<xp.Binding.Scope>;
     }
 
 

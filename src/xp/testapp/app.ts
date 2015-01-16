@@ -28,7 +28,7 @@ window.onload = () => {
     bs = xp.Binding.createNotifierFrom(person);
 
     console.log('App: Set window context.');
-    app.window.context = bs;
+    app.window.scope = bs;
 
     setTimeout(() => {
         console.log('App: Set person name.');

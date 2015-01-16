@@ -18,7 +18,10 @@
 
         protected getAttributeMap(): AttributeMap {
             return xp.extendObject(super.getAttributeMap(), {
-                'items': {} // ?
+                'items': {}, // Parse JSON ?
+                'itemId': {
+                    '*': (id) => this.itemId = id
+                }
             });
         }
 
@@ -50,6 +53,11 @@
         //-----------
         // PROPERTIES
         //-----------
+
+        protected setDefaults() {
+            super.setDefaults();
+            this.itemId = 'item';
+        }
 
         /**
          * Gets or sets items collection.
@@ -84,9 +92,7 @@
                                 this.children[args.oldIndex].remove();
                                 break;
                             case Binding.CollectionChangeAction.set:
-                                this.childContextChangeToken = true;
-                                this.children[args.newIndex].context = args.newItem;
-                                this.childContextChangeToken = false;
+                                this.children[args.newIndex].scope = this.createItemScopeFrom(args.newItem);
                                 break;
                             case Binding.CollectionChangeAction.reset:
                                 this.items = items;
@@ -115,7 +121,16 @@
         }
         protected _items: any[];
         protected itemsRegistar: EventRegistar;
-        protected childContextChangeToken = false; // Prevents cycling when set context
+
+        /**
+         * Gets or sets list-item identifier for item's scope.
+         */
+        itemId: string;
+
+
+        //-------
+        // EVENTS
+        //-------
 
         protected initEvents() {
             super.initEvents();
@@ -145,24 +160,19 @@
             var type = xp.UI.Tags[tagName];
             var child = new type($(this.itemTemplateXml));
             child.name = xp.createUuid();
-            child.useParentContext = false;
+            child.useParentScope = false;
 
             // Append child
             this.insertElement(child, index);
 
-            // Bind child by index
-            this.childContextChangeToken = true;
-            child.context = item;
-            this.childContextChangeToken = false;
+            // Set child's scope
+            child.scope = this.createItemScopeFrom(item);
+        }
 
-            // Subscribe for replacement
-            // TODO: Unsubscribe?
-            child.onContextChanged.addHandler((ctx) => {
-                if (!this.childContextChangeToken) {
-                    var i = this.children.indexOf(child);
-                    this.items[i] = ctx;
-                }
-            }, this);
+        protected createItemScopeFrom(item: any): xp.Binding.Scope {
+            var scope = {};
+            scope[this.itemId] = item;
+            return new xp.Binding.Scope(scope, this.scope);
         }
     }
     Tags['List'] = List;

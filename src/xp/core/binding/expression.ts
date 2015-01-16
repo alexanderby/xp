@@ -22,8 +22,6 @@
         constructor(expression: string) {
             this.onPropertyChanged = new Event<string>();
 
-            // TODO: Empty path.
-
             // Find paths
             var regex = /\{([^\s\(\)]+?)\}/g;
             var matches = expression.match(regex);
@@ -39,6 +37,8 @@
                 }
             }
             this.propsPaths = propsPaths;
+
+            // TODO: eval() ?
 
             // Create function
             var body = expression;
