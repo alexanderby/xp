@@ -269,6 +269,6 @@
      * @param obj Object.
      */
     export function isCollectionNotifier(obj) {
-        return obj && 'onCollectionChanged' in obj;
+        return obj && typeof obj === 'object' && 'onCollectionChanged' in obj;
     }
 } 

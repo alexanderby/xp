@@ -365,7 +365,7 @@
             return this._parent;
         }
         /*internal*/set parent(parent) {
-            if (parent.children.indexOf(this) < 0)
+            if (parent && parent.children.indexOf(this) < 0)
                 throw new Error('The "parent" property must be set only by parent.');
 
             if (this._parent) {
@@ -514,10 +514,13 @@
             }
 
             if (controlProperty === 'scope' && !source) {
-                if (!this.parent)
-                    throw new Error('Unable to bind "scope" property. Element has no parent.');
-
-                source = this.parent.scope;
+                if (!this.parent) {
+                    //throw new Error('Unable to bind "scope" property. Element has no parent.');
+                    source = {};
+                }
+                else {
+                    source = this.parent.scope;
+                }
             }
 
             this.bindings[controlProperty] = new Binding.BindingManager(

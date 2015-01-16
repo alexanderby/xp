@@ -22,7 +22,8 @@
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
 
         // Create inner object (source deep copy)
-        obj['__inner__'] = xp.clone(source);
+        //obj['__inner__'] = xp.clone(source);
+        obj['__inner__'] = source;
 
         for (var key in source) {
             // Create notification property
@@ -36,7 +37,7 @@
      * @param obj Object.
      */
     export function isNotifier(obj) {
-        return obj && 'onPropertyChanged' in obj;
+        return obj && typeof obj === 'object' && 'onPropertyChanged' in obj;
     }
 
     ///**

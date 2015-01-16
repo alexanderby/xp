@@ -1,4 +1,9 @@
 ﻿module xp.Binding {
+    // TODO: Ideas:
+    // 1. Scope should implement INotifier or...
+    // 2. Should not create INotifier, ObservableCollection,
+    // use Object.observe instead.
+
     /**
      * Data scope.
      */
@@ -12,7 +17,10 @@
          * @param [parent] Parent scope.
          */
         constructor(source: any, parent?: Scope) {
-            if (isNotifier(source)) {
+            if (source instanceof Scope) {
+                this.self = (<Scope>source).self;
+            }
+            else if (isNotifier(source)) {
                 this.self = source;
             }
             else if (Array.isArray(source)) {
@@ -60,11 +68,11 @@
             }
         }
 
-        /**
-         * Is invoked when any object's property is changed.
-         * Argument is a property name.
-         */
-        onPropertyChanged: Event<string>;
+        ///**
+        // * Is invoked when any object's property is changed.
+        // * Argument is a property name.
+        // */
+        //onPropertyChanged: Event<string>;
     }
 
     //export interface Scope extends INotifier {

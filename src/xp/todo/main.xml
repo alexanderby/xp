@@ -3,9 +3,9 @@
   <Stack width="20em">
     <Label text="TODO APP"/>
     <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
-    <List name="list" items="{todos}">
+    <List name="list" items="{todos}" itemId="t">
       <Stack flow="horizontal">
-        <CheckBox checked="{isDone}" text="{name}" onCheckChange="onDoneToggle"/>
+        <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
         <Placeholder/>
         <Button key="delete" text="Delete" onClick="onDeleteClick"/>
       </Stack>
@@ -25,11 +25,11 @@
   <Stack width="10em">
     <Label text="Selected"/>
     <TextBox text="{selected.name}" name="tb_selected"/>
-    <!--<List items="{todos}">
-      <RadioButton item="{}" text="{this.item.name}" selectedItem="{selected}" group="todos" checked="({this.item} == {selected})"/>
-    </List>-->
-    <RadioButton item="{todos[0]}" text="{todos[0].name}" selectedItem="{selected}"/>
+    <List items="{todos}">
+      <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
+    </List>
+    <!--<RadioButton item="{todos[0]}" text="{todos[0].name}" selectedItem="{selected}"/>
     <RadioButton item="{todos[1]}" text="{todos[1].name}" selectedItem="{selected}"/>
-    <RadioButton item="{todos[2]}" text="{todos[2].name}" selectedItem="{selected}"/>
+    <RadioButton item="{todos[2]}" text="{todos[2].name}" selectedItem="{selected}"/>-->
   </Stack>
 </Window>

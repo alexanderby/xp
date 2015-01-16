@@ -30,8 +30,8 @@
     <CheckBox name="ch1" checked="({numbers.length} > 3)" text="Length > 3" readonly="true"/>
     <Label text="{name}" name="Label1" height="4em"/>
     <TextBox text="{city.name}" name="TextBox1" width="100%"/>
-    <Stack flow="horizontal" context="{city}" name="Stack_ctx" itemsAlign="stretch">
-      <TextBox context="{country}" text="{name}" name="TextBox2" width="100%"/>
+    <Stack flow="horizontal" scope="{city}" name="Stack_ctx" itemsAlign="stretch">
+      <TextBox scope="{country}" text="{name}" name="TextBox2" width="100%"/>
     </Stack>
     <TextBox text="{city.country.name}" name="TextBox3" notifyOnKeydown="true" width="100%"/>
     <Stack flow="horizontal">
@@ -41,16 +41,16 @@
     </Stack>
     <TextBox width="100%" text="{books[1].pages}" notifyOnKeydown="true" name="tb_1_pages_1"/>
     <TextBox width="100%" text="{books[1].pages}" notifyOnKeydown="true" name="tb_1_pages_2"/>
-    <List flow="vertical" name="List1" items="{books}">
+    <List flow="vertical" name="List1" items="{books}" itemId="book">
       <Stack flow="horizontal" itemsAlign="stretch">
         <Label text="book"/>
-        <TextBox text="{pages}" width="100%"/>
+        <TextBox text="{book.pages}" width="100%"/>
       </Stack>
     </List>
-    <List flow="vertical" name="List2" items="{numbers}" itemsAlign="stretch">
+    <List flow="vertical" name="List2" items="{numbers}" itemsAlign="stretch" itemId="num">
       <Stack flow="horizontal">
         <Label text="number"/>
-        <TextBox text="{}" width="100%" type="number"/>
+        <TextBox text="{num}" width="100%" type="number"/>
       </Stack>
     </List>
     <Stack flow="horizontal">

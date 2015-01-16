@@ -12,7 +12,7 @@
                 todos: new Array<TodoItem>(),
                 selected: null
             });
-            this.scope = this.data;
+            this.scope = new xp.Binding.Scope(this.data);
         }
 
         //---------
@@ -20,8 +20,7 @@
         //---------
 
         private onDeleteClick(args: xp.UI.UIEventArgs) {
-            //alert('Delete');
-            var index = this.data.todos.indexOf(args.targetUIControl.scope);
+            var index = this.data.todos.indexOf(args.targetUIControl.scope.get('t')); // Hmm...
             if (index >= 0) {
                 this.removeItem(index);
             }

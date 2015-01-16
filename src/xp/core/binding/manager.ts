@@ -85,14 +85,14 @@
 
             // WARNING: If property is unreachable then the current scope will be used.
             // WARNING: If property is reachable then the property holder will be used.
-            this.scope = this.scope.getPropertyHolder(this.path) || this.scope;
+            var scope = this.scope.getPropertyHolder(this.path) || this.scope;
             var parts = this.pathParts;
 
             if (startIndex === 0) {
                 this.pathObjects = [];
             }
             this.pathObjects[startIndex] = {
-                obj: this.scope.get('')
+                obj: scope.get(startIndex === 0 ? '' : parts.slice(0, startIndex).join('.'))
             };
 
             var po: PathObjectInfo[] = this.pathObjects;
@@ -103,7 +103,7 @@
 
                 var current = po[i].obj;
 
-                if (!(prop in current)) {
+                if (!current) {
                     break;
                 }
 
@@ -142,6 +142,7 @@
                         })(prop, i + 1);
                     }
 
+                    (<INotifier>po[i].obj).onPropertyChanged.addHandler(handler, this);
                     po[i].handler = handler;
                 }
             }
@@ -168,10 +169,12 @@
          */
         updateSource() {
             if (this.scope.get(this.path) !== void 0) {
-                this.logMessage(xp.formatString('Update source "{0}" property with value "{1}".', this.path, value));
                 var value = xp.Path.getPropertyByPath(this.target, this.targetPropertyPath);
+                this.logMessage(xp.formatString('Update source "{0}" property with value "{1}".', this.path, value));
                 var pathLength = this.pathParts.length;
-                this.pathObjects[pathLength][this.pathParts[pathLength]] = value;
+                var sourceObj = this.pathObjects[pathLength - 1].obj;
+                var sourceProp = this.pathParts[pathLength - 1];
+                sourceObj[sourceProp] = value;
             }
             else {
                 this.logMessage(xp.formatString('Unable to update source property "{0}". It is unreachable.', this.path));
