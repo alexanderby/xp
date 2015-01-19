@@ -51,6 +51,24 @@
         }
 
         /**
+         * Sets a property value by path.
+         * @param path Property path.
+         * @param value Value.
+         */
+        set(path: string, value): any {
+            if (this.get(path) === void 0) {
+                throw new Error(
+                    xp.formatString('Unable to set property value "{0}" by path "{1}". Property is unreachable.', value, path));
+            }
+
+            var holder = this.getPropertyHolder(path);
+            var obj = xp.Path.getPropertyByPath(holder.get(''), xp.Path.getObjectPath(path));
+            var propName = xp.Path.getPropertyName(path);
+
+            obj[propName] = value;
+        }
+
+        /**
          * Returns a nearest scope that has the property.
          * @param path Property path.
          * @returns Scope or "undefined" if property is unreachable.

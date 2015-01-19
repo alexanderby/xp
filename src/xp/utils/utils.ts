@@ -132,8 +132,8 @@ module xp.Path {
     /**
      * Returns object's property.
      * @param obj Source object.
-     * @param path Dotted path to property. If path='', then source object will be returned.
-     * @param [throwErr=true] Throws an error if object not found.
+     * @param path Path to property. If path='', then source object will be returned.
+     * @param [throwErr=true] Throws an error if property not found.
      */
     export function getPropertyByPath(obj, path, throwErr = true) {
         if (!obj) {
@@ -163,6 +163,27 @@ module xp.Path {
             return true;
         });
         return current;
+    }
+
+    /**
+     * Sets property value by path.
+     * @param obj Source object.
+     * @param path Path to property.
+     * @param value Value.
+     * @param [throwErr=true] Throws an error if property not found.
+     */
+    export function setPropertyByPath(obj, path, value, throwErr = true) {
+        var objPath = getObjectPath(path);
+        var obj = getPropertyByPath(obj, objPath, throwErr);
+        var propName = getPropertyName(path);
+
+        // TODO: Allow adding properties?
+        if (!(propName in obj) && throwErr) {
+            throw new Error(
+                xp.formatString('Unable to set property value "{0}" by path "{1}". Property is unreachable.', value, path));
+        }
+
+        obj[propName] = value;
     }
 
     /**

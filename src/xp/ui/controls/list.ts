@@ -89,10 +89,15 @@
                                 this.addItem(args.newIndex, args.newItem);
                                 break;
                             case Binding.CollectionChangeAction.remove:
+                                // Remove replacement handler
+                                var found = this.itemReplacementHandlers.filter((h) => h.item === args.oldItem)[0];
+                                found.holder.onPropertyChanged.removeHandler(found.handler);
+                                this.itemReplacementHandlers.splice(this.itemReplacementHandlers.indexOf(found), 1);
+
                                 this.children[args.oldIndex].remove();
                                 break;
                             case Binding.CollectionChangeAction.set:
-                                this.children[args.newIndex].scope = this.createItemScopeFrom(args.newItem);
+                                (<xp.Binding.Scope>this.children[args.newIndex].scope).set(this.itemId, args.newItem);
                                 break;
                             case Binding.CollectionChangeAction.reset:
                                 this.items = items;
@@ -142,7 +147,9 @@
         // RELATIONS
         //----------
 
-        // TODO: Ability to set template from code.
+        // TODO: Ability to set template from code (apply
+        // markup not in constructor, but separately by
+        // returning and applying initializer).
 
         ///**
         // * Gets or sets list item template.
@@ -170,10 +177,38 @@
         }
 
         protected createItemScopeFrom(item: any): xp.Binding.Scope {
-            var scope = {};
-            scope[this.itemId] = item;
-            return new xp.Binding.Scope(scope, this.scope);
+            // Create item scope
+            var obj = {};
+            obj[this.itemId] = item;
+            var scope = new xp.Binding.Scope(obj, this.scope);
+
+            // Handle item replacement inside other scope
+            var holder = <xp.Binding.INotifier>scope.get('');
+            var handler = (prop) => {
+                if (prop === this.itemId) {
+                    var index = this.items.indexOf(item);
+                    this.items[index] = holder[prop];
+                }
+            };
+            holder.onPropertyChanged.addHandler(handler, this);
+
+            this.itemReplacementHandlers.push({
+                item: item,
+                holder: holder,
+                handler: handler
+            });
+
+            return scope;
         }
+
+        protected itemReplacementHandlers: ItemHandlerUnion[] = [];
     }
     Tags['List'] = List;
+
+
+    interface ItemHandlerUnion {
+        item: any;
+        holder: xp.Binding.INotifier;
+        handler: (propName: string) => void;
+    }
 }
