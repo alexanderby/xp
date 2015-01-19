@@ -62,7 +62,7 @@
                         }
 
                         if (value !== void 0 && isCollectionNotifier(value)) {
-                            // Register for collection changes
+                            // Subscribe for collection changes
                             var registar = new EventRegistar();
                             var cn = <ICollectionNotifier>value;
                             registar.subscribe(cn.onCollectionChanged, (args) => {

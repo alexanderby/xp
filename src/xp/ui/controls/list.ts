@@ -97,7 +97,9 @@
                                 this.children[args.oldIndex].remove();
                                 break;
                             case Binding.CollectionChangeAction.set:
-                                (<xp.Binding.Scope>this.children[args.newIndex].scope).set(this.itemId, args.newItem);
+                                if (!this.itemReplacementToken) {
+                                    (<xp.Binding.Scope>this.children[args.newIndex].scope).set(this.itemId, args.newItem);
+                                }
                                 break;
                             case Binding.CollectionChangeAction.reset:
                                 this.items = items;
@@ -186,8 +188,14 @@
             var holder = <xp.Binding.INotifier>scope.get('');
             var handler = (prop) => {
                 if (prop === this.itemId) {
-                    var index = this.items.indexOf(item);
+                    //var index = this.items.indexOf(item);
+                    var index = this.items.indexOf(holder[this.itemId]);
+                    if (index < 0) {
+                        throw new Error('Item does not belong to List items.');
+                    }
+                    this.itemReplacementToken = true;
                     this.items[index] = holder[prop];
+                    this.itemReplacementToken = false;
                 }
             };
             holder.onPropertyChanged.addHandler(handler, this);
@@ -201,6 +209,7 @@
             return scope;
         }
 
+        private itemReplacementToken = false;
         protected itemReplacementHandlers: ItemHandlerUnion[] = [];
     }
     Tags['List'] = List;
