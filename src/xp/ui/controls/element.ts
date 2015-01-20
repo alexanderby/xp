@@ -167,7 +167,7 @@
                 this.domElement.addClass('disabled');
             }
         }
-        protected _enabled = true;
+        private _enabled = true;
 
         /**
          * Gets or sets element's name.
@@ -182,7 +182,7 @@
             // DOM
             this.domElement.attr('id', value);
         }
-        protected _name: string;
+        private _name: string;
 
         /**
          * Gets or sets element's key.
@@ -193,7 +193,7 @@
         set key(key) {
             this._key = key.toLowerCase();
         }
-        protected _key: string;
+        private _key: string;
 
         /**
          * Gets or sets width of the element (using CSS syntax).
@@ -207,7 +207,7 @@
             // DOM
             this.domElement.css('width', width);
         }
-        protected _width: string;
+        private _width: string;
 
         /**
          * Gets or sets height of the element (using CSS syntax).
@@ -221,7 +221,7 @@
             // DOM
             this.domElement.css('height', height);
         }
-        protected _height: string;
+        private _height: string;
 
         /**
          * Gets or sets margin of the element (using CSS syntax).
@@ -235,7 +235,7 @@
             // DOM
             this.domElement.css('margin', margin);
         }
-        protected _margin: string;
+        private _margin: string;
 
         /**
          * Gets or sets element's CSS class.
@@ -250,7 +250,7 @@
             this.domElement.removeClass();
             this.domElement.addClass(cssClass);
         }
-        protected _style: string;
+        private _style: string;
 
 
         //------------------
@@ -377,7 +377,7 @@
                 this.parentScopeChangeHandler();
             }
         }
-        protected _parent: Container;
+        private _parent: Container;
 
         /**
          * Handles parent context change.

@@ -58,8 +58,8 @@
                     throw new Error('Unknown flow value: ' + flow);
             }
         }
-        protected _flow: Flow;
-        protected removeFlowClasses() {
+        private _flow: Flow;
+        private removeFlowClasses() {
             this.domElement.removeClass('flow-x flow-y');
         }
 
@@ -90,8 +90,8 @@
                     throw new Error('Unknown content alignment value: ' + align);
             }
         }
-        protected _contentAlignment: ContentAlignment;
-        protected removeContentAlignmentClasses() {
+        private _contentAlignment: ContentAlignment;
+        private removeContentAlignmentClasses() {
             this.domElement.removeClass('content-align-start content-align-center content-align-end');
         }
 
@@ -126,8 +126,8 @@
                     throw new Error('Unknown items alignment value: ' + align);
             }
         }
-        protected _itemsAlignment: ItemsAlignment;
-        protected removeItemsAlignmentClasses() {
+        private _itemsAlignment: ItemsAlignment;
+        private removeItemsAlignmentClasses() {
             this.domElement.removeClass('items-align-start items-align-center items-align-end items-align-stretch');
         }
 
@@ -165,8 +165,8 @@
                     throw new Error('Unknown items indent value: ' + indent);
             }
         }
-        protected _itemsIndent: ItemsIndent;
-        protected removeItemsIndentClasses() {
+        private _itemsIndent: ItemsIndent;
+        private removeItemsIndentClasses() {
             this.domElement.removeClass('items-indent-05 items-indent-1 items-indent-2 items-indent-4');
         }
 
@@ -201,8 +201,8 @@
                     throw new Error('Unknown scroll bar value: ' + scroll);
             }
         }
-        protected _scrollBar: ScrollBar;
-        protected removeScrollBarClasses() {
+        private _scrollBar: ScrollBar;
+        private removeScrollBarClasses() {
             this.domElement.removeClass('scrollbar-none scrollbar-x scrollbar-y scrollbar-both');
         }
 
@@ -229,8 +229,8 @@
                     throw new Error('Unknown wrapping value: ' + wrap);
             }
         }
-        protected _wrapping: Wrapping;
-        protected removeWrappingClasses() {
+        private _wrapping: Wrapping;
+        private removeWrappingClasses() {
             this.domElement.removeClass('wrapping-nowrap wrapping-wrap');
         }
 

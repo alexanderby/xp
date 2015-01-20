@@ -55,7 +55,7 @@
             // DOM
             this.domElement.css('padding', padding);
         }
-        protected _padding: string;
+        private _padding: string;
 
 
         //------------------

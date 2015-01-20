@@ -80,7 +80,7 @@
             // DOM
             this.checkElement.prop('checked', checked);
         }
-        protected _checked: boolean;
+        private _checked: boolean;
 
         /**
          * Gets or sets button's text.
@@ -101,7 +101,7 @@
                 this.textElement.hide();
             }
         }
-        protected _text: string;
+        private _text: string;
 
         /**
          * Gets or sets value, indicating whether text box is readonly.
@@ -121,7 +121,7 @@
                 this.checkElement.removeAttr('readonly');
             }
         }
-        protected _readonly: boolean;
+        private _readonly: boolean;
 
 
         //------------------

@@ -33,7 +33,7 @@
             //this.textElement.text(text);
             this.domElement.text(text);
         }
-        protected _text: string;
+        private _text: string;
 
 
         //------------------

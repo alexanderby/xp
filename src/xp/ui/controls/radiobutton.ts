@@ -47,7 +47,7 @@
             // DOM
             this.checkElement.attr('name', group);
         }
-        protected _group: string;
+        private _group: string;
 
         /**
          * Gets or sets data item that is related to this control.

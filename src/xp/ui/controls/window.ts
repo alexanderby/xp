@@ -36,7 +36,7 @@
             this._title = title;
             document.title = title;
         }
-        protected _title: string;
+        private _title: string;
 
 
         //------------------

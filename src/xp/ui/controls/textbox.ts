@@ -111,7 +111,7 @@
             //    newText: text
             //});
         }
-        protected _text: string;
+        private _text: string;
 
         /**
          * Gets or sets textbox type.
@@ -122,7 +122,7 @@
         set type(type) {
             this._type = type;
         }
-        protected _type: TextBoxType;
+        private _type: TextBoxType;
 
         /**
          * Gets or sets value, indicating whether text box is readonly.
@@ -141,7 +141,7 @@
                 this.domElement.removeAttr('readonly');
             }
         }
-        protected _readonly: boolean;
+        private _readonly: boolean;
 
         /**
          * Gets or sets text placeholder.
@@ -160,7 +160,7 @@
                 this.domElement.removeAttr('placeholder');
             }
         }
-        protected _placeholder: string;
+        private _placeholder: string;
 
         /**
          * If enabled, listeners will be notified of changes on every input key is down.

@@ -47,7 +47,7 @@
                 this.iconElement.hide();
             }
         }
-        protected _iconPath: string;
+        private _iconPath: string;
 
         /**
          * Gets or sets button's text.
@@ -68,7 +68,7 @@
                 this.textElement.hide();
             }
         }
-        protected _text: string;
+        private _text: string;
 
 
         //------------------
