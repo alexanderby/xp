@@ -11,11 +11,12 @@
     }
 
     export enum CollectionChangeAction {
-        add,
-        remove,
+        Create,
+        Replace,
+        //Update?
+        Delete,
+        Reset,
         //move,
-        set, // TODO: 'set' vs 'onPropertyChanged'.
-        reset,
         //sort
     }
 
@@ -73,7 +74,7 @@
 
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.add,
+                action: CollectionChangeAction.Create,
                 newIndex: index,
                 newItem: item
             });
@@ -92,7 +93,7 @@
 
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.remove,
+                action: CollectionChangeAction.Delete,
                 oldIndex: index,
                 oldItem: item
             });
@@ -114,7 +115,7 @@
 
                     // Notify
                     this.onCollectionChanged.invoke({
-                        action: CollectionChangeAction.set,
+                        action: CollectionChangeAction.Replace,
                         oldIndex: index,
                         newIndex: index,
                         oldItem: this.inner[index],
@@ -172,7 +173,7 @@
             this.inner.reverse();
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.reset // TODO: move?
+                action: CollectionChangeAction.Reset // TODO: move?
             });
             return this.inner;
         }
@@ -186,7 +187,7 @@
             this.inner.sort(compareFn);
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.reset // TODO: move?
+                action: CollectionChangeAction.Reset // TODO: move?
             });
             return this.inner;
         }

@@ -31,17 +31,9 @@
             }
 
             var childXmlNode = markup.children().get(0);
-            var tagName = childXmlNode.nodeName;
-            var type = xp.UI.Tags[tagName];
-            var init = new type().getMarkupInitializer($(childXmlNode));
+            var create = xp.UI.getElementCreator($(childXmlNode));
 
-            return (el) => {
-                el.itemCreator = () => {
-                    var child = new type();
-                    init(child);
-                    return child;
-                };
-            }
+            return (el) => el.itemCreator = create;
         }
 
         protected getAttributeMap(): AttributeMap<List> {
@@ -89,10 +81,10 @@
                     var collection = <Binding.ICollectionNotifier><any>items;
                     this.itemsRegistar.subscribe(collection.onCollectionChanged, (args) => {
                         switch (args.action) {
-                            case Binding.CollectionChangeAction.add:
+                            case Binding.CollectionChangeAction.Create:
                                 this.addItem(args.newIndex, args.newItem);
                                 break;
-                            case Binding.CollectionChangeAction.remove:
+                            case Binding.CollectionChangeAction.Delete:
                                 // Remove replacement handler
                                 var found = this.itemReplacementHandlers.filter((h) => h.item === args.oldItem)[0];
                                 found.holder.onPropertyChanged.removeHandler(found.handler);
@@ -100,12 +92,12 @@
 
                                 this.children[args.oldIndex].remove();
                                 break;
-                            case Binding.CollectionChangeAction.set:
+                            case Binding.CollectionChangeAction.Replace:
                                 if (!this.itemReplacementToken) {
                                     (<xp.Binding.Scope>this.children[args.newIndex].scope).set(this.itemId, args.newItem);
                                 }
                                 break;
-                            case Binding.CollectionChangeAction.reset:
+                            case Binding.CollectionChangeAction.Reset:
                                 this.items = items;
                                 break;
                             default:
@@ -152,10 +144,6 @@
         //----------
         // RELATIONS
         //----------
-
-        // TODO: Ability to set template from code (apply
-        // markup not in constructor, but separately by
-        // returning and applying initializer).
 
         /**
          * Gets or sets list item creator function.

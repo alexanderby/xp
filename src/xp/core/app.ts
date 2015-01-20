@@ -18,10 +18,7 @@
          */
         start() {
             var markup = xp.loadMarkupSync(this.config.startupUrl);
-            var type = xp.UI.Tags[markup[0].nodeName];
-            this.window = <xp.UI.Window>new type();
-            var init = this.window.getMarkupInitializer(markup);
-            init(this.window);
+            this.window = <xp.UI.Window>xp.UI.createElement(markup);
             this.window.renderTo('body');
         }
 
@@ -38,7 +35,6 @@
     export interface AppConfig {
         startupUrl: string;
     }
-
 
     // TODO: Async?
     /**

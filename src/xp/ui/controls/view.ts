@@ -1,5 +1,5 @@
 ﻿module xp.UI {
-    // TODO: No sense in <View> with href now?
+    // TODO: No sense in <View> with href now? Use custom control.
 
     /**
      * View.

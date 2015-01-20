@@ -124,6 +124,21 @@
 
         throw new Error("Unable to copy obj! Its type isn't supported.");
     }
+
+    // http://stackoverflow.com/a/1608546/4137472
+    /**
+     * Creates new object and applies arguments to constructor.
+     * @param constructor Type of object.
+     * @param args Arguments to apply.
+     * @returns New object.
+     */
+    export function applyConstructor<T extends Object>(constructor: new () => T, args: any[]): T {
+        function F(): void {
+            constructor.apply(this, args);
+        }
+        F.prototype = constructor.prototype;
+        return new F();
+    }
 }
 
 module xp.Path {

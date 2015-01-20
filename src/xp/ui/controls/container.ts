@@ -89,12 +89,10 @@
                     throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
                 }
 
-                var type = xp.UI.Tags[tagName];
-                var init = new type().getMarkupInitializer($(childXmlNode)); // TODO: Separate class for mapkup processing - MarkupProcessor<T extends Element>
+                var create = xp.UI.getElementCreator($(childXmlNode));
 
                 actions.push((el) => {
-                    var child = new type();
-                    init(child);
+                    var child = create();
                     el.append(child);
                 });
 

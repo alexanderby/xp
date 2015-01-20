@@ -5,12 +5,18 @@
     }
 
     export class Main extends xp.UI.Window {
-        constructor() {
+
+        constructor(app?: xp.Application) {
             super();
+
+            console.log('Main dependency (app):');
+            console.log(app);
 
             this.data = xp.Binding.createNotifierFrom({
                 todos: new Array<TodoItem>(),
-                selected: null
+                //selected: null,
+                undone: new Array<TodoItem>(),
+                done: new Array<TodoItem>()
             });
             this.scope = new xp.Binding.Scope(this.data);
         }
@@ -41,8 +47,13 @@
             }
         }
 
+        private refreshFiltered() {
+            this.data.undone = this.data.todos.filter((t) => !t.isDone);
+            this.data.done = this.data.todos.filter((t) => t.isDone);
+        }
+
         private onDoneToggle(args: xp.UI.CheckChangeArgs) {
-            //this.undone = this.data.todos.filter((t) => !t.isDone).length;
+            this.refreshFiltered();
         }
 
         private textbox: xp.UI.TextBox;
@@ -55,6 +66,8 @@
 
         private data: {
             todos: TodoItem[];
+            undone: TodoItem[];
+            done: TodoItem[];
         }
 
         private addItem(name: string) {
@@ -63,10 +76,12 @@
                 isDone: false
             };
             this.data.todos.push(item);
+            this.refreshFiltered();
         }
 
         private removeItem(index: number) {
             this.data.todos.splice(index, 1);
+            this.refreshFiltered();
         }
     }
     xp.UI.Tags['Window'] = Main;

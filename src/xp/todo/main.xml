@@ -11,13 +11,13 @@
       </Stack>
     </List>
     <Stack flow="horizontal">
-      <Label text="({todos}.filter(function(t){return !t.isDone;}).length + ' items left')"/>
+      <Label text="({undone.length} + ' items left')"/>
       <!--RadioButtons: All, active, completed.-->
       <Placeholder/>
       <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
     </Stack>
   </Stack>
-  <Stack width="10em">
+  <!--<Stack width="10em">
     <Label text="Item 0"/>
     <TextBox text="{todos[0].name}" name="tb0"/>
     <CheckBox text="Check" checked="{todos[0].isDone}" name="cb0"/>
@@ -28,8 +28,5 @@
     <List items="{todos}">
       <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
     </List>
-    <!--<RadioButton item="{todos[0]}" text="{todos[0].name}" selectedItem="{selected}"/>
-    <RadioButton item="{todos[1]}" text="{todos[1].name}" selectedItem="{selected}"/>
-    <RadioButton item="{todos[2]}" text="{todos[2].name}" selectedItem="{selected}"/>-->
-  </Stack>
+  </Stack>-->
 </Window>
