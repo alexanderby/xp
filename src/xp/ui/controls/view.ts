@@ -1,4 +1,6 @@
 ﻿module xp.UI {
+    // TODO: No sense in <View> with href now?
+
     /**
      * View.
      */
