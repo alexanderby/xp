@@ -172,28 +172,28 @@
         // MARKUP PROCESSING
         //------------------
 
-        protected getAttributeMap(): AttributeMap {
-            return xp.extendObject(super.getAttributeMap(), {
+        protected getAttributeMap(): AttributeMap<TextBox> {
+            return extendAttributeMap(super.getAttributeMap(), {
                 'text': {
-                    '*': (value) => this.text = value
+                    '*': (value) => (el: TextBox) => el.text = value
                 },
                 'notifyOnKeydown': {
-                    'true': () => this.notifyOnKeyDown = true,
-                    'false': () => this.notifyOnKeyDown = false
+                    'true': () => (el: TextBox) => el.notifyOnKeyDown = true,
+                    'false': () => (el: TextBox) => el.notifyOnKeyDown = false
                 },
                 'type': {
-                    'string': () => this.type = TextBoxType.string,
-                    'number': () => this.type = TextBoxType.number
+                    'string': () => (el: TextBox) => el.type = TextBoxType.string,
+                    'number': () => (el: TextBox) => el.type = TextBoxType.number
                 },
                 'readonly': {
-                    'true': () => this.readonly = true,
-                    'false': () => this.readonly = false
+                    'true': () => (el: TextBox) => el.readonly = true,
+                    'false': () => (el: TextBox) => el.readonly = false
                 },
                 'placeholder': {
-                    '*': (value) => this.placeholder = value
+                    '*': (value) => (el: TextBox) => el.placeholder = value
                 },
                 'onTextChange': {
-                    '*': (value) => this.registerUIHandler(this.onTextChange, value)
+                    '*': (value) => (el: TextBox) => el.registerUIHandler(el.onTextChange, value)
                 }
             });
         }

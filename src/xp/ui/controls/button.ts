@@ -74,17 +74,17 @@
         //------------------
         // MARKUP PROCESSING
         //------------------
-
+        
         /**
-        * Defines the way of setting control's properties through the XML attributes.
-        */
-        protected getAttributeMap(): AttributeMap {
-            return xp.extendObject(super.getAttributeMap(), {
+         * Defines the way of setting control's properties through the XML attributes.
+         */
+        protected getAttributeMap(): AttributeMap<Button> {
+            return extendAttributeMap(super.getAttributeMap(), {
                 'icon': {
-                    '*': (value) => this.icon = value
+                    '*': (value) => (el: Button) => el.icon = value
                 },
                 'text': {
-                    '*': (value) => this.text = value
+                    '*': (value) => (el: Button) => el.text = value
                 }
             });
         }

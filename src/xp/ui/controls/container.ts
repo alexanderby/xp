@@ -6,17 +6,12 @@
 
         /**
          * Initializes UI container.
-         * @param xmlElement Markup XML-element.
          */
-        protected initElement(xmlElement?: JQuery) {
+        protected initElement() {
             this.domElement = this.getTemplate();
             this.initEvents();
             this.initContent();
             this.setDefaults();
-            if (xmlElement) {
-                this.processMarkup(xmlElement);
-            }
-            this.setNamedChildren();
         }
 
         /**
@@ -63,11 +58,28 @@
         //------------------
 
         /**
-         * Processes markup (applies attributes, creates children etc).
-         * @param markup Markup.
+         * Returns function which initializes control
+         * according to provider markup.
+         * @param markup Element's markup.
          */
-        protected processMarkup(markup: JQuery) {
-            this.applyAttributes(markup);
+        getMarkupInitializer(markup: JQuery): UIInitializer<Container> {
+            var initAttributes = this.getAttributesInitializer(markup);
+            var initContent = this.getContentInitializer(markup);
+            return (el) => {
+                initAttributes(el);
+                initContent(el);
+
+                el.setNamedChildren(); // Where to place?
+            };
+        }
+
+        /**
+         * Returns function whilch initializes control
+         * according to provided children of root element.
+         * @param markup Element's markup.
+         */
+        protected getContentInitializer(markup: JQuery): UIInitializer<Container> {
+            var actions: UIInitializer<Container>[] = [];
 
             // Create children
             $.each(markup.children(), (i, childXmlNode) => {
@@ -76,25 +88,32 @@
                 if (!xp.UI.Tags[tagName]) {
                     throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
                 }
-                var type = xp.UI.Tags[tagName];
-                var child = new type($(childXmlNode));
 
-                // Append child
-                this.appendElement(child);
+                var type = xp.UI.Tags[tagName];
+                var init = new type().getMarkupInitializer($(childXmlNode)); // TODO: Separate class for mapkup processing - MarkupProcessor<T extends Element>
+
+                actions.push((el) => {
+                    var child = new type();
+                    init(child);
+                    el.append(child);
+                });
+
             });
+
+            return (el) => actions.forEach((init) => init(el));
         }
 
         /**
-        * Defines the way of setting control's properties through the XML attributes.
-        */
-        protected getAttributeMap(): AttributeMap {
-            return xp.extendObject(super.getAttributeMap(), {
+         * Returns markup attributes mapping to control's properties.
+         */
+        protected getAttributeMap(): AttributeMap<Container> {
+            return extendAttributeMap(super.getAttributeMap(), {
                 'enabled': {
-                    'true': () => this.cascadeBy((el) => el.enabled = true),
-                    'false': () => this.cascadeBy((el) => el.enabled = true)
+                    'true': () => (el: Container) => el.cascadeBy((e) => e.enabled = true),
+                    'false': () => (el: Container) => el.cascadeBy((e) => e.enabled = true)
                 },
                 'padding': {
-                    '*': (padding) => this.padding = padding
+                    '*': (padding) => (el: Container) => el.padding = padding
                 }
             });
         }
@@ -114,7 +133,7 @@
          * Adds an element at container's end.
          * @param element Element to append.
          */
-        appendElement(element: Element) {
+        append(element: Element) {
             if (element.parent) {
                 element.parent.detachChild(element);
             }
@@ -130,7 +149,7 @@
          * Adds an element at container's beginning.
          * @param element Element to prepend.
          */
-        prependElement(element: Element) {
+        prepend(element: Element) {
             if (element.parent) {
                 element.parent.detachChild(element);
             }
@@ -148,7 +167,7 @@
          * @param element Element to prepend.
          * @param index Index to insert at.
          */
-        insertElement(element: Element, index: number) {
+        insert(element: Element, index: number) {
             if (element.parent === this && this.children.indexOf(element) == index) {
                 // Don't do anything.
             }
@@ -156,7 +175,7 @@
                 var target = this.children[index];
                 if (!target) {
                     // Append at end
-                    this.appendElement(element);
+                    this.append(element);
                 }
                 else {
                     var targetIndex = (element.parent === this && this.children.indexOf(element) < index) ?
@@ -220,7 +239,7 @@
          * Searches for the first element with given name, key or selector.
          * @param selector Element's selector (e.g. "#name", ".key" "ClassName").
          */
-        findElement(selector: string): Element {
+        find(selector: string): Element {
             if (selector[0] === '#') {
                 var name = selector.substring(1);
                 return this.cascadeBy((e) => e.name === name);
@@ -239,7 +258,7 @@
          * Searches for all element with given name, key or selector.
          * @param selector Elements' selector (e.g. "#name", ".key" "ClassName").
          */
-        findElements(selector: string): Element[] {
+        findAll(selector: string): Element[] {
             var results: Element[] = [];
             if (selector[0] === '#') {
                 var name = selector.substring(1);

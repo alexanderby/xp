@@ -4,7 +4,7 @@
      * @param source Object to extend.
      * @param extension Object containing the extensions.
      */
-    export function extendObject<TSrc>(source: TSrc, extension): TSrc {
+    export function extendObject<TSrc, TExt>(source: TSrc, extension: TExt): TSrc { // TODO: Mixin.
         var result = {};
         for (var key in source) {
             result[key] = source[key];

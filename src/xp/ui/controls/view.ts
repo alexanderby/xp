@@ -15,14 +15,15 @@
         }
 
 
-        protected processMarkup(xmlElement: JQuery) {
+        getMarkupInitializer(markup: JQuery): UIInitializer<View> {
+
             // Load from external file, if 'href' attribute specified.
-            var url: string = xmlElement.get(0).getAttribute('href');
+            var url: string = markup.get(0).getAttribute('href');
             if (url) {
-                xmlElement = xp.loadMarkupSync(url);
+                markup = xp.loadMarkupSync(url);
             }
 
-            super.processMarkup(xmlElement);
+            return super.getMarkupInitializer(markup);
         }
     }
     Tags['View'] = View;

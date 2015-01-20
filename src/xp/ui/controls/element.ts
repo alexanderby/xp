@@ -6,23 +6,18 @@
 
         /**
          * Creates UI element.
-         * @param markup Markup.
          */
-        constructor(markup?: JQuery) {
-            this.initElement(markup);
+        constructor() {
+            this.initElement();
         }
 
         /**
          * Initializes UI element.
-         * @param markup Markup.
          */
         protected initElement(markup?: JQuery) {
             this.domElement = this.getTemplate();
             this.initEvents();
             this.setDefaults();
-            if (markup) {
-                this.processMarkup(markup);
-            }
         }
 
 
@@ -258,22 +253,26 @@
         //------------------
 
         /**
-         * Processes markup (applies attributes, creates children etc).
-         * @param markup Markup.
+         * Returns function which initializes control
+         * according to provider markup.
+         * @param markup Element's markup.
          */
-        protected processMarkup(markup: JQuery) {
-            this.applyAttributes(markup);
+        getMarkupInitializer(markup: JQuery): UIInitializer<Element> {
+            var init = this.getAttributesInitializer(markup);
+            return init;
         }
 
         /**
-         * Applies the attributes' values.
-         * @param markup Markup.
+         * Returns function whilch initializes control
+         * according to provided attributes of root element.
+         * @param markup Element's markup.
          */
-        protected applyAttributes(markup: JQuery) {
+        protected getAttributesInitializer(markup: JQuery): UIInitializer<Element> {
+            var actions: UIInitializer<Element>[] = [];
 
             // Get attribute values
             var attributes = markup.get(0).attributes;
-            var values: AttrValueDictionary = {};
+            var values: { [attr: string]: string; } = {};
             $.each(attributes, (i, attr: Attr) => {
                 // Add attribute's name and value into dictionary
                 values[attr.name] = attr.value;
@@ -283,7 +282,7 @@
             for (var key in values) {
                 // Find attribute
                 if (!map[key]) {
-                    throw new Error(xp.formatString('Illegal attribute "{0}" of element "{1}".', key, markup[0].nodeName.toLowerCase()));
+                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup[0].nodeName.toLowerCase()));
                 }
 
                 // Check for binding
@@ -292,17 +291,24 @@
                 if (bindings && bindings[1] !== void 0) {
                     var path = bindings[1];
                     // Bind control property
-                    this.bind(key, path);
+                    var act = ((k, p) => {
+                        return (el: Element) => el.bind(k, p);
+                    })(key, path);
+                    actions.push(act);
                 }
                 else if (expressions && expressions[1] !== void 0) {
                     var expr = expressions[1];
                     // Register expression
-                    this.express(key, expr);
+                    var act = ((k, ex) => {
+                        return (el:Element) => el.express(k, ex);
+                    })(key, expr);
+                    actions.push(act);
                 }
                 else if (map[key]['*']) {
                     // If accepts any value -> call setter with value
                     var setter = map[key]['*'];
-                    setter(values[key]);
+                    var init = setter(values[key]);
+                    actions.push(init);
                 }
                 else {
                     // Find value
@@ -311,43 +317,46 @@
                     }
                     // Call setter
                     var setter = map[key][values[key]];
-                    setter();
+                    var init = setter()
+                    actions.push(init);
                 }
             }
+
+            return (el) => actions.forEach((init) => init(el));
         }
 
         /**
-        * Defines the way of setting control's properties through the XML attributes.
-        */
-        protected getAttributeMap(): AttributeMap {
+         * Returns markup attributes mapping to control's properties.
+         */
+        protected getAttributeMap(): AttributeMap<Element> {
             return {
                 'enabled': {
-                    'true': () => this.enabled = true,
-                    'false': () => this.enabled = false
+                    'true': () => (el) => el.enabled = true,
+                    'false': () => (el) => el.enabled = false
                 },
                 'name': {
-                    '*': (name) => this.name = name,
+                    '*': (name) => (el) => el.name = name,
                 },
                 'key': {
-                    '*': (key) => this.key = key,
+                    '*': (key) => (el) => el.key = key,
                 },
                 'style': {
-                    '*': (cssClass) => this.style = cssClass,
+                    '*': (cssClass) => (el) => el.style = cssClass,
                 },
                 'width': {
-                    '*': (width) => this.width = width
+                    '*': (width) => (el) => el.width = width
                 },
                 'height': {
-                    '*': (height) => this.height = height
+                    '*': (height) => (el) => el.height = height
                 },
                 'margin': {
-                    '*': (margin) => this.margin = margin
+                    '*': (margin) => (el) => el.margin = margin
                 },
-                'scope': {}, // Deserialize JSON?
+                'scope': {}, // TODO: Deserialize JSON?
 
                 // Events
                 'onClick': {
-                    '*': (name) => this.registerUIHandler(this.onClick, name)
+                    '*': (name) => (el) => el.registerUIHandler(el.onClick, name)
                 }
             };
         }
@@ -425,7 +434,7 @@
                 throw new Error('Target element has no parent.');
             }
             var index = target.parent.children.indexOf(target);
-            target.parent.insertElement(this, index);
+            target.parent.insert(this, index);
         }
 
         /**
@@ -437,7 +446,7 @@
                 throw new Error('Target element has no parent.');
             }
             var index = target.parent.children.indexOf(target) + 1;
-            target.parent.insertElement(this, index);
+            target.parent.insert(this, index);
         }
 
         /**
@@ -445,7 +454,7 @@
          * @param container Container element.
          */
         appendTo(container: Container) {
-            container.appendElement(this);
+            container.append(this);
         }
 
         /**
@@ -453,7 +462,7 @@
          * @param container Container element.
          */
         prependTo(container: Container) {
-            container.prependElement(this);
+            container.prepend(this);
         }
 
         /*
@@ -491,11 +500,11 @@
         /**
          * Holds control's properties' bindings.
          */
-        protected bindings: UiBindingDictionary;
+        protected bindings: UIBindingDictionary;
         /**
          * Holds control's properties' expressions.
          */
-        protected expressions: UiExpressionDictionary;
+        protected expressions: UIExpressionDictionary;
 
         /**
          * Binds control's property to source property.
@@ -614,29 +623,49 @@
     }
 
 
-    export interface AttrValueDictionary {
-        [attr: string]: string;
+    export interface AttributeMap<T extends Element> {
+        [attr: string]: ValueMap<T>;
     }
 
-    export interface AttributeMap {
-        [attr: string]: ValueMap;
+    export interface ValueMap<T extends Element> {
+        [value: string]: (value?: string) => UIInitializer<Element>;
     }
 
-    export interface ValueMap {
-        [value: string]: (value?: string) => void;
+    /**
+     * Extends attribute map with another one.
+     * @param source Base map.
+     * @param extension Map extension.
+     */
+    export function extendAttributeMap<TSrc extends Element, TExt extends Element>(source: AttributeMap<TSrc>, extension: AttributeMap<TExt>): AttributeMap<TExt> { // TODO: Mixin.
+        var result = {};
+        for (var key in source) {
+            result[key] = source[key];
+        }
+        for (var key in extension) {
+            result[key] = extension[key];
+        }
+        return <AttributeMap<TExt>>result;
     }
+
 
     /**
      * Represents "control property name":"binding manager" dictionary.
      */
-    export interface UiBindingDictionary {
+    export interface UIBindingDictionary {
         [controlProperty: string]: Binding.BindingManager;
     }
 
     /**
      * Represents "control property name":"expression" dictionary.
      */
-    export interface UiExpressionDictionary {
+    export interface UIExpressionDictionary {
         [controlProperty: string]: Binding.Expression;
+    }
+
+    /**
+     * Represents a function which initializes UI element.
+     */
+    export interface UIInitializer<T extends Element> {
+        (el: T): void;
     }
 }

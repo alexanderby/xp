@@ -239,43 +239,43 @@
         // MARKUP PROCESSING
         //------------------
 
-        protected getAttributeMap() {
-            return xp.extendObject(super.getAttributeMap(), {
+        protected getAttributeMap(): AttributeMap<Stack> {
+            return extendAttributeMap(super.getAttributeMap(), {
                 'flow': {
-                    'horizontal': () => this.flow = Flow.horizontal,
-                    'vertical': () => this.flow = Flow.vertical
+                    'horizontal': () => (el: Stack) => el.flow = Flow.horizontal,
+                    'vertical': () => (el: Stack) => el.flow = Flow.vertical
                 },
                 'contentAlign': {
-                    'start': () => this.contentAlignment = ContentAlignment.start,
-                    'center': () => this.contentAlignment = ContentAlignment.center,
-                    'end': () => this.contentAlignment = ContentAlignment.end
+                    'start': () => (el: Stack) => el.contentAlignment = ContentAlignment.start,
+                    'center': () => (el: Stack) => el.contentAlignment = ContentAlignment.center,
+                    'end': () => (el: Stack) => el.contentAlignment = ContentAlignment.end
                 },
                 'itemsAlign': {
-                    'start': () => this.itemsAlignment = ItemsAlignment.start,
-                    'center': () => this.itemsAlignment = ItemsAlignment.center,
-                    'end': () => this.itemsAlignment = ItemsAlignment.end,
-                    'stretch': () => this.itemsAlignment = ItemsAlignment.stretch
+                    'start': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.start,
+                    'center': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.center,
+                    'end': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.end,
+                    'stretch': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.stretch
                 },
                 'itemsIndent': {
-                    'none': () => this.itemsIndent = ItemsIndent.none,
-                    '0.5em': () => this.itemsIndent = ItemsIndent._0_5em,
-                    '1em': () => this.itemsIndent = ItemsIndent._1em,
-                    '2em': () => this.itemsIndent = ItemsIndent._2em,
-                    '4em': () => this.itemsIndent = ItemsIndent._4em
+                    'none': () => (el: Stack) => el.itemsIndent = ItemsIndent.none,
+                    '0.5em': () => (el: Stack) => el.itemsIndent = ItemsIndent._0_5em,
+                    '1em': () => (el: Stack) => el.itemsIndent = ItemsIndent._1em,
+                    '2em': () => (el: Stack) => el.itemsIndent = ItemsIndent._2em,
+                    '4em': () => (el: Stack) => el.itemsIndent = ItemsIndent._4em
                 },
                 'scrollBar': {
-                    'none': () => this.scrollBar = ScrollBar.none,
-                    'horizontal': () => this.scrollBar = ScrollBar.horizontal,
-                    'vertical': () => this.scrollBar = ScrollBar.vertical,
-                    'both': () => this.scrollBar = ScrollBar.both
+                    'none': () => (el: Stack) => el.scrollBar = ScrollBar.none,
+                    'horizontal': () => (el: Stack) => el.scrollBar = ScrollBar.horizontal,
+                    'vertical': () => (el: Stack) => el.scrollBar = ScrollBar.vertical,
+                    'both': () => (el: Stack) => el.scrollBar = ScrollBar.both
                 },
                 'wrapping': {
-                    'nowrap': () => this.wrapping = Wrapping.nowrap,
-                    'wrap': () => this.wrapping = Wrapping.wrap
+                    'nowrap': () => (el: Stack) => el.wrapping = Wrapping.nowrap,
+                    'wrap': () => (el: Stack) => el.wrapping = Wrapping.wrap
                 }
             });
         }
-        
+
     }
     Tags['Stack'] = Stack;
 

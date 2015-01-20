@@ -128,21 +128,21 @@
         // MARKUP PROCESSING
         //------------------
 
-        protected getAttributeMap(): AttributeMap {
-            return xp.extendObject(super.getAttributeMap(), {
+        protected getAttributeMap(): AttributeMap<CheckBox> {
+            return extendAttributeMap(super.getAttributeMap(), {
                 'checked': {
-                    'true': () => this.checked = true,
-                    'false': () => this.checked = false
+                    'true': () => (el: CheckBox) => el.checked = true,
+                    'false': () => (el: CheckBox) => el.checked = false
                 },
                 'text': {
-                    '*': (value) => this.text = value
+                    '*': (value) => (el: CheckBox) => el.text = value
                 },
                 'readonly': {
-                    'true': () => this.readonly = true,
-                    'false': () => this.readonly = false
+                    'true': () => (el: CheckBox) => el.readonly = true,
+                    'false': () => (el: CheckBox) => el.readonly = false
                 },
                 'onCheckChange': {
-                    '*': (value) => this.registerUIHandler(this.onCheckChange, value)
+                    '*': (value) => (el: CheckBox) => el.registerUIHandler(el.onCheckChange, value)
                 }
             });
         }

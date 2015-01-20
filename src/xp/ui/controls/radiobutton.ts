@@ -82,10 +82,10 @@
         // MARKUP PROCESSING
         //------------------
 
-        protected getAttributeMap(): AttributeMap {
-            return xp.extendObject(super.getAttributeMap(), {
+        protected getAttributeMap(): AttributeMap<RadioButton> {
+            return extendAttributeMap(super.getAttributeMap(), {
                 'group': {
-                    '*': (value) => this.group = value
+                    '*': (value) => (el: RadioButton) => el.group = value
                 },
                 'item': {}, // Binding only
                 'selectedItem': {} // Binding only

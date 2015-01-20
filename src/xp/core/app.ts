@@ -19,7 +19,9 @@
         start() {
             var markup = xp.loadMarkupSync(this.config.startupUrl);
             var type = xp.UI.Tags[markup[0].nodeName];
-            this.window = <xp.UI.Window>new type(markup);
+            this.window = <xp.UI.Window>new type();
+            var init = this.window.getMarkupInitializer(markup);
+            init(this.window);
             this.window.renderTo('body');
         }
 

@@ -16,37 +16,41 @@
         // MARKUP PROCESSING
         //------------------
 
-        protected getAttributeMap(): AttributeMap {
-            return xp.extendObject(super.getAttributeMap(), {
-                'items': {}, // Parse JSON ?
-                'itemId': {
-                    '*': (id) => this.itemId = id
-                }
-            });
+        getMarkupInitializer(markup: JQuery): UIInitializer<List> {
+            var initAttributes = this.getAttributesInitializer(markup);
+            var initTemplate = this.getTemplateInitializer(markup);
+            return (el) => {
+                initAttributes(el);
+                initTemplate(el);
+            };
         }
 
-
-        protected processMarkup(xmlElement: JQuery) {
-            this.applyAttributes(xmlElement);
-
-            //
-            // Create template
-
-            if (xmlElement.children().length !== 1) {
+        protected getTemplateInitializer(markup: JQuery): UIInitializer<List> {
+            if (markup.children().length !== 1) {
                 throw new Error('List control must have ONE item template.');
             }
 
-            var childXmlNode = xmlElement.children().get(0);
-            this.itemTemplateXml = childXmlNode;
+            var childXmlNode = markup.children().get(0);
+            var tagName = childXmlNode.nodeName;
+            var type = xp.UI.Tags[tagName];
+            var init = new type().getMarkupInitializer($(childXmlNode));
 
-            // TODO: Ability to set template from code.
+            return (el) => {
+                el.itemCreator = () => {
+                    var child = new type();
+                    init(child);
+                    return child;
+                };
+            }
+        }
 
-            //var tagName = childXmlNode.nodeName.toLowerCase();
-            //if (!xp.Ui.Tags[tagName]) {
-            //    throw new Error('Tags dictionary has no mathes for tag "' + tagName + '".');
-            //}
-            //var type = xp.Ui.Tags[tagName];
-            //this.itemTemplate = new type($(childXmlNode));
+        protected getAttributeMap(): AttributeMap<List> {
+            return extendAttributeMap(super.getAttributeMap(), {
+                'items': {}, // Parse JSON ?
+                'itemId': {
+                    '*': (id) => (el: List) => el.itemId = id
+                }
+            });
         }
 
 
@@ -153,26 +157,19 @@
         // markup not in constructor, but separately by
         // returning and applying initializer).
 
-        ///**
-        // * Gets or sets list item template.
-        // */
-        //itemTemplate: Element;
-
-        protected itemTemplateXml: HTMLElement;
+        /**
+         * Gets or sets list item creator function.
+         */
+        itemCreator: () => Element;
 
         protected addItem(index: number, item) {
             // Create child
-            var tagName = this.itemTemplateXml.nodeName;
-            if (!xp.UI.Tags[tagName]) {
-                throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
-            }
-            var type = xp.UI.Tags[tagName];
-            var child = new type($(this.itemTemplateXml));
+            var child = this.itemCreator();
             child.name = xp.createUuid();
             child.useParentScope = false;
 
             // Append child
-            this.insertElement(child, index);
+            this.insert(child, index);
 
             // Set child's scope
             child.scope = this.createItemScopeFrom(item);

@@ -43,10 +43,10 @@
         // MARKUP PROCESSING
         //------------------
 
-        protected getAttributeMap(): AttributeMap {
-            return xp.extendObject(super.getAttributeMap(), {
+        protected getAttributeMap(): AttributeMap<Window> {
+            return extendAttributeMap(super.getAttributeMap(), {
                 'title': {
-                    '*': (value) => this.title = value
+                    '*': (value) => (el: Window) => el.title = value
                 }
             });
         }

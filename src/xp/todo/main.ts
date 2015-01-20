@@ -5,8 +5,8 @@
     }
 
     export class Main extends xp.UI.Window {
-        constructor(xml) {
-            super(xml);
+        constructor() {
+            super();
 
             this.data = xp.Binding.createNotifierFrom({
                 todos: new Array<TodoItem>(),
