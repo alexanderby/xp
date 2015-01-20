@@ -126,8 +126,8 @@
                 }
             }
         }
-        protected _items: any[];
-        protected itemsRegistar: EventRegistar;
+        private _items: any[];
+        private itemsRegistar: EventRegistar;
 
         /**
          * Gets or sets list-item identifier for item's scope.
@@ -178,44 +178,49 @@
             child.scope = this.createItemScopeFrom(item);
         }
 
-        protected createItemScopeFrom(item: any): xp.Binding.Scope {
+        private createItemScopeFrom(item: any): xp.Binding.Scope {
+            //
             // Create item scope
+
             var obj = {};
             obj[this.itemId] = item;
             var scope = new xp.Binding.Scope(obj, this.scope);
 
-            // Handle item replacement inside other scope
-            var holder = <xp.Binding.INotifier>scope.get('');
-            var handler = (prop) => {
-                if (prop === this.itemId) {
-                    //var index = this.items.indexOf(item);
-                    var index = this.items.indexOf(holder[this.itemId]);
-                    if (index < 0) {
-                        throw new Error('Item does not belong to List items.');
-                    }
-                    this.itemReplacementToken = true;
-                    this.items[index] = holder[prop];
-                    this.itemReplacementToken = false;
-                }
-            };
-            holder.onPropertyChanged.addHandler(handler, this);
+            //
+            // Handle item replacement inside item-element scope
 
-            this.itemReplacementHandlers.push({
+            var hr: ItemReplacementInfo = {
                 item: item,
-                holder: holder,
-                handler: handler
-            });
+                handler: (prop) => {
+                    if (prop === this.itemId) {
+                        var index = this.items.indexOf(hr.item);
+                        if (index < 0) {
+                            throw new Error('Item does not belong to List items.');
+                        }
+                        this.itemReplacementToken = true;
+                        this.items[index] = hr.holder[prop];
+                        this.itemReplacementToken = false;
+
+                        hr.item = hr.holder[prop];
+                    }
+                },
+                holder: <xp.Binding.INotifier>scope.get('')
+            };
+
+            hr.holder.onPropertyChanged.addHandler(hr.handler, this);
+
+            this.itemReplacementHandlers.push(hr);
 
             return scope;
         }
 
         private itemReplacementToken = false;
-        protected itemReplacementHandlers: ItemHandlerUnion[] = [];
+        private itemReplacementHandlers: ItemReplacementInfo[] = [];
     }
     Tags['List'] = List;
 
 
-    interface ItemHandlerUnion {
+    interface ItemReplacementInfo {
         item: any;
         holder: xp.Binding.INotifier;
         handler: (propName: string) => void;
