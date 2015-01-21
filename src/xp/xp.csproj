@@ -78,6 +78,7 @@
     <Content Include="todo\main.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="todo\view1.xml" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>

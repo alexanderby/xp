@@ -1,5 +1,4 @@
 ﻿module xp.UI {
-    // TODO: No sense in <View> with href now? Use custom control.
 
     /**
      * View.
@@ -21,8 +20,18 @@
 
             // Load from external file, if 'href' attribute specified.
             var url: string = markup.get(0).getAttribute('href');
+            var attributes = markup.get(0).attributes;
             if (url) {
+                // Load markup from file
                 markup = xp.loadMarkupSync(url);
+
+                // Merge attributes
+                var rootElement = $(markup.get(0));
+                $.each(attributes, (i, attr: Attr) => {
+                    if (attr.name !== 'href') {
+                        rootElement.attr(attr.name, attr.value);
+                    }
+                });
             }
 
             return super.getMarkupInitializer(markup);

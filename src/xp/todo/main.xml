@@ -29,4 +29,5 @@
       <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
     </List>
   </Stack>-->
+  <View href="view1.xml" name="view1"/>
 </Window>
