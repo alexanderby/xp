@@ -54,6 +54,12 @@
     <Content Include="style\placeholder.min.css">
       <DependentUpon>placeholder.css</DependentUpon>
     </Content>
+    <Content Include="style\radiobutton.css">
+      <DependentUpon>radiobutton.less</DependentUpon>
+    </Content>
+    <Content Include="style\radiobutton.min.css">
+      <DependentUpon>radiobutton.css</DependentUpon>
+    </Content>
     <Content Include="style\stack.css">
       <DependentUpon>stack.less</DependentUpon>
     </Content>
@@ -147,6 +153,10 @@
     <Content Include="style\placeholder.less" />
     <Content Include="style\placeholder.css.map">
       <DependentUpon>placeholder.css</DependentUpon>
+    </Content>
+    <Content Include="style\radiobutton.less" />
+    <Content Include="style\radiobutton.css.map">
+      <DependentUpon>radiobutton.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

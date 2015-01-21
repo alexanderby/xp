@@ -13,10 +13,10 @@
             console.log(app);
 
             this.data = xp.Binding.createNotifierFrom({
-                todos: new Array<TodoItem>(),
-                //selected: null,
-                undone: new Array<TodoItem>(),
-                done: new Array<TodoItem>()
+                todos: [],
+                selected: {},
+                undone: [],
+                done: []
             });
             this.scope = new xp.Binding.Scope(this.data);
 

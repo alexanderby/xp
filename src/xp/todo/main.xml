@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em">
   <Stack width="40em" itemsIndent="2em" flow="horizontal">
-    
+
     <!-- INPUT -->
     <Stack itemsIndent="1em" width="50%">
       <Label text="TODO APP"/>
@@ -20,12 +20,12 @@
         <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
       </Stack>
     </Stack>
-    
+
     <!-- RESULTS -->
     <View name="view1" href="view1.xml" width="40%"/>
-    
+
   </Stack>
-  <!--<Stack width="10em">
+  <Stack width="10em">
     <Label text="Item 0"/>
     <TextBox text="{todos[0].name}" name="tb0"/>
     <CheckBox text="Check" checked="{todos[0].isDone}" name="cb0"/>
@@ -36,5 +36,5 @@
     <List items="{todos}">
       <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
     </List>
-  </Stack>-->
+  </Stack>
 </Window>

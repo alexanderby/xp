@@ -84,7 +84,7 @@
     // MARKUP PROCESSING
     //------------------
 
-    export class RadioButtonMarkupProcessor extends ElementMarkupProcessor<RadioButton>{
+    export class RadioButtonMarkupProcessor extends CheckBoxMarkupProcessor{
         protected getAttributeMap(): AttributeMap<RadioButton> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'group': {
