@@ -68,8 +68,8 @@
             return (el) => {
                 initAttributes(el);
                 initContent(el);
-
                 el.setNamedChildren(); // Where to place?
+                el.onMarkupProcessed.invoke(el);
             };
         }
 
@@ -293,8 +293,8 @@
         protected setNamedChildren() {
             this.cascadeBy((el) => {
                 if (el.name) {
-                    if (this[el.name] !== void 0) {
-                        //throw new Error(xp.formatString('{0}:{1}: The name "{2}" conflicts with container\'s property.', xp.getClassName(this), this.name || '-', el.name));
+                    if (el.name in this && el !== this[el.name]) {
+                        throw new Error(xp.formatString('{0}#{1}: The name "{2}" conflicts with container\'s property.', xp.getClassName(this), this.name || '-', el.name));
                     }
                     this[el.name] = el;
                 }

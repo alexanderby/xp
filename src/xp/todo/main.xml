@@ -1,21 +1,29 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em">
-  <Stack width="20em">
-    <Label text="TODO APP"/>
-    <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
-    <List name="list" items="{todos}" itemId="t">
+  <Stack width="40em" itemsIndent="2em" flow="horizontal">
+    
+    <!-- INPUT -->
+    <Stack itemsIndent="1em" width="50%">
+      <Label text="TODO APP"/>
+      <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
+      <List name="list" items="{todos}" itemId="t">
+        <Stack flow="horizontal">
+          <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
+          <Placeholder/>
+          <Button key="delete" text="Delete" onClick="onDeleteClick"/>
+        </Stack>
+      </List>
       <Stack flow="horizontal">
-        <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
+        <Label text="({undone.length} + ' items left')"/>
+        <!--RadioButtons: All, active, completed.-->
         <Placeholder/>
-        <Button key="delete" text="Delete" onClick="onDeleteClick"/>
+        <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
       </Stack>
-    </List>
-    <Stack flow="horizontal">
-      <Label text="({undone.length} + ' items left')"/>
-      <!--RadioButtons: All, active, completed.-->
-      <Placeholder/>
-      <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
     </Stack>
+    
+    <!-- RESULTS -->
+    <View name="view1" href="view1.xml" width="40%"/>
+    
   </Stack>
   <!--<Stack width="10em">
     <Label text="Item 0"/>
@@ -29,5 +37,4 @@
       <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
     </List>
   </Stack>-->
-  <View href="view1.xml" name="view1" scope="{undone}"/>
 </Window>

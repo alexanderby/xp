@@ -55,7 +55,16 @@
             else
                 target = elementOrSelector;
             target.replaceWith(this.domElement);
+
+            this.setRenderedState(true);
         }
+
+        protected setRenderedState(rendered) {
+            this._isRendered = rendered;
+            if (rendered)
+                this.onRendered.invoke(this);
+        }
+        protected _isRendered = false;
 
 
         //-------
@@ -71,6 +80,14 @@
         onMouseEnter: Event<UIEventArgs>;
         onMouseLeave: Event<UIEventArgs>;
 
+        onRendered: Event<Element>;
+
+        /**
+         * Is invoked by markup processor after
+         * element initialization is complete.
+         */
+        onMarkupProcessed: Event<Element>;
+
         /**
          * Initializes control's events.
          */
@@ -80,6 +97,9 @@
 
             // Control's events
             this.onScopeChanged = new Event<xp.Binding.Scope>();
+            this.onMarkupProcessed = new Event<Element>();
+            this.onRendered = new Event<Element>();
+
             this.onClick = new Event<UIEventArgs>();
             this.onMouseDown = new Event<UIEventArgs>();
             this.onMouseUp = new Event<UIEventArgs>();
@@ -91,6 +111,8 @@
             this.onRemove = new Event<Element>();
             this.onRemove.addHandler(() => {
                 this.onScopeChanged.removeAllHandlers();
+                this.onMarkupProcessed.removeAllHandlers();
+                this.onRendered.removeAllHandlers();
                 this.onClick.removeAllHandlers();
                 this.onMouseDown.removeAllHandlers();
                 this.onMouseUp.removeAllHandlers();
@@ -258,8 +280,11 @@
          * @param markup Element's markup.
          */
         getMarkupInitializer(markup: JQuery): UIInitializer<Element> {
-            var init = this.getAttributesInitializer(markup);
-            return init;
+            var initAttributes = this.getAttributesInitializer(markup);
+            return (el) => {
+                initAttributes(el);
+                el.onMarkupProcessed.invoke(el);
+            };
         }
 
         /**
@@ -300,7 +325,7 @@
                     var expr = expressions[1];
                     // Register expression
                     var act = ((k, ex) => {
-                        return (el:Element) => el.express(k, ex);
+                        return (el: Element) => el.express(k, ex);
                     })(key, expr);
                     actions.push(act);
                 }
@@ -494,6 +519,13 @@
             }
 
             return null;
+        }
+
+        /**
+         * Sets the focus to this element.
+         */
+        focus() {
+            this.domElement.focus();
         }
 
 

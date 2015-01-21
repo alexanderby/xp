@@ -29,30 +29,31 @@
             this.onTextChange = new Event<TextChangeArgs>();
             this.onRemove.addHandler(() => this.onTextChange.removeAllHandlers(), this);
 
-            // On text input
-            this.domElement.on('change', (e) => {
+            var onInput = (e: JQueryEventObject) => {
                 var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);
                 args.oldText = this.text;
                 this.onInput('text', this.value);
                 args.newText = this.value.toString();
                 this.onTextChange.invoke(args);
+            };
+
+            // On text input
+            this.domElement.on('change', (e) => {
+                onInput(e);
             });
             this.domElement.on('input', (e) => {
                 if (this.notifyOnKeyDown) {
-                    var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);
-                    args.oldText = this.text;
-                    this.onInput('text', this.value);
-                    args.newText = this.value.toString();
-                    this.onTextChange.invoke(args);
+                    onInput(e);
                 }
             });
 
-            //// Remove focus on 'Enter' key press
-            //this.domElement.on('keypress', (e) => {
-            //    if (e.keyCode === 13) {
-            //        (<any>document.activeElement).blur();
-            //    }
-            //});
+            this.domElement.on('keypress', (e) => {
+                if (e.keyCode === 13) {
+                    onInput(e);
+                    // Remove focus on 'Enter' key press
+                    //(<any>document.activeElement).blur();
+                }
+            });
         }
 
         //protected isValid(value) {

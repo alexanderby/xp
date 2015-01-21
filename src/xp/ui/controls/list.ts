@@ -23,6 +23,7 @@
             return (el) => {
                 initAttributes(el);
                 initTemplate(el);
+                el.onMarkupProcessed.invoke(el);
             };
         }
 

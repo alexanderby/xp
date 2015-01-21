@@ -19,6 +19,8 @@
                 done: new Array<TodoItem>()
             });
             this.scope = new xp.Binding.Scope(this.data);
+
+            this.onRendered.addHandler((el) => this.textbox.focus(), this);
         }
 
         //---------
