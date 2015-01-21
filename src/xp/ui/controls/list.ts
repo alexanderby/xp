@@ -13,41 +13,6 @@
         }
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
-
-        getMarkupInitializer(markup: JQuery): UIInitializer<List> {
-            var initAttributes = this.getAttributesInitializer(markup);
-            var initTemplate = this.getTemplateInitializer(markup);
-            return (el) => {
-                initAttributes(el);
-                initTemplate(el);
-                el.onMarkupProcessed.invoke(el);
-            };
-        }
-
-        protected getTemplateInitializer(markup: JQuery): UIInitializer<List> {
-            if (markup.children().length !== 1) {
-                throw new Error('List control must have ONE item template.');
-            }
-
-            var childXmlNode = markup.children().get(0);
-            var create = xp.UI.getElementCreator($(childXmlNode));
-
-            return (el) => el.itemCreator = create;
-        }
-
-        protected getAttributeMap(): AttributeMap<List> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'items': {}, // Parse JSON ?
-                'itemId': {
-                    '*': (id) => (el: List) => el.itemId = id
-                }
-            });
-        }
-
-
         //-----------
         // PROPERTIES
         //-----------
@@ -221,7 +186,7 @@
             this.itemReplacementHandlers = [];
         }
     }
-    Tags['List'] = List;
+    Controls['List'] = List;
 
 
     interface ItemReplacementInfo {
@@ -229,4 +194,43 @@
         holder: xp.Binding.INotifier;
         handler: (propName: string) => void;
     }
+
+
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    export class ListMarkupProcessor extends StackMarkupProcessor<List>{
+
+        getInitializer(markup: JQuery): UIInitializer<List> {
+            var initAttributes = this.getAttributesInitializer(markup);
+            var initTemplate = this.getTemplateInitializer(markup);
+            return (el) => {
+                initAttributes(el);
+                initTemplate(el);
+                el.onMarkupProcessed.invoke(el);
+            };
+        }
+
+        protected getTemplateInitializer(markup: JQuery): UIInitializer<List> {
+            if (markup.children().length !== 1) {
+                throw new Error('List control must have ONE item template.');
+            }
+
+            var childXmlNode = markup.children().get(0);
+            var create = xp.UI.getElementCreator($(childXmlNode));
+
+            return (el) => el.itemCreator = create;
+        }
+
+        protected getAttributeMap(): AttributeMap<List> {
+            return extendAttributeMap(super.getAttributeMap(), {
+                'items': {}, // Parse JSON ?
+                'itemId': {
+                    '*': (id) => (el: List) => el.itemId = id
+                }
+            });
+        }
+    }
+    Processors['List'] = new ListMarkupProcessor();
 }

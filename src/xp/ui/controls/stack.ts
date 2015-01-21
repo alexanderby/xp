@@ -233,52 +233,13 @@
         private removeWrappingClasses() {
             this.domElement.removeClass('wrapping-nowrap wrapping-wrap');
         }
-
-
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
-
-        protected getAttributeMap(): AttributeMap<Stack> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'flow': {
-                    'horizontal': () => (el: Stack) => el.flow = Flow.horizontal,
-                    'vertical': () => (el: Stack) => el.flow = Flow.vertical
-                },
-                'contentAlign': {
-                    'start': () => (el: Stack) => el.contentAlignment = ContentAlignment.start,
-                    'center': () => (el: Stack) => el.contentAlignment = ContentAlignment.center,
-                    'end': () => (el: Stack) => el.contentAlignment = ContentAlignment.end
-                },
-                'itemsAlign': {
-                    'start': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.start,
-                    'center': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.center,
-                    'end': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.end,
-                    'stretch': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.stretch
-                },
-                'itemsIndent': {
-                    'none': () => (el: Stack) => el.itemsIndent = ItemsIndent.none,
-                    '0.5em': () => (el: Stack) => el.itemsIndent = ItemsIndent._0_5em,
-                    '1em': () => (el: Stack) => el.itemsIndent = ItemsIndent._1em,
-                    '2em': () => (el: Stack) => el.itemsIndent = ItemsIndent._2em,
-                    '4em': () => (el: Stack) => el.itemsIndent = ItemsIndent._4em
-                },
-                'scrollBar': {
-                    'none': () => (el: Stack) => el.scrollBar = ScrollBar.none,
-                    'horizontal': () => (el: Stack) => el.scrollBar = ScrollBar.horizontal,
-                    'vertical': () => (el: Stack) => el.scrollBar = ScrollBar.vertical,
-                    'both': () => (el: Stack) => el.scrollBar = ScrollBar.both
-                },
-                'wrapping': {
-                    'nowrap': () => (el: Stack) => el.wrapping = Wrapping.nowrap,
-                    'wrap': () => (el: Stack) => el.wrapping = Wrapping.wrap
-                }
-            });
-        }
-
     }
-    Tags['Stack'] = Stack;
+    Controls['Stack'] = Stack;
 
+
+    //------
+    // ENUMS
+    //------
 
     /**
      * Content alignment values.
@@ -335,4 +296,50 @@
         nowrap,
         wrap
     }
+
+
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    export class StackMarkupProcessor<T extends Stack> extends ContainerMarkupProcessor<Stack>{
+
+        protected getAttributeMap(): AttributeMap<Stack> {
+            return extendAttributeMap(super.getAttributeMap(), {
+                'flow': {
+                    'horizontal': () => (el: Stack) => el.flow = Flow.horizontal,
+                    'vertical': () => (el: Stack) => el.flow = Flow.vertical
+                },
+                'contentAlign': {
+                    'start': () => (el: Stack) => el.contentAlignment = ContentAlignment.start,
+                    'center': () => (el: Stack) => el.contentAlignment = ContentAlignment.center,
+                    'end': () => (el: Stack) => el.contentAlignment = ContentAlignment.end
+                },
+                'itemsAlign': {
+                    'start': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.start,
+                    'center': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.center,
+                    'end': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.end,
+                    'stretch': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.stretch
+                },
+                'itemsIndent': {
+                    'none': () => (el: Stack) => el.itemsIndent = ItemsIndent.none,
+                    '0.5em': () => (el: Stack) => el.itemsIndent = ItemsIndent._0_5em,
+                    '1em': () => (el: Stack) => el.itemsIndent = ItemsIndent._1em,
+                    '2em': () => (el: Stack) => el.itemsIndent = ItemsIndent._2em,
+                    '4em': () => (el: Stack) => el.itemsIndent = ItemsIndent._4em
+                },
+                'scrollBar': {
+                    'none': () => (el: Stack) => el.scrollBar = ScrollBar.none,
+                    'horizontal': () => (el: Stack) => el.scrollBar = ScrollBar.horizontal,
+                    'vertical': () => (el: Stack) => el.scrollBar = ScrollBar.vertical,
+                    'both': () => (el: Stack) => el.scrollBar = ScrollBar.both
+                },
+                'wrapping': {
+                    'nowrap': () => (el: Stack) => el.wrapping = Wrapping.nowrap,
+                    'wrap': () => (el: Stack) => el.wrapping = Wrapping.wrap
+                }
+            });
+        }
+    }
+    Processors['Stack'] = new StackMarkupProcessor();
 } 

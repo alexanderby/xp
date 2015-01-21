@@ -62,70 +62,6 @@
         private _padding: string;
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
-
-        /**
-         * Returns function which initializes control
-         * according to provider markup.
-         * @param markup Element's markup.
-         */
-        getMarkupInitializer(markup: JQuery): UIInitializer<Container> {
-            var initAttributes = this.getAttributesInitializer(markup);
-            var initContent = this.getContentInitializer(markup);
-            return (el) => {
-                initAttributes(el);
-                initContent(el);
-                el.setNamedChildren(); // Where to place?
-                el.onMarkupProcessed.invoke(el);
-            };
-        }
-
-        /**
-         * Returns function whilch initializes control
-         * according to provided children of root element.
-         * @param markup Element's markup.
-         */
-        protected getContentInitializer(markup: JQuery): UIInitializer<Container> {
-            var actions: UIInitializer<Container>[] = [];
-
-            // Create children
-            $.each(markup.children(), (i, childXmlNode) => {
-                // Create child
-                var tagName = childXmlNode.nodeName;
-                if (!xp.UI.Tags[tagName]) {
-                    throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
-                }
-
-                var create = xp.UI.getElementCreator($(childXmlNode));
-
-                actions.push((el) => {
-                    var child = create();
-                    el.append(child);
-                });
-
-            });
-
-            return (el) => actions.forEach((init) => init(el));
-        }
-
-        /**
-         * Returns markup attributes mapping to control's properties.
-         */
-        protected getAttributeMap(): AttributeMap<Container> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'enabled': {
-                    'true': () => (el: Container) => el.cascadeBy((e) => e.enabled = true),
-                    'false': () => (el: Container) => el.cascadeBy((e) => e.enabled = true)
-                },
-                'padding': {
-                    '*': (padding) => (el: Container) => el.padding = padding
-                }
-            });
-        }
-
-
         //----------
         // RELATIONS
         //----------
@@ -299,7 +235,7 @@
         /**
          * Sets named children to control's properties.
          */
-        protected setNamedChildren() {
+        setNamedChildren() {
             this.cascadeBy((el) => {
                 if (el.name) {
                     if (el.name in this && el !== this[el.name]) {
@@ -327,6 +263,75 @@
                 this.children[i].remove();
             }
             this.children = [];
+        }
+    }
+
+
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    /**
+     * Containers markup processor base.
+     */
+    export class ContainerMarkupProcessor<T extends Container> extends ElementMarkupProcessor<Container>{
+        /**
+         * Returns function which initializes control
+         * according to provider markup.
+         * @param markup Element's markup.
+         */
+        getInitializer(markup: JQuery): UIInitializer<T> {
+            var initAttributes = this.getAttributesInitializer(markup);
+            var initContent = this.getContentInitializer(markup);
+            return (el) => {
+                initAttributes(el);
+                initContent(el);
+                el.setNamedChildren(); // Where to place?
+                el.onMarkupProcessed.invoke(el);
+            };
+        }
+
+        /**
+         * Returns function whilch initializes control
+         * according to provided children of root element.
+         * @param markup Element's markup.
+         */
+        protected getContentInitializer(markup: JQuery): UIInitializer<T> {
+            var actions: UIInitializer<Container>[] = [];
+
+            // Create children
+            $.each(markup.children(), (i, childXmlNode) => {
+                // Create child
+                var tagName = childXmlNode.nodeName;
+                if (!xp.UI.Controls[tagName]) {
+                    throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
+                }
+
+                var create = xp.UI.getElementCreator($(childXmlNode));
+
+                actions.push((el) => {
+                    var child = create();
+                    el.append(child);
+                });
+
+            });
+
+            return (el) => actions.forEach((init) => init(el));
+        }
+
+        /**
+         * Returns markup attributes mapping to control's properties.
+         */
+        protected getAttributeMap(): AttributeMap<T> {
+            return extendAttributeMap(super.getAttributeMap(), {
+                'enabled': {
+                    'true': () => (el: Container) => el.cascadeBy((e) => e.enabled = true),
+                    'false': () => (el: Container) => el.cascadeBy((e) => e.enabled = true)
+                },
+                'padding': {
+                    '*': (padding) => (el: Container) => el.padding = padding
+                }
+            });
         }
     }
 } 

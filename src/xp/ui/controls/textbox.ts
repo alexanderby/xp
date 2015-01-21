@@ -169,10 +169,26 @@
         notifyOnKeyDown;
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
+    }
+    Controls['TextBox'] = TextBox;
 
+
+    export interface TextChangeArgs extends UIEventArgs {
+        oldText: string;
+        newText: string;
+    }
+
+    export enum TextBoxType {
+        string,
+        number
+    }
+
+
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    export class TextBoxMarkupProcessor extends ElementMarkupProcessor<TextBox>{
         protected getAttributeMap(): AttributeMap<TextBox> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'text': {
@@ -199,16 +215,5 @@
             });
         }
     }
-    Tags['TextBox'] = TextBox;
-
-
-    export interface TextChangeArgs extends UIEventArgs {
-        oldText: string;
-        newText: string;
-    }
-
-    export enum TextBoxType {
-        string,
-        number
-    }
+    Processors['TextBox'] = new TextBoxMarkupProcessor();
 } 

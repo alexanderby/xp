@@ -69,16 +69,17 @@
             }
         }
         private _text: string;
+    }
+    Controls['Button'] = Button;
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
-        
-        /**
-         * Defines the way of setting control's properties through the XML attributes.
-         */
-        protected getAttributeMap(): AttributeMap<Button> {
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    export class ButtonMarkupProcessor extends ElementMarkupProcessor<Button>{
+
+        getAttributeMap(): AttributeMap<Button> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'icon': {
                     '*': (value) => (el: Button) => el.icon = value
@@ -89,5 +90,5 @@
             });
         }
     }
-    Tags['Button'] = Button;
+    Processors['Button'] = new ButtonMarkupProcessor();
 } 

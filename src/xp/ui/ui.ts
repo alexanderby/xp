@@ -1,9 +1,14 @@
 ﻿module xp.UI {
 
     /**
-     * "XML tag":"UI class" dictionary.
+     * "XML tag":"UI control class" dictionary.
      */
-    export var Tags: { [tag: string]: new (...args: any[]) => Element } = {};
+    export var Controls: { [tag: string]: new (...args: any[]) => Element } = {};
+
+    /**
+     * "XML tag":"Markup processor instance" dictionary.
+     */
+    export var Processors: { [tag: string]: MarkupProcessor<Element> } = {};
 
     /**
      * "XML tag":"List of dependencies types" dictionary.
@@ -38,15 +43,15 @@
      */
     export function getElementCreator(markup: JQuery): () => Element {
         var rootNode = markup[0];
-        var tagName = markup[0].nodeName;
-        var type = xp.UI.Tags[tagName];
-        var init = new type().getMarkupInitializer($(rootNode)); // TODO: Separate class for mapkup processing - MarkupProcessor<T extends Element>
-        var dependencies = xp.UI.Dependencies[tagName];
+        var tag = markup[0].nodeName;
+        var type = xp.UI.Controls[tag];
+        var init = xp.UI.Processors[tag].getInitializer($(rootNode));
+        var dependencies = xp.UI.Dependencies[tag];
         if (dependencies) {
             var instances = dependencies.map((d) => {
                 if (!xp.UI.Instances[d]) {
                     throw new Error(
-                        xp.formatString('Unable to get instance of dependency "{0}" for element <{1}>.', d, tagName));
+                        xp.formatString('Unable to get instance of dependency "{0}" for element <{1}>.', d, tag));
                 }
                 return xp.UI.Instances[d];
             });

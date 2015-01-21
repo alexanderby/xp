@@ -122,11 +122,19 @@
             }
         }
         private _readonly: boolean;
+    }
+    Controls['CheckBox'] = CheckBox;
+
+    export interface CheckChangeArgs extends UI.UIEventArgs {
+        checked: boolean;
+    }
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    export class CheckBoxMarkupProcessor extends ElementMarkupProcessor<CheckBox>{
 
         protected getAttributeMap(): AttributeMap<CheckBox> {
             return extendAttributeMap(super.getAttributeMap(), {
@@ -147,9 +155,5 @@
             });
         }
     }
-    Tags['CheckBox'] = CheckBox;
-
-    export interface CheckChangeArgs extends UI.UIEventArgs {
-        checked: boolean;
-    }
+    Processors['CheckBox'] = new CheckBoxMarkupProcessor();
 } 

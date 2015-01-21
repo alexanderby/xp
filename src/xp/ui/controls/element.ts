@@ -142,7 +142,12 @@
             });
         }
 
-        protected registerUIHandler(event: Event<UIEventArgs>, handlerName: string) {
+        /**
+         * Registers control's event handler by name.
+         * @param event Event.
+         * @param handlerName Handler name.
+         */
+        registerUIHandler(event: Event<UIEventArgs>, handlerName: string) {
             event.addHandler((args) => {
                 var elementWithHandler = this.bubbleBy((el) => el[handlerName] !== void 0);
                 if (!elementWithHandler) {
@@ -268,123 +273,6 @@
             this.domElement.addClass(cssClass);
         }
         private _style: string;
-
-
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
-
-        /**
-         * Returns function which initializes control
-         * according to provider markup.
-         * @param markup Element's markup.
-         */
-        getMarkupInitializer(markup: JQuery): UIInitializer<Element> {
-            var initAttributes = this.getAttributesInitializer(markup);
-            return (el) => {
-                initAttributes(el);
-                el.onMarkupProcessed.invoke(el);
-            };
-        }
-
-        /**
-         * Returns function whilch initializes control
-         * according to provided attributes of root element.
-         * @param markup Element's markup.
-         */
-        protected getAttributesInitializer(markup: JQuery): UIInitializer<Element> {
-            var actions: UIInitializer<Element>[] = [];
-
-            // Get attribute values
-            var attributes = markup.get(0).attributes;
-            var values: { [attr: string]: string; } = {};
-            $.each(attributes, (i, attr: Attr) => {
-                // Add attribute's name and value into dictionary
-                values[attr.name] = attr.value;
-            });
-
-            var map = this.getAttributeMap();
-            for (var key in values) {
-                // Find attribute
-                if (!map[key]) {
-                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup[0].nodeName));
-                }
-
-                // Check for binding
-                var bindings = values[key].match(/^\{(.*)\}$/);
-                var expressions = values[key].match(/^\((.*)\)$/);
-                if (bindings && bindings[1] !== void 0) {
-                    var path = bindings[1];
-                    // Bind control property
-                    var act = ((k, p) => {
-                        return (el: Element) => el.bind(k, p);
-                    })(key, path);
-                    actions.push(act);
-                }
-                else if (expressions && expressions[1] !== void 0) {
-                    var expr = expressions[1];
-                    // Register expression
-                    var act = ((k, ex) => {
-                        return (el: Element) => el.express(k, ex);
-                    })(key, expr);
-                    actions.push(act);
-                }
-                else if (map[key]['*']) {
-                    // If accepts any value -> call setter with value
-                    var setter = map[key]['*'];
-                    var init = setter(values[key]);
-                    actions.push(init);
-                }
-                else {
-                    // Find value
-                    if (!map[key][values[key]] && !map['*']) {
-                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, markup[0].nodeName.toLowerCase()));
-                    }
-                    // Call setter
-                    var setter = map[key][values[key]];
-                    var init = setter()
-                    actions.push(init);
-                }
-            }
-
-            return (el) => actions.forEach((init) => init(el));
-        }
-
-        /**
-         * Returns markup attributes mapping to control's properties.
-         */
-        protected getAttributeMap(): AttributeMap<Element> {
-            return {
-                'enabled': {
-                    'true': () => (el) => el.enabled = true,
-                    'false': () => (el) => el.enabled = false
-                },
-                'name': {
-                    '*': (name) => (el) => el.name = name,
-                },
-                'key': {
-                    '*': (key) => (el) => el.key = key,
-                },
-                'style': {
-                    '*': (cssClass) => (el) => el.style = cssClass,
-                },
-                'width': {
-                    '*': (width) => (el) => el.width = width
-                },
-                'height': {
-                    '*': (height) => (el) => el.height = height
-                },
-                'margin': {
-                    '*': (margin) => (el) => el.margin = margin
-                },
-                'scope': {}, // TODO: Deserialize JSON?
-
-                // Events
-                'onClick': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onClick, name)
-                }
-            };
-        }
 
 
         //----------
@@ -663,31 +551,6 @@
     }
 
 
-    export interface AttributeMap<T extends Element> {
-        [attr: string]: ValueMap<T>;
-    }
-
-    export interface ValueMap<T extends Element> {
-        [value: string]: (value?: string) => UIInitializer<Element>;
-    }
-
-    /**
-     * Extends attribute map with another one.
-     * @param source Base map.
-     * @param extension Map extension.
-     */
-    export function extendAttributeMap<TSrc extends Element, TExt extends Element>(source: AttributeMap<TSrc>, extension: AttributeMap<TExt>): AttributeMap<TExt> { // TODO: Mixin.
-        var result = {};
-        for (var key in source) {
-            result[key] = source[key];
-        }
-        for (var key in extension) {
-            result[key] = extension[key];
-        }
-        return <AttributeMap<TExt>>result;
-    }
-
-
     /**
      * Represents "control property name":"binding manager" dictionary.
      */
@@ -702,10 +565,126 @@
         [controlProperty: string]: Binding.Expression;
     }
 
+
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
     /**
-     * Represents a function which initializes UI element.
+     * Markup processor base.
      */
-    export interface UIInitializer<T extends Element> {
-        (el: T): void;
+    export class ElementMarkupProcessor<T extends Element> implements MarkupProcessor<T>{
+
+        /**
+         * Returns function which initializes control
+         * according to provider markup.
+         * @param markup Element's markup.
+         */
+        getInitializer(markup: JQuery): UIInitializer<T> {
+            var initAttributes = this.getAttributesInitializer(markup);
+            return (el) => {
+                initAttributes(el);
+                el.onMarkupProcessed.invoke(el);
+            };
+        }
+
+        /**
+         * Returns function whilch initializes control
+         * according to provided attributes of root element.
+         * @param markup Element's markup.
+         */
+        protected getAttributesInitializer(markup: JQuery): UIInitializer<T> {
+            var actions: UIInitializer<Element>[] = [];
+
+            // Get attribute values
+            var attributes = markup.get(0).attributes;
+            var values: { [attr: string]: string; } = {};
+            $.each(attributes, (i, attr: Attr) => {
+                // Add attribute's name and value into dictionary
+                values[attr.name] = attr.value;
+            });
+
+            var map = this.getAttributeMap();
+            for (var key in values) {
+                // Find attribute
+                if (!map[key]) {
+                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup[0].nodeName));
+                }
+
+                // Check for binding
+                var bindings = values[key].match(/^\{(.*)\}$/);
+                var expressions = values[key].match(/^\((.*)\)$/);
+                if (bindings && bindings[1] !== void 0) {
+                    var path = bindings[1];
+                    // Bind control property
+                    var act = ((k, p) => {
+                        return (el: Element) => el.bind(k, p);
+                    })(key, path);
+                    actions.push(act);
+                }
+                else if (expressions && expressions[1] !== void 0) {
+                    var expr = expressions[1];
+                    // Register expression
+                    var act = ((k, ex) => {
+                        return (el: Element) => el.express(k, ex);
+                    })(key, expr);
+                    actions.push(act);
+                }
+                else if (map[key]['*']) {
+                    // If accepts any value -> call setter with value
+                    var setter = map[key]['*'];
+                    var init = setter(values[key]);
+                    actions.push(init);
+                }
+                else {
+                    // Find value
+                    if (!map[key][values[key]] && !map['*']) {
+                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, markup[0].nodeName.toLowerCase()));
+                    }
+                    // Call setter
+                    var setter = map[key][values[key]];
+                    var init = setter()
+                    actions.push(init);
+                }
+            }
+
+            return (el) => actions.forEach((init) => init(el));
+        }
+
+        /**
+         * Returns markup attributes mapping to control's properties.
+         */
+        protected getAttributeMap(): AttributeMap<T> {
+            return {
+                'enabled': {
+                    'true': () => (el) => el.enabled = true,
+                    'false': () => (el) => el.enabled = false
+                },
+                'name': {
+                    '*': (name) => (el) => el.name = name,
+                },
+                'key': {
+                    '*': (key) => (el) => el.key = key,
+                },
+                'style': {
+                    '*': (cssClass) => (el) => el.style = cssClass,
+                },
+                'width': {
+                    '*': (width) => (el) => el.width = width
+                },
+                'height': {
+                    '*': (height) => (el) => el.height = height
+                },
+                'margin': {
+                    '*': (margin) => (el) => el.margin = margin
+                },
+                'scope': {}, // TODO: Deserialize JSON?
+
+                // Events
+                'onClick': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onClick, name)
+                }
+            };
+        }
     }
 }

@@ -15,5 +15,11 @@
         }
 
     }
-    Tags['Placeholder'] = Placeholder;
+    Controls['Placeholder'] = Placeholder;
+
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    Processors['Placeholder'] = new ElementMarkupProcessor<Placeholder>();
 }

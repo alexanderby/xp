@@ -86,5 +86,5 @@
             this.refreshFiltered();
         }
     }
-    xp.UI.Tags['Window'] = Main;
+    xp.UI.Controls['Window'] = Main;
 } 

@@ -16,7 +16,18 @@
         }
 
 
-        getMarkupInitializer(markup: JQuery): UIInitializer<View> {
+
+    }
+    Controls['View'] = View;
+
+
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    export class ViewMarkupProcessor<T extends View> extends StackMarkupProcessor<View>{
+
+        getInitializer(markup: JQuery): UIInitializer<View> {
 
             // Load from external file, if 'href' attribute specified.
             var url: string = markup.get(0).getAttribute('href');
@@ -34,8 +45,8 @@
                 });
             }
 
-            return super.getMarkupInitializer(markup);
+            return super.getInitializer(markup);
         }
     }
-    Tags['View'] = View;
+    Processors['View'] = new ViewMarkupProcessor();
 } 

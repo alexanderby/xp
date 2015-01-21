@@ -98,6 +98,7 @@
     <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />
     <TypeScriptCompile Include="ui\controls\element.ts" />
+    <TypeScriptCompile Include="ui\controls\markup.ts" />
     <TypeScriptCompile Include="ui\controls\placeholder.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
     <TypeScriptCompile Include="ui\controls\list.ts" />

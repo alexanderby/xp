@@ -37,11 +37,15 @@
             document.title = title;
         }
         private _title: string;
+    }
+    Controls['Window'] = Window;
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
+
+    export class WindowMarkupProcessor<T extends Window> extends StackMarkupProcessor<Window>{
 
         protected getAttributeMap(): AttributeMap<Window> {
             return extendAttributeMap(super.getAttributeMap(), {
@@ -51,5 +55,5 @@
             });
         }
     }
-    Tags['Window'] = Window;
+    Processors['Window'] = new WindowMarkupProcessor();
 } 

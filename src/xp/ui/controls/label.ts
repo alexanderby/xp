@@ -34,12 +34,15 @@
             this.domElement.text(text);
         }
         private _text: string;
+    }
+    Controls['Label'] = Label;
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
 
+    export class LabelMarkupProcessor extends ElementMarkupProcessor<Label>{
         protected getAttributeMap(): AttributeMap<Label> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'text': {
@@ -48,5 +51,5 @@
             });
         }
     }
-    Tags['Label'] = Label;
+    Processors['Label'] = new LabelMarkupProcessor();
 } 

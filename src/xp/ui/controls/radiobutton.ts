@@ -76,12 +76,15 @@
                 this.checked = item === this.item;
         }
         private _selectedItem: any;
+    }
+    Controls['RadioButton'] = RadioButton;
 
 
-        //------------------
-        // MARKUP PROCESSING
-        //------------------
+    //------------------
+    // MARKUP PROCESSING
+    //------------------
 
+    export class RadioButtonMarkupProcessor extends ElementMarkupProcessor<RadioButton>{
         protected getAttributeMap(): AttributeMap<RadioButton> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'group': {
@@ -92,5 +95,5 @@
             });
         }
     }
-    Tags['RadioButton'] = RadioButton;
+    Processors['RadioButton'] = new RadioButtonMarkupProcessor();
 } 
