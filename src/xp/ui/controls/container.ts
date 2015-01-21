@@ -33,6 +33,15 @@
             return this.domElement;
         }
 
+        /*internal*/ setRenderedState(rendered) {
+            this.isRendered = rendered;
+            this.children.forEach((ch) => {
+                ch.setRenderedState(rendered);
+            });
+            if (rendered)
+                this.onRendered.invoke(this);
+        }
+
 
         //-----------
         // PROPERTIES

@@ -125,19 +125,33 @@
         throw new Error("Unable to copy obj! Its type isn't supported.");
     }
 
-    // http://stackoverflow.com/a/1608546/4137472
     /**
      * Creates new object and applies arguments to constructor.
      * @param constructor Type of object.
      * @param args Arguments to apply.
      * @returns New object.
      */
-    export function applyConstructor<T extends Object>(constructor: new () => T, args: any[]): T {
-        function F(): void {
-            constructor.apply(this, args);
+    export function applyConstructor<T extends Object>(constructor: new (...args) => T, args: any[]): T {
+        // http://stackoverflow.com/a/1608546/4137472
+        //function F(): void {
+        //    constructor.apply(this, args);
+        //}
+        //F.prototype = constructor.prototype;
+        //return new F();
+
+        // http://stackoverflow.com/a/24963721/4137472
+        switch (args.length) {
+            case 0: return new constructor();
+            case 1: return new constructor(args[0]);
+            case 2: return new constructor(args[0], args[1]);
+            case 3: return new constructor(args[0], args[1], args[2]);
+            case 4: return new constructor(args[0], args[1], args[2], args[3]);
+            case 5: return new constructor(args[0], args[1], args[2], args[3], args[4]);
+            case 6: return new constructor(args[0], args[1], args[2], args[3], args[4], args[5]);
+            case 7: return new constructor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+            case 8: return new constructor(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+            default: throw new Error('Two much arguments to apply to constructor.');
         }
-        F.prototype = constructor.prototype;
-        return new F();
     }
 }
 

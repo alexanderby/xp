@@ -59,12 +59,12 @@
             this.setRenderedState(true);
         }
 
-        protected setRenderedState(rendered) {
-            this._isRendered = rendered;
+        /*internal*/ setRenderedState(rendered) {
+            this.isRendered = rendered;
             if (rendered)
                 this.onRendered.invoke(this);
         }
-        protected _isRendered = false;
+        /*internal*/ isRendered = false;
 
 
         //-------
@@ -307,7 +307,7 @@
             for (var key in values) {
                 // Find attribute
                 if (!map[key]) {
-                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup[0].nodeName.toLowerCase()));
+                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup[0].nodeName));
                 }
 
                 // Check for binding
@@ -409,6 +409,10 @@
             if (parent) {
                 this._parent.onScopeChanged.addHandler(this.parentScopeChangeHandler, this);
                 this.parentScopeChangeHandler();
+
+                if (!this.isRendered && parent.isRendered)
+                    // Mark as rendered
+                    this.setRenderedState(true);
             }
         }
         private _parent: Container;
