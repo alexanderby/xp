@@ -6,7 +6,7 @@
 
     export class Main extends xp.UI.Window {
 
-        constructor(app?: xp.Application) {
+        constructor(app: xp.Application) {
             super();
 
             console.log('Main dependency (app):');

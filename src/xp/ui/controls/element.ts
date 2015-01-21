@@ -417,6 +417,10 @@
                 this.bindings[cp].unbind();
                 delete this.bindings[cp];
             }
+            for (var cp in this.expressions) {
+                this.expressions[cp].unbind();
+                delete this.expressions[cp];
+            }
 
             // DOM
             this.domElement.remove();

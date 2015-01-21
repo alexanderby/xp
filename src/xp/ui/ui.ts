@@ -3,7 +3,7 @@
     /**
      * "XML tag":"UI class" dictionary.
      */
-    export var Tags: { [tag: string]: typeof Element } = {};
+    export var Tags: { [tag: string]: new (...args: any[]) => Element } = {};
 
     /**
      * "XML tag":"List of dependencies types" dictionary.

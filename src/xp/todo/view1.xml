@@ -1,5 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<View xmlns="http://tempuri.org/Markup.xsd" flow="horizontal" contentAlign="center">
-  <Label text="Hello from view1"/>
-  <Button text="View1 button"/>
+<View xmlns="http://tempuri.org/Markup.xsd">
+  <Label text="Hello from view1. Undone:"/>
+  <List items="{undone}">
+    <Label text="{item.name}"/>
+  </List>
 </View>

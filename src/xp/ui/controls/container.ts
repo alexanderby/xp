@@ -179,7 +179,9 @@
                     var targetIndex = (element.parent === this && this.children.indexOf(element) < index) ?
                         index - 1
                         : index;
-                    element.parent.detachChild(element);
+                    if (element.parent) {
+                        element.parent.detachChild(element);
+                    }
                     this.children.splice(targetIndex, 0, element);
                     element.parent = this;
 
@@ -298,6 +300,24 @@
                 }
                 return false;
             });
+        }
+
+        /**
+         * Removes element.
+         */
+        remove() {
+            // Remove children
+            this.removeChildren();
+
+            // Remove itself
+            super.remove();
+        }
+
+        protected removeChildren() {
+            for (var i = this.children.length - 1; i >= 0; i--) {
+                this.children[i].remove();
+            }
+            this.children = [];
         }
     }
 } 

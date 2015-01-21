@@ -12,6 +12,7 @@
             return $('<div class="list stack"><div class="content"></div></div>');
         }
 
+
         //------------------
         // MARKUP PROCESSING
         //------------------
@@ -65,9 +66,8 @@
             this._items = items;
 
             // Remove current children
-            this.children.forEach((c) => {
-                c.remove();
-            });
+            this.removeReplacementHandlers();
+            this.removeChildren();
             this.itemsRegistar.unsubscribeAll();
 
             if (items) {
@@ -201,6 +201,24 @@
 
         private itemReplacementToken = false;
         private itemReplacementHandlers: ItemReplacementInfo[] = [];
+
+        /**
+         * Removes element.
+         */
+        remove() {
+            // Remove replacement handlers
+            this.removeReplacementHandlers();
+
+            // Remove itself
+            super.remove();
+        }
+
+        protected removeReplacementHandlers() {
+            this.itemReplacementHandlers.forEach((hr) => {
+                hr.holder.onPropertyChanged.removeHandler(hr.handler);
+            });
+            this.itemReplacementHandlers = [];
+        }
     }
     Tags['List'] = List;
 
