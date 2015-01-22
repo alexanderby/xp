@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<span class="button"><span class="icon"></span><span class="text"></span></span>');
+            var template = $('<button class="button" type="button"><span class="icon"></span><span class="text"></span></button>');
             this.iconElement = template.find('.icon');
             this.textElement = template.find('.text');
             return template;
