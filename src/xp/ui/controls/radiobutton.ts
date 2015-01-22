@@ -22,23 +22,10 @@
 
         protected initEvents() {
             super.initEvents();
-            this.onCheckChange.addHandler((args) => {
-                alert('checkchange: ' + args.checked + '; selected: ' + this.selectedItem);
-                if (args.checked) {
-                    console.info('Radiobutton: init selected item change');
-                    this.onInput('selectedItem', this.item);
-                }
-            }, this);
 
-            this.onMouseUp.addHandler((args) => { // WARNING: Click fires twice!
-                alert('mouseup');
-                if (!this.readonly && this.checked === true) {
-                    alert('uncheck');
-                    // Uncheck
-                    this.onInput('checked', false);
-                    alert('inputed checked');
-                    this.onInput('selectedItem', {});
-                    alert('inputed selectedItem');
+            this.onCheckChange.addHandler((args) => {
+                if (args.checked) {
+                    this.onInput('selectedItem', this.item);
                 }
             }, this);
         }

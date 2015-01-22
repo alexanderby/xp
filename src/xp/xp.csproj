@@ -72,6 +72,12 @@
     <Content Include="style\textbox.min.css">
       <DependentUpon>textbox.css</DependentUpon>
     </Content>
+    <Content Include="style\togglebutton.css">
+      <DependentUpon>togglebutton.less</DependentUpon>
+    </Content>
+    <Content Include="style\togglebutton.min.css">
+      <DependentUpon>togglebutton.css</DependentUpon>
+    </Content>
     <Content Include="testapp\app.css" />
     <Content Include="testapp\icon-16-black.svg" />
     <Content Include="testapp\icon-16-white.svg" />
@@ -158,6 +164,10 @@
     <Content Include="style\radiobutton.less" />
     <Content Include="style\radiobutton.css.map">
       <DependentUpon>radiobutton.css</DependentUpon>
+    </Content>
+    <Content Include="style\togglebutton.less" />
+    <Content Include="style\togglebutton.css.map">
+      <DependentUpon>togglebutton.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

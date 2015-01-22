@@ -1,10 +1,10 @@
 ﻿@import "global.less";
 
-/*--------
-    BUTTON
-----------*/
+/*---------------
+    TOGGLE BUTTON
+-----------------*/
 
-.button {
+.togglebutton {
     align-items: center;
     background-color: @color-control-back;
     border: none;
@@ -19,14 +19,19 @@
     min-width: 2em;
     outline: none;
     //overflow: hidden;
-    padding: 0.5em 0.375em;
+    padding: 0 0.375em;
     text-decoration: none;
+
+    > input[type=radio] {
+        display: none;
+    }
 
     &:hover {
         background-color: @color-control-hover;
     }
 
-    &:active {
+    &:active,
+    &.checked {
         background-color: @color-control-active;
     }
 

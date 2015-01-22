@@ -80,7 +80,7 @@
             // DOM
             this.checkElement.prop('checked', checked);
         }
-        private _checked: boolean;
+        protected _checked: boolean;
 
         /**
          * Gets or sets button's text.

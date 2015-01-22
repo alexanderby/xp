@@ -44,6 +44,12 @@
     export function getElementCreator(markup: JQuery): () => Element {
         var rootNode = markup[0];
         var tag = markup[0].nodeName;
+        if (!(tag in xp.UI.Controls)) {
+            throw new Error('Element "' + tag + '" is not defined in controls dictionary.');
+        }
+        if (!(tag in xp.UI.Processors)) {
+            throw new Error('Element "' + tag + '" is not defined in processors dictionary.');
+        }
         var type = xp.UI.Controls[tag];
         var init = xp.UI.Processors[tag].getInitializer($(rootNode));
         var dependencies = xp.UI.Dependencies[tag];

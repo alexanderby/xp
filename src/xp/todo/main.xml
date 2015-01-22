@@ -36,5 +36,8 @@
     <List items="{todos}">
       <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
     </List>
+    <List items="{todos}">
+      <ToggleButton  item="{item}" text="{item.name}" selectedItem="{selected}"/>
+    </List>
   </Stack>
 </Window>

@@ -37,6 +37,7 @@
           <xs:element ref="CheckBox"/>
           <xs:element ref="Placeholder"/>
           <xs:element ref="RadioButton"/>
+          <xs:element ref="ToggleButton"/>
         </xs:choice>
         <xs:attribute name="padding" type="xs:string"/>
       </xs:extension>
@@ -58,15 +59,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-
-  <xs:element name="Stack">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="Stack">
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:element name="Stack" type="Stack"/>
 
   <xs:element name="Window">
     <xs:complexType>
@@ -190,18 +183,17 @@
     </xs:restriction>
   </xs:simpleType>
 
-  <xs:element name="CheckBox">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="Element">
-          <xs:attribute name="checked" type="xs:string"/>
-          <xs:attribute name="readonly" type="Boolean"/>
-          <xs:attribute name="text" type="xs:string"/>
-          <xs:attribute name="onCheckChange" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="CheckBox">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:attribute name="checked" type="xs:string"/>
+        <xs:attribute name="readonly" type="Boolean"/>
+        <xs:attribute name="text" type="xs:string"/>
+        <xs:attribute name="onCheckChange" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="CheckBox" type="CheckBox"/>
 
   <xs:element name="Placeholder">
     <xs:complexType>
@@ -211,17 +203,22 @@
     </xs:complexType>
   </xs:element>
 
-  <xs:element name="RadioButton">
+  <xs:complexType name="RadioButton">
+    <xs:complexContent>
+      <xs:extension base="CheckBox">
+        <xs:attribute name="group" type="xs:string"/>
+        <xs:attribute name="item" type="xs:string"/>
+        <xs:attribute name="selectedItem" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="RadioButton" type="RadioButton"/>
+
+  <xs:element name="ToggleButton">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="Element">
-          <xs:attribute name="checked" type="xs:string"/>
-          <xs:attribute name="readonly" type="Boolean"/>
-          <xs:attribute name="text" type="xs:string"/>
-          <xs:attribute name="onCheckChange" type="xs:string"/>
-          <xs:attribute name="group" type="xs:string"/>
-          <xs:attribute name="item" type="xs:string"/>
-          <xs:attribute name="selectedItem" type="xs:string"/>
+        <xs:extension base="RadioButton">
+          <xs:attribute name="icon" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

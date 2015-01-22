@@ -21,7 +21,12 @@
             throw new Error('Source is notifier already.');
         var obj: INotifier = { onPropertyChanged: new Event<string>() };
 
-        obj['__inner__'] = source;
+        //obj['__inner__'] = source;
+        Object.defineProperty(obj, '__inner__', {
+            configurable: true,
+            enumerable: false,
+            value: source
+        });
 
         for (var key in source) {
             // Create notification property
