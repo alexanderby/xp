@@ -111,6 +111,7 @@
     <TypeScriptCompile Include="ui\controls\radiobutton.ts" />
     <TypeScriptCompile Include="ui\controls\stack.ts" />
     <TypeScriptCompile Include="ui\controls\textbox.ts" />
+    <TypeScriptCompile Include="ui\controls\togglebutton.ts" />
     <TypeScriptCompile Include="ui\controls\view.ts" />
     <TypeScriptCompile Include="ui\controls\window.ts" />
     <TypeScriptCompile Include="core\binding\expression.ts" />
