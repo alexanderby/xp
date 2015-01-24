@@ -38,6 +38,7 @@
           <xs:element ref="Placeholder"/>
           <xs:element ref="RadioButton"/>
           <xs:element ref="ToggleButton"/>
+          <xs:element ref="Html"/>
         </xs:choice>
         <xs:attribute name="padding" type="xs:string"/>
       </xs:extension>
@@ -219,6 +220,19 @@
       <xs:complexContent>
         <xs:extension base="RadioButton">
           <xs:attribute name="icon" type="xs:string"/>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="Html">
+    <xs:complexType>
+      <xs:complexContent>
+        <xs:extension base="Element">
+          <xs:choice>
+            <xs:any namespace="http://www.w3.org/1999/xhtml" minOccurs="1" maxOccurs="1"/>
+          </xs:choice>
+          <xs:attribute name="href" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
     </xs:complexType>

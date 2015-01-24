@@ -32,6 +32,8 @@
             // Load from external file, if 'href' attribute specified.
             var url: string = markup.get(0).getAttribute('href');
             var attributes = markup.get(0).attributes;
+            markup.get(0).removeAttribute('href');
+
             if (url) {
                 // Load markup from file
                 markup = xp.loadMarkupSync(url);

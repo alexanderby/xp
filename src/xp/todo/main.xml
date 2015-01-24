@@ -39,5 +39,11 @@
     <List items="{todos}">
       <ToggleButton  item="{item}" text="{item.name}" selectedItem="{selected}"/>
     </List>
+    <Html width="100%">
+      <div>
+        <span style="color:red;">Hello </span><span style="color:green;">World!</span>
+      </div>
+      <div>{selected}</div>
+    </Html>
   </Stack>
 </Window>
