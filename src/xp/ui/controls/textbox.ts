@@ -27,7 +27,7 @@
         protected initEvents() {
             super.initEvents();
             this.onTextChange = new Event<TextChangeArgs>();
-            this.onRemove.addHandler(() => this.onTextChange.removeAllHandlers(), this);
+            this.onRemoved.addHandler(() => this.onTextChange.removeAllHandlers(), this);
 
             var onInput = (e: JQueryEventObject) => {
                 var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);

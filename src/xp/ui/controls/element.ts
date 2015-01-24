@@ -71,8 +71,6 @@
         // EVENTS
         //-------
 
-        protected onRemove: Event<Element>;
-
         onClick: Event<UIEventArgs>;
         onMouseDown: Event<UIEventArgs>;
         onMouseUp: Event<UIEventArgs>;
@@ -80,6 +78,14 @@
         onMouseEnter: Event<UIEventArgs>;
         onMouseLeave: Event<UIEventArgs>;
 
+        /**
+         * Is invoked when element is being removed.
+         */
+        onRemoved: Event<Element>;
+
+        /**
+         * Is invoked when element is first time rendered.
+         */
         onRendered: Event<Element>;
 
         /**
@@ -108,8 +114,8 @@
             this.onMouseLeave = new Event<UIEventArgs>();
 
             // Unregister events on remove?
-            this.onRemove = new Event<Element>();
-            this.onRemove.addHandler(() => {
+            this.onRemoved = new Event<Element>();
+            this.onRemoved.addHandler(() => {
                 this.onScopeChanged.removeAllHandlers();
                 this.onMarkupProcessed.removeAllHandlers();
                 this.onRendered.removeAllHandlers();
@@ -342,8 +348,8 @@
             // DOM
             this.domElement.remove();
 
-            this.onRemove.invoke(this);
-            this.onRemove.removeAllHandlers();
+            this.onRemoved.invoke(this);
+            this.onRemoved.removeAllHandlers();
         }
 
         /**

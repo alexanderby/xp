@@ -31,7 +31,7 @@
         protected initEvents() {
             super.initEvents();
             this.onCheckChange = new Event<CheckChangeArgs>();
-            this.onRemove.addHandler(() => this.onCheckChange.removeAllHandlers(), this);
+            this.onRemoved.addHandler(() => this.onCheckChange.removeAllHandlers(), this);
 
             // On check change input
             this.domElement.on('change', (e) => {
