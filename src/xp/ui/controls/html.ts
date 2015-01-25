@@ -4,6 +4,32 @@
      */
     export class Html extends Element {
 
+        /**
+         * Sets HTML content.
+         * @param html HTML content.
+         */
+        setHtml(html: JQuery) {
+            if (html.length !== 1) {
+                throw new Error('Html control must have one root element.');
+            }
+
+            this.domElement.replaceWith(html);
+            this.domElement = html;
+
+
+            // Re-init events.
+            // TODO: Unsubscribe from prev enents.
+            this.initEvents();
+
+            // TODO: Reset properties (width, name etc).
+
+            // TODO: Apply bindings.
+
+            //var bindingRegex = /^\{(.*)\}$/;
+            //var binded = html.filter(function () {
+            //    return bindingRegex.test($(this).text());
+            //});
+        }
     }
     Controls['Html'] = Html;
 
@@ -37,22 +63,9 @@
             return (el) => {
                 // Seems to be namespace bug
                 var dom = $(markup.prop('outerHTML'));
-                el.domElement.replaceWith(dom);
-                el.domElement = dom;
+                el.setHtml(dom);
 
-                // HACK: Re-init events.
-                el['initEvents']();
-
-                // Attributes?
                 initAttributes(el);
-
-                // Apply bindings
-                //var i = 0;
-                var bindingRegex = /^\{(.*)\}$/;
-                var binded = dom.filter(function () {
-                    return bindingRegex.test($(this).text());
-                });
-
             };
         }
     }

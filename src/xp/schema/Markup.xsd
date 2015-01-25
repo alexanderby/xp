@@ -230,7 +230,7 @@
       <xs:complexContent>
         <xs:extension base="Element">
           <xs:choice>
-            <xs:any namespace="http://www.w3.org/1999/xhtml" minOccurs="1" maxOccurs="1"/>
+            <xs:any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="1"/>
           </xs:choice>
           <xs:attribute name="href" type="xs:string"/>
         </xs:extension>

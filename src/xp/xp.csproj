@@ -86,6 +86,7 @@
     <Content Include="testapp\view\window.xml">
       <SubType>Designer</SubType>
     </Content>
+    <Content Include="todo\div.html" />
     <Content Include="todo\index.html" />
     <Content Include="todo\main.xml">
       <SubType>Designer</SubType>

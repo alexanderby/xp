@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em">
+<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em" itemsIndent="2em">
   <Stack width="40em" itemsIndent="2em" flow="horizontal">
 
     <!-- INPUT -->
@@ -25,6 +25,12 @@
     <View name="view1" href="view1.xml" width="40%"/>
 
   </Stack>
+
+  <Html width="40em" height="0.0625em">
+    <div style="background-color:#aaa;"></div>
+  </Html>
+
+  <!-- EXPERIMENTS -->
   <Stack width="10em">
     <Label text="Item 0"/>
     <TextBox text="{todos[0].name}" name="tb0"/>
@@ -41,9 +47,10 @@
     </List>
     <Html width="100%">
       <div>
-        <span style="color:red;">Hello </span><span style="color:green;">World!</span>
+        <span style="color:red;">Hello </span>
+        <span style="color:green;">World!</span>
       </div>
-      <div>{selected}</div>
     </Html>
+    <Html width="100%" href="div.html"/>
   </Stack>
 </Window>
