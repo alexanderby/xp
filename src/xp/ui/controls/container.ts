@@ -243,7 +243,13 @@
                     }
                     this[el.name] = el;
                 }
-                return false;
+                if (el instanceof View) {
+                    // Stop on <View>
+                    return true;
+                }
+                else {
+                    return false;
+                }
             });
         }
 
@@ -300,7 +306,7 @@
             var actions: UIInitializer<Container>[] = [];
 
             // Create children
-            $.each(markup.children(), (i, childXmlNode) => {
+            $.each(markup.children(),(i, childXmlNode) => {
                 // Create child
                 var tagName = childXmlNode.nodeName;
                 if (!xp.UI.Controls[tagName]) {
