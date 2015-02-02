@@ -38,17 +38,10 @@
         }
 
         /**
-         * Renders control to the HTML element with given selector.
-         * @param selector Selector.
+         * Renders control to the HTML element or element with given selector.
+         * @param selector HTML element or selector.
          */
-        renderTo(selector: string);
-        /**
-         * Renders control to the HTML element.
-         * @param element HTML element.
-         */
-        renderTo(element: JQuery);
-
-        renderTo(elementOrSelector) {
+        renderTo(elementOrSelector: string|JQuery) {
             var target: JQuery;
             if (typeof elementOrSelector === 'string')
                 target = $(elementOrSelector);
@@ -137,7 +130,7 @@
         }
 
         protected initDomEvent(eventName: string, event: UIEvent) {
-            this.domElement.on(eventName, (e: UIEventArgs) => {
+            this.domElement.on(eventName,(e: UIEventArgs) => {
                 if (this.enabled) {
                     var args = createEventArgs(this, e);
                     event.invoke(args);
@@ -605,7 +598,7 @@
             // Get attribute values
             var attributes = markup.get(0).attributes;
             var values: { [attr: string]: string; } = {};
-            $.each(attributes, (i, attr: Attr) => {
+            $.each(attributes,(i, attr: Attr) => {
                 // Add attribute's name and value into dictionary
                 values[attr.name] = attr.value;
             });
