@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<input class="textbox" type="text"></input>');
+            var template = $('<input class="textbox" type="text" />');
             //template.attr('tabindex', TabIndex++);
             return template;
         }
