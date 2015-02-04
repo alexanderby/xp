@@ -1,10 +1,10 @@
-﻿@import "global.less";
+﻿@import (once) "_variables.less";
 
-/*--------
+/*-----------
     CHECKBOX
-----------*/
+-------------*/
 
-.radiobutton {
+.checkbox {
     align-items: center;
     box-sizing: border-box;
     cursor: default;
@@ -19,27 +19,38 @@
     //overflow: hidden;
     padding: 0 /* 0.5em*/;
 
-    > input[type=radio] {
+    > input[type=checkbox] {
         display: none;
 
         &:checked + .check {
             &:before {
                 background-color: @color-input-fore;
-                border-radius: 0.3125em;
                 content: "";
                 display: inline-block;
-                height: 0.625em;
-                left: 0.1875em;
+                height: 0.25em;
+                left: 0.125em;
                 position: absolute;
-                top: 0.1875em;
-                width: 0.625em;
+                top: 0.5em;
+                transform: skewY(45deg);
+                width: 0.25em;
+            }
+
+            &:after {
+                background-color: @color-input-fore;
+                content: "";
+                display: inline-block;
+                height: 0.25em;
+                position: absolute;
+                top: 0.375em;
+                transform: skewY(-45deg);
+                width: 0.5em;
+                left: 0.375em;
             }
         }
     }
 
     > .check {
         background-color: @color-input-back;
-        border-radius: 0.5em;
         display: inline-block;
         flex: none;
         font-size: 1em;

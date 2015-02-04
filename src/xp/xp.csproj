@@ -18,65 +18,17 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="style\button.css">
-      <DependentUpon>button.less</DependentUpon>
+    <Content Include="style\xp.css">
+      <DependentUpon>xp.less</DependentUpon>
     </Content>
-    <Content Include="style\button.min.css">
-      <DependentUpon>button.css</DependentUpon>
-    </Content>
-    <Content Include="style\checkbox.css">
-      <DependentUpon>checkbox.less</DependentUpon>
-    </Content>
-    <Content Include="style\checkbox.min.css">
-      <DependentUpon>checkbox.css</DependentUpon>
+    <Content Include="style\xp.min.css">
+      <DependentUpon>xp.css</DependentUpon>
     </Content>
     <Content Include="style\defaultstyle.css">
       <DependentUpon>defaultstyle.less</DependentUpon>
     </Content>
     <Content Include="style\defaultstyle.min.css">
       <DependentUpon>defaultstyle.css</DependentUpon>
-    </Content>
-    <Content Include="style\global.css">
-      <DependentUpon>global.less</DependentUpon>
-    </Content>
-    <Content Include="style\global.min.css">
-      <DependentUpon>global.css</DependentUpon>
-    </Content>
-    <Content Include="style\label.css">
-      <DependentUpon>label.less</DependentUpon>
-    </Content>
-    <Content Include="style\label.min.css">
-      <DependentUpon>label.css</DependentUpon>
-    </Content>
-    <Content Include="style\placeholder.css">
-      <DependentUpon>placeholder.less</DependentUpon>
-    </Content>
-    <Content Include="style\placeholder.min.css">
-      <DependentUpon>placeholder.css</DependentUpon>
-    </Content>
-    <Content Include="style\radiobutton.css">
-      <DependentUpon>radiobutton.less</DependentUpon>
-    </Content>
-    <Content Include="style\radiobutton.min.css">
-      <DependentUpon>radiobutton.css</DependentUpon>
-    </Content>
-    <Content Include="style\stack.css">
-      <DependentUpon>stack.less</DependentUpon>
-    </Content>
-    <Content Include="style\stack.min.css">
-      <DependentUpon>stack.css</DependentUpon>
-    </Content>
-    <Content Include="style\textbox.css">
-      <DependentUpon>textbox.less</DependentUpon>
-    </Content>
-    <Content Include="style\textbox.min.css">
-      <DependentUpon>textbox.css</DependentUpon>
-    </Content>
-    <Content Include="style\togglebutton.css">
-      <DependentUpon>togglebutton.less</DependentUpon>
-    </Content>
-    <Content Include="style\togglebutton.min.css">
-      <DependentUpon>togglebutton.css</DependentUpon>
     </Content>
     <Content Include="testapp\app.css" />
     <Content Include="testapp\icon-16-black.svg" />
@@ -90,6 +42,12 @@
     <Content Include="todo\index.html" />
     <Content Include="todo\main.xml">
       <SubType>Designer</SubType>
+    </Content>
+    <Content Include="todo\style.css">
+      <DependentUpon>style.less</DependentUpon>
+    </Content>
+    <Content Include="todo\style.min.css">
+      <DependentUpon>style.css</DependentUpon>
     </Content>
     <Content Include="todo\view1.xml" />
     <Content Include="web.config" />
@@ -135,41 +93,23 @@
     <Content Include="style\defaultstyle.css.map">
       <DependentUpon>defaultstyle.css</DependentUpon>
     </Content>
-    <Content Include="style\global.less" />
-    <Content Include="style\button.less" />
-    <Content Include="style\global.css.map">
-      <DependentUpon>global.css</DependentUpon>
+    <Content Include="style\_button.less" />
+    <Content Include="style\_stack.less" />
+    <Content Include="style\_label.less" />
+    <Content Include="style\_textbox.less" />
+    <Content Include="style\_checkbox.less" />
+    <Content Include="style\_placeholder.less" />
+    <Content Include="style\_radiobutton.less" />
+    <Content Include="style\_togglebutton.less" />
+    <Content Include="style\xp.less" />
+    <Content Include="style\_variables.less" />
+    <Content Include="style\_window.less" />
+    <Content Include="style\xp.css.map">
+      <DependentUpon>xp.css</DependentUpon>
     </Content>
-    <Content Include="style\button.css.map">
-      <DependentUpon>button.css</DependentUpon>
-    </Content>
-    <Content Include="style\stack.less" />
-    <Content Include="style\stack.css.map">
-      <DependentUpon>stack.css</DependentUpon>
-    </Content>
-    <Content Include="style\label.less" />
-    <Content Include="style\label.css.map">
-      <DependentUpon>label.css</DependentUpon>
-    </Content>
-    <Content Include="style\textbox.less" />
-    <Content Include="style\textbox.css.map">
-      <DependentUpon>textbox.css</DependentUpon>
-    </Content>
-    <Content Include="style\checkbox.less" />
-    <Content Include="style\checkbox.css.map">
-      <DependentUpon>checkbox.css</DependentUpon>
-    </Content>
-    <Content Include="style\placeholder.less" />
-    <Content Include="style\placeholder.css.map">
-      <DependentUpon>placeholder.css</DependentUpon>
-    </Content>
-    <Content Include="style\radiobutton.less" />
-    <Content Include="style\radiobutton.css.map">
-      <DependentUpon>radiobutton.css</DependentUpon>
-    </Content>
-    <Content Include="style\togglebutton.less" />
-    <Content Include="style\togglebutton.css.map">
-      <DependentUpon>togglebutton.css</DependentUpon>
+    <Content Include="todo\style.less" />
+    <Content Include="todo\style.css.map">
+      <DependentUpon>style.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

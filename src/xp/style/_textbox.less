@@ -1,4 +1,4 @@
-﻿@import "global.less";
+﻿@import (once) "_variables.less";
 
 /*-----------
     TEXT BOX
@@ -30,4 +30,19 @@
     &[readonly] {
         cursor: default;
     }
+}
+
+// Placeholder
+
+&::-webkit-input-placeholder { /* WebKit browsers */
+    color: @color-input-fore-placeholder;
+}
+
+&::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: @color-input-fore-placeholder;
+    opacity: 1;
+}
+
+&:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: @color-input-fore-placeholder;
 }
