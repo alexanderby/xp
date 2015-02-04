@@ -1,4 +1,4 @@
-﻿@import (once) "_variables.less";
+﻿@import "_variables.less";
 
 /*--------
     STACK
@@ -6,21 +6,22 @@
 
 .stack {
     box-sizing: border-box;
+    flex: 1 0 auto;
 
     > .content {
         display: flex;
-
-        > *:not(.placeholder):not(.stack) {
+        //border: 2px solid red;
+        /*> *:not(.placeholder):not(.stack) {
             flex: none;
-        }
+        }*/
     }
     // Flow
     &.flow-x {
-        min-height: -webkit-min-content;
-        min-height: -moz-min-content;
-        // TODO: IE
         > .content {
             flex-direction: row;
+            min-height: -webkit-min-content;
+            min-height: -moz-min-content;
+            // TODO: IE
         }
         // Items indent
         &.items-indent-05 > .content > *:not(:first-child) {
@@ -41,11 +42,11 @@
     }
 
     &.flow-y {
-        min-width: -webkit-min-content;
-        min-width: -moz-min-content;
-        // TODO: IE
         > .content {
             flex-direction: column;
+            min-width: -webkit-min-content;
+            min-width: -moz-min-content;
+            // TODO: IE
         }
         // Items indent
         &.items-indent-05 > .content > *:not(:first-child) {

@@ -74,12 +74,13 @@
                 if (Binding.isNotifier(items)) {
                     var itemsLengthChangeHandler = (prop: string) => {
                         if (prop === 'length') {
-                            if (this.items.length > 0) {
-                                this.domElement.show();
-                            }
-                            else {
-                                this.domElement.hide();
-                            }
+                            // Hide or show control
+                            //if (this.items.length > 0) {
+                            //    this.domElement.show();
+                            //}
+                            //else {
+                            //    this.domElement.hide();
+                            //}
                         }
                     };
                     this.itemsRegistar.subscribe((<Binding.INotifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);

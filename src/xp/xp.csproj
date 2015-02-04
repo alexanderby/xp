@@ -18,6 +18,12 @@
     <IISExpressUseClassicPipelineMode />
   </PropertyGroup>
   <ItemGroup>
+    <Content Include="style\debug-style.css">
+      <DependentUpon>debug-style.less</DependentUpon>
+    </Content>
+    <Content Include="style\debug-style.min.css">
+      <DependentUpon>debug-style.css</DependentUpon>
+    </Content>
     <Content Include="style\xp.css">
       <DependentUpon>xp.less</DependentUpon>
     </Content>
@@ -110,6 +116,10 @@
     <Content Include="todo\style.less" />
     <Content Include="todo\style.css.map">
       <DependentUpon>style.css</DependentUpon>
+    </Content>
+    <Content Include="style\debug-style.less" />
+    <Content Include="style\debug-style.css.map">
+      <DependentUpon>debug-style.css</DependentUpon>
     </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>

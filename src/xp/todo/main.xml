@@ -1,12 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em" itemsIndent="2em">
-  <Stack width="40em" height="10em" itemsIndent="2em" flow="horizontal" scrollBar="both">
+  <Stack width="40em" itemsIndent="2em" flow="horizontal" scrollBar="both">
 
     <!-- INPUT -->
     <Stack itemsIndent="1em" width="50%">
       <Label text="TODO APP"/>
-      <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
-      <List name="list" items="{todos}" itemId="t">
+      <Stack flow="horizontal">
+        <Label text="Input:"/>
+        <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
+      </Stack>
+      <List name="list" items="{todos}" itemId="t" height="12em">
         <Stack flow="horizontal">
           <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
           <Placeholder/>
