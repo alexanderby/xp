@@ -265,10 +265,11 @@
             return this._style;
         }
         set style(cssClass) {
+            var old = this._style;
             this._style = cssClass;
 
             // DOM
-            this.domElement.removeClass();
+            this.domElement.removeClass(old);
             this.domElement.addClass(cssClass);
         }
         private _style: string;
