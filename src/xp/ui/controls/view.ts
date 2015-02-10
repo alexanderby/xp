@@ -11,7 +11,7 @@
 
         protected getTemplate(): JQuery {
             //return $('<div class="view stack"></div>');
-            var template = $('<div class="view stack"><div class="content"></div></div>');
+            var template = $('<div class="View stack"><div class="content"></div></div>');
             return template;
         }
 

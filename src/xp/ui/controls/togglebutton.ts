@@ -6,7 +6,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<label class="togglebutton"><input type="radio"/><span class="icon"></span><span class="text"></span></label>');
+            var template = $('<label class="ToggleButton"><input type="radio"/><span class="icon"></span><span class="text"></span></label>');
             this.checkElement = template.find('input');
             this.iconElement = template.find('.icon');
             this.textElement = template.find('.text');

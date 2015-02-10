@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<label class="checkbox"><input type="checkbox"/><span class="check"></span><label class="text"></label></label>');
+            var template = $('<label class="CheckBox"><input type="checkbox"/><span class="check"></span><label class="text"></label></label>');
             this.checkElement = template.find('input');
             this.textElement = template.find('label');
             return template;

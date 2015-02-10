@@ -10,7 +10,7 @@
 
         protected getTemplate(): JQuery {
             var template = $('<body></body>') // Bug when defining class in html on body
-                .addClass('window')
+                .addClass('Window')
                 .addClass('stack')
                 .append('<div class="content"></div>');
             return template;

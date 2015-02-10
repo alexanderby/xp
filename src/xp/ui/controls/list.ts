@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<div class="list stack"><div class="content"></div></div>');
+            return $('<div class="List stack"><div class="content"></div></div>');
         }
 
 

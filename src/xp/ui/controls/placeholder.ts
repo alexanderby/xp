@@ -5,7 +5,7 @@
     export class Placeholder extends Element {
 
         protected getTemplate(): JQuery {
-            return $('<span class="placeholder">&nbsp;</span>');
+            return $('<span class="Placeholder">&nbsp;</span>');
         }
 
         setDefaults() {

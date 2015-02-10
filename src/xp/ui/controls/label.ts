@@ -9,7 +9,7 @@
             //var template = $('<span class="label"><span class="text"></span></span>');
             //this.textElement = template.find('.text');
             //return template;
-            return $('<label class="label"></label>');
+            return $('<label class="Label"></label>');
         }
 
         protected textElement: JQuery;

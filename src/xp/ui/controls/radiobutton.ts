@@ -9,7 +9,7 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<label class="radiobutton"><input type="radio"/><span class="check"></span><label class="text"></label></label>');
+            var template = $('<label class="RadioButton"><input type="radio"/><span class="check"></span><label class="text"></label></label>');
             this.checkElement = template.find('input');
             this.textElement = template.find('label');
             return template;
