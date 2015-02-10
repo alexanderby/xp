@@ -10,7 +10,7 @@
         <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
       </HBox>
       <List name="list" items="{todos}" itemId="t" height="12em" itemsIndent="0.5em">
-        <HBox>
+        <HBox flex="none">
           <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
           <Placeholder/>
           <Button key="delete" text="Delete" onClick="onDeleteClick"/>
@@ -34,7 +34,7 @@
   </Html>
 
   <!-- EXPERIMENTS -->
-  <VBox width="10em">
+  <VBox width="10em" flex="none">
     <Label text="Item 0"/>
     <TextBox text="{todos[0].name}" name="tb0"/>
     <CheckBox text="Check" checked="{todos[0].isDone}" name="cb0"/>

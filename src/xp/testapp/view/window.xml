@@ -1,65 +1,36 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
-  <Stack flow="horizontal" name="Stack1" width="5em" height="4em" itemsAlign="stretch">
-    <Button name="Button1" text="Click me" icon="icon-16-white.svg"/>
-    <Button name="Button2" text="Button 2"/>
-  </Stack>
-  <View name="view1">
-    <Stack flow="horizontal" itemsAlign="center" contentAlign="center" name="Stack2">
-      <Button name="Button3" text="Button3" height="4em"/>
-      <Button name="Button4" icon="icon-16-white.svg"/>
-    </Stack>
-    <View name="view2"/>
-  </View>
-  <Stack flow="horizontal" itemsAlign="stretch" contentAlign="start" name="Stack3" wrapping="wrap" itemsIndent="none">
-    <Button text="Button" icon="icon-16-white.svg" height="3em"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <CheckBox text="Check" margin="0 0.5em"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-    <Button text="Button" icon="icon-16-white.svg"/>
-  </Stack>
-  <Stack width="20em" itemsAlign="center" contentAlign="center" padding="0.5em">
-    <CheckBox name="ch1" checked="({numbers.length} > 3)" text="Length > 3" readonly="true"/>
-    <Label text="{name}" name="Label1" height="4em"/>
-    <TextBox text="{city.name}" name="TextBox1" width="100%"/>
-    <Stack flow="horizontal" scope="{city}" name="Stack_ctx" itemsAlign="stretch">
-      <TextBox scope="{country}" text="{name}" name="TextBox2" width="100%"/>
-    </Stack>
-    <TextBox text="{city.country.name}" name="TextBox3" notifyOnKeydown="true" width="100%"/>
-    <Stack flow="horizontal">
-      <Label text="Label"/>
-      <TextBox width="100%" text="{books[0].pages}" name="tb_0_pages"/>
-      <Button text="Button"/>
-    </Stack>
-    <TextBox width="100%" text="{books[1].pages}" notifyOnKeydown="true" name="tb_1_pages_1"/>
-    <TextBox width="100%" text="{books[1].pages}" notifyOnKeydown="true" name="tb_1_pages_2"/>
-    <List flow="vertical" name="List1" items="{books}" itemId="book">
-      <Stack flow="horizontal" itemsAlign="stretch">
-        <Label text="book"/>
-        <TextBox text="{book.pages}" width="100%"/>
-      </Stack>
-    </List>
-    <List flow="vertical" name="List2" items="{numbers}" itemsAlign="stretch" itemId="num">
-      <Stack flow="horizontal">
-        <Label text="number"/>
-        <TextBox text="{num}" width="100%" type="number"/>
-      </Stack>
-    </List>
-    <Stack flow="horizontal">
-      <Label text="length"/>
-      <TextBox text="({numbers.length})" name="tb_len" width="100%" type="number" readonly="true"/>
-    </Stack>
-    <Stack flow="horizontal">
-      <Label text="sum"/>
-      <TextBox text="({numbers}.reduce(function(a,b){return a+b;}))" name="tb_sum" width="100%" readonly="true"/>
-    </Stack>
-  </Stack>
+
+  <!-- VBox layout test -->
+  <!--<HBox name="v-red" style="back-red" flex="none" height="2em"></HBox>
+  <HBox name="v-green" style="back-green" flex="1" height="1em"></HBox>
+  <HBox name="v-blue" style="back-blue" flex="none" height="2em"></HBox>-->
+
+  <!-- HBox layout test -->
+  <HBox itemsAlign="Stretch" height="100%">
+    <VBox name="h-red" style="back-red" flex="none" width="2em" height="100%"></VBox>
+    <VBox name="h-green" style="back-green" flex="1 1" width="100%" height="100%"></VBox>
+    <VBox name="h-blue" style="back-blue" flex="none" width="2em" height="100%"></VBox>
+  </HBox>
+
+  <!-- VBox scroll test -->
+  <VBox style="back-red" height="8em" width="8em" flex="none">
+    <Button text="Button" width="10em" style="back-red"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+  </VBox>
+
+  <!-- HBox scroll test -->
+  <HBox style="back-red" height="8em" width="8em" flex="none" itemsAlign="Middle">
+    <Button text="Button" height="10em" style="back-red"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+    <Button text="Button"/>
+  </HBox>
+
 </Window>

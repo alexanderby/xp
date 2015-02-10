@@ -5,15 +5,21 @@
 ---------*/
 
 .HBox {
+    //border: 1px solid darkblue;
     box-sizing: border-box;
-    flex: 1 0 auto;
+    //flex: 1 0 auto;
+    flex: none;
 
     > .content {
+        //border: 1px solid blue;
+        //box-sizing: border-box;
         display: flex;
         flex-direction: row;
+        height: 100%;
         min-height: -webkit-min-content;
         min-height: -moz-min-content;
         // TODO: IE
+        min-width: 100%;
     }
     // Content alignment
     &.contentAlign-Left > .content {

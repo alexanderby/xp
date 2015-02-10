@@ -2,14 +2,14 @@
 <View xmlns="http://tempuri.org/Markup.xsd" scrollBar="None">
   <HBox>
     <VBox width="50%">
-      <Label text="UNDONE"/>
-      <List items="{undone}">
+      <Label text="UNDONE" flex="none"/>
+      <List items="{undone}" flex="1">
         <Label text="{item.name}"/>
       </List>
     </VBox>
     <VBox width="50%">
-      <Label text="DONE"/>
-      <List items="{done}">
+      <Label text="DONE" flex="none"/>
+      <List items="{done}" flex="1">
         <Label text="{item.name}"/>
       </List>
     </VBox>

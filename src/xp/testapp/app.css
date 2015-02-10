@@ -1,7 +1,11 @@
-﻿body {
-    font-family: 'Segoe UI', sans-serif;
+﻿.back-red {
+    background-color: #532;
 }
 
-span {
-    font-style: italic;
+.back-green {
+    background-color: #253;
+}
+
+.back-blue {
+    background-color: #244;
 }

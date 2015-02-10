@@ -281,10 +281,14 @@
             return this._flex;
         }
         set flex(flex: string) {
+            if (!/^((\d+(\s\d+)?)|(none))$/.test(flex)) {
+                throw new Error(`Wrong flex value "${flex}". Examples of correct values: "1 0", "1", "none".`);
+            }
+
             this._flex = flex;
 
             // DOM
-            this.domElement.css('flex', flex);
+            this.domElement.css('flex', flex == 'none' ? 'none' : flex + ' auto');
         }
         private _flex: string;
 

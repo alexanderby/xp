@@ -29,8 +29,6 @@
             super.setDefaults();
             this.contentAlignment = VContentAlignment.Top;
             this.itemsAlignment = VItemsAlignment.Stretch;
-            //this.width = '100%';
-            this.height = '100%';
         }
 
         /**
