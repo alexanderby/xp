@@ -1,45 +1,45 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em" itemsIndent="2em">
-  <Stack width="40em" itemsIndent="2em" flow="horizontal" scrollBar="both">
+  <HBox width="40em" itemsIndent="2em" scrollBar="Both">
 
     <!-- INPUT -->
-    <Stack itemsIndent="1em" width="50%">
+    <VBox itemsIndent="1em" width="50%">
       <Label text="TODO APP"/>
-      <Stack flow="horizontal">
+      <HBox>
         <Label text="Input:"/>
         <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
-      </Stack>
+      </HBox>
       <List name="list" items="{todos}" itemId="t" height="12em">
-        <Stack flow="horizontal">
+        <HBox>
           <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
           <Placeholder/>
           <Button key="delete" text="Delete" onClick="onDeleteClick"/>
-        </Stack>
+        </HBox>
       </List>
-      <Stack flow="horizontal">
+      <HBox>
         <Label text="({undone.length} + ' items left')"/>
         <!--RadioButtons: All, active, completed.-->
         <Placeholder/>
         <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
-      </Stack>
-    </Stack>
+      </HBox>
+    </VBox>
 
     <!-- RESULTS -->
     <View name="view1" href="view1.xml" width="40%"/>
 
-  </Stack>
+  </HBox>
 
   <Html width="40em" height="0.0625em">
     <div style="background-color:#aaa;"></div>
   </Html>
 
   <!-- EXPERIMENTS -->
-  <Stack width="10em">
+  <VBox width="10em">
     <Label text="Item 0"/>
     <TextBox text="{todos[0].name}" name="tb0"/>
     <CheckBox text="Check" checked="{todos[0].isDone}" name="cb0"/>
-  </Stack>
-  <Stack width="10em">
+  </VBox>
+  <VBox width="10em">
     <Label text="Selected"/>
     <TextBox text="{selected.name}" name="tb_selected"/>
     <List items="{todos}">
@@ -55,5 +55,5 @@
       </div>
     </Html>
     <Html width="100%" href="div.html"/>
-  </Stack>
+  </VBox>
 </Window>

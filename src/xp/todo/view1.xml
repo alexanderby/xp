@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<View xmlns="http://tempuri.org/Markup.xsd" flow="horizontal" scrollBar="none">
-  <Stack width="50%">
+<View xmlns="http://tempuri.org/Markup.xsd" flow="horizontal" scrollBar="None">
+  <VBox width="50%">
     <Label text="UNDONE"/>
     <List items="{undone}">
       <Label text="{item.name}"/>
     </List>
-  </Stack>
-  <Stack width="50%">
+  </VBox>
+  <VBox width="50%">
     <Label text="DONE"/>
     <List items="{done}">
       <Label text="{item.name}"/>
     </List>
-  </Stack>
+  </VBox>
 </View>

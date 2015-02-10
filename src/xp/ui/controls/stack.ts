@@ -1,6 +1,6 @@
 ﻿module xp.UI {
     /**
-     * Stack panel.
+     * (OBSOLETE) Stack panel.
      */
     export class Stack extends Container {
 
@@ -31,8 +31,8 @@
             this.contentAlignment = ContentAlignment.start;
             this.itemsAlignment = ItemsAlignment.stretch;
             this.itemsIndent = ItemsIndent._0_5em;
-            this.scrollBar = ScrollBar.both;
-            this.wrapping = Wrapping.nowrap;
+            this.scrollBar = ScrollBar.Both;
+            this.wrapping = Wrapping.NoWrap;
         }
 
         /**
@@ -142,7 +142,7 @@
 
             // DOM
             switch (indent) {
-                case ItemsIndent.none:
+                case ItemsIndent.None:
                     this.removeItemsIndentClasses();
                     break;
                 case ItemsIndent._0_5em:
@@ -181,19 +181,19 @@
 
             // DOM
             switch (scroll) {
-                case ScrollBar.none:
+                case ScrollBar.None:
                     this.removeScrollBarClasses();
                     this.domElement.addClass('scrollbar-none');
                     break;
-                case ScrollBar.horizontal:
+                case ScrollBar.Horizontal:
                     this.removeScrollBarClasses();
                     this.domElement.addClass('scrollbar-x');
                     break;
-                case ScrollBar.vertical:
+                case ScrollBar.Vertical:
                     this.removeScrollBarClasses();
                     this.domElement.addClass('scrollbar-y');
                     break;
-                case ScrollBar.both:
+                case ScrollBar.Both:
                     this.removeScrollBarClasses();
                     this.domElement.addClass('scrollbar-both');
                     break;
@@ -217,11 +217,11 @@
 
             // DOM
             switch (wrap) {
-                case Wrapping.nowrap:
+                case Wrapping.NoWrap:
                     this.removeWrappingClasses();
                     this.domElement.addClass('wrapping-nowrap');
                     break;
-                case Wrapping.wrap:
+                case Wrapping.Wrap:
                     this.removeWrappingClasses();
                     this.domElement.addClass('wrapping-wrap');
                     break;
@@ -264,7 +264,7 @@
     * Items indent values.
     */
     export enum ItemsIndent {
-        none,
+        None,
         _0_5em,
         _1em,
         _2em,
@@ -283,18 +283,18 @@
      * Scroll bar options.
      */
     export enum ScrollBar {
-        none,
-        horizontal,
-        vertical,
-        both
+        None,
+        Horizontal,
+        Vertical,
+        Both
     }
 
     /**
      * Content wrapping.
      */
     export enum Wrapping {
-        nowrap,
-        wrap
+        NoWrap,
+        Wrap
     }
 
 
@@ -322,21 +322,21 @@
                     'stretch': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.stretch
                 },
                 'itemsIndent': {
-                    'none': () => (el: Stack) => el.itemsIndent = ItemsIndent.none,
+                    'None': () => (el: Stack) => el.itemsIndent = ItemsIndent.None,
                     '0.5em': () => (el: Stack) => el.itemsIndent = ItemsIndent._0_5em,
                     '1em': () => (el: Stack) => el.itemsIndent = ItemsIndent._1em,
                     '2em': () => (el: Stack) => el.itemsIndent = ItemsIndent._2em,
                     '4em': () => (el: Stack) => el.itemsIndent = ItemsIndent._4em
                 },
                 'scrollBar': {
-                    'none': () => (el: Stack) => el.scrollBar = ScrollBar.none,
-                    'horizontal': () => (el: Stack) => el.scrollBar = ScrollBar.horizontal,
-                    'vertical': () => (el: Stack) => el.scrollBar = ScrollBar.vertical,
-                    'both': () => (el: Stack) => el.scrollBar = ScrollBar.both
+                    'None': () => (el: Stack) => el.scrollBar = ScrollBar.None,
+                    'Horizontal': () => (el: Stack) => el.scrollBar = ScrollBar.Horizontal,
+                    'Vertical': () => (el: Stack) => el.scrollBar = ScrollBar.Vertical,
+                    'Both': () => (el: Stack) => el.scrollBar = ScrollBar.Both
                 },
                 'wrapping': {
-                    'nowrap': () => (el: Stack) => el.wrapping = Wrapping.nowrap,
-                    'wrap': () => (el: Stack) => el.wrapping = Wrapping.wrap
+                    'NoWrap': () => (el: Stack) => el.wrapping = Wrapping.NoWrap,
+                    'Wrap': () => (el: Stack) => el.wrapping = Wrapping.Wrap
                 }
             });
         }

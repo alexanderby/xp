@@ -27,6 +27,8 @@
 
 ..\src\xp\ui\controls\container.ts
 ..\src\xp\ui\controls\stack.ts
+..\src\xp\ui\controls\hbox.ts
+..\src\xp\ui\controls\vbox.ts
 ..\src\xp\ui\controls\list.ts
 ..\src\xp\ui\controls\view.ts
 ..\src\xp\ui\controls\window.ts

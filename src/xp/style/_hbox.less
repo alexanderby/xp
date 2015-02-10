@@ -1,0 +1,89 @@
+﻿@import "_variables.less";
+
+/*-------
+    HBOX
+---------*/
+
+.HBox {
+    box-sizing: border-box;
+    flex: 1 0 auto;
+
+    > .content {
+        display: flex;
+        flex-direction: row;
+        min-height: -webkit-min-content;
+        min-height: -moz-min-content;
+        // TODO: IE
+    }
+    // Content alignment
+    &.contentAlign-Left > .content {
+        justify-content: flex-start;
+    }
+
+    &.contentAlign-Center > .content {
+        justify-content: center;
+    }
+
+    &.contentAlign-Right > .content {
+        justify-content: flex-end;
+    }
+    // Items alignment
+    &.itemsAlign-Top > .content {
+        align-items: flex-start;
+    }
+
+    &.itemsAlign-Middle > .content {
+        align-items: center;
+    }
+
+    &.itemsAlign-Bottom > .content {
+        align-items: flex-end;
+    }
+
+    &.itemsAlign-Stretch > .content {
+        align-items: stretch;
+        -ms-flex-line-pack: stretch; //?
+    }
+    // Items indent
+    &.itemsIndent-05 > .content > *:not(:first-child) {
+        margin-left: 0.5em;
+    }
+
+    &.itemsIndent-1 > .content > *:not(:first-child) {
+        margin-left: 1em;
+    }
+
+    &.itemsIndent-2 > .content > *:not(:first-child) {
+        margin-left: 2em;
+    }
+
+    &.itemsIndent-4 > .content > *:not(:first-child) {
+        margin-left: 4em;
+    }
+    // Scroll bar
+    &.scrollBar-None {
+        overflow: hidden;
+    }
+
+    &.scrollBar-Horizontal {
+        overflow-x: auto;
+        overflow-y: hidden;
+    }
+
+    &.scrollBar-Vertical {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    &.scrollBar-Both {
+        overflow: auto;
+    }
+    // Wrapping
+    &.wrapping-NoWrap > .content {
+        flex-wrap: nowrap;
+    }
+
+    &.wrapping-Wrap > .content {
+        flex-wrap: wrap;
+    }
+}

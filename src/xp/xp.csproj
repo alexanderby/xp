@@ -75,6 +75,7 @@
     <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />
     <TypeScriptCompile Include="ui\controls\element.ts" />
+    <TypeScriptCompile Include="ui\controls\hbox.ts" />
     <TypeScriptCompile Include="ui\controls\html.ts" />
     <TypeScriptCompile Include="ui\controls\markup.ts" />
     <TypeScriptCompile Include="ui\controls\placeholder.ts" />
@@ -84,6 +85,7 @@
     <TypeScriptCompile Include="ui\controls\stack.ts" />
     <TypeScriptCompile Include="ui\controls\textbox.ts" />
     <TypeScriptCompile Include="ui\controls\togglebutton.ts" />
+    <TypeScriptCompile Include="ui\controls\vbox.ts" />
     <TypeScriptCompile Include="ui\controls\view.ts" />
     <TypeScriptCompile Include="ui\controls\window.ts" />
     <TypeScriptCompile Include="core\binding\expression.ts" />
@@ -121,6 +123,8 @@
     <Content Include="style\debug-style.css.map">
       <DependentUpon>debug-style.css</DependentUpon>
     </Content>
+    <Content Include="style\_hbox.less" />
+    <Content Include="style\_vbox.less" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

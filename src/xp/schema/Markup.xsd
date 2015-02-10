@@ -30,6 +30,8 @@
         <xs:choice minOccurs="0" maxOccurs="unbounded">
           <xs:element ref="View"/>
           <xs:element ref="Stack"/>
+          <xs:element ref="HBox"/>
+          <xs:element ref="VBox"/>
           <xs:element ref="Button"/>
           <xs:element ref="Label"/>
           <xs:element ref="TextBox"/>
@@ -61,6 +63,32 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="Stack" type="Stack"/>
+  
+  <xs:complexType name="HBox">
+    <xs:complexContent>
+      <xs:extension base="Container">
+        <xs:attribute name="contentAlign" type="HContentAlign"/>
+        <xs:attribute name="itemsAlign" type="HItemsAlign"/>
+        <xs:attribute name="itemsIndent" type="ItemsIndent"/>
+        <xs:attribute name="scrollBar" type="ScrollBar"/>
+        <xs:attribute name="wrapping" type="Wrapping"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="HBox" type="HBox"/>
+  
+  <xs:complexType name="VBox">
+    <xs:complexContent>
+      <xs:extension base="Container">
+        <xs:attribute name="contentAlign" type="VContentAlign"/>
+        <xs:attribute name="itemsAlign" type="VItemsAlign"/>
+        <xs:attribute name="itemsIndent" type="ItemsIndent"/>
+        <xs:attribute name="scrollBar" type="ScrollBar"/>
+        <xs:attribute name="wrapping" type="Wrapping"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="VBox" type="VBox"/>
 
   <xs:element name="Window">
     <xs:complexType>
@@ -115,9 +143,39 @@
       <xs:enumeration value="stretch"/>
     </xs:restriction>
   </xs:simpleType>
+  <xs:simpleType name="HContentAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Left"/>
+      <xs:enumeration value="Center"/>
+      <xs:enumeration value="Right"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="HItemsAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Top"/>
+      <xs:enumeration value="Middle"/>
+      <xs:enumeration value="Bottom"/>
+      <xs:enumeration value="Stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="VContentAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Top"/>
+      <xs:enumeration value="Middle"/>
+      <xs:enumeration value="Bottom"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="VItemsAlign">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Left"/>
+      <xs:enumeration value="Center"/>
+      <xs:enumeration value="Right"/>
+      <xs:enumeration value="Stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
   <xs:simpleType name="ItemsIndent">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="none"/>
+      <xs:enumeration value="None"/>
       <xs:enumeration value="0.5em"/>
       <xs:enumeration value="1em"/>
       <xs:enumeration value="2em"/>
@@ -126,16 +184,16 @@
   </xs:simpleType>
   <xs:simpleType name="ScrollBar">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="none"/>
-      <xs:enumeration value="horizontal"/>
-      <xs:enumeration value="vertical"/>
-      <xs:enumeration value="both"/>
+      <xs:enumeration value="None"/>
+      <xs:enumeration value="Horizontal"/>
+      <xs:enumeration value="Vertical"/>
+      <xs:enumeration value="Both"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="Wrapping">
     <xs:restriction base="xs:string">
-      <xs:enumeration value="nowrap"/>
-      <xs:enumeration value="wrap"/>
+      <xs:enumeration value="NoWrap"/>
+      <xs:enumeration value="Wrap"/>
     </xs:restriction>
   </xs:simpleType>
 
