@@ -274,6 +274,20 @@
         }
         private _style: string;
 
+        /**
+         * Gets or sets element's flexible behavior ("<grow> <shrink>" eg.: "1 0", "none", "0 1").
+         */
+        get flex() {
+            return this._flex;
+        }
+        set flex(flex: string) {
+            this._flex = flex;
+
+            // DOM
+            this.domElement.css('flex', flex);
+        }
+        private _flex: string;
+
 
         //----------
         // RELATIONS
@@ -677,6 +691,9 @@
                 },
                 'margin': {
                     '*': (margin) => (el) => el.margin = margin
+                },
+                'flex': {
+                    '*': (flex) => (el) => el.flex = flex
                 },
                 'scope': {}, // TODO: Deserialize JSON?
 
