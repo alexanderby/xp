@@ -2,7 +2,7 @@
     /**
      * Window.
      */
-    export class Window extends Stack {
+    export class Window extends VBox {
 
         //----
         // DOM
@@ -11,7 +11,7 @@
         protected getTemplate(): JQuery {
             var template = $('<body></body>') // Bug when defining class in html on body
                 .addClass('Window')
-                .addClass('stack')
+                .addClass('VBox')
                 .append('<div class="content"></div>');
             return template;
         }
@@ -45,7 +45,7 @@
     // MARKUP PROCESSING
     //------------------
 
-    export class WindowMarkupProcessor<T extends Window> extends StackMarkupProcessor<Window>{
+    export class WindowMarkupProcessor<T extends Window> extends VBoxMarkupProcessor<Window>{
 
         protected getAttributeMap(): AttributeMap<Window> {
             return extendAttributeMap(super.getAttributeMap(), {

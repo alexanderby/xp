@@ -29,7 +29,6 @@
       <xs:extension base="Element">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
           <xs:element ref="View"/>
-          <xs:element ref="Stack"/>
           <xs:element ref="HBox"/>
           <xs:element ref="VBox"/>
           <xs:element ref="Button"/>
@@ -53,25 +52,18 @@
   <xs:complexType name="Stack">
     <xs:complexContent>
       <xs:extension base="Container">
-        <xs:attribute name="flow" type="Flow"/>
-        <xs:attribute name="contentAlign" type="ContentAlign"/>
-        <xs:attribute name="itemsAlign" type="ItemsAlign"/>
         <xs:attribute name="itemsIndent" type="ItemsIndent"/>
         <xs:attribute name="scrollBar" type="ScrollBar"/>
         <xs:attribute name="wrapping" type="Wrapping"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  <xs:element name="Stack" type="Stack"/>
   
   <xs:complexType name="HBox">
     <xs:complexContent>
-      <xs:extension base="Container">
+      <xs:extension base="Stack">
         <xs:attribute name="contentAlign" type="HContentAlign"/>
         <xs:attribute name="itemsAlign" type="HItemsAlign"/>
-        <xs:attribute name="itemsIndent" type="ItemsIndent"/>
-        <xs:attribute name="scrollBar" type="ScrollBar"/>
-        <xs:attribute name="wrapping" type="Wrapping"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -79,12 +71,9 @@
   
   <xs:complexType name="VBox">
     <xs:complexContent>
-      <xs:extension base="Container">
+      <xs:extension base="Stack">
         <xs:attribute name="contentAlign" type="VContentAlign"/>
         <xs:attribute name="itemsAlign" type="VItemsAlign"/>
-        <xs:attribute name="itemsIndent" type="ItemsIndent"/>
-        <xs:attribute name="scrollBar" type="ScrollBar"/>
-        <xs:attribute name="wrapping" type="Wrapping"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
@@ -93,7 +82,7 @@
   <xs:element name="Window">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="Stack">
+        <xs:extension base="VBox">
           <xs:attribute name="title" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
@@ -103,7 +92,7 @@
   <xs:element name="View">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="Stack">
+        <xs:extension base="VBox">
           <xs:attribute name="href" type="xs:string"/>
         </xs:extension>
       </xs:complexContent>
@@ -113,7 +102,7 @@
   <xs:element name="List">
     <xs:complexType>
       <xs:complexContent>
-        <xs:extension base="Stack">
+        <xs:extension base="VBox">
           <xs:attribute name="items" type="xs:string"/>
           <xs:attribute name="itemId" type="xs:string"/>
         </xs:extension>
@@ -122,27 +111,6 @@
   </xs:element>
 
   <!-- Enums -->
-  <xs:simpleType name="Flow">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="horizontal"/>
-      <xs:enumeration value="vertical"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="ContentAlign">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="start"/>
-      <xs:enumeration value="end"/>
-      <xs:enumeration value="center"/>
-    </xs:restriction>
-  </xs:simpleType>
-  <xs:simpleType name="ItemsAlign">
-    <xs:restriction base="xs:string">
-      <xs:enumeration value="start"/>
-      <xs:enumeration value="end"/>
-      <xs:enumeration value="center"/>
-      <xs:enumeration value="stretch"/>
-    </xs:restriction>
-  </xs:simpleType>
   <xs:simpleType name="HContentAlign">
     <xs:restriction base="xs:string">
       <xs:enumeration value="Left"/>

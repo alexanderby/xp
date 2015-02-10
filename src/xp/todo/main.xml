@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="center" padding="0.5em" itemsIndent="2em">
+<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App" itemsAlign="Center" padding="0.5em" itemsIndent="2em">
   <HBox width="40em" itemsIndent="2em" scrollBar="Both">
 
     <!-- INPUT -->
     <VBox itemsIndent="1em" width="50%">
       <Label text="TODO APP"/>
-      <HBox>
+      <HBox itemsIndent="0.5em">
         <Label text="Input:"/>
         <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
       </HBox>
-      <List name="list" items="{todos}" itemId="t" height="12em">
+      <List name="list" items="{todos}" itemId="t" height="12em" itemsIndent="0.5em">
         <HBox>
           <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
           <Placeholder/>

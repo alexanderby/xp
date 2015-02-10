@@ -102,7 +102,6 @@
       <DependentUpon>defaultstyle.css</DependentUpon>
     </Content>
     <Content Include="style\_button.less" />
-    <Content Include="style\_stack.less" />
     <Content Include="style\_label.less" />
     <Content Include="style\_textbox.less" />
     <Content Include="style\_checkbox.less" />

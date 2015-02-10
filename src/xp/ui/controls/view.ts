@@ -3,7 +3,7 @@
     /**
      * View.
      */
-    export class View extends Stack {
+    export class View extends VBox {
 
         //----
         // DOM
@@ -11,7 +11,7 @@
 
         protected getTemplate(): JQuery {
             //return $('<div class="view stack"></div>');
-            var template = $('<div class="View stack"><div class="content"></div></div>');
+            var template = $('<div class="View VBox"><div class="content"></div></div>');
             return template;
         }
 
@@ -25,7 +25,7 @@
     // MARKUP PROCESSING
     //------------------
 
-    export class ViewMarkupProcessor<T extends View> extends StackMarkupProcessor<View>{
+    export class ViewMarkupProcessor<T extends View> extends VBoxMarkupProcessor<View>{
 
         getInitializer(markup: JQuery): UIInitializer<View> {
 

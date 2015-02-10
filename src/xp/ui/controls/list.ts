@@ -2,14 +2,14 @@
     /**
      * List container.
      */
-    export class List extends Stack {
+    export class List extends VBox {
 
         //----
         // DOM
         //----
 
         protected getTemplate(): JQuery {
-            return $('<div class="List stack"><div class="content"></div></div>');
+            return $('<div class="List VBox"><div class="content"></div></div>');
         }
 
 
@@ -201,7 +201,7 @@
     // MARKUP PROCESSING
     //------------------
 
-    export class ListMarkupProcessor extends StackMarkupProcessor<List>{
+    export class ListMarkupProcessor extends VBoxMarkupProcessor<List>{
 
         getInitializer(markup: JQuery): UIInitializer<List> {
             var initAttributes = this.getAttributesInitializer(markup);

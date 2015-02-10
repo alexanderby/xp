@@ -1,25 +1,8 @@
 ﻿module xp.UI {
     /**
-     * (OBSOLETE) Stack panel.
+     * Base stack panel.
      */
-    export class Stack extends Container {
-
-        //----
-        // DOM
-        //----
-
-        protected getTemplate(): JQuery {
-            var template = $('<div class="stack"><div class="content"></div></div>');
-            return template;
-        }
-
-        protected getContainerElement(): JQuery {
-            //return this.domElement.closest('.content'); // Bug with <body>
-
-            // Get only nearest '.content'.
-            return $(this.domElement.find('.content').get(0));
-        }
-
+    export /*abstract*/ class Stack extends Container {
 
         //-----------
         // PROPERTIES
@@ -27,108 +10,9 @@
 
         protected setDefaults() {
             super.setDefaults();
-            this.flow = Flow.vertical;
-            this.contentAlignment = ContentAlignment.start;
-            this.itemsAlignment = ItemsAlignment.stretch;
-            this.itemsIndent = ItemsIndent._0_5em;
+            this.itemsIndent = ItemsIndent.None;
             this.scrollBar = ScrollBar.Both;
             this.wrapping = Wrapping.NoWrap;
-        }
-
-        /**
-         * Gets or sets content flow.
-         */
-        get flow() {
-            return this._flow;
-        }
-        set flow(flow: Flow) {
-            this._flow = flow;
-
-            // DOM
-            switch (flow) {
-                case Flow.horizontal:
-                    this.removeFlowClasses();
-                    this.domElement.addClass('flow-x');
-                    break;
-                case Flow.vertical:
-                    this.removeFlowClasses();
-                    this.domElement.addClass('flow-y');
-                    break;
-                default:
-                    throw new Error('Unknown flow value: ' + flow);
-            }
-        }
-        private _flow: Flow;
-        private removeFlowClasses() {
-            this.domElement.removeClass('flow-x flow-y');
-        }
-
-        /**
-         * Gets or sets content alignment.
-         */
-        get contentAlignment() {
-            return this._contentAlignment;
-        }
-        set contentAlignment(align: ContentAlignment) {
-            this._contentAlignment = align;
-
-            // DOM
-            switch (align) {
-                case ContentAlignment.start:
-                    this.removeContentAlignmentClasses();
-                    this.domElement.addClass('content-align-start');
-                    break;
-                case ContentAlignment.center:
-                    this.removeContentAlignmentClasses();
-                    this.domElement.addClass('content-align-center');
-                    break;
-                case ContentAlignment.end:
-                    this.removeContentAlignmentClasses();
-                    this.domElement.addClass('content-align-end');
-                    break;
-                default:
-                    throw new Error('Unknown content alignment value: ' + align);
-            }
-        }
-        private _contentAlignment: ContentAlignment;
-        private removeContentAlignmentClasses() {
-            this.domElement.removeClass('content-align-start content-align-center content-align-end');
-        }
-
-        /**
-         * Gets or sets items alignment.
-         */
-        get itemsAlignment() {
-            return this._itemsAlignment;
-        }
-        set itemsAlignment(align: ItemsAlignment) {
-            this._itemsAlignment = align;
-
-            // DOM
-            switch (align) {
-                case ItemsAlignment.start:
-                    this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('items-align-start');
-                    break;
-                case ItemsAlignment.center:
-                    this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('items-align-center');
-                    break;
-                case ItemsAlignment.end:
-                    this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('items-align-end');
-                    break;
-                case ItemsAlignment.stretch:
-                    this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('items-align-stretch');
-                    break;
-                default:
-                    throw new Error('Unknown items alignment value: ' + align);
-            }
-        }
-        private _itemsAlignment: ItemsAlignment;
-        private removeItemsAlignmentClasses() {
-            this.domElement.removeClass('items-align-start items-align-center items-align-end items-align-stretch');
         }
 
         /**
@@ -147,19 +31,19 @@
                     break;
                 case ItemsIndent._0_5em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('items-indent-05');
+                    this.domElement.addClass('itemsIndent-05');
                     break;
                 case ItemsIndent._1em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('items-indent-1');
+                    this.domElement.addClass('itemsIndent-1');
                     break;
                 case ItemsIndent._2em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('items-indent-2');
+                    this.domElement.addClass('itemsIndent-2');
                     break;
                 case ItemsIndent._4em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('items-indent-4');
+                    this.domElement.addClass('itemsIndent-4');
                     break;
                 default:
                     throw new Error('Unknown items indent value: ' + indent);
@@ -167,7 +51,7 @@
         }
         private _itemsIndent: ItemsIndent;
         private removeItemsIndentClasses() {
-            this.domElement.removeClass('items-indent-05 items-indent-1 items-indent-2 items-indent-4');
+            this.domElement.removeClass('itemsIndent-05 itemsIndent-1 itemsIndent-2 itemsIndent-4');
         }
 
         /**
@@ -183,19 +67,19 @@
             switch (scroll) {
                 case ScrollBar.None:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollbar-none');
+                    this.domElement.addClass('scrollBar-None');
                     break;
                 case ScrollBar.Horizontal:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollbar-x');
+                    this.domElement.addClass('scrollBar-Horizontal');
                     break;
                 case ScrollBar.Vertical:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollbar-y');
+                    this.domElement.addClass('scrollBar-Vertical');
                     break;
                 case ScrollBar.Both:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollbar-both');
+                    this.domElement.addClass('scrollBar-Both');
                     break;
                 default:
                     throw new Error('Unknown scroll bar value: ' + scroll);
@@ -203,7 +87,7 @@
         }
         private _scrollBar: ScrollBar;
         private removeScrollBarClasses() {
-            this.domElement.removeClass('scrollbar-none scrollbar-x scrollbar-y scrollbar-both');
+            this.domElement.removeClass('scrollBar-None scrollBar-Horizontal scrollBar-Vertical scrollBar-Both');
         }
 
         /**
@@ -219,11 +103,11 @@
             switch (wrap) {
                 case Wrapping.NoWrap:
                     this.removeWrappingClasses();
-                    this.domElement.addClass('wrapping-nowrap');
+                    this.domElement.addClass('wrapping-NoWrap');
                     break;
                 case Wrapping.Wrap:
                     this.removeWrappingClasses();
-                    this.domElement.addClass('wrapping-wrap');
+                    this.domElement.addClass('wrapping-Wrap');
                     break;
                 default:
                     throw new Error('Unknown wrapping value: ' + wrap);
@@ -231,34 +115,14 @@
         }
         private _wrapping: Wrapping;
         private removeWrappingClasses() {
-            this.domElement.removeClass('wrapping-nowrap wrapping-wrap');
+            this.domElement.removeClass('wrapping-NoWrap wrapping-Wrap');
         }
     }
-    Controls['Stack'] = Stack;
 
 
     //------
     // ENUMS
     //------
-
-    /**
-     * Content alignment values.
-     */
-    export enum ContentAlignment {
-        start,
-        center,
-        end
-    }
-
-    /**
-    * Items alignment values.
-    */
-    export enum ItemsAlignment {
-        start,
-        center,
-        end,
-        stretch
-    }
 
     /**
     * Items indent values.
@@ -269,14 +133,6 @@
         _1em,
         _2em,
         _4em
-    }
-
-    /**
-     * Content flow orientation.
-     */
-    export enum Flow {
-        horizontal,
-        vertical
     }
 
     /**
@@ -306,21 +162,6 @@
 
         protected getAttributeMap(): AttributeMap<Stack> {
             return extendAttributeMap(super.getAttributeMap(), {
-                'flow': {
-                    'horizontal': () => (el: Stack) => el.flow = Flow.horizontal,
-                    'vertical': () => (el: Stack) => el.flow = Flow.vertical
-                },
-                'contentAlign': {
-                    'start': () => (el: Stack) => el.contentAlignment = ContentAlignment.start,
-                    'center': () => (el: Stack) => el.contentAlignment = ContentAlignment.center,
-                    'end': () => (el: Stack) => el.contentAlignment = ContentAlignment.end
-                },
-                'itemsAlign': {
-                    'start': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.start,
-                    'center': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.center,
-                    'end': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.end,
-                    'stretch': () => (el: Stack) => el.itemsAlignment = ItemsAlignment.stretch
-                },
                 'itemsIndent': {
                     'None': () => (el: Stack) => el.itemsIndent = ItemsIndent.None,
                     '0.5em': () => (el: Stack) => el.itemsIndent = ItemsIndent._0_5em,
@@ -341,5 +182,4 @@
             });
         }
     }
-    Processors['Stack'] = new StackMarkupProcessor();
 } 
