@@ -24,12 +24,13 @@
         //-----------
 
         protected setDefaults() {
-            this.icon = '';
+            this.icon = null;
             this.text = '';
         }
 
         /**
-         * Gets or sets the icon image.
+         * Gets or sets the icon image url.
+         * Empty value may be set if icon will be set through style.
          */
         get icon() {
             return this._iconPath;
@@ -38,9 +39,11 @@
             this._iconPath = path;
 
             // DOM
-            if (!!path === true) {
-                // Set background image
-                this.iconElement.css('background-image', xp.formatString('url({0})', path));
+            if (path !== void 0 && path !== null) {
+                if (path !== '' && path !== '*' && path !== '/') {
+                    // Set background image
+                    this.iconElement.css('background-image', xp.formatString('url({0})', path));
+                }
                 this.iconElement.show();
             }
             else {
