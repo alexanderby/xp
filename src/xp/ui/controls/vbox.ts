@@ -9,7 +9,8 @@
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<div class="VBox"><div class="content"></div></div>');
+            //var template = $('<div class="VBox"><div class="content"></div></div>');
+            var template = $('<div class="VBox"></div>');
             return template;
         }
 
@@ -17,7 +18,9 @@
             //return this.domElement.closest('.content'); // Bug with <body>
 
             // Get only nearest '.content'.
-            return $(this.domElement.find('.content').get(0));
+            //return $(this.domElement.find('.content').get(0));
+
+            return this.domElement;
         }
 
 

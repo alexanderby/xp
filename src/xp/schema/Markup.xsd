@@ -15,7 +15,12 @@
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="margin" type="xs:string"/>
-    <xs:attribute name="flex" type="xs:string"/>
+    <xs:attribute name="flex" type="FlexValue"/>
+    <!--<xs:attribute name="flex">
+      <xs:simpleType>
+        <xs:union memberTypes="FlexValue FlowNumber"/>
+      </xs:simpleType>
+    </xs:attribute>-->
     <xs:attribute name="scope" type="xs:string"/>
     <!--Events-->
     <xs:attribute name="onClick" type="xs:string"/>
@@ -59,7 +64,7 @@
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
-  
+
   <xs:complexType name="HBox">
     <xs:complexContent>
       <xs:extension base="Stack">
@@ -69,7 +74,7 @@
     </xs:complexContent>
   </xs:complexType>
   <xs:element name="HBox" type="HBox"/>
-  
+
   <xs:complexType name="VBox">
     <xs:complexContent>
       <xs:extension base="Stack">
@@ -270,6 +275,18 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="true"/>
       <xs:enumeration value="false"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="FlexValue">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="None"/>
+      <xs:enumeration value="Stretch"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="FlowNumber">
+    <xs:restriction base="xs:string">
+      <xs:pattern value="^(\d+(\s\d+)?)$"/>
     </xs:restriction>
   </xs:simpleType>
 

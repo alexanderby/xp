@@ -2,35 +2,35 @@
 <Window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
 
   <!-- VBox layout test -->
-  <!--<HBox name="v-red" style="back-red" flex="none" height="2em"></HBox>
-  <HBox name="v-green" style="back-green" flex="1" height="1em"></HBox>
-  <HBox name="v-blue" style="back-blue" flex="none" height="2em"></HBox>-->
+  <HBox name="v-red" style="back-red" flex="None" height="2em"></HBox>
+  <HBox name="v-green" style="back-green" flex="Stretch"></HBox>
+  <HBox name="v-blue" style="back-blue" flex="None" height="2em"></HBox>
 
   <!-- HBox layout test -->
-  <HBox itemsAlign="Stretch" height="100%">
+  <!--<HBox itemsAlign="Stretch" height="100%">
     <VBox name="h-red" style="back-red" flex="none" width="2em" height="100%"></VBox>
     <VBox name="h-green" style="back-green" flex="1 1" width="100%" height="100%"></VBox>
     <VBox name="h-blue" style="back-blue" flex="none" width="2em" height="100%"></VBox>
-  </HBox>
+  </HBox>-->
 
   <!-- VBox scroll test -->
-  <VBox style="back-red" height="8em" width="8em" flex="none">
+  <!--<VBox style="back-red" height="8em" width="8em" flex="none">
     <Button text="Button" width="10em" style="back-red"/>
     <Button text="Button"/>
     <Button text="Button"/>
     <Button text="Button"/>
     <Button text="Button"/>
     <Button text="Button"/>
-  </VBox>
+  </VBox>-->
 
   <!-- HBox scroll test -->
-  <HBox style="back-red" height="8em" width="8em" flex="none" itemsAlign="Middle">
+  <!--<HBox style="back-red" height="8em" width="8em" flex="none" itemsAlign="Middle">
     <Button text="Button" height="10em" style="back-red"/>
     <Button text="Button"/>
     <Button text="Button"/>
     <Button text="Button"/>
     <Button text="Button"/>
     <Button text="Button"/>
-  </HBox>
+  </HBox>-->
 
 </Window>

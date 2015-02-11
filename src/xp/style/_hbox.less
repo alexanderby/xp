@@ -7,63 +7,61 @@
 .HBox {
     //border: 1px solid darkblue;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: row;
     //flex: 1 0 auto;
     flex: none;
 
-    > .content {
-        //border: 1px solid blue;
-        //box-sizing: border-box;
-        display: flex;
-        flex-direction: row;
-        height: 100%;
-        min-height: -webkit-min-content;
-        min-height: -moz-min-content;
-        // TODO: IE
-        min-width: 100%;
+    > .flex-None {
+        flex: none;
+    }
+
+    > .flex-Stretch {
+        flex: 1 1 auto;
+        width: 100%;
     }
     // Content alignment
-    &.contentAlign-Left > .content {
+    &.contentAlign-Left {
         justify-content: flex-start;
     }
 
-    &.contentAlign-Center > .content {
+    &.contentAlign-Center {
         justify-content: center;
     }
 
-    &.contentAlign-Right > .content {
+    &.contentAlign-Right {
         justify-content: flex-end;
     }
     // Items alignment
-    &.itemsAlign-Top > .content {
+    &.itemsAlign-Top {
         align-items: flex-start;
     }
 
-    &.itemsAlign-Middle > .content {
+    &.itemsAlign-Middle {
         align-items: center;
     }
 
-    &.itemsAlign-Bottom > .content {
+    &.itemsAlign-Bottom {
         align-items: flex-end;
     }
 
-    &.itemsAlign-Stretch > .content {
+    &.itemsAlign-Stretch {
         align-items: stretch;
-        -ms-flex-line-pack: stretch; //?
     }
     // Items indent
-    &.itemsIndent-05 > .content > *:not(:first-child) {
+    &.itemsIndent-05 > *:not(:first-child) {
         margin-left: 0.5em;
     }
 
-    &.itemsIndent-1 > .content > *:not(:first-child) {
+    &.itemsIndent-1 > *:not(:first-child) {
         margin-left: 1em;
     }
 
-    &.itemsIndent-2 > .content > *:not(:first-child) {
+    &.itemsIndent-2 > *:not(:first-child) {
         margin-left: 2em;
     }
 
-    &.itemsIndent-4 > .content > *:not(:first-child) {
+    &.itemsIndent-4 > *:not(:first-child) {
         margin-left: 4em;
     }
     // Scroll bar
@@ -85,11 +83,11 @@
         overflow: auto;
     }
     // Wrapping
-    &.wrapping-NoWrap > .content {
+    &.wrapping-NoWrap {
         flex-wrap: nowrap;
     }
 
-    &.wrapping-Wrap > .content {
+    &.wrapping-Wrap {
         flex-wrap: wrap;
     }
 }

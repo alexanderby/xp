@@ -7,63 +7,61 @@
 .VBox {
     //border: 1px solid darkred;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
     //flex: 1 0 auto;
     flex: none;
 
-    > .content {
-        //border: 1px solid red;
-        //box-sizing: border-box;
-        display: flex;
-        flex-direction: column;
+    > .flex-None {
+        flex: none;
+    }
+
+    > .flex-Stretch {
+        flex: 1 1 auto;
         height: 100%;
-        //min-height: 100%;
-        min-width: -webkit-min-content;
-        min-width: -moz-min-content;
-        // TODO: IE
     }
     // Content alignment
-    &.contentAlign-Top > .content {
+    &.contentAlign-Top {
         justify-content: flex-start;
     }
 
-    &.contentAlign-Middle > .content {
+    &.contentAlign-Middle {
         justify-content: center;
     }
 
-    &.contentAlign-Bottom > .content {
+    &.contentAlign-Bottom {
         justify-content: flex-end;
     }
     // Items alignment
-    &.itemsAlign-Left > .content {
+    &.itemsAlign-Left {
         align-items: flex-start;
     }
 
-    &.itemsAlign-Center > .content {
+    &.itemsAlign-Center {
         align-items: center;
     }
 
-    &.itemsAlign-Right > .content {
+    &.itemsAlign-Right {
         align-items: flex-end;
     }
 
-    &.itemsAlign-Stretch > .content {
+    &.itemsAlign-Stretch {
         align-items: stretch;
-        -ms-flex-line-pack: stretch; //?
     }
     // Items indent
-    &.itemsIndent-05 > .content > *:not(:first-child) {
+    &.itemsIndent-05 > *:not(:first-child) {
         margin-top: 0.5em;
     }
 
-    &.itemsIndent-1 > .content > *:not(:first-child) {
+    &.itemsIndent-1 > *:not(:first-child) {
         margin-top: 1em;
     }
 
-    &.itemsIndent-2 > .content > *:not(:first-child) {
+    &.itemsIndent-2 > *:not(:first-child) {
         margin-top: 2em;
     }
 
-    &.itemsIndent-4 > .content > *:not(:first-child) {
+    &.itemsIndent-4 > *:not(:first-child) {
         margin-top: 4em;
     }
     // Scroll bar
@@ -85,11 +83,11 @@
         overflow: auto;
     }
     // Wrapping
-    &.wrapping-NoWrap > .content {
+    &.wrapping-NoWrap {
         flex-wrap: nowrap;
     }
 
-    &.wrapping-Wrap > .content {
+    &.wrapping-Wrap {
         flex-wrap: wrap;
     }
 }

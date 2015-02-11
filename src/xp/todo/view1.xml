@@ -1,15 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<View xmlns="http://tempuri.org/Markup.xsd" scrollBar="None">
-  <HBox>
+<View xmlns="http://tempuri.org/Markup.xsd">
+  <HBox flex="Stretch">
     <VBox width="50%">
-      <Label text="UNDONE" flex="none"/>
-      <List items="{undone}" flex="1">
+      <Label text="UNDONE"/>
+      <List items="{undone}" flex="Stretch">
         <Label text="{item.name}"/>
       </List>
     </VBox>
     <VBox width="50%">
-      <Label text="DONE" flex="none"/>
-      <List items="{done}" flex="1">
+      <Label text="DONE"/>
+      <List items="{done}" flex="Stretch">
         <Label text="{item.name}"/>
       </List>
     </VBox>

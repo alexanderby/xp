@@ -275,22 +275,31 @@
         private _style: string;
 
         /**
-         * Gets or sets element's flexible behavior ("<grow> <shrink>" eg.: "1 0", "none", "0 1").
+         * Gets or sets element's flexible behavior.
          */
         get flex() {
             return this._flex;
         }
-        set flex(flex: string) {
-            if (!/^((\d+(\s\d+)?)|(none))$/.test(flex)) {
-                throw new Error(`Wrong flex value "${flex}". Examples of correct values: "1 0", "1", "none".`);
-            }
-
+        set flex(flex) {
             this._flex = flex;
 
             // DOM
-            this.domElement.css('flex', flex == 'none' ? 'none' : flex + ' auto');
+            this.removeFlexClasses();
+            switch (flex) {
+                case FlexValue.None:
+                    this.domElement.addClass('flex-None');
+                    break;
+                case FlexValue.Stretch:
+                    this.domElement.addClass('flex-Stretch');
+                    break;
+                default:
+                    throw new Error('Unknown flex value "' + flex + '".');
+            }
         }
-        private _flex: string;
+        private _flex: FlexValue;
+        private removeFlexClasses() {
+            this.domElement.removeClass('flex-None flex-Stretch');
+        }
 
 
         //----------
@@ -583,6 +592,14 @@
         [controlProperty: string]: Binding.Expression;
     }
 
+    /**
+     * Flex values.
+     */
+    export enum FlexValue {
+        None,
+        Stretch
+    }
+
 
     //------------------
     // MARKUP PROCESSING
@@ -697,7 +714,8 @@
                     '*': (margin) => (el) => el.margin = margin
                 },
                 'flex': {
-                    '*': (flex) => (el) => el.flex = flex
+                    'None': (flex) => (el) => el.flex = FlexValue.None,
+                    'Stretch': (flex) => (el) => el.flex = FlexValue.Stretch
                 },
                 'scope': {}, // TODO: Deserialize JSON?
 

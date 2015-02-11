@@ -12,7 +12,7 @@
             var template = $('<body></body>') // Bug when defining class in html on body
                 .addClass('Window')
                 .addClass('VBox')
-                .append('<div class="content"></div>');
+                //.append('<div class="content"></div>');
             return template;
         }
 
