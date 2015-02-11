@@ -5,21 +5,17 @@
 ----------*/
 
 .Button {
-    align-items: center;
     background-color: @color-control-back;
     border: none;
     box-sizing: border-box;
     cursor: default;
-    display: inline-flex;
-    flex-flow: row nowrap;
+    display: flex;
     flex: none;
     font-family: @font-family;
     font-size: 1em;
-    justify-content: center;
     min-height: 2em;
     min-width: 2em;
     outline: none;
-    //overflow: hidden;
     padding: 0.5em 0.375em;
     text-decoration: none;
 
@@ -31,22 +27,33 @@
         background-color: @color-control-active;
     }
 
-    > .icon {
-        display: inline-block;
-        height: 1em;
-        width: 1em;
-    }
-
-    > .text {
-        color: @color-control-fore;
-        display: inline-block;
-        font-size: 1em;
-        line-height: 1em;
-    }
-
-    > span {
+    .wrapper {
+        align-items: center;
+        display: inline-flex;
         flex: none;
-        margin: 0 0.125em;
-        pointer-events: none;
+        flex-flow: row nowrap;
+        height: 100%;
+        justify-content: center;
+        //overflow: hidden;
+        width: 100%;
+
+        > .icon {
+            display: inline-block;
+            height: 1em;
+            width: 1em;
+        }
+
+        > .text {
+            color: @color-control-fore;
+            display: inline-block;
+            font-size: 1em;
+            line-height: 1em;
+        }
+
+        > span {
+            flex: none;
+            margin: 0 0.125em;
+            pointer-events: none;
+        }
     }
 }
