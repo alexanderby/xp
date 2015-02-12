@@ -136,7 +136,7 @@
                     event.invoke(args);
 
                     // TODO: Stop propagation or not?
-                    e.stopPropagation();
+                    //e.stopPropagation();
                 }
             });
         }
