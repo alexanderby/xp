@@ -197,7 +197,6 @@
             return this._name;
         }
         set name(value: string) {
-            value = value.toLowerCase();
             this._name = value;
 
             // DOM
@@ -212,7 +211,7 @@
             return this._key;
         }
         set key(key) {
-            this._key = key.toLowerCase();
+            this._key = key;
         }
         private _key: string;
 
