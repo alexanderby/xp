@@ -1,0 +1,56 @@
+﻿@import "_variables.less";
+
+/*--------------
+    SCROLL BARS
+----------------*/
+
+.VBox, .HBox {
+    //
+    // WebKit
+    &::-webkit-scrollbar {
+        background-color: transparent;
+        height: 1.5em;
+        width: 1.5em;
+    }
+
+    &::-webkit-scrollbar-track {
+        //margin: 1em;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background-clip: padding-box;
+        background-color: @color-control-back;
+        //border-left: 0.5em solid yellow;
+        &:hover {
+            background-color: @color-control-hover;
+        }
+
+        &:active {
+            background-color: @color-control-active;
+        }
+
+        &:horizontal {
+            border-top: 0.5em solid transparent;
+        }
+
+        &:vertical {
+            border-left: 0.5em solid transparent;
+        }
+    }
+
+    &::-webkit-scrollbar-corner {
+        background-color: transparent;
+    }
+    //
+    // IE
+    scrollbar-arrow-color: @color-control-active;
+    scrollbar-track-color: @color-back;
+    scrollbar-base-color: @color-control-hover;
+    scrollbar-3dlight-color: @color-control-hover;
+    scrollbar-highlight-color: @color-control-hover;
+    scrollbar-face-color: @color-control-hover;
+    scrollbar-shadow-color: @color-control-hover;
+    scrollbar-darkshadow-color: @color-control-hover;
+    //
+    // TODO: FireFox
+}

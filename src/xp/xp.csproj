@@ -125,6 +125,7 @@
     </Content>
     <Content Include="style\_hbox.less" />
     <Content Include="style\_vbox.less" />
+    <Content Include="style\_scrollbar.less" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>
