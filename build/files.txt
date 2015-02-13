@@ -4,8 +4,9 @@
 ..\src\xp\core\app.ts
 ..\src\xp\core\event.ts
 
-..\src\xp\core\binding\notifier.ts
+..\src\xp\core\binding\object.ts
 ..\src\xp\core\binding\collection.ts
+..\src\xp\core\binding\observable.ts
 ..\src\xp\core\binding\expression.ts
 ..\src\xp\core\binding\manager.ts
 ..\src\xp\core\binding\scope.ts
