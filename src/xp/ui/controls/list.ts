@@ -9,7 +9,8 @@
         //----
 
         protected getTemplate(): JQuery {
-            return $('<div class="List VBox"><div class="content"></div></div>');
+            //return $('<div class="List VBox"><div class="content"></div></div>');
+            return $('<div class="List VBox"></div>');
         }
 
 
