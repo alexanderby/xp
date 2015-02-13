@@ -11,6 +11,11 @@
     export var Processors: { [tag: string]: MarkupProcessor<Element> } = {};
 
     /**
+     * "XML tag":"Markup URL" dictionary.
+     */
+    export var MarkupUrls: { [tag: string]: string } = {};
+
+    /**
      * "XML tag":"List of dependencies types" dictionary.
      */
     //export var Dependencies: { [tag: string]: typeof Object [] } = {};
@@ -29,12 +34,40 @@
 
     /**
      * Creates UI element resolving dependencies.
+     * @param constructor Type of element.
+     */
+    export function createElement<T extends Element>(constructor: new (...args: any[]) => T): T;
+    /**
+     * Creates UI element resolving dependencies.
+     * @param url URL of element's markup.
+     */
+    export function createElement<T extends Element>(url: string): T;
+    /**
+     * Creates UI element resolving dependencies.
      * @param markup Element's markup.
      */
-    export function createElement(markup: JQuery) {
+    export function createElement<T extends Element>(markup: JQuery): T;
+
+    export function createElement<T extends Element>(markupOrUrlOrType: any): T {
+        var markup: JQuery;
+        if (typeof markupOrUrlOrType === 'string') {
+            markup = loadMarkupSync(markupOrUrlOrType);
+        }
+        else if (typeof markupOrUrlOrType === 'function') {
+            var name = (<Object>markupOrUrlOrType).toString().match(/^function\s*(.*?)\s*\(/)[1];
+            if (!(name in MarkupUrls))
+                throw new Error('URL for markup of element "' + name + '" is not defined.');
+
+            var url = MarkupUrls[name];
+            markup = loadMarkupSync(url);
+        }
+        else {
+            markup = <JQuery>markupOrUrlOrType;
+        }
+
         var create = getElementCreator(markup);
         var el = create();
-        return el;
+        return <T>el;
     }
 
     /**
