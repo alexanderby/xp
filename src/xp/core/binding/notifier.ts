@@ -19,7 +19,13 @@
     export function createNotifierFrom<T>(source: T/*Object*/): T /*INotifier*/ { // TODO: Mixin<T, INotifier>?
         if (isNotifier(source))
             throw new Error('Source is notifier already.');
-        var obj: INotifier = { onPropertyChanged: new Event<string>() };
+        var obj = {};
+
+        Object.defineProperty(obj, 'onPropertyChanged', {
+            configurable: true,
+            enumerable: false,
+            value: new Event<string>()
+        });
 
         //obj['__inner__'] = source;
         Object.defineProperty(obj, '__inner__', {
@@ -30,7 +36,7 @@
 
         for (var key in source) {
             // Create notification property
-            addNotificationProperty(obj, key);
+            addNotificationProperty(<INotifier>obj, key);
         }
         return <T><any>obj;
     }

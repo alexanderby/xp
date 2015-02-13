@@ -40,10 +40,25 @@
          * @param [collection] Source collection.
          */
         constructor(collection?: Array<T>) {
-            this.onPropertyChanged = new Event<string>();
-            this.onCollectionChanged = new Event<CollectionChangeArgs>();
+            //this.onPropertyChanged = new Event<string>();
+            //this.onCollectionChanged = new Event<CollectionChangeArgs>();
+            Object.defineProperty(this, 'onPropertyChanged', {
+                configurable: true,
+                enumerable: false,
+                value: new Event<string>()
+            });
+            Object.defineProperty(this, 'onCollectionChanged', {
+                configurable: true,
+                enumerable: false,
+                value: new Event<CollectionChangeArgs>()
+            });
+            Object.defineProperty(this, 'inner', {
+                configurable: true,
+                enumerable: false,
+                value: []
+            });
 
-            this.inner = [];
+            //this.inner = [];
             if (collection) {
                 // Copy collection
                 collection.forEach((item, i) => {
@@ -231,8 +246,16 @@
 
         slice(start?: number, end?: number): T[] { return this.inner.slice(start, end); }
 
+        /**
+         * Method called by JSON.stringify()
+         */
+        toJSON() {
+            return this.inner;
+        }
+
         //toString(): string { return this.inner.toString(); }
         toString(): string { return Object.prototype.toString.call(this); }
+        //toString(): string { return '[object Array]'; }
 
         toLocaleString(): string { return this.inner.toLocaleString(); }
 
