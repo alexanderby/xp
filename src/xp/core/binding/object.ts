@@ -11,37 +11,6 @@
     }
 
     /**
-     * Creates object, which notifies of it's properties changes.
-     * Notification properties and fiels for storing data will be
-     * created for every source property.
-     * @param source Source object.
-     */
-    export function createNotifierFrom<T>(source: T/*Object*/): T /*INotifier*/ { // TODO: Mixin<T, INotifier>?
-        if (isNotifier(source))
-            throw new Error('Source is notifier already.');
-        var obj = {};
-
-        Object.defineProperty(obj, 'onPropertyChanged', {
-            configurable: true,
-            enumerable: false,
-            value: new Event<string>()
-        });
-
-        //obj['__inner__'] = source;
-        Object.defineProperty(obj, '__inner__', {
-            configurable: true,
-            enumerable: false,
-            value: source
-        });
-
-        for (var key in source) {
-            // Create notification property
-            addNotificationProperty(<INotifier>obj, key);
-        }
-        return <T><any>obj;
-    }
-
-    /**
      * Determines whether object implements INotifier.
      * @param obj Object.
      */
@@ -49,26 +18,51 @@
         return obj && typeof obj === 'object' && 'onPropertyChanged' in obj;
     }
 
-    ///**
-    // * Extends 
-    // */
-    //export function extendNotifier(obj: INotifier, propName: string, value?: any) {
-    //    if (!isNotifier(obj))
-    //        throw new Error('Object is not a notifier.');
 
-    //    // Add property
-    //    addNotificationProperty(obj, propName);
+    /**
+     * An object which notifies of it's changes.
+     */
+    export class ObservableObject implements INotifier {
+        protected __inner__: Object;
+        onPropertyChanged: xp.Event<string>;
 
-    //    if (value !== void 0) {
-    //        // Set value
-    //        obj[propName] = value;
-    //    }
-    //}
+        /**
+         * Creates an object, which notifies of it's properties changes.
+         * WARNING: The source's nested object-properties will be replaced with observables.
+         * @param source Source object.
+         */
+        constructor(source: Object) {
+            this.init(source);
+        }
 
+        protected init(source) {
+            if (source instanceof ObservableObject) {
+                throw new Error('Source object is an observer already.');
+            }
+            if (Array.isArray(source)) {
+                throw new Error('Source must not be an array. Use ObservableCollection.');
+            }
+            if (!(source instanceof Object)) {
+                throw new Error('Source must be an object.');
+            }
 
-    //--------
-    // PRIVATE
-    //--------
+            Object.defineProperty(this, 'onPropertyChanged', {
+                configurable: true,
+                enumerable: false,
+                value: new Event<string>()
+            });
+            Object.defineProperty(this, '__inner__', {
+                configurable: true,
+                enumerable: false,
+                value: source
+            });
+
+            for (var key in source) {
+                // Create notification property
+                addNotificationProperty(this, key);
+            }
+        }
+    }
 
     /**
      * Adds property to INotifier.
@@ -81,12 +75,14 @@
         if (name in obj) {
             throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
         }
-        if (name === 'onPropertyChanged') {
-            throw new Error('Unable to create notification property. Reserved name "onPropertyChanged" is used.');
+        if (name === 'onPropertyChanged' || name === '__inner__' || name === '__create__') {
+            throw new Error('Unable to create notification property. Reserved name "' + name + '" is used.');
         }
 
         var inner = obj['__inner__'];
         var value = inner[name];
+        if (value === null)
+            value = {};
 
         //
         // Check if property is an object.
@@ -97,7 +93,7 @@
             var isNestedObject = true;
         }
         else if (typeof value === 'object' && !isNotifier(value)) {
-            inner[name] = createNotifierFrom(value);
+            inner[name] = new ObservableObject(value);
             var isNestedObject = true;
         }
 
@@ -117,11 +113,14 @@
         if (isNestedObject) {
             // Nested object setter
             var nestedSetter = function (newObj) {
-                if (Array.isArray(newObj)) {
+                if (newObj === null) {
+                    newObj = {};
+                }
+                else if (Array.isArray(newObj)) {
                     newObj = new ObservableCollection(newObj);
                 }
-                if (!isNotifier(newObj)) {
-                    newObj = createNotifierFrom(newObj);
+                else if (!isNotifier(newObj)) {
+                    newObj = new ObservableObject(newObj);
                 }
                 inner[name] = newObj;
                 obj.onPropertyChanged.invoke(name);
@@ -138,4 +137,4 @@
             configurable: true
         });
     }
-} 
+}

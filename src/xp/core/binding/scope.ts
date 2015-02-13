@@ -9,26 +9,29 @@
      */
     export class Scope {
         private parent: Scope;
-        private self: INotifier;
+        private self: any;
 
         /**
          * Creates a scope.
-         * @param source Source object for converting into observable object.
+         * @param source Source object. Should be observable to enable two-way data binding.
          * @param [parent] Parent scope.
          */
         constructor(source: any, parent?: Scope) {
             if (source instanceof Scope) {
                 this.self = (<Scope>source).self;
             }
-            else if (isNotifier(source)) {
+            else {
                 this.self = source;
             }
-            else if (Array.isArray(source)) {
-                this.self = new ObservableCollection(source);
-            }
-            else {
-                this.self = createNotifierFrom(source);
-            }
+            //else if (isNotifier(source)) {
+            //    this.self = source;
+            //}
+            //else if (Array.isArray(source)) {
+            //    this.self = new ObservableCollection(source);
+            //}
+            //else {
+            //    this.self = createNotifierFrom(source);
+            //}
 
             this.parent = parent;
         }

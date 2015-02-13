@@ -533,8 +533,9 @@
             return this._scope;
         }
         set scope(scope) {
-            if (!(scope instanceof xp.Binding.Scope))
-                scope = new xp.Binding.Scope(scope);
+            if (scope && !(scope instanceof xp.Binding.Scope))
+                throw new Error('"scope" is not an instance of Scope.');
+
             if (this.bindings['scope'])
                 scope = new xp.Binding.Scope(scope, this.parent.scope);
 
@@ -555,7 +556,7 @@
             }
             this.onScopeChanged.invoke(scope);
         }
-        private _scope: any;
+        private _scope: xp.Binding.Scope;
 
         /**
          * Is invoked when user performs an input action.

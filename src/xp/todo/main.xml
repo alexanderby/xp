@@ -3,7 +3,7 @@
   <HBox width="40em" itemsIndent="2em" scrollBar="Both">
 
     <!-- INPUT -->
-    <VBox itemsIndent="1em" width="50%">
+    <VBox itemsIndent="1em" flex="Stretch">
       <Label text="TODO APP"/>
       <HBox itemsIndent="0.5em">
         <Label text="Input:"/>
@@ -25,7 +25,7 @@
     </VBox>
 
     <!-- RESULTS -->
-    <View name="view1" href="view1.xml" width="40%"/>
+    <View name="view1" href="view1.xml" flex="Stretch"/>
 
   </HBox>
 

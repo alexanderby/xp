@@ -30,16 +30,34 @@
     }
 
     /**
+     * Determines whether object implements ICollectionNotifier.
+     * @param obj Object.
+     */
+    export function isCollectionNotifier(obj) {
+        return obj && typeof obj === 'object' && 'onCollectionChanged' in obj;
+    }
+
+
+    /**
      * A collection which notifies of it's changes.
      */
-    export class ObservableCollection<T> implements Array<T>, ICollectionNotifier, INotifier {
-        private inner: Array<T>;
+    export class ObservableCollection<T> extends ObservableObject implements Array<T>, ICollectionNotifier, INotifier {
+        protected __inner__: Array<T>;
 
         /**
          * Creates a collection which notifies of it's changes.
+         * WARNING: The source's items-objects will be mutated replaced with observables.
          * @param [collection] Source collection.
          */
         constructor(collection?: Array<T>) {
+            super(collection);
+        }
+
+        protected init(collection?: Array<T>) {
+            if (collection && !Array.isArray(collection)) {
+                throw new Error('Source must be an array.');
+            }
+
             //this.onPropertyChanged = new Event<string>();
             //this.onCollectionChanged = new Event<CollectionChangeArgs>();
             Object.defineProperty(this, 'onPropertyChanged', {
@@ -52,7 +70,7 @@
                 enumerable: false,
                 value: new Event<CollectionChangeArgs>()
             });
-            Object.defineProperty(this, 'inner', {
+            Object.defineProperty(this, '__inner__', {
                 configurable: true,
                 enumerable: false,
                 value: []
@@ -84,7 +102,7 @@
          */
         protected add(item, index) {
             item = this.createNotifier(item);
-            this.inner.splice(index, 0, item);
+            this.__inner__.splice(index, 0, item);
             this.appendIndexProperty();
 
             // Notify
@@ -94,7 +112,7 @@
                 newItem: item
             });
             this.onPropertyChanged.invoke('length');
-            for (var i = index; i < this.inner.length; i++) {
+            for (var i = index; i < this.__inner__.length; i++) {
                 this.onPropertyChanged.invoke(i.toString());
             }
         }
@@ -103,7 +121,7 @@
          * Handles item's removal item from collection. 
          */
         protected remove(index): T {
-            var item = this.inner.splice(index, 1)[0];
+            var item = this.__inner__.splice(index, 1)[0];
             this.deleteIndexProperty();
 
             // Notify
@@ -113,7 +131,7 @@
                 oldItem: item
             });
             this.onPropertyChanged.invoke('length');
-            for (var i = index; i < this.inner.length + 1; i++) {
+            for (var i = index; i < this.__inner__.length + 1; i++) {
                 this.onPropertyChanged.invoke(i.toString());
             }
 
@@ -122,19 +140,19 @@
 
         // Must be called after inner collection change.
         protected appendIndexProperty() {
-            var index = this.inner.length - 1;
+            var index = this.__inner__.length - 1;
             Object.defineProperty(this, index.toString(), {
-                get: () => this.inner[index],
+                get: () => this.__inner__[index],
                 set: (value: T) => {
-                    this.inner[index] = value;
+                    this.__inner__[index] = value;
 
                     // Notify
                     this.onCollectionChanged.invoke({
                         action: CollectionChangeAction.Replace,
                         oldIndex: index,
                         newIndex: index,
-                        oldItem: this.inner[index],
-                        newItem: this.inner[index] = value
+                        oldItem: this.__inner__[index],
+                        newItem: this.__inner__[index] = value
                     });
                     this.onPropertyChanged.invoke(index.toString());
                 },
@@ -145,7 +163,7 @@
 
         // Must be called after inner collection change.
         protected deleteIndexProperty() {
-            delete this[this.inner.length];
+            delete this[this.__inner__.length];
         }
 
         protected createNotifier(item): INotifier {
@@ -153,7 +171,7 @@
                 item = new ObservableCollection(<Array<any>><any>item);
             }
             else if (typeof item === 'object' && !isNotifier(item)) {
-                item = createNotifierFrom(item);
+                item = new ObservableObject(item);
             }
             return item;
         }
@@ -164,7 +182,7 @@
         //-----------
 
         get length(): number {
-            return this.inner.length;
+            return this.__inner__.length;
         }
 
 
@@ -173,24 +191,24 @@
         //----------------
 
         pop(): T {
-            var item = this.remove(this.inner.length - 1);
+            var item = this.remove(this.__inner__.length - 1);
             return item;
         }
 
         push(...items: T[]): number {
             items.forEach((item) => {
-                this.add(item, this.inner.length);
+                this.add(item, this.__inner__.length);
             });
-            return this.inner.length;
+            return this.__inner__.length;
         }
 
         reverse(): T[] {
-            this.inner.reverse();
+            this.__inner__.reverse();
             // Notify
             this.onCollectionChanged.invoke({
                 action: CollectionChangeAction.Reset // TODO: move?
             });
-            return this.inner;
+            return this.__inner__;
         }
 
         shift(): T {
@@ -199,12 +217,12 @@
         }
 
         sort(compareFn?: (a: T, b: T) => number): T[] {
-            this.inner.sort(compareFn);
+            this.__inner__.sort(compareFn);
             // Notify
             this.onCollectionChanged.invoke({
                 action: CollectionChangeAction.Reset // TODO: move?
             });
-            return this.inner;
+            return this.__inner__;
         }
 
         splice(start: number): T[];
@@ -229,7 +247,7 @@
             for (var i = 0; i < items.length; i++) {
                 this.add(items[i], i);
             }
-            return this.inner.length;
+            return this.__inner__.length;
         }
 
 
@@ -240,59 +258,51 @@
         // TODO: Return new ObservableCollection?
 
         concat<U extends T[]>(...items: U[]): T[];
-        concat(...items: T[]): T[] { return this.inner.concat(items); }
+        concat(...items: T[]): T[] { return this.__inner__.concat(items); }
 
-        join(separator?: string): string { return this.inner.join(separator); }
+        join(separator?: string): string { return this.__inner__.join(separator); }
 
-        slice(start?: number, end?: number): T[] { return this.inner.slice(start, end); }
+        slice(start?: number, end?: number): T[] { return this.__inner__.slice(start, end); }
 
         /**
          * Method called by JSON.stringify()
          */
         toJSON() {
-            return this.inner;
+            return this.__inner__;
         }
 
         //toString(): string { return this.inner.toString(); }
         toString(): string { return Object.prototype.toString.call(this); }
         //toString(): string { return '[object Array]'; }
 
-        toLocaleString(): string { return this.inner.toLocaleString(); }
+        toLocaleString(): string { return this.__inner__.toLocaleString(); }
 
-        indexOf(searchElement: T, fromIndex?: number): number { return this.inner.indexOf(searchElement, fromIndex); }
+        indexOf(searchElement: T, fromIndex?: number): number { return this.__inner__.indexOf(searchElement, fromIndex); }
 
-        lastIndexOf(searchElement: T, fromIndex?: number): number { return this.inner.lastIndexOf(searchElement, fromIndex); }
+        lastIndexOf(searchElement: T, fromIndex?: number): number { return this.__inner__.lastIndexOf(searchElement, fromIndex); }
 
 
         //------------------
         // Iteration methods
         //------------------
 
-        forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void { return this.inner.forEach(callbackfn, thisArg); }
+        forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void { return this.__inner__.forEach(callbackfn, thisArg); }
 
-        every(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.every(callbackfn, thisArg); }
+        every(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.__inner__.every(callbackfn, thisArg); }
 
-        some(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.some(callbackfn, thisArg); }
+        some(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.__inner__.some(callbackfn, thisArg); }
 
-        filter(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): T[] { return this.inner.filter(callbackfn, thisArg); }
+        filter(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): T[] { return this.__inner__.filter(callbackfn, thisArg); }
 
-        map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] { return this.inner.map(callbackfn, thisArg); }
+        map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] { return this.__inner__.map(callbackfn, thisArg); }
 
         reduce<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
-        reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduce(callbackfn, initialValue); }
+        reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.__inner__.reduce(callbackfn, initialValue); }
 
         reduceRight<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
-        reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduceRight(callbackfn, initialValue); }
+        reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.__inner__.reduceRight(callbackfn, initialValue); }
 
 
         [n: number]: T;
-    }
-
-    /**
-     * Determines whether object implements ICollectionNotifier.
-     * @param obj Object.
-     */
-    export function isCollectionNotifier(obj) {
-        return obj && typeof obj === 'object' && 'onCollectionChanged' in obj;
     }
 } 

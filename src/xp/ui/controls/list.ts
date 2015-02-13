@@ -136,7 +136,7 @@
 
             var obj = {};
             obj[this.itemId] = item;
-            var scope = new xp.Binding.Scope(obj, this.scope);
+            var scope = new xp.Binding.Scope(xp.Binding.observable(obj), this.scope);
 
             //
             // Handle item replacement inside item-element scope

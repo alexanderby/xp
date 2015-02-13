@@ -12,7 +12,7 @@
             console.log('Main dependency (app):');
             console.log(app);
 
-            this.data = xp.Binding.createNotifierFrom({
+            this.data = xp.Binding.observable({
                 todos: [],
                 selected: {},
                 undone: [],
