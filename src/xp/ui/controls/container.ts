@@ -244,7 +244,7 @@
                     }
                     this[el.name] = el;
                 }
-                if (el instanceof View) {
+                if (el !== this && el instanceof View) {
                     // Stop on <View>
                     return true;
                 }
