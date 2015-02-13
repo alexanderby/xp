@@ -80,11 +80,12 @@
             if (element.parent) {
                 element.parent.detachChild(element);
             }
+            // DOM
+            this.getContainerElement().append(element.domElement);
+
             this.children.push(element);
             element.parent = this;
 
-            // DOM
-            this.getContainerElement().append(element.domElement);
             console.log(xp.formatString('Appended {0}:{1} to {2}:{3}', xp.getClassName(element), element.name || '-', xp.getClassName(this), this.name || '-'));
         }
 
@@ -96,11 +97,11 @@
             if (element.parent) {
                 element.parent.detachChild(element);
             }
-            this.children.splice(0, 0, element);
-            element.parent = this;
-
             // DOM
             this.getContainerElement().prepend(element.domElement);
+
+            this.children.splice(0, 0, element);
+            element.parent = this;
         }
 
         /**
@@ -121,6 +122,9 @@
                     this.append(element);
                 }
                 else {
+                    // DOM
+                    element.domElement.insertBefore(target.domElement);
+
                     var targetIndex = (element.parent === this && this.children.indexOf(element) < index) ?
                         index - 1
                         : index;
@@ -129,9 +133,6 @@
                     }
                     this.children.splice(targetIndex, 0, element);
                     element.parent = this;
-
-                    // DOM
-                    element.domElement.insertBefore(target.domElement);
                 }
             }
         }
