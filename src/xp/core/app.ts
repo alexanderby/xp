@@ -50,6 +50,7 @@
             dataType: 'text',
             async: false,
             error: (req, text, err) => {
+                console.warn('Unable to load markup from "' + url + '".');
                 throw err;
             },
             success: (response: string) => {
