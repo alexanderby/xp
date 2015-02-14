@@ -8,7 +8,7 @@
 >
   <!-- BASE -->
 
-  <xs:attributeGroup name="attrs">
+  <xs:complexType name="Element" abstract="true">
     <xs:attribute name="name" type="xs:ID"/>
     <xs:attribute name="key" type="xs:string"/>
     <xs:attribute name="style" type="xs:string"/>
@@ -22,40 +22,43 @@
       </xs:simpleType>
     </xs:attribute>-->
     <xs:attribute name="scope" type="xs:string"/>
-    <!--Events-->
+    <!-- TODO: More events. -->
     <xs:attribute name="onClick" type="xs:string"/>
-  </xs:attributeGroup>
-
-  <xs:complexType name="Element">
-    <xs:attributeGroup ref="attrs"/>
   </xs:complexType>
 
-  <xs:complexType name="Container" mixed="true">
+  <xs:complexType name="Container" mixed="true" abstract="true">
     <xs:complexContent>
       <xs:extension base="Element">
         <xs:choice minOccurs="0" maxOccurs="unbounded">
-          <xs:element ref="View"/>
-          <xs:element ref="HBox"/>
-          <xs:element ref="VBox"/>
-          <xs:element ref="Button"/>
-          <xs:element ref="Label"/>
-          <xs:element ref="TextBox"/>
-          <xs:element ref="List"/>
-          <xs:element ref="CheckBox"/>
-          <xs:element ref="Placeholder"/>
-          <xs:element ref="RadioButton"/>
-          <xs:element ref="ToggleButton"/>
-          <xs:element ref="Html"/>
+          <xs:group ref="elements"/>
         </xs:choice>
         <xs:attribute name="padding" type="xs:string"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>
 
+  <!-- List of all child-elements -->
+  <xs:group name="elements">
+    <xs:choice>
+      <xs:element ref="View"/>
+      <xs:element ref="HBox"/>
+      <xs:element ref="VBox"/>
+      <xs:element ref="Button"/>
+      <xs:element ref="Label"/>
+      <xs:element ref="TextBox"/>
+      <xs:element ref="List"/>
+      <xs:element ref="CheckBox"/>
+      <xs:element ref="Placeholder"/>
+      <xs:element ref="RadioButton"/>
+      <xs:element ref="ToggleButton"/>
+      <xs:element ref="Html"/>
+    </xs:choice>
+  </xs:group>
+
 
   <!-- CONTAINERS -->
 
-  <xs:complexType name="Stack">
+  <xs:complexType name="Stack" abstract="true">
     <xs:complexContent>
       <xs:extension base="Container">
         <xs:attribute name="itemsIndent" type="ItemsIndent"/>
@@ -85,36 +88,33 @@
   </xs:complexType>
   <xs:element name="VBox" type="VBox"/>
 
-  <xs:element name="Window">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="VBox">
-          <xs:attribute name="title" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="Window">
+    <xs:complexContent>
+      <xs:extension base="VBox">
+        <xs:attribute name="title" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Window" type="Window"/>
 
-  <xs:element name="View">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="VBox">
-          <xs:attribute name="href" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="View">
+    <xs:complexContent>
+      <xs:extension base="VBox">
+        <xs:attribute name="href" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="View" type="View"/>
 
-  <xs:element name="List">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="VBox">
-          <xs:attribute name="items" type="xs:string"/>
-          <xs:attribute name="itemId" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="List">
+    <xs:complexContent>
+      <xs:extension base="VBox">
+        <xs:attribute name="items" type="xs:string"/>
+        <xs:attribute name="itemId" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="List" type="List"/>
 
   <!-- Enums -->
   <xs:simpleType name="HContentAlign">
@@ -174,42 +174,39 @@
 
   <!-- ELEMENTS -->
 
-  <xs:element name="Button">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="Element">
-          <xs:attribute name="icon" type="xs:string"/>
-          <xs:attribute name="text" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="Button">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:attribute name="icon" type="xs:string"/>
+        <xs:attribute name="text" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Button" type="Button"/>
 
-  <xs:element name="Label">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="Element">
-          <xs:attribute name="text" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="Label">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:attribute name="text" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Label" type="Label"/>
 
-  <xs:element name="TextBox">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="Element">
-          <xs:attribute name="text" type="xs:string"/>
-          <xs:attribute name="notifyOnKeydown" type="Boolean"/>
-          <xs:attribute name="type" type="TextBoxType"/>
-          <xs:attribute name="readonly" type="Boolean"/>
-          <xs:attribute name="placeholder" type="xs:string"/>
-          <xs:attribute name="onTextChange" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
-  <xs:simpleType name="TextBoxType">
+  <xs:complexType name="TextBox">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:attribute name="text" type="xs:string"/>
+        <xs:attribute name="notifyOnKeydown" type="Boolean"/>
+        <xs:attribute name="type" type="TextBoxValueType"/>
+        <xs:attribute name="readonly" type="Boolean"/>
+        <xs:attribute name="placeholder" type="xs:string"/>
+        <xs:attribute name="onTextChange" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TextBox" type="TextBox"/>
+  <xs:simpleType name="TextBoxValueType">
     <xs:restriction base="xs:string">
       <xs:enumeration value="string"/>
       <xs:enumeration value="number"/>
@@ -228,13 +225,12 @@
   </xs:complexType>
   <xs:element name="CheckBox" type="CheckBox"/>
 
-  <xs:element name="Placeholder">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="Element"/>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="Placeholder">
+    <xs:complexContent>
+      <xs:extension base="Element"/>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Placeholder" type="Placeholder"/>
 
   <xs:complexType name="RadioButton">
     <xs:complexContent>
@@ -247,28 +243,26 @@
   </xs:complexType>
   <xs:element name="RadioButton" type="RadioButton"/>
 
-  <xs:element name="ToggleButton">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="RadioButton">
-          <xs:attribute name="icon" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="ToggleButton">
+    <xs:complexContent>
+      <xs:extension base="RadioButton">
+        <xs:attribute name="icon" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="ToggleButton" type="ToggleButton"/>
 
-  <xs:element name="Html">
-    <xs:complexType>
-      <xs:complexContent>
-        <xs:extension base="Element">
-          <xs:choice>
-            <xs:any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="1"/>
-          </xs:choice>
-          <xs:attribute name="href" type="xs:string"/>
-        </xs:extension>
-      </xs:complexContent>
-    </xs:complexType>
-  </xs:element>
+  <xs:complexType name="Html">
+    <xs:complexContent>
+      <xs:extension base="Element">
+        <xs:choice>
+          <xs:any namespace="http://www.w3.org/1999/xhtml" minOccurs="0" maxOccurs="1"/>
+        </xs:choice>
+        <xs:attribute name="href" type="xs:string"/>
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="Html" type="Html"/>
 
   <!-- Enums -->
   <xs:simpleType name="Boolean">
