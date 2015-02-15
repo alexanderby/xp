@@ -2,6 +2,7 @@
 
 ..\src\xp\utils\utils.ts
 ..\src\xp\core\app.ts
+..\src\xp\core\dictionary.ts
 ..\src\xp\core\event.ts
 
 ..\src\xp\core\binding\object.ts
@@ -11,14 +12,13 @@
 ..\src\xp\core\binding\manager.ts
 ..\src\xp\core\binding\scope.ts
 
-..\src\xp\ui\ui.ts
+..\src\xp\ui\markup.ts
 ..\src\xp\ui\uievent.ts
 
 ..\src\xp\ui\controls\element.ts
 ..\src\xp\ui\controls\button.ts
 ..\src\xp\ui\controls\checkbox.ts
 ..\src\xp\ui\controls\label.ts
-..\src\xp\ui\controls\markup.ts
 ..\src\xp\ui\controls\placeholder.ts
 ..\src\xp\ui\controls\radiobutton.ts
 ..\src\xp\ui\controls\textbox.ts
