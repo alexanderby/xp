@@ -64,6 +64,7 @@
     <TypeScriptCompile Include="core\binding\observable.ts" />
     <TypeScriptCompile Include="core\binding\scope.ts" />
     <TypeScriptCompile Include="core\binding\manager.ts" />
+    <TypeScriptCompile Include="core\dictionary.ts" />
     <TypeScriptCompile Include="testapp\app.ts" />
     <TypeScriptCompile Include="core\app.ts" />
     <TypeScriptCompile Include="core\event.ts" />
@@ -78,7 +79,7 @@
     <TypeScriptCompile Include="ui\controls\element.ts" />
     <TypeScriptCompile Include="ui\controls\hbox.ts" />
     <TypeScriptCompile Include="ui\controls\html.ts" />
-    <TypeScriptCompile Include="ui\controls\markup.ts" />
+    <TypeScriptCompile Include="ui\markup.ts" />
     <TypeScriptCompile Include="ui\controls\placeholder.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
     <TypeScriptCompile Include="ui\controls\list.ts" />
@@ -90,7 +91,6 @@
     <TypeScriptCompile Include="ui\controls\view.ts" />
     <TypeScriptCompile Include="ui\controls\window.ts" />
     <TypeScriptCompile Include="core\binding\expression.ts" />
-    <TypeScriptCompile Include="ui\ui.ts" />
     <TypeScriptCompile Include="ui\uievent.ts" />
     <TypeScriptCompile Include="utils\utils.ts" />
   </ItemGroup>

@@ -102,7 +102,6 @@
             this.domElement.removeClass('itemsAlign-Left itemsAlign-Center itemsAlign-Right itemsAlign-Stretch');
         }
     }
-    Controls['VBox'] = VBox;
 
 
     //------
@@ -129,11 +128,11 @@
     }
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class VBoxMarkupProcessor<T extends VBox> extends StackMarkupProcessor<VBox>{
+    export class VBoxMarkupParser<T extends VBox> extends StackMarkupParser<VBox>{
 
         protected getAttributeMap(): AttributeMap<VBox> {
             return extendAttributeMap(super.getAttributeMap(), {
@@ -151,5 +150,9 @@
             });
         }
     }
-    Processors['VBox'] = new VBoxMarkupProcessor();
+
+    MarkupParseInfo['VBox'] = {
+        ctor: VBox,
+        parser: new VBoxMarkupParser()
+    };
 }

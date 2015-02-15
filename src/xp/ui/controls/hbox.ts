@@ -102,7 +102,6 @@
             this.domElement.removeClass('itemsAlign-Top itemsAlign-Middle itemsAlign-Bottom itemsAlign-Stretch');
         }
     }
-    Controls['HBox'] = HBox;
 
 
     //------
@@ -129,11 +128,11 @@
     }
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class HBoxMarkupProcessor<T extends HBox> extends StackMarkupProcessor<HBox>{
+    export class HBoxMarkupParser<T extends HBox> extends StackMarkupParser<HBox>{
 
         protected getAttributeMap(): AttributeMap<HBox> {
             return extendAttributeMap(super.getAttributeMap(), {
@@ -151,5 +150,9 @@
             });
         }
     }
-    Processors['HBox'] = new HBoxMarkupProcessor();
+
+    MarkupParseInfo['HBox'] = {
+        ctor: HBox,
+        parser: new HBoxMarkupParser()
+    };
 }

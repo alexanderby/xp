@@ -35,14 +35,13 @@
         }
         private _text: string;
     }
-    Controls['Label'] = Label;
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class LabelMarkupProcessor extends ElementMarkupProcessor<Label>{
+    export class LabelMarkupParser extends ElementMarkupParser<Label>{
         protected getAttributeMap(): AttributeMap<Label> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'text': {
@@ -51,5 +50,9 @@
             });
         }
     }
-    Processors['Label'] = new LabelMarkupProcessor();
+
+    MarkupParseInfo['Label'] = {
+        ctor: Label,
+        parser: new LabelMarkupParser()
+    };
 } 

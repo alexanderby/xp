@@ -31,14 +31,13 @@
             //});
         }
     }
-    Controls['Html'] = Html;
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class HtmlMarkupProcessor extends ElementMarkupProcessor<Html>{
+    export class HtmlMarkupParser extends ElementMarkupParser<Html>{
 
         getInitializer(markup: JQuery): UIInitializer<Html> {
 
@@ -70,5 +69,9 @@
             };
         }
     }
-    Processors['Html'] = new HtmlMarkupProcessor();
+
+    MarkupParseInfo['Html'] = {
+        ctor: Html,
+        parser: new HtmlMarkupParser()
+    };
 }

@@ -12,7 +12,7 @@
             var template = $('<body></body>') // Bug when defining class in html on body
                 .addClass('Window')
                 .addClass('VBox')
-                //.append('<div class="content"></div>');
+            //.append('<div class="content"></div>');
             return template;
         }
 
@@ -38,14 +38,13 @@
         }
         private _title: string;
     }
-    Controls['Window'] = Window;
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class WindowMarkupProcessor<T extends Window> extends VBoxMarkupProcessor<Window>{
+    export class WindowMarkupParser<T extends Window> extends VBoxMarkupParser<Window>{
 
         protected getAttributeMap(): AttributeMap<Window> {
             return extendAttributeMap(super.getAttributeMap(), {
@@ -55,5 +54,9 @@
             });
         }
     }
-    Processors['Window'] = new WindowMarkupProcessor();
+
+    MarkupParseInfo['Window'] = {
+        ctor: Window,
+        parser: new WindowMarkupParser()
+    };
 } 

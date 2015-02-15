@@ -601,14 +601,14 @@
     }
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
     /**
-     * Markup processor base.
+     * Markup parser base.
      */
-    export class ElementMarkupProcessor<T extends Element> implements MarkupProcessor<T>{
+    export class ElementMarkupParser<T extends Element> implements MarkupParser<T>{
 
         /**
          * Returns function which initializes control

@@ -46,7 +46,7 @@
                 // Subscribe for changes
                 if (Binding.isCollectionNotifier(items)) {
                     var collection = <Binding.ICollectionNotifier><any>items;
-                    this.itemsRegistar.subscribe(collection.onCollectionChanged, (args) => {
+                    this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
                         switch (args.action) {
                             case Binding.CollectionChangeAction.Create:
                                 this.addItem(args.newIndex, args.newItem);
@@ -188,7 +188,6 @@
             this.itemReplacementHandlers = [];
         }
     }
-    Controls['List'] = List;
 
 
     interface ItemReplacementInfo {
@@ -198,11 +197,11 @@
     }
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class ListMarkupProcessor extends VBoxMarkupProcessor<List>{
+    export class ListMarkupParser extends VBoxMarkupParser<List>{
 
         getInitializer(markup: JQuery): UIInitializer<List> {
             var initAttributes = this.getAttributesInitializer(markup);
@@ -234,5 +233,9 @@
             });
         }
     }
-    Processors['List'] = new ListMarkupProcessor();
+
+    MarkupParseInfo['List'] = {
+        ctor: List,
+        parser: new ListMarkupParser()
+    };
 }

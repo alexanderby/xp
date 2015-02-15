@@ -73,14 +73,13 @@
         }
         private _text: string;
     }
-    Controls['Button'] = Button;
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class ButtonMarkupProcessor extends ElementMarkupProcessor<Button>{
+    export class ButtonMarkupParser extends ElementMarkupParser<Button>{
 
         getAttributeMap(): AttributeMap<Button> {
             return extendAttributeMap(super.getAttributeMap(), {
@@ -93,5 +92,9 @@
             });
         }
     }
-    Processors['Button'] = new ButtonMarkupProcessor();
+
+    MarkupParseInfo['Button'] = {
+        ctor: Button,
+        parser: new ButtonMarkupParser()
+    };
 } 

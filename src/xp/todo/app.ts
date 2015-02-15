@@ -4,8 +4,7 @@ window.onload = () => {
     app = new xp.Application({
         startupUrl: 'main.xml'
     });
-    xp.UI.Instances['App'] = app;
-    xp.UI.Dependencies['Window'] = ['App'];
+    xp.UI.DIInstances.set(xp.Application, app);
 
     app.start();
 };

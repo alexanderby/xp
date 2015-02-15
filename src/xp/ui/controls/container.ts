@@ -274,14 +274,14 @@
     }
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
     /**
-     * Containers markup processor base.
+     * Containers markup parser base.
      */
-    export class ContainerMarkupProcessor<T extends Container> extends ElementMarkupProcessor<Container>{
+    export class ContainerMarkupParser<T extends Container> extends ElementMarkupParser<Container>{
         /**
          * Returns function which initializes control
          * according to provider markup.
@@ -310,7 +310,7 @@
             $.each(markup.children(),(i, childXmlNode) => {
                 // Create child
                 var tagName = childXmlNode.nodeName;
-                if (!xp.UI.Controls[tagName]) {
+                if (!xp.UI.MarkupParseInfo[tagName]) {
                     throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
                 }
 

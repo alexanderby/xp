@@ -38,16 +38,16 @@
             };
 
             // On text input
-            this.domElement.on('change', (e) => {
+            this.domElement.on('change',(e) => {
                 onInput(e);
             });
-            this.domElement.on('input', (e) => {
+            this.domElement.on('input',(e) => {
                 if (this.notifyOnKeyDown) {
                     onInput(e);
                 }
             });
 
-            this.domElement.on('keypress', (e) => {
+            this.domElement.on('keypress',(e) => {
                 if (e.keyCode === 13) {
                     onInput(e);
                     // Remove focus on 'Enter' key press
@@ -170,7 +170,6 @@
 
 
     }
-    Controls['TextBox'] = TextBox;
 
 
     export interface TextChangeArgs extends UIEventArgs {
@@ -184,11 +183,11 @@
     }
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class TextBoxMarkupProcessor extends ElementMarkupProcessor<TextBox>{
+    export class TextBoxMarkupParser extends ElementMarkupParser<TextBox>{
         protected getAttributeMap(): AttributeMap<TextBox> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'text': {
@@ -215,5 +214,9 @@
             });
         }
     }
-    Processors['TextBox'] = new TextBoxMarkupProcessor();
+
+    MarkupParseInfo['TextBox'] = {
+        ctor: TextBox,
+        parser: new TextBoxMarkupParser()
+    };
 } 

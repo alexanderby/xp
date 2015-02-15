@@ -86,5 +86,9 @@
             this.refreshFiltered();
         }
     }
-    xp.UI.Controls['Window'] = Main;
+    xp.UI.MarkupParseInfo['Window'] = {
+        ctor: Main,
+        parser: new xp.UI.WindowMarkupParser(),
+        dependencies: [xp.Application]
+    };
 } 

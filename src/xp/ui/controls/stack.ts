@@ -154,11 +154,11 @@
     }
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class StackMarkupProcessor<T extends Stack> extends ContainerMarkupProcessor<Stack>{
+    export class StackMarkupParser<T extends Stack> extends ContainerMarkupParser<Stack>{
 
         protected getAttributeMap(): AttributeMap<Stack> {
             return extendAttributeMap(super.getAttributeMap(), {

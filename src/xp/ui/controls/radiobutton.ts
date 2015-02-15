@@ -82,14 +82,13 @@
         // */
         //uncheckable: boolean;
     }
-    Controls['RadioButton'] = RadioButton;
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class RadioButtonMarkupProcessor extends CheckBoxMarkupProcessor {
+    export class RadioButtonMarkupParser extends CheckBoxMarkupParser {
         protected getAttributeMap(): AttributeMap<RadioButton> {
             return extendAttributeMap(super.getAttributeMap(), {
                 'group': {
@@ -104,5 +103,9 @@
             });
         }
     }
-    Processors['RadioButton'] = new RadioButtonMarkupProcessor();
+
+    MarkupParseInfo['RadioButton'] = {
+        ctor: RadioButton,
+        parser: new RadioButtonMarkupParser()
+    };
 } 

@@ -15,11 +15,13 @@
         }
 
     }
-    Controls['Placeholder'] = Placeholder;
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    Processors['Placeholder'] = new ElementMarkupProcessor<Placeholder>();
+    MarkupParseInfo['Placeholder'] = {
+        ctor: Placeholder,
+        parser: new ElementMarkupParser<Placeholder>()
+    };
 }

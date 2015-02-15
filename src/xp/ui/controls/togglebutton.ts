@@ -12,7 +12,7 @@
             this.textElement = template.find('.text');
             return template;
         }
-        
+
         protected iconElement: JQuery;
         protected textElement: JQuery;
 
@@ -70,14 +70,13 @@
         private _iconPath: string;
 
     }
-    Controls['ToggleButton'] = ToggleButton;
 
 
-    //------------------
-    // MARKUP PROCESSING
-    //------------------
+    //---------------
+    // MARKUP PARSING
+    //---------------
 
-    export class ToggleButtonMarkupProcessor extends RadioButtonMarkupProcessor {
+    export class ToggleButtonMarkupProcessor extends RadioButtonMarkupParser {
 
         protected getAttributeMap(): AttributeMap<ToggleButton> {
             return extendAttributeMap(super.getAttributeMap(), {
@@ -87,5 +86,9 @@
             });
         }
     }
-    Processors['ToggleButton'] = new ToggleButtonMarkupProcessor();
+
+    MarkupParseInfo['ToggleButton'] = {
+        ctor: ToggleButton,
+        parser: new ToggleButtonMarkupProcessor
+    };
 }

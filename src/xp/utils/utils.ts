@@ -127,11 +127,11 @@
 
     /**
      * Creates new object and applies arguments to constructor.
-     * @param constructor Type of object.
+     * @param ctor Type of object.
      * @param args Arguments to apply.
      * @returns New object.
      */
-    export function applyConstructor<T extends Object>(constructor: new (...args) => T, args: any[]): T {
+    export function applyConstructor<T extends Object>(ctor: new (...args) => T, args: any[]): T {
         // http://stackoverflow.com/a/1608546/4137472
         //function F(): void {
         //    constructor.apply(this, args);
@@ -141,15 +141,15 @@
 
         // http://stackoverflow.com/a/24963721/4137472
         switch (args.length) {
-            case 0: return new constructor();
-            case 1: return new constructor(args[0]);
-            case 2: return new constructor(args[0], args[1]);
-            case 3: return new constructor(args[0], args[1], args[2]);
-            case 4: return new constructor(args[0], args[1], args[2], args[3]);
-            case 5: return new constructor(args[0], args[1], args[2], args[3], args[4]);
-            case 6: return new constructor(args[0], args[1], args[2], args[3], args[4], args[5]);
-            case 7: return new constructor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-            case 8: return new constructor(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
+            case 0: return new ctor();
+            case 1: return new ctor(args[0]);
+            case 2: return new ctor(args[0], args[1]);
+            case 3: return new ctor(args[0], args[1], args[2]);
+            case 4: return new ctor(args[0], args[1], args[2], args[3]);
+            case 5: return new ctor(args[0], args[1], args[2], args[3], args[4]);
+            case 6: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
+            case 7: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
+            case 8: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
             default: throw new Error('Two much arguments to apply to constructor.');
         }
     }
@@ -255,7 +255,7 @@ module xp.Path {
         //var result = path.replace(indexerRegex, '.$1');
 
         // With property identifier validation.
-        var result = path.replace(indexerRegex, (match, m1) => {
+        var result = path.replace(indexerRegex,(match, m1) => {
             if (!identifierRegex.test(m1)) {
                 throw new Error(
                     xp.formatString('Wrong property identifier. Property: "{0}". Path: "{1}".', path, m1));

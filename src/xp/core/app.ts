@@ -36,6 +36,13 @@
         startupUrl: string;
     }
 
+    /**
+     * Defines a constructor of type T instance.
+     */
+    export interface Constructor<T> {
+        new (...args: any[]): T;
+    }
+
     // TODO: Async?
     /**
      * Synchronously loads and parses markup from file.
