@@ -79,6 +79,8 @@
     <TypeScriptCompile Include="ui\controls\element.ts" />
     <TypeScriptCompile Include="ui\controls\hbox.ts" />
     <TypeScriptCompile Include="ui\controls\html.ts" />
+    <TypeScriptCompile Include="ui\controls\messagebox.ts" />
+    <TypeScriptCompile Include="ui\controls\modal.ts" />
     <TypeScriptCompile Include="ui\markup.ts" />
     <TypeScriptCompile Include="ui\controls\placeholder.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
@@ -126,6 +128,7 @@
     <Content Include="style\_hbox.less" />
     <Content Include="style\_vbox.less" />
     <Content Include="style\_scrollbar.less" />
+    <Content Include="style\_modal.less" />
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

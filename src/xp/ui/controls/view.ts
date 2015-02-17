@@ -11,16 +11,18 @@
             // Load markup if URL specified (not "href" attribute).
             var tag = xp.getClassName(this);
             var mp = MarkupParseInfo[tag];
-            if (mp.markupInit) {
-                // Already loaded? Init.
-                mp.markupInit(this);
-            }
-            else if (mp.markupUrl) {
-                // Load markup and init
-                var markup = loadMarkupSync(mp.markupUrl);
-                var init = mp.parser.getInitializer($(markup[0]));
-                mp.markupInit = init;
-                init(this);
+            if (mp) {
+                if (mp.markupInit) {
+                    // Already loaded? Init.
+                    mp.markupInit(this);
+                }
+                else if (mp.markupUrl) {
+                    // Load markup and init
+                    var markup = loadMarkupSync(mp.markupUrl);
+                    var init = mp.parser.getInitializer($(markup[0]));
+                    mp.markupInit = init;
+                    init(this);
+                }
             }
         }
 

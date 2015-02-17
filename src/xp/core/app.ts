@@ -17,9 +17,14 @@
          * Starts the application.
          */
         start() {
+            if (RunningApp)
+                throw new Error('Application is already running.');
+
             var markup = xp.loadMarkupSync(this.config.startupUrl);
             this.window = <xp.UI.Window>xp.UI.createElement(markup);
             this.window.renderTo('body');
+
+            RunningApp = this;
         }
 
 
@@ -81,4 +86,9 @@
 
         return xml;
     }
+
+    /**
+     * Accesses the running app.
+     */
+    export var RunningApp: Application;
 } 

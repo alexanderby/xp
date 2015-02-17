@@ -116,6 +116,12 @@
   </xs:complexType>
   <xs:element name="List" type="List"/>
 
+  <xs:complexType name="Modal">
+    <xs:complexContent>
+      <xs:extension base="View"/>
+    </xs:complexContent>
+  </xs:complexType>
+
   <!-- Enums -->
   <xs:simpleType name="HContentAlign">
     <xs:restriction base="xs:string">
