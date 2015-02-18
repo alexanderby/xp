@@ -1,5 +1,8 @@
 ﻿module xp.Binding {
 
+    // TODO: Support move.
+    // Currently this seems not possible with Array interface.
+
     /**
      * Defines a collection, which notifies of it's changes.
      */
@@ -228,6 +231,8 @@
         splice(start: number): T[];
         splice(start: number, deleteCount: number, ...items: T[]);
         splice(start: number, deleteCount?: number, ...items: T[]): T[] {
+            // TODO: Move.
+
             // Delete
             var deleted = new Array<T>();
             for (var i = 0; i < deleteCount; i++) {
