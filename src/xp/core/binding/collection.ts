@@ -1,4 +1,29 @@
-﻿module xp.Binding {
+﻿interface Array<T> {
+    /**
+     * Moves an item within an array.
+     * @param from Item's current index.
+     * @param to Target index.
+     */
+    move(from: number, to: number): Array<T>;
+}
+Array.prototype.move = function (from, to) {
+    if (from < 0) {
+        from = this.length - from;
+    }
+    if (to < 0) {
+        to = this.length - to;
+    }
+    if (from > this.length - 1 || from < 0 || to < 0) {
+        throw new Error('Index was out of range.');
+    }
+
+    var picked = this.splice(from, 1)[0];
+    //this.splice(from < to ? to - 1 : to, 0, picked);
+    this.splice(to, 0, picked); // As in .NET 
+    return this;
+};
+
+module xp.Binding {
 
     // TODO: Support move.
     // Currently this seems not possible with Array interface.
@@ -19,7 +44,7 @@
         //Update?
         Delete,
         Reset,
-        //move,
+        Move
         //sort
     }
 
@@ -147,7 +172,9 @@
             Object.defineProperty(this, index.toString(), {
                 get: () => this.__inner__[index],
                 set: (value: T) => {
-                    this.__inner__[index] = value;
+                    if (!isNotifier(value)) {
+                        value = observable(value);
+                    }
 
                     // Notify
                     this.onCollectionChanged.invoke({
@@ -193,6 +220,19 @@
         // Mutator methods
         //----------------
 
+        move(from: number, to: number): T[] {
+            this.__inner__.move(from, to);
+            // Notify
+            this.onCollectionChanged.invoke({
+                action: CollectionChangeAction.Move,
+                oldIndex: from,
+                newIndex: to,
+                oldItem: this.__inner__[to],
+                newItem: this.__inner__[to]
+            });
+            return this.__inner__;
+        }
+
         pop(): T {
             var item = this.remove(this.__inner__.length - 1);
             return item;
@@ -205,12 +245,12 @@
             return this.__inner__.length;
         }
 
-        reverse(): T[] {
-            this.__inner__.reverse();
-            // Notify
-            this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.Reset // TODO: move?
-            });
+        reverse(): T[]{
+            var length = this.__inner__.length;
+            for (var i = 0; i < length - 1; i++) {
+                this.move(0, length - 1 - i);
+            }
+
             return this.__inner__;
         }
 
@@ -220,11 +260,25 @@
         }
 
         sort(compareFn?: (a: T, b: T) => number): T[] {
-            this.__inner__.sort(compareFn);
-            // Notify
-            this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.Reset // TODO: move?
+            var unsorted = this.__inner__.slice();
+            var sorted = unsorted.sort(compareFn);
+
+            var indicies = unsorted.map((v, i) => {
+                return {
+                    old: i,
+                    new: sorted.indexOf(v)
+                };
             });
+            indicies.sort((a, b) => b.new - a.new);
+            for (var i = 0; i < indicies.length; i++) {
+                for (var j = i + 1; j < indicies.length; j++) {
+                    if (indicies[i].old > indicies[j].old) {
+                        indicies[j].old--;
+                    }
+                }
+            }
+            indicies.forEach((i) => this.move(i.old, i.new));
+
             return this.__inner__;
         }
 
