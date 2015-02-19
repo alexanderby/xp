@@ -23,12 +23,10 @@
      * An object which notifies of it's changes.
      */
     export class ObservableObject implements INotifier {
-        protected __inner__: Object;
         onPropertyChanged: xp.Event<string>;
 
         /**
          * Creates an object, which notifies of it's properties changes.
-         * WARNING: The source's nested object-properties will be replaced with observables.
          * @param source Source object.
          */
         constructor(source: Object) {
@@ -51,15 +49,10 @@
                 enumerable: false,
                 value: new Event<string>()
             });
-            Object.defineProperty(this, '__inner__', {
-                configurable: true,
-                enumerable: false,
-                value: source
-            });
 
             for (var key in source) {
                 // Create notification property
-                addNotificationProperty(this, key);
+                addNotificationProperty(this, key, source[key]);
             }
         }
     }
@@ -68,45 +61,51 @@
      * Adds property to INotifier.
      * @param obj Notifier.
      * @param name Name of the property to create.
+     * @param value Default value.
      */
-    function addNotificationProperty(obj: INotifier, name: string) {
+    function addNotificationProperty(obj: INotifier, name: string, value: any) {
         //
         // Ensure property is not already present.
         if (name in obj) {
             throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
         }
-        if (name === 'onPropertyChanged' || name === '__inner__' || name === '__create__') {
+        if (name === 'onPropertyChanged') {
             throw new Error('Unable to create notification property. Reserved name "' + name + '" is used.');
         }
 
-        var inner = obj['__inner__'];
-        var value = inner[name];
         if (value === null)
-            value = {};
+            value = {}; // TODO: How to handle nulls?
+
 
         //
         // Check if property is an object.
         // If so -> make it Notifier.
 
-        if (Array.isArray(value)) {
-            inner[name] = new ObservableCollection(value);
+        if (typeof value === 'object' && !isNotifier(value)) {
+            value = observable(value);
             var isNestedObject = true;
         }
-        else if (typeof value === 'object' && !isNotifier(value)) {
-            inner[name] = new ObservableObject(value);
-            var isNestedObject = true;
-        }
+
+        ////
+        //// Create private field
+        //var fieldName = '_' + name;
+        //Object.defineProperty(obj, fieldName, {
+        //    configurable: true,
+        //    enumerable: false,
+        //    writable: true,
+        //    value: value
+        //});
 
         //
         // Getters/setters
 
         var getter = function () {
-            return inner[name];
+            return value;
         };
 
         // Simple setter
-        var setter = function (value) {
-            inner[name] = value;
+        var setter = function (v) {
+            value = v;
             obj.onPropertyChanged.invoke(name);
         };
 
@@ -116,13 +115,10 @@
                 if (newObj === null) {
                     newObj = {};
                 }
-                else if (Array.isArray(newObj)) {
-                    newObj = new ObservableCollection(newObj);
+                if (!isNotifier(newObj)) {
+                    newObj = observable(newObj);
                 }
-                else if (!isNotifier(newObj)) {
-                    newObj = new ObservableObject(newObj);
-                }
-                inner[name] = newObj;
+                value = newObj;
                 obj.onPropertyChanged.invoke(name);
             };
         }

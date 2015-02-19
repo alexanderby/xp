@@ -65,11 +65,10 @@ module xp.Binding {
      * A collection which notifies of it's changes.
      */
     export class ObservableCollection<T> extends ObservableObject implements Array<T>, ICollectionNotifier, INotifier {
-        protected __inner__: Array<T>;
+        protected inner: Array<T>;
 
         /**
          * Creates a collection which notifies of it's changes.
-         * WARNING: The source's items-objects will be mutated replaced with observables.
          * @param [collection] Source collection.
          */
         constructor(collection?: Array<T>) {
@@ -93,7 +92,7 @@ module xp.Binding {
                 enumerable: false,
                 value: new Event<CollectionChangeArgs>()
             });
-            Object.defineProperty(this, '__inner__', {
+            Object.defineProperty(this, 'inner', {
                 configurable: true,
                 enumerable: false,
                 value: []
@@ -127,7 +126,7 @@ module xp.Binding {
          */
         protected add(item, index) {
             item = this.createNotifier(item);
-            this.__inner__.splice(index, 0, item);
+            this.inner.splice(index, 0, item);
             this.appendIndexProperty();
 
             // Notify
@@ -138,7 +137,7 @@ module xp.Binding {
             });
             this.onPropertyChanged.invoke('length');
             if (!this.splicing) {
-                for (var i = index; i < this.__inner__.length; i++) {
+                for (var i = index; i < this.inner.length; i++) {
                     this.onPropertyChanged.invoke(i.toString());
                 }
             }
@@ -148,7 +147,7 @@ module xp.Binding {
          * Handles item's removal item from collection. 
          */
         protected remove(index): T {
-            var item = this.__inner__.splice(index, 1)[0];
+            var item = this.inner.splice(index, 1)[0];
             this.deleteIndexProperty();
 
             // Notify
@@ -159,7 +158,7 @@ module xp.Binding {
             });
             this.onPropertyChanged.invoke('length');
             if (!this.splicing) {
-                for (var i = index; i < this.__inner__.length + 1; i++) {
+                for (var i = index; i < this.inner.length + 1; i++) {
                     this.onPropertyChanged.invoke(i.toString());
                 }
             }
@@ -169,9 +168,9 @@ module xp.Binding {
 
         // Must be called after inner collection change.
         protected appendIndexProperty() {
-            var index = this.__inner__.length - 1;
+            var index = this.inner.length - 1;
             Object.defineProperty(this, index.toString(), {
-                get: () => this.__inner__[index],
+                get: () => this.inner[index],
                 set: (value: T) => {
                     if (!isNotifier(value)) {
                         value = observable(value);
@@ -182,8 +181,8 @@ module xp.Binding {
                         action: CollectionChangeAction.Replace,
                         oldIndex: index,
                         newIndex: index,
-                        oldItem: this.__inner__[index],
-                        newItem: this.__inner__[index] = value
+                        oldItem: this.inner[index],
+                        newItem: this.inner[index] = value
                     });
                     this.onPropertyChanged.invoke(index.toString());
                 },
@@ -194,7 +193,7 @@ module xp.Binding {
 
         // Must be called after inner collection change.
         protected deleteIndexProperty() {
-            delete this[this.__inner__.length];
+            delete this[this.inner.length];
         }
 
         protected createNotifier(item): INotifier {
@@ -213,7 +212,7 @@ module xp.Binding {
         //-----------
 
         get length(): number {
-            return this.__inner__.length;
+            return this.inner.length;
         }
 
 
@@ -222,15 +221,15 @@ module xp.Binding {
         //----------------
 
         move(from: number, to: number): T[] {
-            this.__inner__.move(from, to);
+            this.inner.move(from, to);
 
             // Notify
             this.onCollectionChanged.invoke({
                 action: CollectionChangeAction.Move,
                 oldIndex: from,
                 newIndex: to,
-                oldItem: this.__inner__[to],
-                newItem: this.__inner__[to]
+                oldItem: this.inner[to],
+                newItem: this.inner[to]
             });
             if (!this.sorting) {
                 for (var i = Math.min(from, to); i <= Math.max(from, to); i++) {
@@ -238,24 +237,24 @@ module xp.Binding {
                 }
             }
 
-            return this.__inner__;
+            return this.inner;
         }
 
         pop(): T {
-            var item = this.remove(this.__inner__.length - 1);
+            var item = this.remove(this.inner.length - 1);
             return item;
         }
 
         push(...items: T[]): number {
             items.forEach((item) => {
-                this.add(item, this.__inner__.length);
+                this.add(item, this.inner.length);
             });
-            return this.__inner__.length;
+            return this.inner.length;
         }
 
         reverse(): T[] {
             this.sorting = true;
-            var length = this.__inner__.length;
+            var length = this.inner.length;
             for (var i = 0; i < length - 1; i++) {
                 this.move(0, length - 1 - i); // Collection notifications are inside move()
             }
@@ -269,7 +268,7 @@ module xp.Binding {
                 }
             }
 
-            return this.__inner__;
+            return this.inner;
         }
 
         shift(): T {
@@ -280,7 +279,7 @@ module xp.Binding {
         private sorting = false; // Prevents property changed notifications while sorting
 
         sort(compareFn?: (a: T, b: T) => number): T[] {
-            var unsorted = this.__inner__.slice();
+            var unsorted = this.inner.slice();
             var sorted = unsorted.slice().sort(compareFn);
 
             var indicies = unsorted.map((v, i) => {
@@ -308,7 +307,7 @@ module xp.Binding {
                 }
             });
 
-            return this.__inner__;
+            return this.inner;
         }
 
         splice(start: number): T[];
@@ -322,17 +321,17 @@ module xp.Binding {
             }
 
             if (start < 0)
-                start = this.__inner__.length + start;
+                start = this.inner.length + start;
 
-            if (start < 0 || start > this.__inner__.length || deleteCount < 0)
+            if (start < 0 || start > this.inner.length || deleteCount < 0)
                 throw new Error('Index was out of range.');
 
-            deleteCount = isNaN(deleteCount) ? (this.__inner__.length - start) : deleteCount;
+            deleteCount = isNaN(deleteCount) ? (this.inner.length - start) : deleteCount;
 
             //
             // Process
 
-            var oldLength = this.__inner__.length;
+            var oldLength = this.inner.length;
             this.splicing = true;
             // Delete
             var deleted = new Array<T>();
@@ -352,7 +351,7 @@ module xp.Binding {
 
             // Notify of properties changes
             var addedCount = items ? items.length : 0;
-            var newLength = this.__inner__.length;
+            var newLength = this.inner.length;
             var end = deleteCount === addedCount ? start + addedCount : Math.max(newLength, oldLength);
             for (var i = start; i < end; i++) {
                 this.onPropertyChanged.invoke(i.toString());
@@ -366,7 +365,7 @@ module xp.Binding {
             //for (var i = 0; i < items.length; i++) {
             //    this.add(items[i], i);
             //}
-            return this.__inner__.length;
+            return this.inner.length;
         }
 
 
@@ -377,49 +376,49 @@ module xp.Binding {
         // TODO: Return new ObservableCollection?
 
         concat<U extends T[]>(...items: U[]): T[];
-        concat(...items: T[]): T[] { return this.__inner__.concat(items); }
+        concat(...items: T[]): T[] { return this.inner.concat(items); }
 
-        join(separator?: string): string { return this.__inner__.join(separator); }
+        join(separator?: string): string { return this.inner.join(separator); }
 
-        slice(start?: number, end?: number): T[] { return this.__inner__.slice(start, end); }
+        slice(start?: number, end?: number): T[] { return this.inner.slice(start, end); }
 
         /**
          * Method called by JSON.stringify()
          */
         toJSON() {
-            return this.__inner__;
+            return this.inner;
         }
 
         //toString(): string { return this.inner.toString(); }
         toString(): string { return Object.prototype.toString.call(this); }
         //toString(): string { return '[object Array]'; }
 
-        toLocaleString(): string { return this.__inner__.toLocaleString(); }
+        toLocaleString(): string { return this.inner.toLocaleString(); }
 
-        indexOf(searchElement: T, fromIndex?: number): number { return this.__inner__.indexOf(searchElement, fromIndex); }
+        indexOf(searchElement: T, fromIndex?: number): number { return this.inner.indexOf(searchElement, fromIndex); }
 
-        lastIndexOf(searchElement: T, fromIndex?: number): number { return this.__inner__.lastIndexOf(searchElement, fromIndex); }
+        lastIndexOf(searchElement: T, fromIndex?: number): number { return this.inner.lastIndexOf(searchElement, fromIndex); }
 
 
         //------------------
         // Iteration methods
         //------------------
 
-        forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void { return this.__inner__.forEach(callbackfn, thisArg); }
+        forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void { return this.inner.forEach(callbackfn, thisArg); }
 
-        every(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.__inner__.every(callbackfn, thisArg); }
+        every(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.every(callbackfn, thisArg); }
 
-        some(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.__inner__.some(callbackfn, thisArg); }
+        some(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.some(callbackfn, thisArg); }
 
-        filter(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): T[] { return this.__inner__.filter(callbackfn, thisArg); }
+        filter(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): T[] { return this.inner.filter(callbackfn, thisArg); }
 
-        map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] { return this.__inner__.map(callbackfn, thisArg); }
+        map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] { return this.inner.map(callbackfn, thisArg); }
 
         reduce<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
-        reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.__inner__.reduce(callbackfn, initialValue); }
+        reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduce(callbackfn, initialValue); }
 
         reduceRight<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
-        reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.__inner__.reduceRight(callbackfn, initialValue); }
+        reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduceRight(callbackfn, initialValue); }
 
 
         [n: number]: T;

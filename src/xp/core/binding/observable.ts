@@ -2,7 +2,6 @@
     
     /**
      * Creates an object or collection, which notifies of it's properties changes.
-     * WARNING: The source's nested object-properties will be replaced with observables.
      * WARNING: Avoid circular references.
      * WARNING: Source properties must be initialized 
      * (at least have {} or [] but not null or undefined).
