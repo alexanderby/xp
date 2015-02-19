@@ -8,10 +8,10 @@
 }
 Array.prototype.move = function (from, to) {
     if (from < 0) {
-        from = this.length - from;
+        from = this.length + from;
     }
     if (to < 0) {
-        to = this.length - to;
+        to = this.length + to;
     }
     if (from > this.length - 1 || from < 0 || to < 0) {
         throw new Error('Index was out of range.');
@@ -24,9 +24,6 @@ Array.prototype.move = function (from, to) {
 };
 
 module xp.Binding {
-
-    // TODO: Support move.
-    // Currently this seems not possible with Array interface.
 
     /**
      * Defines a collection, which notifies of it's changes.
@@ -45,12 +42,10 @@ module xp.Binding {
         Delete,
         Reset,
         Move
-        //sort
     }
 
     export interface CollectionChangeArgs {
         action: CollectionChangeAction;
-        //index?: number;
         newIndex?: number;
         oldIndex?: number;
         newItem?: any;
@@ -125,6 +120,8 @@ module xp.Binding {
         // Handling operations
         //--------------------
 
+        private splicing = false; // Prevents multiple property change notifications while splicing
+
         /**
          * Handles item's addition into collection.
          */
@@ -140,8 +137,10 @@ module xp.Binding {
                 newItem: item
             });
             this.onPropertyChanged.invoke('length');
-            for (var i = index; i < this.__inner__.length; i++) {
-                this.onPropertyChanged.invoke(i.toString());
+            if (!this.splicing) {
+                for (var i = index; i < this.__inner__.length; i++) {
+                    this.onPropertyChanged.invoke(i.toString());
+                }
             }
         }
 
@@ -159,8 +158,10 @@ module xp.Binding {
                 oldItem: item
             });
             this.onPropertyChanged.invoke('length');
-            for (var i = index; i < this.__inner__.length + 1; i++) {
-                this.onPropertyChanged.invoke(i.toString());
+            if (!this.splicing) {
+                for (var i = index; i < this.__inner__.length + 1; i++) {
+                    this.onPropertyChanged.invoke(i.toString());
+                }
             }
 
             return item;
@@ -222,6 +223,7 @@ module xp.Binding {
 
         move(from: number, to: number): T[] {
             this.__inner__.move(from, to);
+
             // Notify
             this.onCollectionChanged.invoke({
                 action: CollectionChangeAction.Move,
@@ -230,6 +232,12 @@ module xp.Binding {
                 oldItem: this.__inner__[to],
                 newItem: this.__inner__[to]
             });
+            if (!this.sorting) {
+                for (var i = Math.min(from, to); i <= Math.max(from, to); i++) {
+                    this.onPropertyChanged.invoke(i.toString());
+                }
+            }
+
             return this.__inner__;
         }
 
@@ -245,10 +253,20 @@ module xp.Binding {
             return this.__inner__.length;
         }
 
-        reverse(): T[]{
+        reverse(): T[] {
+            this.sorting = true;
             var length = this.__inner__.length;
             for (var i = 0; i < length - 1; i++) {
-                this.move(0, length - 1 - i);
+                this.move(0, length - 1 - i); // Collection notifications are inside move()
+            }
+            this.sorting = false;
+
+            // Notify of properties changes
+            for (var i = 0; i < length; i++) {
+                // Middle item was not changed
+                if (!(length % 2 === 1 && Math.floor(length / 2) === i)) {
+                    this.onPropertyChanged.invoke(i.toString());
+                }
             }
 
             return this.__inner__;
@@ -259,9 +277,11 @@ module xp.Binding {
             return item;
         }
 
+        private sorting = false; // Prevents property changed notifications while sorting
+
         sort(compareFn?: (a: T, b: T) => number): T[] {
             var unsorted = this.__inner__.slice();
-            var sorted = unsorted.sort(compareFn);
+            var sorted = unsorted.slice().sort(compareFn);
 
             var indicies = unsorted.map((v, i) => {
                 return {
@@ -272,12 +292,21 @@ module xp.Binding {
             indicies.sort((a, b) => b.new - a.new);
             for (var i = 0; i < indicies.length; i++) {
                 for (var j = i + 1; j < indicies.length; j++) {
-                    if (indicies[i].old > indicies[j].old) {
+                    if (indicies[i].old < indicies[j].old) {
                         indicies[j].old--;
                     }
                 }
             }
-            indicies.forEach((i) => this.move(i.old, i.new));
+            this.sorting = true;
+            indicies.forEach((i) => i.old !== i.new && this.move(i.old, i.new)); // Collection notifications are inside move()
+            this.sorting = false;
+
+            // Notify of properties changes
+            indicies.forEach((i) => {
+                if (i.new !== i.old) {
+                    this.onPropertyChanged.invoke(i.new.toString());
+                }
+            });
 
             return this.__inner__;
         }
@@ -285,27 +314,58 @@ module xp.Binding {
         splice(start: number): T[];
         splice(start: number, deleteCount: number, ...items: T[]);
         splice(start: number, deleteCount?: number, ...items: T[]): T[] {
-            // TODO: Move.
+            //
+            // Check
 
+            if (start === void 0/* || (items && items.length === 0)*//*TypeScript creates an empty Array*/) {
+                throw new Error('The specified arguments may lead to unexpected result.');
+            }
+
+            if (start < 0)
+                start = this.__inner__.length + start;
+
+            if (start < 0 || start > this.__inner__.length || deleteCount < 0)
+                throw new Error('Index was out of range.');
+
+            deleteCount = isNaN(deleteCount) ? (this.__inner__.length - start) : deleteCount;
+
+            //
+            // Process
+
+            var oldLength = this.__inner__.length;
+            this.splicing = true;
             // Delete
             var deleted = new Array<T>();
             for (var i = 0; i < deleteCount; i++) {
                 var item = this.remove(start);
                 deleted.push(item);
             }
-            // Add
-            var index = start;
-            items.forEach((item) => {
-                this.add(item, index);
-                index++;
-            })
+            if (items) {
+                // Add
+                var index = start;
+                items.forEach((item) => {
+                    this.add(item, index);
+                    index++;
+                })
+            }
+            this.splicing = false;
+
+            // Notify of properties changes
+            var addedCount = items ? items.length : 0;
+            var newLength = this.__inner__.length;
+            var end = deleteCount === addedCount ? start + addedCount : Math.max(newLength, oldLength);
+            for (var i = start; i < end; i++) {
+                this.onPropertyChanged.invoke(i.toString());
+            }
+
             return deleted;
         }
 
         unshift(...items: T[]): number {
-            for (var i = 0; i < items.length; i++) {
-                this.add(items[i], i);
-            }
+            this.splice(0, 0, items.length > 1 ? <any>items : items[0]);
+            //for (var i = 0; i < items.length; i++) {
+            //    this.add(items[i], i);
+            //}
             return this.__inner__.length;
         }
 

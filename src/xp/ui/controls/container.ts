@@ -77,16 +77,8 @@
          * @param element Element to append.
          */
         append(element: Element) {
-            if (element.parent) {
-                element.parent.detachChild(element);
-            }
-            // DOM
-            this.getContainerElement().append(element.domElement);
-
-            this.children.push(element);
-            element.parent = this;
-
-            console.log(xp.formatString('Appended {0}:{1} to {2}:{3}', xp.getClassName(element), element.name || '-', xp.getClassName(this), this.name || '-'));
+            this.insert(element, this.children.length);
+            //console.log(xp.formatString('Appended {0}:{1} to {2}:{3}', xp.getClassName(element), element.name || '-', xp.getClassName(this), this.name || '-'));
         }
 
         /**
@@ -94,47 +86,93 @@
          * @param element Element to prepend.
          */
         prepend(element: Element) {
-            if (element.parent) {
-                element.parent.detachChild(element);
-            }
-            // DOM
-            this.getContainerElement().prepend(element.domElement);
-
-            this.children.splice(0, 0, element);
-            element.parent = this;
+            this.insert(element, 0);
         }
 
         /**
          * Inserts element at index.
-         * Be accurate: if element is already listed in the container, the resulting index may differ.
-         * Use 'insertBefore' or 'insertAfter' instead.
          * @param element Element to prepend.
          * @param index Index to insert at.
          */
         insert(element: Element, index: number) {
             if (element.parent === this && this.children.indexOf(element) == index) {
                 // Don't do anything.
+                return;
             }
-            else {
-                var target = this.children[index];
-                if (!target) {
-                    // Append at end
-                    this.append(element);
+
+            if (index > this.children.length) {
+                throw new Error('Index was out or range.');
+            }
+
+            if (element.parent === this) {
+                var from = this.children.indexOf(element);
+
+                // DOM
+                var target = from < index ? index + 1 : index;
+                if (target === this.children.length) {
+                    element.domElement.appendTo(this.domElement);
                 }
                 else {
-                    // DOM
-                    element.domElement.insertBefore(target.domElement);
-
-                    var targetIndex = (element.parent === this && this.children.indexOf(element) < index) ?
-                        index - 1
-                        : index;
-                    if (element.parent) {
-                        element.parent.detachChild(element);
-                    }
-                    this.children.splice(targetIndex, 0, element);
-                    element.parent = this;
+                    element.domElement.insertBefore(this.domElement.children().get(target));
                 }
+
+                this.children.move(from, index);
             }
+            else {
+                if (element.parent)
+                    element.parent.detachChild(element);
+
+                // DOM
+                if (index === this.children.length) {
+                    element.domElement.appendTo(this.domElement);
+                }
+                else {
+                    element.domElement.insertBefore(this.domElement.children().get(index));
+                }
+
+                this.children.splice(index, 0, element);
+                element.parent = this;
+            }
+            //else {
+            //    //var target = this.children[index];
+            //    //if (!target) {
+            //    //    // Append at end
+            //    //    this.append(element);
+            //    //}
+            //    //else {
+            //    //    // DOM
+            //    //    element.domElement.insertBefore(target.domElement);
+
+            //    //    var targetIndex = (element.parent === this && this.children.indexOf(element) < index) ?
+            //    //        index - 1
+            //    //        : index;
+            //    //    if (element.parent) {
+            //    //        element.parent.detachChild(element);
+            //    //    }
+            //    //    this.children.splice(targetIndex, 0, element);
+            //    //    element.parent = this;
+            //    //}
+            //    if (index > this.children.length)
+            //        throw new Error('Index was out or range.');
+
+            //    if (index === this.children.length) {
+            //        this.append(element);
+            //    }
+            //    else {
+            //        if (element.parent === this) {
+            //            var from=
+            //        }
+            //        if (element.parent) {
+            //            element.parent.detachChild(element);
+            //        }
+
+            //        // DOM
+            //        element.domElement.insertBefore(this.domElement.children().get(index));
+
+            //        this.children.splice(index, 0, element);
+            //        element.parent = this;
+            //    }
+            //}
         }
 
         /**

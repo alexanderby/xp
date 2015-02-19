@@ -29,35 +29,74 @@
     console.log('Test: Push.');
     nc.push({ v: 4 }, { v: 5 });
     console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 1 }, { v: 2 }, { v: 3 }, { v: 4 }, { v: 5 }]));
 
     console.log('Test: Pop.');
     nc.pop();
     console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 1 }, { v: 2 }, { v: 3 }, { v: 4 }]));
 
     console.log('Test: Shift.');
     nc.shift();
     console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 2 }, { v: 3 }, { v: 4 }]));
 
     console.log('Test: Unshift.');
     nc.unshift({ v: 0 });
     console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 0 }, { v: 2 }, { v: 3 }, { v: 4 }]));
 
     console.log('Test: Splice.');
     nc.splice(1, 2, { v: 7 }, { v: 8 });
     console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 0 }, { v: 7 }, { v: 8 }, { v: 4 }]));
 
     console.log('Test: Replace.');
     nc[2] = { v: 9 };
     console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 0 }, { v: 7 }, { v: 9 }, { v: 4 }]));
+
+    console.log('Test: Move.');
+    nc.move(1, 3);
+    console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 0 }, { v: 9 }, { v: 4 }, { v: 7 }]));
+
+    console.log('Test: Sort.');
+    nc.sort((a, b) => a.v - b.v);
+    console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 0 }, { v: 4 }, { v: 7 }, { v: 9 }]));
+
+    console.log('Test: Reverse.');
+    nc.reverse();
+    console.log(nc);
+    assertEquals(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 9 }, { v: 7 }, { v: 4 }, { v: 0 }]));
 
     //
     // Check
 
     assertEquals(nc.length, 4);
-    assertEquals(nc[0].v, 0);
+    assertEquals(nc[0].v, 9);
     assertEquals(nc[1].v, 7);
-    assertEquals(nc[2].v, 9);
-    assertEquals(nc[3].v, 4);
+    assertEquals(nc[2].v, 4);
+    assertEquals(nc[3].v, 0);
 
     //
     // The End

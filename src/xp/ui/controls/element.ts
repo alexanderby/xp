@@ -380,7 +380,15 @@
             if (!target.parent) {
                 throw new Error('Target element has no parent.');
             }
-            var index = target.parent.children.indexOf(target);
+            var index: number;
+            if (this.parent === target.parent) {
+                var from = this.parent.children.indexOf(this);
+                var to = this.parent.children.indexOf(target);
+                index = from < to ? to - 1 : to;
+            }
+            else {
+                index = target.parent.children.indexOf(target);
+            }
             target.parent.insert(this, index);
         }
 
@@ -392,7 +400,15 @@
             if (!target.parent) {
                 throw new Error('Target element has no parent.');
             }
-            var index = target.parent.children.indexOf(target) + 1;
+            var index: number;
+            if (this.parent === target.parent) {
+                var from = this.parent.children.indexOf(this);
+                var to = this.parent.children.indexOf(target);
+                index = from < to ? to : to + 1;
+            }
+            else {
+                index = target.parent.children.indexOf(target) + 1;
+            }
             target.parent.insert(this, index);
         }
 

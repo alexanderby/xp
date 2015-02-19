@@ -64,6 +64,9 @@
                                     (<xp.Binding.Scope>this.children[args.newIndex].scope).set(this.itemId, args.newItem);
                                 }
                                 break;
+                            case Binding.CollectionChangeAction.Move:
+                                this.insert(this.children[args.oldIndex], args.newIndex);
+                                break;
                             case Binding.CollectionChangeAction.Reset:
                                 this.items = items;
                                 break;
