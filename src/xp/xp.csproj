@@ -55,7 +55,6 @@
     <Content Include="todo\style.min.css">
       <DependentUpon>style.css</DependentUpon>
     </Content>
-    <Content Include="todo\view1.xml" />
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
@@ -64,9 +63,9 @@
     <TypeScriptCompile Include="core\binding\observable.ts" />
     <TypeScriptCompile Include="core\binding\scope.ts" />
     <TypeScriptCompile Include="core\binding\manager.ts" />
+    <TypeScriptCompile Include="core\defs.ts" />
     <TypeScriptCompile Include="core\dictionary.ts" />
     <TypeScriptCompile Include="testapp\app.ts" />
-    <TypeScriptCompile Include="core\app.ts" />
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="tests\binding.collection.tests.ts" />
@@ -90,9 +89,9 @@
     <TypeScriptCompile Include="ui\controls\textbox.ts" />
     <TypeScriptCompile Include="ui\controls\togglebutton.ts" />
     <TypeScriptCompile Include="ui\controls\vbox.ts" />
-    <TypeScriptCompile Include="ui\controls\view.ts" />
     <TypeScriptCompile Include="ui\controls\window.ts" />
     <TypeScriptCompile Include="core\binding\expression.ts" />
+    <TypeScriptCompile Include="ui\startup.ts" />
     <TypeScriptCompile Include="ui\uievent.ts" />
     <TypeScriptCompile Include="utils\utils.ts" />
   </ItemGroup>

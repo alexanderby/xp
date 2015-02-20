@@ -49,7 +49,9 @@
 
             if (url) {
                 // Load markup from file
-                markup = xp.loadMarkupSync(url);
+                xp.UI.loadMarkup(url,(r) => {
+                    markup = r;
+                }, false);
             }
             else {
                 markup = markup.children();

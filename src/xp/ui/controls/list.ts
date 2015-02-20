@@ -61,7 +61,7 @@
                                 break;
                             case Binding.CollectionChangeAction.Replace:
                                 if (!this.itemReplacementToken) {
-                                    (<xp.Binding.Scope>this.children[args.newIndex].scope).set(this.itemId, args.newItem);
+                                    this.children[args.newIndex].scope.set(this.itemId, args.newItem);
                                 }
                                 break;
                             case Binding.CollectionChangeAction.Move:
@@ -212,7 +212,6 @@
             return (el) => {
                 initAttributes(el);
                 initTemplate(el);
-                el.onMarkupProcessed.invoke(el);
             };
         }
 

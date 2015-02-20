@@ -2,7 +2,7 @@
     /**
      * Modal dialog base.
      */
-    export /*abstract*/ class Modal extends View {
+    export /*abstract*/ class Modal extends VBox {
 
         /**
          * If returns 'true', the dialog will be closed.
@@ -24,7 +24,7 @@
          * Displays the modal dialog.
          */
         show() {
-            RunningApp.window.append(this);
+            Window.instance.append(this);
         }
 
         /**

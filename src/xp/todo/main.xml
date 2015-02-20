@@ -25,7 +25,22 @@
     </VBox>
 
     <!-- RESULTS -->
-    <View name="view1" href="view1.xml" flex="Stretch"/>
+    <VBox name="view1" flex="Stretch">
+      <HBox flex="Stretch">
+        <VBox width="50%">
+          <Label text="UNDONE"/>
+          <List items="{undone}" flex="Stretch">
+            <Label text="{item.name}"/>
+          </List>
+        </VBox>
+        <VBox width="50%">
+          <Label text="DONE"/>
+          <List items="{done}" flex="Stretch">
+            <Label text="{item.name}"/>
+          </List>
+        </VBox>
+      </HBox>
+    </VBox>
 
   </HBox>
 

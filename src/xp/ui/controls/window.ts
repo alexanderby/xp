@@ -4,16 +4,30 @@
      */
     export class Window extends VBox {
 
+        /**
+         * Instance of Window.
+         */
+        static instance: Window;
+
         //----
         // DOM
         //----
 
         protected getTemplate(): JQuery {
-            var template = $('<body></body>') // Bug when defining class in html on body
+            var template = $('body')
                 .addClass('Window')
                 .addClass('VBox')
-            //.append('<div class="content"></div>');
             return template;
+        }
+
+        protected initElement() {
+            super.initElement();
+
+            if (Window.instance)
+                throw new Error('There is already another Window.');
+            Window.instance = this;
+
+            this.onRendered.invoke(this);
         }
 
 
@@ -25,6 +39,11 @@
         //-----------
         // PROPERTIES
         //-----------
+
+        protected setDefaults() {
+            super.setDefaults();
+            this.title = 'XP Application';
+        }
 
         /**
          * Gets or sets app title.

@@ -14,10 +14,27 @@
         /**
          * Initializes UI element.
          */
-        protected initElement(markup?: JQuery) {
+        protected initElement() {
             this.domElement = this.getTemplate();
             this.initEvents();
             this.setDefaults();
+            this.applyInitializers();
+        }
+
+        /**
+         * Applies initializers that were defined outside.
+         */
+        protected applyInitializers() {
+            if (this instanceof Window) {
+                console.info('ENTERED APPLYING INIT');
+            }
+            var inits = Initializers.get(<any>this['constructor']);
+            if (inits) {
+                console.info('APPLYING INIT');
+                inits.forEach((init) => {
+                    init(this);
+                });
+            }
         }
 
 
@@ -70,6 +87,9 @@
         onMouseMove: Event<UIEventArgs>;
         onMouseEnter: Event<UIEventArgs>;
         onMouseLeave: Event<UIEventArgs>;
+        onKeyPress: Event<UIEventArgs>;
+        onKeyDown: Event<UIEventArgs>;
+        onKeyUp: Event<UIEventArgs>;
 
         /**
          * Is invoked when element is being removed.
@@ -82,12 +102,6 @@
         onRendered: Event<Element>;
 
         /**
-         * Is invoked by markup processor after
-         * element initialization is complete.
-         */
-        onMarkupProcessed: Event<Element>;
-
-        /**
          * Initializes control's events.
          */
         protected initEvents() {
@@ -95,22 +109,23 @@
             this.expressions = {};
 
             // Control's events
-            this.onScopeChanged = new Event<xp.Binding.Scope>();
-            this.onMarkupProcessed = new Event<Element>();
-            this.onRendered = new Event<Element>();
+            this.onScopeChanged = new Event();
+            this.onRendered = new Event();
 
-            this.onClick = new Event<UIEventArgs>();
-            this.onMouseDown = new Event<UIEventArgs>();
-            this.onMouseUp = new Event<UIEventArgs>();
-            this.onMouseMove = new Event<UIEventArgs>();
-            this.onMouseEnter = new Event<UIEventArgs>();
-            this.onMouseLeave = new Event<UIEventArgs>();
+            this.onClick = new Event();
+            this.onMouseDown = new Event();
+            this.onMouseUp = new Event;
+            this.onMouseMove = new Event();
+            this.onMouseEnter = new Event();
+            this.onMouseLeave = new Event();
+            this.onKeyPress = new Event();
+            this.onKeyDown = new Event();
+            this.onKeyUp = new Event();
 
             // Unregister events on remove?
-            this.onRemoved = new Event<Element>();
+            this.onRemoved = new Event();
             this.onRemoved.addHandler(() => {
                 this.onScopeChanged.removeAllHandlers();
-                this.onMarkupProcessed.removeAllHandlers();
                 this.onRendered.removeAllHandlers();
                 this.onClick.removeAllHandlers();
                 this.onMouseDown.removeAllHandlers();
@@ -118,15 +133,21 @@
                 this.onMouseMove.removeAllHandlers();
                 this.onMouseEnter.removeAllHandlers();
                 this.onMouseLeave.removeAllHandlers();
+                this.onKeyPress.removeAllHandlers();
+                this.onKeyDown.removeAllHandlers();
+                this.onKeyUp.removeAllHandlers();
             }, this);
 
-            // DOM events.
+            // DOM events
             this.initDomEvent('click', this.onClick);
             this.initDomEvent('mousedown', this.onMouseDown);
             this.initDomEvent('mouseup', this.onMouseUp);
             this.initDomEvent('mousemove', this.onMouseMove);
             this.initDomEvent('mouseenter', this.onMouseEnter);
             this.initDomEvent('mouseleave', this.onMouseLeave);
+            this.initDomEvent('keypress', this.onKeyPress);
+            this.initDomEvent('keydown', this.onKeyDown);
+            this.initDomEvent('keyup', this.onKeyUp);
         }
 
         protected initDomEvent(eventName: string, event: UIEvent) {
@@ -635,7 +656,6 @@
             var initAttributes = this.getAttributesInitializer(markup);
             return (el) => {
                 initAttributes(el);
-                el.onMarkupProcessed.invoke(el);
             };
         }
 
@@ -738,6 +758,30 @@
                 // Events
                 'onClick': {
                     '*': (name) => (el) => el.registerUIHandler(el.onClick, name)
+                },
+                'onMouseDown': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onMouseDown, name)
+                },
+                'onMouseUp': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onMouseUp, name)
+                },
+                'onMouseMove': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onMouseMove, name)
+                },
+                'onMouseEnter': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onMouseEnter, name)
+                },
+                'onMouseLeave': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onMouseLeave, name)
+                },
+                'onKeyPress': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onKeyPress, name)
+                },
+                'onKeyDown': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onKeyDown, name)
+                },
+                'onKeyUp': {
+                    '*': (name) => (el) => el.registerUIHandler(el.onKeyUp, name)
                 }
             };
         }

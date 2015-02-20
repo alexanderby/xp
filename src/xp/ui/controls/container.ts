@@ -12,6 +12,7 @@
             this.initEvents();
             this.initContent();
             this.setDefaults();
+            this.applyInitializers();
         }
 
         /**
@@ -272,27 +273,6 @@
         }
 
         /**
-         * Sets named children to control's properties.
-         */
-        setNamedChildren() {
-            this.cascadeBy((el) => {
-                if (el.name) {
-                    if (el.name in this && el !== this[el.name]) {
-                        throw new Error(xp.formatString('{0}#{1}: The name "{2}" conflicts with container\'s property.', xp.getClassName(this), this.name || '-', el.name));
-                    }
-                    this[el.name] = el;
-                }
-                if (el !== this && el instanceof View) {
-                    // Stop on <View>
-                    return true;
-                }
-                else {
-                    return false;
-                }
-            });
-        }
-
-        /**
          * Removes element.
          */
         remove() {
@@ -331,8 +311,6 @@
             return (el) => {
                 initAttributes(el);
                 initContent(el);
-                el.setNamedChildren(); // Where to place?
-                el.onMarkupProcessed.invoke(el);
             };
         }
 
@@ -358,7 +336,6 @@
                     var child = create();
                     el.append(child);
                 });
-
             });
 
             return (el) => actions.forEach((init) => init(el));
@@ -369,10 +346,10 @@
          */
         protected getAttributeMap(): AttributeMap<T> {
             return extendAttributeMap(super.getAttributeMap(), {
-                'enabled': {
-                    'true': () => (el: Container) => el.cascadeBy((e) => e.enabled = true),
-                    'false': () => (el: Container) => el.cascadeBy((e) => e.enabled = true)
-                },
+                //'enabled': {
+                //    'true': () => (el: Container) => el.cascadeBy((e) => e.enabled = true),
+                //    'false': () => (el: Container) => el.cascadeBy((e) => e.enabled = true)
+                //},
                 'padding': {
                     '*': (padding) => (el: Container) => el.padding = padding
                 }

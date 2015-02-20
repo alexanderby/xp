@@ -6,10 +6,10 @@
 
     export class Main extends xp.UI.Window {
 
-        constructor(app: xp.Application) {
+        constructor(app: App) {
             super();
 
-            console.log('Main dependency (app):');
+            console.info('Main dependency (app):');
             console.log(app);
 
             this.data = xp.Binding.observable({
@@ -20,7 +20,7 @@
             });
             this.scope = new xp.Binding.Scope(this.data);
 
-            this.onRendered.addHandler((el) => this.textbox.focus(), this);
+            this.textbox.focus();
         }
 
         //---------
@@ -86,9 +86,11 @@
             this.refreshFiltered();
         }
     }
+
     xp.UI.MarkupParseInfo['Window'] = {
         ctor: Main,
         parser: new xp.UI.WindowMarkupParser(),
-        dependencies: [xp.Application]
+        markupUrl: 'main.xml',
+        dependencies: [App]
     };
 } 

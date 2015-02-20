@@ -40,7 +40,6 @@
   <!-- List of all child-elements -->
   <xs:group name="elements">
     <xs:choice>
-      <xs:element ref="View"/>
       <xs:element ref="HBox"/>
       <xs:element ref="VBox"/>
       <xs:element ref="Button"/>
@@ -97,15 +96,6 @@
   </xs:complexType>
   <xs:element name="Window" type="Window"/>
 
-  <xs:complexType name="View">
-    <xs:complexContent>
-      <xs:extension base="VBox">
-        <xs:attribute name="href" type="xs:string"/>
-      </xs:extension>
-    </xs:complexContent>
-  </xs:complexType>
-  <xs:element name="View" type="View"/>
-
   <xs:complexType name="List">
     <xs:complexContent>
       <xs:extension base="VBox">
@@ -118,7 +108,7 @@
 
   <xs:complexType name="Modal">
     <xs:complexContent>
-      <xs:extension base="View"/>
+      <xs:extension base="VBox"/>
     </xs:complexContent>
   </xs:complexType>
 

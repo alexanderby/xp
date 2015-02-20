@@ -69,11 +69,11 @@
          * Markup URL (used to load markup of View or it's inheritors).
          */
         markupUrl?: string;
-        /**
-         * Function-initializer obtained by parsing of loaded markup
-         * (used by View or it's inheritors to prevent multiple loading).
-         */
-        markupInit?: (element: T) => void;
+        ///**
+        // * Function-initializer obtained by parsing of loaded markup
+        // * (used by View or it's inheritors to prevent multiple loading).
+        // */
+        //markupInit?: (element: T) => void;
     }
 
     /**
