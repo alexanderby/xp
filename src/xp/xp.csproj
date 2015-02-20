@@ -95,6 +95,7 @@
     <TypeScriptCompile Include="ui\uievent.ts" />
     <TypeScriptCompile Include="utils\path.ts" />
     <TypeScriptCompile Include="utils\misc.ts" />
+    <TypeScriptCompile Include="utils\log.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="schema\markup.xsd">

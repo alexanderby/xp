@@ -1,5 +1,5 @@
 ﻿module xp.Tests {
-    console.info('Test: Binding manager. Start.');
+    Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Binding manager. Start.');
 
     interface Person extends INotifier {
         name: string;
@@ -25,24 +25,24 @@
     };
 
     // Create manager
-    console.log('Test: Create binding manager.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Create binding manager.');
     var manager = new xp.BindingManager(target, 'cityName', source, 'city.name', 'unknown');
     assertEquals(source.city.name, target.cityName);
     assertEquals(source['onPropertyChanged']['handlers'].length, 1);
     assertEquals(source.city['onPropertyChanged']['handlers'].length, 1);
 
     // Change name
-    console.log('Test: Change name.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change name.');
     source.name = 'Ivan';
-    assertEquals(source.name, 'Ivan');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, source.name, 'Ivan');
 
     // Change city name
-    console.log('Test: Change city name.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change city name.');
     source.city.name = 'Moscow';
-    assertEquals(source.city.name, 'Moscow');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, source.city.name, 'Moscow');
 
     // Change city
-    console.log('Test: Change city.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change city.');
     var oldCity = source.city;
     source.city = <any>{ name: 'Hoiniki' };
     assertEquals(source.city.name, 'Hoiniki');
@@ -51,12 +51,12 @@
     assertEquals(oldCity['onPropertyChanged']['handlers'].length, 0);
 
     // Change city to null
-    console.log('Test: Change city to NULL.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change city to NULL.');
     source.city = null;
     assertEquals(target.cityName, 'unknown');
 
     // Revert city
-    console.log('Test: Revert city.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Revert city.');
     source.city = oldCity;
     assertEquals(source.city.name, 'Moscow');
     assertEquals(target.cityName, 'Moscow');
@@ -64,12 +64,12 @@
     assertEquals(source.city['onPropertyChanged']['handlers'].length, 1);
 
     // Change source to null
-    console.log('Test: Change source to NULL.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change source to NULL.');
     manager.resetWith(null);
     assertEquals(target.cityName, 'unknown');
 
     // Revert source
-    console.log('Test: Revert source.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Revert source.');
     manager.resetWith(source);
     assertEquals(source.city.name, 'Moscow');
     assertEquals(target.cityName, 'Moscow');
@@ -80,5 +80,5 @@
     //
     // The End
 
-    console.info('Test: Binding manager. Finish.');
+    Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Binding manager. Finish.');
 }

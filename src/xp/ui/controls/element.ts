@@ -574,7 +574,7 @@
             if (this.bindings['scope'])
                 scope = new xp.Scope(scope, this.parent.scope);
 
-            console.log(xp.formatString('{0}:{1}: Set data scope "{2}".', xp.getClassName(this), this.name || '-', scope));
+            Log.write(Log.HeatLevel.Log, Log.Domain.UI | Log.Domain.Binding, '{0}:{1}: Set data scope "{2}".', xp.getClassName(this), this.name || '-', scope);
             this._scope = scope;
 
             for (var cp in this.bindings) {
@@ -599,7 +599,7 @@
          * @param value Value, that user inputs.
          */
         protected onInput(controlProp: string, value) {
-            console.log(xp.formatString('{0}:{1}.{2}: Input "{3}".', xp.getClassName(this), this.name || '-', controlProp, value));
+            Log.write(Log.HeatLevel.Log, Log.Domain.UI, '{0}:{1}.{2}: Input "{3}".', xp.getClassName(this), this.name || '-', controlProp, value);
             this[controlProp] = value;
             if (this.bindings[controlProp]) {
                 this.bindings[controlProp].updateSource();

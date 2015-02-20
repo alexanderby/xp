@@ -125,7 +125,7 @@
                 this.resultField = this.func.apply(this, params);
             }
             catch (e) {
-                console.warn('Expression error: ' + e);
+                Log.write(Log.HeatLevel.Warn, Log.Domain.Binding, 'Expression error: ' + e);
                 this.resultField = null;
             }
             this.onPropertyChanged.invoke('result');

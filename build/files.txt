@@ -1,18 +1,22 @@
 ..\src\xp\lib\jquery.d.ts
 
-..\src\xp\utils\utils.ts
-..\src\xp\core\app.ts
+..\src\xp\utils\log.ts
+..\src\xp\utils\misc.ts
+..\src\xp\utils\path.ts
+
+..\src\xp\core\defs.ts
 ..\src\xp\core\dictionary.ts
 ..\src\xp\core\event.ts
 
-..\src\xp\core\binding\object.ts
-..\src\xp\core\binding\collection.ts
-..\src\xp\core\binding\observable.ts
-..\src\xp\core\binding\expression.ts
-..\src\xp\core\binding\manager.ts
-..\src\xp\core\binding\scope.ts
+..\src\xp\data\object.ts
+..\src\xp\data\collection.ts
+..\src\xp\data\observable.ts
+..\src\xp\data\expression.ts
+..\src\xp\data\manager.ts
+..\src\xp\data\scope.ts
 
 ..\src\xp\ui\markup.ts
+..\src\xp\ui\startup.ts
 ..\src\xp\ui\uievent.ts
 
 ..\src\xp\ui\controls\element.ts
@@ -31,7 +35,6 @@
 ..\src\xp\ui\controls\hbox.ts
 ..\src\xp\ui\controls\vbox.ts
 ..\src\xp\ui\controls\list.ts
-..\src\xp\ui\controls\view.ts
 ..\src\xp\ui\controls\window.ts
 ..\src\xp\ui\controls\modal.ts
 ..\src\xp\ui\controls\messagebox.ts

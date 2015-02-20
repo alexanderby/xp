@@ -79,7 +79,6 @@
          */
         append(element: Element) {
             this.insert(element, this.children.length);
-            //console.log(xp.formatString('Appended {0}:{1} to {2}:{3}', xp.getClassName(element), element.name || '-', xp.getClassName(this), this.name || '-'));
         }
 
         /**

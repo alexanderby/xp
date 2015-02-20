@@ -1,4 +1,6 @@
-﻿module Todo {
+﻿//xp.Log.DisplayMessages = 255;
+
+module Todo {
     export class App {
         window: xp.UI.Window;
     }

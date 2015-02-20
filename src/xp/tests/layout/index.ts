@@ -1,4 +1,6 @@
-﻿window.onload = () => {
+﻿xp.Log.DisplayMessages = 255;
+
+window.onload = () => {
     xp.UI.MarkupParseInfo['Window'].markupUrl = 'view/window.xml';
 
     xp.UI.init(() => {

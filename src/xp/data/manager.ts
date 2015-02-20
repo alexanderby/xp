@@ -218,11 +218,12 @@
 
 
         private logMessage(message: string) {
-            console.log(xp.formatString('BM of "{0}#{1}.{2}": {3}',
+            Log.write(Log.HeatLevel.Log, Log.Domain.Binding,
+                'BM of "{0}#{1}.{2}": {3}',
                 xp.getClassName(this.target),
                 this.target['name'],
                 this.targetPropertyPath,
-                message));
+                message);
         }
     }
 

@@ -1,5 +1,5 @@
 ﻿module xp.Tests {
-    console.info('Test: Observable collection. Start.');
+    Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Observable collection. Start.');
 
     //
     // Create
@@ -16,75 +16,75 @@
     // Subscribe
 
     nc.onCollectionChanged.addHandler((args) => {
-        console.log(xp.formatString('Test: Collection changed. Type: {0}, new index: {1}, old index: {2}, new item: {3}, old item: {4}.', CollectionChangeAction[args.action], args.newIndex, args.oldIndex, args.newItem, args.oldItem));
+        Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Collection changed. Type: {0}, new index: {1}, old index: {2}, new item: {3}, old item: {4}.', CollectionChangeAction[args.action], args.newIndex, args.oldIndex, args.newItem, args.oldItem);
     }, window);
     nc.onPropertyChanged.addHandler((prop) => {
-        console.log(xp.formatString('Test: Collection property changed: "{0}".', prop));
+        Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Collection property changed: "{0}".', prop);
     }, window);
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
 
     //
     // Process
 
-    console.log('Test: Push.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Push.');
     nc.push({ v: 4 }, { v: 5 });
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 1 }, { v: 2 }, { v: 3 }, { v: 4 }, { v: 5 }]));
 
-    console.log('Test: Pop.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Pop.');
     nc.pop();
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 1 }, { v: 2 }, { v: 3 }, { v: 4 }]));
 
-    console.log('Test: Shift.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Shift.');
     nc.shift();
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 2 }, { v: 3 }, { v: 4 }]));
 
-    console.log('Test: Unshift.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Unshift.');
     nc.unshift({ v: 0 });
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 0 }, { v: 2 }, { v: 3 }, { v: 4 }]));
 
-    console.log('Test: Splice.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Splice.');
     nc.splice(1, 2, { v: 7 }, { v: 8 });
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 0 }, { v: 7 }, { v: 8 }, { v: 4 }]));
 
-    console.log('Test: Replace.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Replace.');
     nc[2] = { v: 9 };
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 0 }, { v: 7 }, { v: 9 }, { v: 4 }]));
 
-    console.log('Test: Move.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Move.');
     nc.move(1, 3);
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 0 }, { v: 9 }, { v: 4 }, { v: 7 }]));
 
-    console.log('Test: Sort.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Sort.');
     nc.sort((a, b) => a.v - b.v);
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 0 }, { v: 4 }, { v: 7 }, { v: 9 }]));
 
-    console.log('Test: Reverse.');
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Reverse.');
     nc.reverse();
-    console.log(nc);
+    Log.write(Log.HeatLevel.Log, Log.Domain.Test, nc);
     assertEquals(
         JSON.stringify(nc),
         JSON.stringify([{ v: 9 }, { v: 7 }, { v: 4 }, { v: 0 }]));
@@ -101,7 +101,7 @@
     //
     // The End
 
-    console.info('Test: Observable collection. Finish.');
+    Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Observable collection. Finish.');
 
     export function assertEquals(a, b) {
         if (a !== b) {

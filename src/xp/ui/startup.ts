@@ -67,7 +67,7 @@
             dataType: 'text',
             async: async,
             error: (req, text, err) => {
-                console.warn('Unable to load markup from "' + url + '".');
+                Log.write(Log.HeatLevel.Warn, Log.Domain.Misc, 'Unable to load markup from "' + url + '".');
                 throw err;
             },
             success: (response: string) => {

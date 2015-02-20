@@ -26,7 +26,7 @@
             return this._text;
         }
         set text(text) {
-            console.log('Set text: ' + text);
+            Log.write(Log.HeatLevel.Log, Log.Domain.UI, 'Set text: ' + text);
             this._text = text;
 
             // DOM
