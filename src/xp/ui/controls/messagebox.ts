@@ -17,6 +17,7 @@
             var content = new VBox();
             content.padding = '1em';
             content.width = '32em';
+            content.margin = '-40% 0 0 0';
 
             if (title !== void 0) {
                 var titleEl = new Label();
