@@ -48,18 +48,41 @@
             var initAttributes = this.getAttributesInitializer(markup);
 
             if (url) {
-                // Load markup from file
-                xp.UI.loadMarkup(url,(r) => {
-                    markup = r;
-                }, false);
+                return (el) => {
+                    // Load markup from file
+                    xp.UI.loadMarkup(url,(r) => {
+                        markup = r;
+
+                        if (markup.length !== 1) {
+                            throw new Error('Html control must have one root element.');
+                        }
+
+                        // Seems to be namespace bug
+                        //var dom = $(markup.prop('outerHTML')); // Bug in IE
+                        var dom = $($('<div>').append(markup).prop('innerHTML'));
+                        el.setHtml(dom);
+
+                        initAttributes(el);
+                    });
+                };
             }
             else {
                 markup = markup.children();
+
+                if (markup.length !== 1) {
+                    throw new Error('Html control must have one root element.');
+                }
+
+                return (el) => {
+                    // Seems to be namespace bug
+                    //var dom = $(markup.prop('outerHTML')); // Bug in IE
+                    var dom = $($('<div>').append(markup).prop('innerHTML'));
+                    el.setHtml(dom);
+
+                    initAttributes(el);
+                };
             }
 
-            if (markup.length !== 1) {
-                throw new Error('Html control must have one root element.');
-            }
 
             return (el) => {
                 // Seems to be namespace bug
