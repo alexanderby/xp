@@ -1,4 +1,6 @@
-﻿module xp.UI {
+﻿type gEvent = Event;
+
+module xp.UI {
 
     export interface Coordinates {
         x: number;
@@ -11,8 +13,7 @@
         elementY: number;
     }
 
-    // TODO: How to use 'Event' interface?
-    export function createEventArgs(control: Element, domEventObject: any/*Event*/): UIEventArgs {
+    export function createEventArgs(control: Element, domEventObject: gEvent): UIEventArgs {
         var e = <UIEventArgs>domEventObject;
 
         // Target element
