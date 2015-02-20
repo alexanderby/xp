@@ -20,3 +20,10 @@ html {
     height: 100%;
     width: 100%;
 }
+
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    /* IE10+ specific styles go here */
+    .Window {
+        height: 100%; // Content didn't stretch vertically
+    }
+}
