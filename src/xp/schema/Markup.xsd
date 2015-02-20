@@ -22,8 +22,15 @@
       </xs:simpleType>
     </xs:attribute>-->
     <xs:attribute name="scope" type="xs:string"/>
-    <!-- TODO: More events. -->
     <xs:attribute name="onClick" type="xs:string"/>
+    <xs:attribute name="onMouseDown" type="xs:string"/>
+    <xs:attribute name="onMouseUp" type="xs:string"/>
+    <xs:attribute name="onMouseMove" type="xs:string"/>
+    <xs:attribute name="onMouseEnter" type="xs:string"/>
+    <xs:attribute name="onMouseLeave" type="xs:string"/>
+    <xs:attribute name="onKeyPress" type="xs:string"/>
+    <xs:attribute name="onKeyDown" type="xs:string"/>
+    <xs:attribute name="onKeyUp" type="xs:string"/>
   </xs:complexType>
 
   <xs:complexType name="Container" mixed="true" abstract="true">
