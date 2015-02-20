@@ -1,4 +1,4 @@
-﻿module xp.Binding.Tests {
+﻿module xp.Tests {
     console.info('Test: Observable collection. Start.');
 
     //

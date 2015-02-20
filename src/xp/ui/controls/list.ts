@@ -44,14 +44,14 @@
                 });
 
                 // Subscribe for changes
-                if (Binding.isCollectionNotifier(items)) {
-                    var collection = <Binding.ICollectionNotifier><any>items;
+                if (isCollectionNotifier(items)) {
+                    var collection = <ICollectionNotifier><any>items;
                     this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
                         switch (args.action) {
-                            case Binding.CollectionChangeAction.Create:
+                            case CollectionChangeAction.Create:
                                 this.addItem(args.newIndex, args.newItem);
                                 break;
-                            case Binding.CollectionChangeAction.Delete:
+                            case CollectionChangeAction.Delete:
                                 // Remove replacement handler
                                 var found = this.itemReplacementHandlers.filter((h) => h.item === args.oldItem)[0];
                                 found.holder.onPropertyChanged.removeHandler(found.handler);
@@ -59,15 +59,15 @@
 
                                 this.children[args.oldIndex].remove();
                                 break;
-                            case Binding.CollectionChangeAction.Replace:
+                            case CollectionChangeAction.Replace:
                                 if (!this.itemReplacementToken) {
                                     this.children[args.newIndex].scope.set(this.itemId, args.newItem);
                                 }
                                 break;
-                            case Binding.CollectionChangeAction.Move:
+                            case CollectionChangeAction.Move:
                                 this.insert(this.children[args.oldIndex], args.newIndex);
                                 break;
-                            case Binding.CollectionChangeAction.Reset:
+                            case CollectionChangeAction.Reset:
                                 this.items = items;
                                 break;
                             default:
@@ -75,7 +75,7 @@
                         }
                     }, this);
                 }
-                if (Binding.isNotifier(items)) {
+                if (isNotifier(items)) {
                     var itemsLengthChangeHandler = (prop: string) => {
                         if (prop === 'length') {
                             // Hide or show control
@@ -87,14 +87,14 @@
                             //}
                         }
                     };
-                    this.itemsRegistar.subscribe((<Binding.INotifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
+                    this.itemsRegistar.subscribe((<INotifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
                     // Handle length for the first time
                     itemsLengthChangeHandler('length');
                 }
             }
         }
         private _items: any[];
-        private itemsRegistar: EventRegistar;
+        private itemsRegistar: EventRegistrar;
 
         /**
          * Gets or sets list-item identifier for item's scope.
@@ -108,7 +108,7 @@
 
         protected initEvents() {
             super.initEvents();
-            this.itemsRegistar = new EventRegistar();
+            this.itemsRegistar = new EventRegistrar();
         }
 
 
@@ -134,13 +134,13 @@
             child.scope = this.createItemScopeFrom(item);
         }
 
-        private createItemScopeFrom(item: any): xp.Binding.Scope {
+        private createItemScopeFrom(item: any): xp.Scope {
             //
             // Create item scope
 
             var obj = {};
             obj[this.itemId] = item;
-            var scope = new xp.Binding.Scope(xp.Binding.observable(obj), this.scope);
+            var scope = new xp.Scope(xp.observable(obj), this.scope);
 
             //
             // Handle item replacement inside item-element scope
@@ -160,7 +160,7 @@
                         hr.item = hr.holder[prop];
                     }
                 },
-                holder: <xp.Binding.INotifier>scope.get('')
+                holder: <xp.INotifier>scope.get('')
             };
 
             hr.holder.onPropertyChanged.addHandler(hr.handler, this);
@@ -195,7 +195,7 @@
 
     interface ItemReplacementInfo {
         item: any;
-        holder: xp.Binding.INotifier;
+        holder: xp.INotifier;
         handler: (propName: string) => void;
     }
 

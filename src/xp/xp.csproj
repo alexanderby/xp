@@ -36,42 +36,42 @@
     <Content Include="style\defaultstyle.min.css">
       <DependentUpon>defaultstyle.css</DependentUpon>
     </Content>
-    <Content Include="testapp\app.css" />
-    <Content Include="testapp\icon-16-black.svg" />
-    <Content Include="testapp\icon-16-white.svg" />
-    <Content Include="testapp\index.html" />
+    <Content Include="tests\layout\app.css" />
+    <Content Include="tests\layout\icon-16-black.svg" />
+    <Content Include="tests\layout\icon-16-white.svg" />
+    <Content Include="tests\layout\index.html" />
     <Content Include="lib\jquery.js" />
-    <Content Include="testapp\view\window.xml">
+    <Content Include="tests\layout\view\window.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="todo\div.html" />
-    <Content Include="todo\index.html" />
-    <Content Include="todo\main.xml">
+    <Content Include="tests\todo\div.html" />
+    <Content Include="tests\todo\index.html" />
+    <Content Include="tests\todo\main.xml">
       <SubType>Designer</SubType>
     </Content>
-    <Content Include="todo\style.css">
+    <Content Include="tests\todo\style.css">
       <DependentUpon>style.less</DependentUpon>
     </Content>
-    <Content Include="todo\style.min.css">
+    <Content Include="tests\todo\style.min.css">
       <DependentUpon>style.css</DependentUpon>
     </Content>
     <Content Include="web.config" />
   </ItemGroup>
   <ItemGroup>
-    <TypeScriptCompile Include="core\binding\collection.ts" />
-    <TypeScriptCompile Include="core\binding\object.ts" />
-    <TypeScriptCompile Include="core\binding\observable.ts" />
-    <TypeScriptCompile Include="core\binding\scope.ts" />
-    <TypeScriptCompile Include="core\binding\manager.ts" />
+    <TypeScriptCompile Include="data\collection.ts" />
+    <TypeScriptCompile Include="data\object.ts" />
+    <TypeScriptCompile Include="data\observable.ts" />
+    <TypeScriptCompile Include="data\scope.ts" />
+    <TypeScriptCompile Include="data\manager.ts" />
     <TypeScriptCompile Include="core\defs.ts" />
     <TypeScriptCompile Include="core\dictionary.ts" />
-    <TypeScriptCompile Include="testapp\app.ts" />
+    <TypeScriptCompile Include="tests\layout\index.ts" />
     <TypeScriptCompile Include="core\event.ts" />
     <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="tests\binding.collection.tests.ts" />
     <TypeScriptCompile Include="tests\binding.manager.tests.ts" />
-    <TypeScriptCompile Include="todo\app.ts" />
-    <TypeScriptCompile Include="todo\main.ts" />
+    <TypeScriptCompile Include="tests\todo\app.ts" />
+    <TypeScriptCompile Include="tests\todo\main.ts" />
     <TypeScriptCompile Include="ui\controls\button.ts" />
     <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />
@@ -90,10 +90,11 @@
     <TypeScriptCompile Include="ui\controls\togglebutton.ts" />
     <TypeScriptCompile Include="ui\controls\vbox.ts" />
     <TypeScriptCompile Include="ui\controls\window.ts" />
-    <TypeScriptCompile Include="core\binding\expression.ts" />
+    <TypeScriptCompile Include="data\expression.ts" />
     <TypeScriptCompile Include="ui\startup.ts" />
     <TypeScriptCompile Include="ui\uievent.ts" />
-    <TypeScriptCompile Include="utils\utils.ts" />
+    <TypeScriptCompile Include="utils\path.ts" />
+    <TypeScriptCompile Include="utils\misc.ts" />
   </ItemGroup>
   <ItemGroup>
     <None Include="schema\markup.xsd">
@@ -116,8 +117,8 @@
     <Content Include="style\xp.css.map">
       <DependentUpon>xp.css</DependentUpon>
     </Content>
-    <Content Include="todo\style.less" />
-    <Content Include="todo\style.css.map">
+    <Content Include="tests\todo\style.less" />
+    <Content Include="tests\todo\style.css.map">
       <DependentUpon>style.css</DependentUpon>
     </Content>
     <Content Include="style\debug-style.less" />

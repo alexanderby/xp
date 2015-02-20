@@ -1,4 +1,4 @@
-﻿module xp.Binding {
+﻿module xp {
     /**
      * Defines an object, which notifies of it's properties changes.
      */

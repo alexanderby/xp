@@ -65,7 +65,7 @@
       <ToggleButton  item="{item}" text="{item.name}" selectedItem="{selected}"/>
     </List>
     <Html width="100%">
-      <div>
+      <div xmlns="http://www.w3.org/1999/xhtml">
         <span style="color:red;">Hello </span>
         <span style="color:green;">World!</span>
       </div>

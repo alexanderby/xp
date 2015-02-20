@@ -1,4 +1,6 @@
 ﻿module xp.UI {
+    // TODO: Pass properties no inner <VBox>.
+
     /**
      * Modal dialog base.
      */

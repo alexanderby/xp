@@ -1,4 +1,4 @@
-﻿module xp.Binding {
+﻿module xp {
     /**
      * Manages the scope data binding for a single property.
      * This manager is hold by target and must exist until

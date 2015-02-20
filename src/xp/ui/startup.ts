@@ -44,7 +44,6 @@
                 }
                 else {
                     // Call back
-                    console.log('CALLBACK');
                     onLoad();
                 }
             };
@@ -52,45 +51,8 @@
         }
         else {
             // Call back
-            console.log('CALLBACK');
             onLoad();
         }
-
-
-        //else if (arguments.length == 2) {
-        //    var ctor = <Constructor<Window>>arg0;
-        //    var callback = arg1;
-
-        //    // Get dependencies
-        //    var tagName = arg0.toString().match(/function\s*(.*?)\s*\(/)[1];
-        //    if (tagName in MarkupParseInfo[tagName]) {
-        //        var mp = MarkupParseInfo[tagName];
-        //        if (mp.dependencies) {
-        //            var instances = mp.dependencies.map((d) => {
-        //                var inst = xp.UI.DIInstances.get(d);
-        //                if (!inst) {
-        //                    throw new Error(
-        //                        xp.formatString('Unable to get instance of dependency "{0}" for element <{1}>.',
-        //                            d.toString().match(/function\s*(.*?)\s*\(/)[1],
-        //                            tag));
-        //                }
-        //                return inst;
-        //            });
-        //        }
-        //    }
-
-        //    // Create instance
-        //    var win: Window;
-        //    if (instances) {
-        //        win = xp.applyConstructor(ctor, instances);
-        //    }
-        //    else {
-        //        win = new ctor();
-        //    }
-
-        //    // Call back
-        //    callback(win);
-        //}
     }
 
     /**

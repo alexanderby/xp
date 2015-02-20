@@ -1,4 +1,4 @@
-﻿module xp.UI {
+﻿module xp {
 
     /**
      * Dictionary.

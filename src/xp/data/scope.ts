@@ -1,4 +1,4 @@
-﻿module xp.Binding {
+﻿module xp {
     // TODO: Ideas:
     // 1. Scope should implement INotifier or...
     // 2. Should not create INotifier, ObservableCollection,

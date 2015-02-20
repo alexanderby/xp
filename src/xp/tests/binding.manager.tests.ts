@@ -1,4 +1,4 @@
-﻿module xp.Binding.Tests {
+﻿module xp.Tests {
     console.info('Test: Binding manager. Start.');
 
     interface Person extends INotifier {
@@ -13,7 +13,7 @@
     //
     // Create
 
-    var source = xp.Binding.observable({
+    var source = xp.observable({
         name: 'John',
         city: {
             name: 'New York'
@@ -26,7 +26,7 @@
 
     // Create manager
     console.log('Test: Create binding manager.');
-    var manager = new xp.Binding.BindingManager(target, 'cityName', source, 'city.name', 'unknown');
+    var manager = new xp.BindingManager(target, 'cityName', source, 'city.name', 'unknown');
     assertEquals(source.city.name, target.cityName);
     assertEquals(source['onPropertyChanged']['handlers'].length, 1);
     assertEquals(source.city['onPropertyChanged']['handlers'].length, 1);

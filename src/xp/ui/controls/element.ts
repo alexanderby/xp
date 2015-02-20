@@ -26,11 +26,9 @@
          */
         protected applyInitializers() {
             if (this instanceof Window) {
-                console.info('ENTERED APPLYING INIT');
             }
             var inits = Initializers.get(<any>this['constructor']);
             if (inits) {
-                console.info('APPLYING INIT');
                 inits.forEach((init) => {
                     init(this);
                 });
@@ -523,7 +521,7 @@
                 }
             }
 
-            this.bindings[controlProperty] = new Binding.BindingManager(
+            this.bindings[controlProperty] = new BindingManager(
                 this,
                 controlProperty,
                 source || this.scope,
@@ -555,8 +553,8 @@
             if (this.expressions[controlProperty]) {
                 this.expressions[controlProperty].unbind();
             }
-            this.expressions[controlProperty] = new Binding.Expression(expression);
-            this.bindings[controlProperty] = new Binding.BindingManager(
+            this.expressions[controlProperty] = new Expression(expression);
+            this.bindings[controlProperty] = new BindingManager(
                 this,
                 controlProperty,
                 this.expressions[controlProperty],
@@ -570,11 +568,11 @@
             return this._scope;
         }
         set scope(scope) {
-            if (scope && !(scope instanceof xp.Binding.Scope))
+            if (scope && !(scope instanceof xp.Scope))
                 throw new Error('"scope" is not an instance of Scope.');
 
             if (this.bindings['scope'])
-                scope = new xp.Binding.Scope(scope, this.parent.scope);
+                scope = new xp.Scope(scope, this.parent.scope);
 
             console.log(xp.formatString('{0}:{1}: Set data scope "{2}".', xp.getClassName(this), this.name || '-', scope));
             this._scope = scope;
@@ -593,7 +591,7 @@
             }
             this.onScopeChanged.invoke(scope);
         }
-        private _scope: xp.Binding.Scope;
+        private _scope: xp.Scope;
 
         /**
          * Is invoked when user performs an input action.
@@ -611,7 +609,7 @@
         /**
          * Fires when data scope is changed.
          */
-        onScopeChanged: Event<xp.Binding.Scope>;
+        onScopeChanged: Event<xp.Scope>;
     }
 
 
@@ -619,14 +617,14 @@
      * Represents "control property name":"binding manager" dictionary.
      */
     export interface UIBindingDictionary {
-        [controlProperty: string]: Binding.BindingManager;
+        [controlProperty: string]: BindingManager;
     }
 
     /**
      * Represents "control property name":"expression" dictionary.
      */
     export interface UIExpressionDictionary {
-        [controlProperty: string]: Binding.Expression;
+        [controlProperty: string]: Expression;
     }
 
     /**

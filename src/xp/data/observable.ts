@@ -1,4 +1,4 @@
-﻿module xp.Binding {
+﻿module xp {
     
     /**
      * Creates an object or collection, which notifies of it's properties changes.

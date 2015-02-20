@@ -86,9 +86,9 @@
     }
 
     /**
-     * Simplifies subscription and especially unsubscription on events.
+     * Simplifies subscription and especially unsubscription of events.
      */
-    export class EventRegistar {
+    export class EventRegistrar {
         private subscriptions: Subscription<any>[] = [];
 
         /**

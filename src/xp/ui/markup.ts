@@ -69,11 +69,6 @@
          * Markup URL (used to load markup of View or it's inheritors).
          */
         markupUrl?: string;
-        ///**
-        // * Function-initializer obtained by parsing of loaded markup
-        // * (used by View or it's inheritors to prevent multiple loading).
-        // */
-        //markupInit?: (element: T) => void;
     }
 
     /**
@@ -85,8 +80,6 @@
      * "Dependency constructor":"Instance" dictionary.
      */
     export var DIInstances = new Dictionary<Constructor<any>, any>();
-
-    //export var TabIndex = 0;
 
     /**
      * Creates UI element resolving dependencies.

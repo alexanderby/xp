@@ -12,13 +12,13 @@
             console.info('Main dependency (app):');
             console.log(app);
 
-            this.data = xp.Binding.observable({
+            this.data = xp.observable({
                 todos: [],
                 selected: {},
                 undone: [],
                 done: []
             });
-            this.scope = new xp.Binding.Scope(this.data);
+            this.scope = new xp.Scope(this.data);
 
             this.textbox.focus();
         }

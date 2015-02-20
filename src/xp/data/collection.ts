@@ -23,7 +23,8 @@ Array.prototype.move = function (from, to) {
     return this;
 };
 
-module xp.Binding {
+
+module xp {
 
     /**
      * Defines a collection, which notifies of it's changes.

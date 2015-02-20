@@ -1,4 +1,4 @@
-﻿module xp.Binding {
+﻿module xp {
     /**
      * UI control's property bindable expression.
      */
@@ -13,7 +13,7 @@
         private managers: BindingManager[];
         private params: INotifier;
         // Holds change handlers for collection parameters.
-        private collectionRegistrations: { [paramName: string]: EventRegistar };
+        private collectionRegistrations: { [paramName: string]: EventRegistrar };
 
         /**
          * Creates control's property bindable expression.
@@ -63,7 +63,7 @@
 
                         if (value !== void 0 && isCollectionNotifier(value)) {
                             // Subscribe for collection changes
-                            var registar = new EventRegistar();
+                            var registar = new EventRegistrar();
                             var cn = <ICollectionNotifier>value;
                             registar.subscribe(cn.onCollectionChanged, (args) => {
                                 this.exec();
