@@ -1,6 +1,4 @@
 ﻿module xp.UI {
-    // TODO: Pass properties no inner <VBox>.
-
     /**
      * Modal dialog base.
      */
@@ -26,7 +24,7 @@
          * Displays the modal dialog.
          */
         show() {
-            Window.instance.append(this);
+            Window.instance.showModal(this);
         }
 
         /**
@@ -35,7 +33,7 @@
         close() {
             var result = this.onClose();
             if (result)
-                this.remove();
+                Window.instance.closeModal();
         }
 
 
@@ -44,7 +42,23 @@
         //----
 
         protected getTemplate() {
-            return $('<div class="Modal"></div>');
+            return $('<div class="Modal VBox"></div>');
         }
+    }
+
+    /**
+     * Modal dialog tint.
+     */
+    export class ModalTint extends Container {
+        protected getTemplate() {
+            return $('<div class="ModalTint"></div>');
+        }
+
+        // TODO: Closeable tint?
+        //protected initEvents() {
+        //    super.initEvents();
+        //    var onClick = 
+        //    this.on
+        //}
     }
 } 

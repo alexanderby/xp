@@ -56,6 +56,41 @@
             document.title = title;
         }
         private _title: string;
+
+
+        //-----------------------
+        // MODAL DIALOGS HANDLING
+        //-----------------------
+
+        protected tint: ModalTint;
+        protected modal: Element;
+
+        /**
+         * Shows modal dialog.
+         * It may be any element but it is recommended to use a modal.
+         */
+        showModal(modal: Element) {
+            if (this.tint || this.modal)
+                throw new Error('Another modal is displayed.');
+
+            // Create tint
+            this.tint = new ModalTint();
+            this.tint.appendTo(this);
+
+            // Place modal
+            this.modal = modal;
+            modal.appendTo(this.tint);
+        }
+
+        /**
+         * Closes a current modal dialog.
+         */
+        closeModal() {
+            this.modal.remove();
+            this.tint.remove();
+            this.modal = null;
+            this.tint = null;
+        }
     }
 
 

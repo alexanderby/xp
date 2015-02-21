@@ -4,7 +4,7 @@
 
     <!-- INPUT -->
     <VBox itemsIndent="1em" flex="Stretch">
-      <Label text="TODO APP"/>
+      <Label text="TODO APP" style="title"/>
       <HBox itemsIndent="0.5em">
         <Label text="Input:"/>
         <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
@@ -29,13 +29,13 @@
     <VBox name="view1" flex="Stretch">
       <HBox flex="Stretch">
         <VBox width="50%">
-          <Label text="UNDONE"/>
+          <Label text="UNDONE" style="title"/>
           <List items="{undone}" flex="Stretch">
             <Label text="{item.name}"/>
           </List>
         </VBox>
         <VBox width="50%">
-          <Label text="DONE"/>
+          <Label text="DONE" style="title"/>
           <List items="{done}" flex="Stretch">
             <Label text="{item.name}"/>
           </List>
@@ -51,12 +51,12 @@
 
   <!-- EXPERIMENTS -->
   <VBox width="10em">
-    <Label text="Item 0"/>
+    <Label text="Item 0" style="title"/>
     <TextBox text="{todos[0].name}" name="tb0"/>
     <CheckBox text="Check" checked="{todos[0].isDone}" name="cb0"/>
   </VBox>
   <VBox width="10em">
-    <Label text="Selected"/>
+    <Label text="Selected" style="title"/>
     <TextBox text="{selected.name}" name="tb_selected"/>
     <List items="{todos}">
       <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
