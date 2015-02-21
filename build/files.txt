@@ -38,3 +38,5 @@
 ..\src\xp\ui\controls\window.ts
 ..\src\xp\ui\controls\modal.ts
 ..\src\xp\ui\controls\messagebox.ts
+
+..\src\xp\tests\assert.ts

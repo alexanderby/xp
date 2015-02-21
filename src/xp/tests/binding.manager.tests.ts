@@ -27,9 +27,9 @@
     // Create manager
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Create binding manager.');
     var manager = new xp.BindingManager(target, 'cityName', source, 'city.name', 'unknown');
-    assertEquals(source.city.name, target.cityName);
-    assertEquals(source['onPropertyChanged']['handlers'].length, 1);
-    assertEquals(source.city['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(source.city.name, target.cityName);
+    assertEqual(source['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(source.city['onPropertyChanged']['handlers'].length, 1);
 
     // Change name
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change name.');
@@ -45,36 +45,36 @@
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change city.');
     var oldCity = source.city;
     source.city = <any>{ name: 'Hoiniki' };
-    assertEquals(source.city.name, 'Hoiniki');
-    assertEquals(source['onPropertyChanged']['handlers'].length, 1);
-    assertEquals(source.city['onPropertyChanged']['handlers'].length, 1);
-    assertEquals(oldCity['onPropertyChanged']['handlers'].length, 0);
+    assertEqual(source.city.name, 'Hoiniki');
+    assertEqual(source['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(source.city['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(oldCity['onPropertyChanged']['handlers'].length, 0);
 
     // Change city to null
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change city to NULL.');
     source.city = null;
-    assertEquals(target.cityName, 'unknown');
+    assertEqual(target.cityName, 'unknown');
 
     // Revert city
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Revert city.');
     source.city = oldCity;
-    assertEquals(source.city.name, 'Moscow');
-    assertEquals(target.cityName, 'Moscow');
-    assertEquals(source['onPropertyChanged']['handlers'].length, 1);
-    assertEquals(source.city['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(source.city.name, 'Moscow');
+    assertEqual(target.cityName, 'Moscow');
+    assertEqual(source['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(source.city['onPropertyChanged']['handlers'].length, 1);
 
     // Change source to null
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Change source to NULL.');
     manager.resetWith(null);
-    assertEquals(target.cityName, 'unknown');
+    assertEqual(target.cityName, 'unknown');
 
     // Revert source
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Revert source.');
     manager.resetWith(source);
-    assertEquals(source.city.name, 'Moscow');
-    assertEquals(target.cityName, 'Moscow');
-    assertEquals(source['onPropertyChanged']['handlers'].length, 1);
-    assertEquals(source.city['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(source.city.name, 'Moscow');
+    assertEqual(target.cityName, 'Moscow');
+    assertEqual(source['onPropertyChanged']['handlers'].length, 1);
+    assertEqual(source.city['onPropertyChanged']['handlers'].length, 1);
 
 
     //
