@@ -1,6 +1,8 @@
 PROMPT $g
 SET outfolder=xp
 
+REM "TODO: Compile LESS"
+
 ECHO "*** Compiling TS to single 'xp.js'... ***"
 "C:\Program Files (x86)\Microsoft SDKs\TypeScript\1.4\tsc.exe" @files.txt --out %outfolder%\xp.js -t ES5 --declaration
 
