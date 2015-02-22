@@ -23,8 +23,11 @@
 
         /**
          * Defines simple getter and setter for a model instance.
+         * @param model Model instance.
+         * @param prop Property name.
+         * @param [value] Default value.
          */
-        static defineProperty(model: Model, prop: string, value: any) {
+        static defineProperty(model: Model, prop: string, value?: any) {
             Object.defineProperty(model, prop, {
                 get: () => {
                     return value;
