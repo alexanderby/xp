@@ -13,6 +13,7 @@
 ..\src\xp\data\observable.ts
 ..\src\xp\data\expression.ts
 ..\src\xp\data\manager.ts
+..\src\xp\data\model.ts
 ..\src\xp\data\scope.ts
 
 ..\src\xp\ui\markup.ts
