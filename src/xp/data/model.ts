@@ -35,7 +35,9 @@
                 set: (v) => {
                     value = v;
                     model.onPropertyChanged.invoke(prop);
-                }
+                },
+                configurable: true,
+                enumerable: true
             });
         }
     }
