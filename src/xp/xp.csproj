@@ -59,6 +59,7 @@
   </ItemGroup>
   <ItemGroup>
     <TypeScriptCompile Include="data\collection.ts" />
+    <TypeScriptCompile Include="data\model.ts" />
     <TypeScriptCompile Include="data\object.ts" />
     <TypeScriptCompile Include="data\observable.ts" />
     <TypeScriptCompile Include="data\scope.ts" />
