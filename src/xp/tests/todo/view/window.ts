@@ -4,7 +4,7 @@
         isDone: boolean;
     }
 
-    export class Main extends xp.UI.Window {
+    export class Window extends xp.UI.Window {
 
         constructor(app: App) {
             super();
@@ -88,9 +88,9 @@
     }
 
     xp.UI.MarkupParseInfo['Window'] = {
-        ctor: Main,
+        ctor: Window,
         parser: new xp.UI.WindowMarkupParser(),
-        markupUrl: 'main.xml',
+        markupUrl: 'view/window.xml',
         dependencies: [App]
     };
 } 

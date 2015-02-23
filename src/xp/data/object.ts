@@ -30,10 +30,21 @@
          * @param source Source object.
          */
         constructor(source: Object) {
-            this.init(source);
+            this.initProperties();
+            if (source) {
+                this.copySource(source);
+            }
         }
 
-        protected init(source) {
+        protected initProperties() {
+            Object.defineProperty(this, 'onPropertyChanged', {
+                configurable: true,
+                enumerable: false,
+                value: new Event<string>()
+            });
+        }
+
+        protected copySource(source: Object) {
             if (source instanceof ObservableObject) {
                 throw new Error('Source object is an observer already.');
             }
@@ -43,12 +54,6 @@
             if (!(source instanceof Object)) {
                 throw new Error('Source must be an object.');
             }
-
-            Object.defineProperty(this, 'onPropertyChanged', {
-                configurable: true,
-                enumerable: false,
-                value: new Event<string>()
-            });
 
             for (var key in source) {
                 // Create notification property

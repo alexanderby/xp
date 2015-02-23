@@ -76,18 +76,9 @@ module xp {
             super(collection);
         }
 
-        protected init(collection?: Array<T>) {
-            if (collection && !Array.isArray(collection)) {
-                throw new Error('Source must be an array.');
-            }
+        protected initProperties() {
+            super.initProperties();
 
-            //this.onPropertyChanged = new Event<string>();
-            //this.onCollectionChanged = new Event<CollectionChangeArgs>();
-            Object.defineProperty(this, 'onPropertyChanged', {
-                configurable: true,
-                enumerable: false,
-                value: new Event<string>()
-            });
             Object.defineProperty(this, 'onCollectionChanged', {
                 configurable: true,
                 enumerable: false,
@@ -98,6 +89,12 @@ module xp {
                 enumerable: false,
                 value: []
             });
+        }
+
+        protected copySource(collection: Array<T>) {
+            if (collection && (!Array.isArray(collection) || collection instanceof ObservableCollection)) {
+                throw new Error('Source must be an array.');
+            }
 
             //this.inner = [];
             if (collection) {

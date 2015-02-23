@@ -70,6 +70,6 @@
         <span style="color:green;">World!</span>
       </div>
     </Html>
-    <Html width="100%" href="div.html"/>
+    <Html width="100%" href="view/div.html"/>
   </VBox>
 </Window>

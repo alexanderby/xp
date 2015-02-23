@@ -10,9 +10,9 @@ var todoApp: Todo.App;
 
 window.onload = () => {
     todoApp = new Todo.App();
-    xp.UI.DIInstances.set(Todo.App, todoApp);
+    //xp.UI.DIInstances.set(Todo.App, todoApp);
 
     xp.UI.init(() => {
-        todoApp.window = new Todo.Main(todoApp);
+        todoApp.window = new Todo.Window(todoApp);
     });
 };
