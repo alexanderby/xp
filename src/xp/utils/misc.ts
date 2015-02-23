@@ -1,19 +1,19 @@
 ﻿module xp {
-    /**
-     * Extends given object with properties from another one.
-     * @param source Object to extend.
-     * @param extension Object containing the extensions.
-     */
-    export function extendObject<TSrc, TExt>(source: TSrc, extension: TExt): TSrc { // TODO: Mixin.
-        var result = {};
-        for (var key in source) {
-            result[key] = source[key];
-        }
-        for (var key in extension) {
-            result[key] = extension[key];
-        }
-        return <TSrc>result;
-    }
+    ///**
+    // * Extends given object with properties from another one.
+    // * @param source Object to extend.
+    // * @param extension Object containing the extensions.
+    // */
+    //export function extendObject<TSrc, TExt>(source: TSrc, extension: TExt): TSrc { // TODO: Mixin.
+    //    var result = {};
+    //    for (var key in source) {
+    //        result[key] = source[key];
+    //    }
+    //    for (var key in extension) {
+    //        result[key] = extension[key];
+    //    }
+    //    return <TSrc>result;
+    //}
 
     /**
      * Replaces each format item in a specified string with values.
@@ -28,21 +28,21 @@
         return s;
     }
 
-    /**
-     * Returns current stack trace (maybe works in Chrome only).
-     */
-    export function getStackTrace() {
-        var msg: string;
-        try {
-            throw new Error();
-        } catch (e) {
-            msg = e.stack;
-        }
-        if (msg.match(/^Error\n/)) {
-            msg = msg.replace(/^Error\n/, 'Stack trace:\n');
-        }
-        return msg;
-    }
+    ///**
+    // * Returns current stack trace (maybe works in Chrome only).
+    // */
+    //export function getStackTrace() {
+    //    var msg: string;
+    //    try {
+    //        throw new Error();
+    //    } catch (e) {
+    //        msg = e.stack;
+    //    }
+    //    if (msg.match(/^Error\n/)) {
+    //        msg = msg.replace(/^Error\n/, 'Stack trace:\n');
+    //    }
+    //    return msg;
+    //}
 
     /**
      * Creates unique identifier.
@@ -86,44 +86,44 @@
         return items;
     }
 
-    // http://stackoverflow.com/a/728694/4137472
-    /**
-     * Creates a deep copy of an object.
-     * Will infinitely loop on circular references.
-     */
-    export function clone(obj: any): any {
-        var copy;
+    //// http://stackoverflow.com/a/728694/4137472
+    ///**
+    // * Creates a deep copy of an object.
+    // * Will infinitely loop on circular references.
+    // */
+    //export function clone(obj: any): any {
+    //    var copy;
 
-        // Handle the 3 simple types, and null or undefined
-        if (null == obj || "object" != typeof obj) return obj;
+    //    // Handle the 3 simple types, and null or undefined
+    //    if (null == obj || "object" != typeof obj) return obj;
 
-        // Handle Date
-        if (obj instanceof Date) {
-            copy = new Date();
-            copy.setTime(obj.getTime());
-            return copy;
-        }
+    //    // Handle Date
+    //    if (obj instanceof Date) {
+    //        copy = new Date();
+    //        copy.setTime(obj.getTime());
+    //        return copy;
+    //    }
 
-        // Handle Array
-        if (obj instanceof Array) {
-            copy = [];
-            for (var i = 0, len = obj.length; i < len; i++) {
-                copy[i] = clone(obj[i]);
-            }
-            return copy;
-        }
+    //    // Handle Array
+    //    if (obj instanceof Array) {
+    //        copy = [];
+    //        for (var i = 0, len = obj.length; i < len; i++) {
+    //            copy[i] = clone(obj[i]);
+    //        }
+    //        return copy;
+    //    }
 
-        // Handle Object
-        if (obj instanceof Object) {
-            copy = {};
-            for (var attr in obj) {
-                if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
-            }
-            return copy;
-        }
+    //    // Handle Object
+    //    if (obj instanceof Object) {
+    //        copy = {};
+    //        for (var attr in obj) {
+    //            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
+    //        }
+    //        return copy;
+    //    }
 
-        throw new Error("Unable to copy obj! Its type isn't supported.");
-    }
+    //    throw new Error("Unable to copy obj! Its type isn't supported.");
+    //}
 
     /**
      * Creates new object and applies arguments to constructor.
