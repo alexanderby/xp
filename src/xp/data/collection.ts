@@ -195,11 +195,8 @@ module xp {
         }
 
         protected createNotifier(item): INotifier {
-            if (Array.isArray(item)) {
-                item = new ObservableCollection(<Array<any>><any>item);
-            }
-            else if (typeof item === 'object' && !isNotifier(item)) {
-                item = new ObservableObject(item);
+            if (typeof item === 'object' && !isNotifier(item)) {
+                item = observable(item);
             }
             return item;
         }

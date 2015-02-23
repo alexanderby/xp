@@ -8,10 +8,10 @@
      */
     export function observable<T>(source: T) {
         // Check
-        if (source instanceof ObservableObject) {
+        if (isNotifier(source)) {
             throw new Error('Source object is already observable.');
         }
-        if (!(source instanceof Object)) {
+        if (!(typeof source === 'object')) {
             throw new Error('Source must be an object.');
         }
 
