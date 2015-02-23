@@ -1,4 +1,6 @@
-﻿interface Array<T> {
+﻿// Extend Array interface with move() method
+// to prevent bound DOM regeneration on move.
+interface Array<T> {
     /**
      * Moves an item within an array.
      * @param from Item's current index.

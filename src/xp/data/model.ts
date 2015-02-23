@@ -153,10 +153,10 @@
         /**
          * Creates a model instance from JSON string.
          * @param modelCtor Model constructor. Must be parameterless.
-         * @param json JSON string.
+         * @param json JSON string or object.
          */
-        static parseModel<T extends Model>(modelCtor: new () => T, json: string): T {
-            var source = JSON.parse(json);
+        static parseModel<T extends Model>(modelCtor: new () => T, json: string|Object): T {
+            var source = typeof json === 'string' ? JSON.parse(json) : json;
             if (typeof source !== 'object') {
                 throw new Error('Unable to parse a model. The specified string does not contain an object. JSON: ' + json);
             }
@@ -173,10 +173,10 @@
         /**
          * Creates a model collection from JSON string.
          * @param modelCtor Model constructor. Must be parameterless.
-         * @param json JSON string.
+         * @param json JSON string or array.
          */
-        static parseCollection<T extends Model>(modelCtor: new () => T, json: string): ModelCollection<T> {
-            var source = JSON.parse(json);
+        static parseCollection<T extends Model>(modelCtor: new () => T, json: string|Object[]): ModelCollection<T> {
+            var source = typeof json === 'string' ? JSON.parse(json) : json;
             if (!Array.isArray(source)) {
                 throw new Error('Unable to parse a collection. The specified string doesn not contain an array. JSON: ' + json);
             }
@@ -216,15 +216,4 @@
             return item;
         }
     }
-
-    //class Animal extends xp.Model {
-    //    id: number;
-    //    name: string;
-
-    //    constructor(id: string, name: string) {
-    //        super();
-    //        xp.Model.defineProperty(this, 'id', id);
-    //        xp.Model.defineProperty(this, 'name', name);
-    //    }
-    //}
 } 

@@ -1,5 +1,4 @@
 ﻿module xp.Path {
-    // TODO: setPropertyByPath
 
     /**
      * Returns object's property.

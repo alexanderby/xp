@@ -26,12 +26,4 @@
             return <T><any>new ObservableObject(source);
         }
     }
-
-    /**
-     * Creates a plain object that repeates the structure
-     * of the source observable object.
-     */
-    export function plain<T>(observable: T) {
-        return JSON.parse(JSON.stringify(observable));
-    }
 } 

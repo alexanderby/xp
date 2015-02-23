@@ -7,7 +7,7 @@
          * Is invoked when expression result changes.
          */
         onPropertyChanged: Event<string>;
-        private source;
+        private scope: Scope;
         private func: Function;
         private propsPaths: string[];
         private managers: BindingManager[];
@@ -65,7 +65,7 @@
                             // Subscribe for collection changes
                             var registar = new EventRegistrar();
                             var cn = <ICollectionNotifier>value;
-                            registar.subscribe(cn.onCollectionChanged, (args) => {
+                            registar.subscribe(cn.onCollectionChanged,(args) => {
                                 this.exec();
                             }, this);
                             this.collectionRegistrations[param] = registar
@@ -86,7 +86,7 @@
             // Create managers
             this.managers = [];
             this.propsPaths.forEach((path, i) => {
-                var manager = new BindingManager(this.params, params[i], this.source, path);
+                var manager = new BindingManager(this.params, params[i], this.scope, path);
                 this.managers.push(manager);
             });
 
@@ -137,11 +137,11 @@
          * Resets source and causes expression evaluation.
          * @param source Source.
          */
-        resetWith(source) {
+        resetWith(scope: Scope) {
             this.sourceSetToken = true;
-            this.source = source;
+            this.scope = scope;
             this.managers.forEach((m) => {
-                m.resetWith(source);
+                m.resetWith(scope);
             });
             this.sourceSetToken = false;
             this.exec();

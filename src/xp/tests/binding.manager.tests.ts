@@ -26,7 +26,7 @@
 
     // Create manager
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Create binding manager.');
-    var manager = new xp.BindingManager(target, 'cityName', source, 'city.name', 'unknown');
+    var manager = new xp.BindingManager(target, 'cityName', new Scope(source), 'city.name', 'unknown');
     assertEqual(source.city.name, target.cityName);
     assertEqual(source['onPropertyChanged']['handlers'].length, 1);
     assertEqual(source.city['onPropertyChanged']['handlers'].length, 1);
@@ -70,7 +70,7 @@
 
     // Revert source
     Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Revert source.');
-    manager.resetWith(source);
+    manager.resetWith(new Scope(source));
     assertEqual(source.city.name, 'Moscow');
     assertEqual(target.cityName, 'Moscow');
     assertEqual(source['onPropertyChanged']['handlers'].length, 1);

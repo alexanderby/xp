@@ -18,7 +18,7 @@
     <xs:attribute name="flex" type="FlexValue"/>
     <!--<xs:attribute name="flex">
       <xs:simpleType>
-        <xs:union memberTypes="FlexValue FlowNumber"/>
+        <xs:union memberTypes="FlexValue FlexNumber"/>
       </xs:simpleType>
     </xs:attribute>-->
     <xs:attribute name="scope" type="xs:string"/>
@@ -281,9 +281,9 @@
       <xs:enumeration value="Stretch"/>
     </xs:restriction>
   </xs:simpleType>
-  <xs:simpleType name="FlowNumber">
+  <xs:simpleType name="FlexNumber">
     <xs:restriction base="xs:string">
-      <xs:pattern value="^(\d+(\s\d+)?)$"/>
+      <xs:pattern value="^(\d+(\.\d+)?(\s\d+(\.\d+)?)?)$"/>
     </xs:restriction>
   </xs:simpleType>
 

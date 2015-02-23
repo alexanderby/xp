@@ -21,7 +21,7 @@
          * @param path Path to bind to.
          * @param [defaultValue] Value to use is case when source property is unreachable.
          */
-        constructor(target: any, targetPropertyPath: string, scope: any, path: string, defaultValue?: any) {
+        constructor(target: any, targetPropertyPath: string, scope: Scope, path: string, defaultValue?: any) {
             //
             // Checks
 
@@ -31,11 +31,16 @@
             if (!path)
                 throw new Error('Unable to bind to empty path.');
 
+            if (scope) {
+                if (!(scope instanceof Scope))
+                    throw new Error('Object is not an instance of Scope.');
+            }
+            else {
+                scope = new Scope(null);
+            }
+
             this.target = target;
             this.targetPropertyPath = targetPropertyPath;
-            if (!(scope instanceof Scope)) {
-                scope = new Scope(scope);
-            }
             this.scope = scope;
             this.path = path;
             this.defaultValue = defaultValue;
@@ -154,11 +159,16 @@
          * Resets binding with new binding source (with the same hierarchy).
          * @param scope Scope to sync with.
          */
-        resetWith(scope) {
-            if (!(scope instanceof Scope)) {
-                scope = new Scope(scope);
+        resetWith(scope: Scope) {
+            if (scope) {
+                if (!(scope instanceof Scope))
+                    throw new Error('Object is not an instance of Scope.');
             }
-            this.logMessage(xp.formatString('Reset with "{0}".', scope));
+            else {
+                scope = new Scope(null);
+            }
+
+            this.logMessage(xp.formatString('Reset with "{0}".', scope.get('')));
             this.scope = scope;
             this.registerPathObjects();
             this.updateTarget();

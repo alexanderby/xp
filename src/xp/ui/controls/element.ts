@@ -524,7 +524,7 @@
             this.bindings[controlProperty] = new BindingManager(
                 this,
                 controlProperty,
-                source || this.scope,
+                source || this.scope || new Scope(null),
                 objectPropertyPath);
         }
 
@@ -557,7 +557,7 @@
             this.bindings[controlProperty] = new BindingManager(
                 this,
                 controlProperty,
-                this.expressions[controlProperty],
+                new Scope(this.expressions[controlProperty]),
                 'result');
         }
 
@@ -569,7 +569,8 @@
         }
         set scope(scope) {
             if (scope && !(scope instanceof xp.Scope))
-                throw new Error('"scope" is not an instance of Scope.');
+                //throw new Error('Object is not an instance of Scope.');
+                scope = new Scope(scope);
 
             if (this.bindings['scope'])
                 scope = new xp.Scope(scope, this.parent.scope);
