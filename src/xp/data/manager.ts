@@ -190,7 +190,7 @@
             var prop = xp.Path.getPropertyName(this.targetPropertyPath);
             var targetObj = xp.Path.getPropertyByPath(this.target, path);
 
-            if (value !== void 0) {
+            if (value !== void 0 && value !== null) {
                 this.logMessage(xp.formatString('Update target with "{0}" property value "{1}".', this.path, value));
                 targetObj[prop] = value
             }

@@ -24,11 +24,11 @@
         var parts = path.split('.');
         var current = obj;
         parts.every((p) => {
-            if (current[p] === void 0) {
+            if (current[p] === void 0 || current[p] === null) {
                 if (throwErr) {
                     throw new Error('Unable to get property by path "' + path + '".');
                 }
-                current = void 0;
+                current = current[p];
                 return false;
             }
             current = current[p];

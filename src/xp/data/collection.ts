@@ -123,7 +123,7 @@ module xp {
          * Handles item's addition into collection.
          */
         protected add(item, index) {
-            item = this.createNotifier(item);
+            item = this.createNotifierIfPossible(item);
             this.inner.splice(index, 0, item);
             this.appendIndexProperty();
 
@@ -194,8 +194,8 @@ module xp {
             delete this[this.inner.length];
         }
 
-        protected createNotifier(item): INotifier {
-            if (typeof item === 'object' && !isNotifier(item)) {
+        protected createNotifierIfPossible(item): any {
+            if (ObservableObject.isConvertable(item)) {
                 item = observable(item);
             }
             return item;

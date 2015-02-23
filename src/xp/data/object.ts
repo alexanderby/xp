@@ -57,85 +57,86 @@
 
             for (var key in source) {
                 // Create notification property
-                addNotificationProperty(this, key, source[key]);
+                ObservableObject.extend(this, key, source[key]);
             }
         }
-    }
 
-    /**
-     * Adds property to INotifier.
-     * @param obj Notifier.
-     * @param name Name of the property to create.
-     * @param value Default value.
-     */
-    function addNotificationProperty(obj: INotifier, name: string, value: any) {
-        //
-        // Ensure property is not already present.
-        if (name in obj) {
-            throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
-        }
-        if (name === 'onPropertyChanged') {
-            throw new Error('Unable to create notification property. Reserved name "' + name + '" is used.');
+        /**
+         * Determines whether specified object can be converted into an observable object.
+         * @param source Source object.
+         */
+        static isConvertable(source): boolean {
+            return (typeof source === 'object'
+                && !isNotifier(source)
+                && source !== null
+                && !(source instanceof Date));
         }
 
-        if (value === null)
-            value = {}; // TODO: How to handle nulls?
+        /**
+         * Adds property to INotifier.
+         * @param obj Notifier.
+         * @param name Name of the property to create.
+         * @param value Default value.
+         */
+        static extend(obj: INotifier, name: string, value: any) {
+            //
+            // Ensure property is not already present.
+            if (name in obj) {
+                throw new Error('Unable to create notification property. Object already has "' + name + '" property.');
+            }
+            if (name === 'onPropertyChanged') {
+                throw new Error('Unable to create notification property. Reserved name "' + name + '" is used.');
+            }
 
+            // Clone date
+            if (value instanceof Date) {
+                var d = new Date();
+                d.setTime((<Date>value).getTime());
+                value = d;
+            }
 
-        //
-        // Check if property is an object.
-        // If so -> make it Notifier.
+            //
+            // Check if property is an object.
+            // If so -> make it Observable.
 
-        if (typeof value === 'object' && !isNotifier(value)) {
-            value = observable(value);
-            var isNestedObject = true;
-        }
+            if (ObservableObject.isConvertable(value)) {
+                value = observable(value);
+                var isNestedObject = true;
+            }
 
-        ////
-        //// Create private field
-        //var fieldName = '_' + name;
-        //Object.defineProperty(obj, fieldName, {
-        //    configurable: true,
-        //    enumerable: false,
-        //    writable: true,
-        //    value: value
-        //});
+            //
+            // Getters/setters
 
-        //
-        // Getters/setters
+            var getter = function () {
+                return value;
+            };
 
-        var getter = function () {
-            return value;
-        };
-
-        // Simple setter
-        var setter = function (v) {
-            value = v;
-            obj.onPropertyChanged.invoke(name);
-        };
-
-        if (isNestedObject) {
-            // Nested object setter
-            var nestedSetter = function (newObj) {
-                if (newObj === null) {
-                    newObj = {};
-                }
-                if (!isNotifier(newObj)) {
-                    newObj = observable(newObj);
-                }
-                value = newObj;
+            // Simple setter
+            var setter = function (v) {
+                value = v;
                 obj.onPropertyChanged.invoke(name);
             };
+
+            if (isNestedObject) {
+                // Nested object setter
+                var nestedSetter = function (newObj) {
+                    if (ObservableObject.isConvertable(newObj)) {
+                        newObj = observable(newObj);
+                    }
+                    value = newObj;
+                    obj.onPropertyChanged.invoke(name);
+                };
+            }
+
+            //
+            // Define property
+
+            Object.defineProperty(obj, name, {
+                get: getter,
+                set: isNestedObject ? nestedSetter : setter,
+                enumerable: true,
+                configurable: true
+            });
         }
-
-        //
-        // Define property
-
-        Object.defineProperty(obj, name, {
-            get: getter,
-            set: isNestedObject ? nestedSetter : setter,
-            enumerable: true,
-            configurable: true
-        });
     }
 }

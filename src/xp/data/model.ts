@@ -204,7 +204,7 @@
         //
         // Overrides
 
-        protected createNotifier(item): INotifier {
+        protected createNotifierIfPossible(item): INotifier {
             if (!(item instanceof this.model)) {
                 // Create model instance and copy values
                 var m = new this.model();

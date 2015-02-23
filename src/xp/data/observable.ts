@@ -3,8 +3,8 @@
     /**
      * Creates an object or collection, which notifies of it's properties changes.
      * WARNING: Avoid circular references.
-     * WARNING: Source properties must be initialized 
-     * (at least have {} or [] but not null or undefined).
+     * WARNING: Source properties must be initialized (have some value).
+     * New properties may be added using ObservableObject.extend().
      */
     export function observable<T>(source: T) {
         // Check
@@ -13,6 +13,9 @@
         }
         if (!(typeof source === 'object')) {
             throw new Error('Source must be an object.');
+        }
+        else if(source instanceof Date) {
+            throw new Error('Dates cannot be converted into an observable.');
         }
 
         // Return
