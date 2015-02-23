@@ -9,7 +9,7 @@
     export function observable<T>(source: T) {
         // Check
         if (source instanceof ObservableObject) {
-            throw new Error('Source object is an observer already.');
+            throw new Error('Source object is already observable.');
         }
         if (!(source instanceof Object)) {
             throw new Error('Source must be an object.');

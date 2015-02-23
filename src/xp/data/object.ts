@@ -46,7 +46,7 @@
 
         protected copySource(source: Object) {
             if (source instanceof ObservableObject) {
-                throw new Error('Source object is an observer already.');
+                throw new Error('Source object is already observable.');
             }
             if (Array.isArray(source)) {
                 throw new Error('Source must not be an array. Use ObservableCollection.');

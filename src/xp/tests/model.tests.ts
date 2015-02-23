@@ -12,7 +12,7 @@
             super();
             xp.Model.simpleProperty(this, 'name');
             xp.Model.modelProperty(this, 'city', City);
-            xp.Model.modelCollection(this, 'books', Book);
+            xp.Model.modelCollection(this, 'books', Book, []);
         }
     }
 

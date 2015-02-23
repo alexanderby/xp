@@ -46,7 +46,7 @@
   </HBox>
 
   <Html width="40em" height="0.0625em">
-    <div style="background-color:#aaa;"></div>
+    <div xmlns="http://www.w3.org/1999/xhtml" style="background-color:#aaa;"></div>
   </Html>
 
   <!-- EXPERIMENTS -->

@@ -49,26 +49,22 @@
         }
 
         /**
-         * Defines nested model property.
-         * Allows creating right model instances when doing JSON deserialization.
+         * Defines observable getter and setter for a model instance.
          * @param obj Model instance.
          * @param prop Property name.
-         * @param propCtor Property model constructor. Must be parameterless.
          * @param value Default value.
          */
-        static modelProperty<T extends Model>(obj: Model, prop: string, propCtor: new () => T, value?: T) {
+        static observableProperty(obj: Model, prop: string, value?: any) {
+            if (value && !isNotifier(value)) {
+                value = observable(value);
+            }
             Object.defineProperty(obj, prop, {
                 get: () => {
                     return value;
                 },
                 set: (v) => {
-                    if (!(v instanceof propCtor)) {
-                        // Create model, copy values
-                        var m = new propCtor();
-                        for (var key in v) {
-                            m[key] = v[key];
-                        }
-                        v = m;
+                    if (value && !isNotifier(v)) {
+                        v = observable(v);
                     }
                     value = v;
                     obj.onPropertyChanged.invoke(prop);
@@ -79,29 +75,79 @@
         }
 
         /**
+         * Defines nested model property.
+         * Allows creating right model instances when doing JSON deserialization.
+         * @param obj Model instance.
+         * @param prop Property name.
+         * @param propModel Property model constructor. Must be parameterless.
+         * @param value Default value.
+         */
+        static modelProperty<T extends Model>(obj: Model, prop: string, propModel: new () => T, value?: T) {
+            if (value) {
+                value = Model.createModel(propModel, value);
+            }
+            Object.defineProperty(obj, prop, {
+                get: () => {
+                    return value;
+                },
+                set: (v) => {
+                    v = Model.createModel(propModel, v);
+                    value = v;
+                    obj.onPropertyChanged.invoke(prop);
+                },
+                configurable: true,
+                enumerable: true
+            });
+        }
+
+        private static createModel<T extends Model>(model: new () => T, source: Object): T {
+            if (source instanceof model) {
+                return <T>source;
+            }
+            else {
+                // Create model, copy values
+                var m = new model();
+                for (var key in source) {
+                    m[key] = source[key];
+                }
+                return m;
+            }
+        }
+
+        /**
         * Defines nested model collection property.
         * Allows filling the collection with right model instances when doing JSON deserialization.
         * @param obj Model instance.
         * @param prop Property name.
-        * @param modelCtor Model constructor. Must be parameterless.
+        * @param model Model constructor. Must be parameterless.
         * @param items Default items collection.
         */
-        static modelCollection<T extends Model>(obj: Model, prop: string, modelCtor: new () => T, items?: Array<T>) {
+        static modelCollection<T extends Model>(obj: Model, prop: string, model: new () => T, items?: Array<T>) {
+            items = Model.createCollection(model, items);
             Object.defineProperty(obj, prop, {
                 get: () => {
                     return items;
                 },
                 set: (v) => {
-                    if (!(v instanceof ModelCollection)) {
-                        // Create model collection
-                        v = new ModelCollection(modelCtor, v)
-                    }
+                    v = Model.createCollection(model, v);
                     items = v;
                     obj.onPropertyChanged.invoke(prop);
                 },
                 configurable: true,
                 enumerable: true
             });
+        }
+
+        private static createCollection<T extends Model>(model: new () => T, source: T[]): ModelCollection<T> {
+            if (source instanceof ModelCollection) {
+                if ((<ModelCollection<T>>source).model !== model) {
+                    throw new Error('Collection model mismatch.');
+                }
+                return <ModelCollection<T>>source;
+            } else {
+                // Create model collection
+                return new ModelCollection(model, source)
+            }
         }
 
         /**
