@@ -1,5 +1,9 @@
-﻿// Extend Array interface with move() method
-// to prevent bound DOM regeneration on move.
+﻿//
+// NOTE: Extend Array interface with move(), attach(),
+// detach() methods to prevent bound DOM regeneration
+// when moving items within or between collections or
+// performing a sort.
+
 interface Array<T> {
     /**
      * Moves an item within an array.
@@ -7,24 +11,36 @@ interface Array<T> {
      * @param to Target index.
      */
     move(from: number, to: number): Array<T>;
+    /**
+     * Attaches an item to an array.
+     * @param item Item.
+     * @param index Target index.
+     */
+    attach(item: T, index: number): number;
+    /**
+     * Detaches an item from an array.
+     * @param index Item's index.
+     */
+    detach(index: number): T;
 }
 Array.prototype.move = function (from, to) {
-    if (from < 0) {
-        from = this.length + from;
-    }
-    if (to < 0) {
-        to = this.length + to;
-    }
-    if (from > this.length - 1 || from < 0 || to < 0) {
+    if (from < 0) from = this.length + from;
+    if (to < 0) to = this.length + to;
+    if (from > this.length - 1 || to > this.length - 1 || from < 0 || to < 0) {
         throw new Error('Index was out of range.');
     }
 
     var picked = this.splice(from, 1)[0];
-    //this.splice(from < to ? to - 1 : to, 0, picked);
-    this.splice(to, 0, picked); // As in .NET 
+    this.splice(to, 0, picked);
     return this;
 };
-
+Array.prototype.attach = function (item, index) {
+    this.splice(index, 0, item);
+    return this.length;
+};
+Array.prototype.detach = function (index) {
+    return this.splice(index, 1)[0];
+};
 
 module xp {
 
@@ -44,7 +60,9 @@ module xp {
         //Update?
         Delete,
         Reset,
-        Move
+        Move,
+        Attach,
+        Detach
     }
 
     export interface CollectionChangeArgs {
@@ -124,14 +142,16 @@ module xp {
         /**
          * Handles item's addition into collection.
          */
-        protected add(item, index) {
+        protected add(item, index, moving?: boolean) {
             item = this.createNotifierIfPossible(item);
             this.inner.splice(index, 0, item);
             this.appendIndexProperty();
 
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.Create,
+                action: moving ?
+                    CollectionChangeAction.Attach
+                    : CollectionChangeAction.Create,
                 newIndex: index,
                 newItem: item
             });
@@ -146,13 +166,15 @@ module xp {
         /**
          * Handles item's removal item from collection. 
          */
-        protected remove(index): T {
+        protected remove(index, moving?: boolean): T {
             var item = this.inner.splice(index, 1)[0];
             this.deleteIndexProperty();
 
             // Notify
             this.onCollectionChanged.invoke({
-                action: CollectionChangeAction.Delete,
+                action: moving ?
+                    CollectionChangeAction.Detach
+                    : CollectionChangeAction.Delete,
                 oldIndex: index,
                 oldItem: item
             });
@@ -217,6 +239,7 @@ module xp {
         // Mutator methods
         //----------------
 
+        // Extension
         move(from: number, to: number): T[] {
             this.inner.move(from, to);
 
@@ -235,6 +258,19 @@ module xp {
             }
 
             return this.inner;
+        }
+
+        // Extension
+        attach(item: T, index: number): number {
+            var length = this.inner.attach(item, index);
+            this.add(item, index, true);
+            return length;
+        }
+
+        // Extension
+        detach(index: number) {
+            var item = this.remove(index, true);
+            return item;
         }
 
         pop(): T {

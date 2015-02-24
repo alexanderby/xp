@@ -48,9 +48,11 @@
                     var collection = <ICollectionNotifier><any>items;
                     this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
                         switch (args.action) {
+                            case CollectionChangeAction.Attach:
                             case CollectionChangeAction.Create:
                                 this.addItem(args.newIndex, args.newItem);
                                 break;
+                            case CollectionChangeAction.Detach:
                             case CollectionChangeAction.Delete:
                                 // Remove replacement handler
                                 var found = this.itemReplacementHandlers.filter((h) => h.item === args.oldItem)[0];
