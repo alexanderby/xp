@@ -10,7 +10,7 @@
         <TextBox name="textbox" placeholder="What to do?" onTextChange="onTextInput"/>
       </HBox>
       <List name="list" items="{todos}" itemId="t" height="12em" itemsIndent="0.5em">
-        <HBox>
+        <HBox visible="({filter}==='All' || ({t.isDone}&amp;&amp;{filter}==='Done') || (!{t.isDone}&amp;&amp;{filter}==='Undone'))">
           <Label text="({todos}.indexOf({t}) + 1)" margin="0 1em 0 0"/>
           <CheckBox checked="{t.isDone}" text="{t.name}" onCheckChange="onDoneToggle"/>
           <Placeholder/>
@@ -22,6 +22,12 @@
         <!--RadioButtons: All, active, completed.-->
         <Placeholder/>
         <Button name="button_ClearCompleted" text="Clear done" onClick="onClearDoneClick"/>
+      </HBox>
+      <HBox>
+        <Label text="View:" margin="0 0.5em 0 0"/>
+        <ToggleButton text="All" item="All" selectedItem="{filter}" flex="Stretch"/>
+        <ToggleButton text="Done" item="Done" selectedItem="{filter}" flex="Stretch"/>
+        <ToggleButton text="Undone" item="Undone" selectedItem="{filter}" flex="Stretch"/>
       </HBox>
     </VBox>
 

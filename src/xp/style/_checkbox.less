@@ -61,7 +61,7 @@
         width: 1em;
     }
 
-    &:hover > .check {
+    &:hover:not(.disabled) > .check {
         background-color: @color-input-active;
     }
 
@@ -73,5 +73,9 @@
         line-height: 1em;
         margin-left: 0.25em;
         pointer-events: none;
+    }
+
+    &.disabled{
+        .disabled();
     }
 }

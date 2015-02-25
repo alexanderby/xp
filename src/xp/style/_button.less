@@ -19,11 +19,11 @@
     padding: 0.5em 0.375em;
     text-decoration: none;
 
-    &:hover {
+    &:hover:not(.disabled) {
         background-color: @color-control-hover;
     }
 
-    &:active {
+    &:active:not(.disabled) {
         background-color: @color-control-active;
     }
 
@@ -55,5 +55,9 @@
             margin: 0 0.125em;
             pointer-events: none;
         }
+    }
+
+    &.disabled{
+        .disabled();
     }
 }

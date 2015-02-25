@@ -1,4 +1,4 @@
-﻿xp.Log.DisplayMessages = 255;
+﻿xp.Log.DisplayMessages = 0;
 
 module Todo {
     export class App {

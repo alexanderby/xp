@@ -16,6 +16,16 @@
     <xs:attribute name="height" type="xs:string"/>
     <xs:attribute name="margin" type="xs:string"/>
     <xs:attribute name="flex" type="FlexValue"/>
+    <xs:attribute name="enabled">
+      <xs:simpleType>
+        <xs:union memberTypes="Boolean xs:string"/>
+      </xs:simpleType>
+    </xs:attribute>
+    <xs:attribute name="visible">
+      <xs:simpleType>
+        <xs:union memberTypes="Boolean xs:string"/>
+      </xs:simpleType>
+    </xs:attribute>
     <!--<xs:attribute name="flex">
       <xs:simpleType>
         <xs:union memberTypes="FlexValue FlexNumber"/>
@@ -284,6 +294,14 @@
   <xs:simpleType name="FlexNumber">
     <xs:restriction base="xs:string">
       <xs:pattern value="^(\d+(\.\d+)?(\s\d+(\.\d+)?)?)$"/>
+    </xs:restriction>
+  </xs:simpleType>
+
+  <xs:simpleType name="Visibility">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="Visible"/>
+      <xs:enumeration value="Hidden"/>
+      <xs:enumeration value="Collapsed"/>
     </xs:restriction>
   </xs:simpleType>
 

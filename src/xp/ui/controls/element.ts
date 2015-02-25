@@ -188,6 +188,7 @@
          */
         protected setDefaults() {
             this.enabled = true;
+            this.visible = true;
         }
 
         /**
@@ -200,7 +201,7 @@
             this._enabled = value
 
             // DOM
-            if (value === true) {
+            if (value) {
                 this.domElement.removeClass('disabled');
             }
             else {
@@ -302,7 +303,7 @@
             this._flex = flex;
 
             // DOM
-            this.removeFlexClasses();
+            this.domElement.removeClass('flex-None flex-Stretch');
             switch (flex) {
                 case FlexValue.None:
                     this.domElement.addClass('flex-None');
@@ -315,9 +316,45 @@
             }
         }
         private _flex: FlexValue;
-        private removeFlexClasses() {
-            this.domElement.removeClass('flex-None flex-Stretch');
+
+        get visible() {
+            return this._visible;
         }
+        set visible(v) {
+            this._visible = v;
+
+            // DOM
+            if (v) {
+                this.domElement.removeClass('hidden');
+            }
+            else {
+                this.domElement.addClass('hidden');
+            }
+        }
+        private _visible: boolean;
+
+        //get visibility() {
+        //    return this._visibility;
+        //}
+        //set visibility(value) {
+        //    this._visibility = value;
+
+        //    // DOM
+        //    this.domElement.removeClass('visibility-Hidden visibility-Collapsed');
+        //    switch (value) {
+        //        case Visibility.Visible:
+        //            break;
+        //        case Visibility.Hidden:
+        //            this.domElement.addClass('visibility-Hidden');
+        //            break;
+        //        case Visibility.Collapsed:
+        //            this.domElement.addClass('visibility-Collapsed');
+        //            break;
+        //        default:
+        //            throw new Error('Unknown visibility value.');
+        //    }
+        //}
+        //private _visibility: Visibility;
 
 
         //----------
@@ -636,6 +673,15 @@
         Stretch
     }
 
+    ///**
+    // * Visibility values.
+    // */
+    //export enum Visibility {
+    //    Visible,
+    //    Hidden,
+    //    Collapsed
+    //}
+
 
     //---------------
     // MARKUP PARSING
@@ -752,6 +798,15 @@
                     'None': (flex) => (el) => el.flex = FlexValue.None,
                     'Stretch': (flex) => (el) => el.flex = FlexValue.Stretch
                 },
+                'visible': {
+                    'true': () => (el) => el.visible = true,
+                    'false': () => (el) => el.visible = false
+                },
+                //'visibility': {
+                //    'Visible': (v) => (el) => el.visibility = Visibility.Visible,
+                //    'Hidden': (v) => (el) => el.visibility = Visibility.Hidden,
+                //    'Collapsed': (v) => (el) => el.visibility = Visibility.Collapsed
+                //},
                 'scope': {}, // TODO: Deserialize JSON?
 
                 // Events

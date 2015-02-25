@@ -49,19 +49,19 @@
         align-items: stretch;
     }
     // Items indent
-    &.itemsIndent-05 > *:not(:first-child) {
+    &.itemsIndent-05 > :not(.hidden) ~ :not(.hidden) {
         margin-top: 0.5em;
     }
 
-    &.itemsIndent-1 > *:not(:first-child) {
+    &.itemsIndent-1 > :not(.hidden) ~ :not(.hidden) {
         margin-top: 1em;
     }
 
-    &.itemsIndent-2 > *:not(:first-child) {
+    &.itemsIndent-2 > :not(.hidden) ~ :not(.hidden) {
         margin-top: 2em;
     }
 
-    &.itemsIndent-4 > *:not(:first-child) {
+    &.itemsIndent-4 > :not(.hidden) ~ :not(.hidden) {
         margin-top: 4em;
     }
     // Scroll bar

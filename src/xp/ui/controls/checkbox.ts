@@ -34,8 +34,8 @@
             this.onRemoved.addHandler(() => this.onCheckChange.removeAllHandlers(), this);
 
             // On check change input
-            this.domElement.on('change', (e) => {
-                if (!this.readonly) {
+            this.domElement.on('change',(e) => {
+                if (!this.readonly || this.enabled) {
                     this.onInput('checked', this.value);
 
                     var args = <CheckChangeArgs>UI.createEventArgs(this, e);
@@ -154,7 +154,7 @@
             });
         }
     }
-    
+
     MarkupParseInfo['CheckBox'] = {
         ctor: CheckBox,
         parser: new CheckBoxMarkupParser()

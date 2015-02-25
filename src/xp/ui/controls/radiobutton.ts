@@ -98,8 +98,12 @@
                 //    'true': () => (el: RadioButton) => el.uncheckable = true,
                 //    'false': () => (el: RadioButton) => el.uncheckable = false
                 //},
-                'item': {}, // Binding only
-                'selectedItem': {} // Binding only
+                'item': {
+                    '*': (value) => (el: RadioButton) => el.item = value // Allow string value?
+                },
+                'selectedItem': {
+                    // Binding only //'*': (value) => (el: RadioButton) => el.selectedItem = value // Allow string value?
+                }
             });
         }
     }

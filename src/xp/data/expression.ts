@@ -47,7 +47,8 @@
             this.collectionRegistrations = {};
             propsPaths.forEach((p, i) => {
                 var param = 'p' + i;
-                body = body.replace('{' + p + '}', param);
+                //body = body.replace('{' + p + '}', param); // Doesn't replace all. Regexp?
+                body = body.split('{' + p + '}').join(param);
                 params.push(param);
                 // Add param property
                 var fieldName = '_' + param;

@@ -14,7 +14,8 @@
 
             this.data = xp.observable({
                 todos: [],
-                selected: {},
+                selected: null,
+                filter: 'All',
                 undone: [],
                 done: []
             });
@@ -70,6 +71,7 @@
             todos: TodoItem[];
             undone: TodoItem[];
             done: TodoItem[];
+            filter: string;
         }
 
         private addItem(name: string) {
