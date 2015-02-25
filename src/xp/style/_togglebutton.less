@@ -53,9 +53,13 @@
         flex: none;
         margin: 0 0.125em;
         pointer-events: none;
+
+        &.hidden {
+            display: none;
+        }
     }
 
-    &.disabled{
+    &.disabled {
         .disabled();
     }
 }

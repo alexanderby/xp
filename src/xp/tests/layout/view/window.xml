@@ -1,9 +1,15 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Window xmlns="http://tempuri.org/Markup.xsd" title="Test App">
+<Window xmlns="http://tempuri.org/Markup.xsd" title="Layout Test">
 
   <!-- VBox layout test -->
   <HBox name="v-red" style="back-red" flex="None" height="2em"></HBox>
-  <HBox name="v-green" style="back-green" flex="Stretch"></HBox>
+  <HBox name="v-green" style="back-green" flex="Stretch">
+    <VBox flex="Stretch">
+      <HBox style="back-red" flex="None" height="2em"></HBox>
+      <HBox style="back-green" flex="Stretch"></HBox>
+      <HBox style="back-blue" flex="None" height="2em"></HBox>
+    </VBox>
+  </HBox>
   <HBox name="v-blue" style="back-blue" flex="None" height="2em"></HBox>
 
   <!-- HBox layout test -->

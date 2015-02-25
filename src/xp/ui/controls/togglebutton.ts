@@ -61,10 +61,12 @@
                     // Set background image
                     this.iconElement.css('background-image', xp.formatString('url({0})', path));
                 }
-                this.iconElement.show();
+                //this.iconElement.show();// NOTE: Replaces inline-block with inline which causes bugs in IE.
+                this.iconElement.removeClass('hidden');
             }
             else {
-                this.iconElement.hide();
+                //this.iconElement.hide();
+                this.iconElement.addClass('hidden');
             }
         }
         private _iconPath: string;
