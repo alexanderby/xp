@@ -24,6 +24,12 @@
     <Content Include="style\debug-style.min.css">
       <DependentUpon>debug-style.css</DependentUpon>
     </Content>
+    <Content Include="style\ie9-layout-fallback.css">
+      <DependentUpon>ie9-layout-fallback.less</DependentUpon>
+    </Content>
+    <Content Include="style\ie9-layout-fallback.min.css">
+      <DependentUpon>ie9-layout-fallback.css</DependentUpon>
+    </Content>
     <Content Include="style\xp.css">
       <DependentUpon>xp.less</DependentUpon>
     </Content>
@@ -133,6 +139,10 @@
     <Content Include="style\_vbox.less" />
     <Content Include="style\_scrollbar.less" />
     <Content Include="style\_modal.less" />
+    <Content Include="style\ie9-layout-fallback.less" />
+    <Content Include="style\ie9-layout-fallback.css.map">
+      <DependentUpon>ie9-layout-fallback.css</DependentUpon>
+    </Content>
     <None Include="web.Debug.config">
       <DependentUpon>web.config</DependentUpon>
     </None>

@@ -1,0 +1,61 @@
+﻿/*-------------------------
+    IE 9 FLEXBOX FALLBACK
+---------------------------*/
+
+.VBox {
+    //background-color: darkred;
+    > :not(.hidden) {
+        display: block;
+
+        &.flex-Stretch {
+            //width: 100%;
+        }
+    }
+
+    &.itemsAlign-Left > * {
+        float: left;
+    }
+
+    &.itemsAlign-Center > * {
+        clear: both;
+        margin: 0 auto;
+    }
+
+    &.itemsAlign-Right > * {
+        float: right;
+    }
+}
+
+.HBox {
+    //background-color: darkblue;
+    > :not(.hidden) {
+        display: inline-block;
+        float: left;
+
+        &.flex-Stretch {
+            width: auto !important;
+        }
+    }
+}
+
+.HBox > .flex-Stretch ~ :not(.flex-Stretch):not(.Placeholder),
+.HBox > .Placeholder ~ :not(.flex-Stretch):not(.Placeholder) {
+    float: right !important;
+}
+
+.TextBox,
+.Placeholder,
+.Label {
+    width: auto !important;
+}
+
+.Button {
+    :not(.hidden) {
+        display: inline-block;
+        text-align: center;
+    }
+}
+
+.Label {
+    text-align: center;
+}

@@ -67,10 +67,12 @@
             if (!!text === true) {
                 // Set text
                 this.textElement.text(text);
-                this.textElement.show();
+                //this.textElement.show();// NOTE: Replaces inline-block with inline which causes bugs in IE.
+                this.textElement.removeClass('hidden');
             }
             else {
-                this.textElement.hide();
+                //this.textElement.hide();
+                this.textElement.addClass('hidden');
             }
         }
         private _text: string;
