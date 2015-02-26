@@ -59,7 +59,7 @@ module xp {
         Replace,
         //Update?
         Delete,
-        Reset,
+        //Reset,
         Move,
         Attach,
         Detach

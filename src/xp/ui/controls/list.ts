@@ -52,6 +52,7 @@
                             case CollectionChangeAction.Create:
                                 this.addItem(args.newIndex, args.newItem);
                                 break;
+
                             case CollectionChangeAction.Detach:
                             case CollectionChangeAction.Delete:
                                 // Remove replacement handler
@@ -61,17 +62,17 @@
 
                                 this.children[args.oldIndex].remove();
                                 break;
+
                             case CollectionChangeAction.Replace:
                                 if (!this.itemReplacementToken) {
                                     this.children[args.newIndex].scope.set(this.itemId, args.newItem);
                                 }
                                 break;
+
                             case CollectionChangeAction.Move:
                                 this.insert(this.children[args.oldIndex], args.newIndex);
                                 break;
-                            case CollectionChangeAction.Reset:
-                                this.items = items;
-                                break;
+
                             default:
                                 throw new Error('Not implemented.');
                         }
