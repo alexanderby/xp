@@ -15,7 +15,7 @@
         }
         if (infos.length > 0) {
             var i = 0;
-            var next = (markup:JQuery) => {
+            var next = (markup: JQuery) => {
                 // Init markup
                 var markupInit = infos[i].parser.getInitializer($(markup[0]));
                 var inits = Initializers.get(infos[i].ctor);
@@ -28,7 +28,7 @@
                 // Set named children 
                 // TODO: Maybe just call by user in constructor? 
                 // Previously was set for Views until View was reached.
-                var names = markup.children().find('[name]').toArray().map((el) => el.getAttribute('name'));
+                var names = markup.find('[name]').toArray().map((el) => el.getAttribute('name'));
                 inits.push((el) => {
                     if (el instanceof Container) {
                         names.forEach((n) => {
