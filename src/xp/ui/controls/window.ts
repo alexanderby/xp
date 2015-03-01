@@ -16,7 +16,7 @@
         protected getTemplate(): JQuery {
             var template = $('body')
                 .addClass('Window')
-                .addClass('VBox')
+                .addClass('VBox');
             return template;
         }
 
@@ -27,7 +27,7 @@
                 throw new Error('There is already another Window.');
             Window.instance = this;
 
-            this.onRendered.invoke(this);
+            this.setRenderedState(true);
         }
 
 
