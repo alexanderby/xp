@@ -262,9 +262,8 @@ module xp {
 
         // Extension
         attach(item: T, index: number): number {
-            var length = this.inner.attach(item, index);
             this.add(item, index, true);
-            return length;
+            return this.inner.length;
         }
 
         // Extension

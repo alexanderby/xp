@@ -70,6 +70,16 @@
         JSON.stringify(nc),
         JSON.stringify([{ v: 9 }, { v: 7 }, { v: 4 }, { v: 0 }]));
 
+    var t = nc.detach(2);
+    assertEqual(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 9 }, { v: 7 }, { v: 0 }]));
+
+    nc.attach(t, 2);
+    assertEqual(
+        JSON.stringify(nc),
+        JSON.stringify([{ v: 9 }, { v: 7 }, { v: 4 }, { v: 0 }]));
+
     //
     // Check
 
