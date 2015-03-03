@@ -12,6 +12,8 @@
         private scope: Scope;
         private path: string;
         private defaultValue: any;
+        private sourceConverter: (srcValue) => any;
+        private targetConverter: (targetValue) => any;
 
         /**
          * Creates the scope binding manager.
@@ -20,8 +22,11 @@
          * @param scope Scope object.
          * @param path Path to bind to.
          * @param [defaultValue] Value to use is case when source property is unreachable.
+         * @param [defaultValue] Value to use is case when source property is unreachable.
+         * @param [sourceConverter] Function which converts source value.
+         * @param [targetConverter] Function which converts target value.
          */
-        constructor(target: any, targetPropertyPath: string, scope: Scope, path: string, defaultValue?: any) {
+        constructor(target: any, targetPropertyPath: string, scope: Scope, path: string, defaultValue?: any, sourceConverter?: (srcValue) => any, targetConverter?: (targetValue) => void) {
             //
             // Checks
 
@@ -44,6 +49,8 @@
             this.scope = scope;
             this.path = path;
             this.defaultValue = defaultValue;
+            this.sourceConverter = sourceConverter;
+            this.targetConverter = targetConverter;
 
             //
             // Split path into parts
@@ -184,6 +191,9 @@
                 var pathLength = this.pathParts.length;
                 var sourceObj = this.pathObjects[pathLength - 1].obj;
                 var sourceProp = this.pathParts[pathLength - 1];
+                if (this.targetConverter) {
+                    value = this.targetConverter(value)
+                }
                 sourceObj[sourceProp] = value;
             }
             else {
@@ -200,6 +210,9 @@
             var prop = xp.Path.getPropertyName(this.targetPropertyPath);
             var targetObj = xp.Path.getPropertyByPath(this.target, path);
 
+            if (this.sourceConverter) {
+                value = this.sourceConverter(value);
+            }
             if (value !== void 0 && value !== null) {
                 this.logMessage(xp.formatString('Update target with "{0}" property value "{1}".', this.path, value));
                 targetObj[prop] = value

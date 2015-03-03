@@ -72,6 +72,7 @@
     <TypeScriptCompile Include="data\manager.ts" />
     <TypeScriptCompile Include="core\defs.ts" />
     <TypeScriptCompile Include="core\dictionary.ts" />
+    <TypeScriptCompile Include="data\call_manager.ts" />
     <TypeScriptCompile Include="tests\assert.ts" />
     <TypeScriptCompile Include="tests\layout\index.ts" />
     <TypeScriptCompile Include="core\event.ts" />
