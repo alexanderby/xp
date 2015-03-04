@@ -29,7 +29,7 @@
         //-----------------
 
         /**
-         * Defines simple getter and setter for a model instance.
+         * Defines a simple getter and setter for a model instance.
          * @param obj Model instance.
          * @param prop Property name.
          * @param value Default value.
@@ -49,7 +49,7 @@
         }
 
         /**
-         * Defines observable getter and setter for a model instance.
+         * Defines an observable getter and setter for a model instance.
          * @param obj Model instance.
          * @param prop Property name.
          * @param value Default value.
@@ -75,7 +75,7 @@
         }
 
         /**
-         * Defines nested model property.
+         * Defines a nested model property.
          * Allows creating right model instances when doing JSON deserialization.
          * @param obj Model instance.
          * @param prop Property name.
@@ -115,7 +115,7 @@
         }
 
         /**
-        * Defines nested model collection property.
+        * Defines a nested model collection property.
         * Allows filling the collection with right model instances when doing JSON deserialization.
         * @param obj Model instance.
         * @param prop Property name.
@@ -148,6 +148,21 @@
                 // Create model collection
                 return new ModelCollection(model, source)
             }
+        }
+
+        /**
+         * Defines a non-enumerable and non-observable field.
+         * @param obj Model instance.
+         * @param prop Field name.
+         * @param value Default value.
+         */
+        static nonEnumerableField<T extends Model>(obj: Model, field: string, value?: any) {
+            Object.defineProperty(obj, field, {
+                enumerable: false,
+                configurable: true,
+                writable: true,
+                value: value
+            });
         }
 
         /**
