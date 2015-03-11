@@ -80,15 +80,15 @@
                 }
                 if (isNotifier(items)) {
                     var itemsLengthChangeHandler = (prop: string) => {
-                        if (prop === 'length') {
-                            // Hide or show control
-                            //if (this.items.length > 0) {
-                            //    this.domElement.show();
-                            //}
-                            //else {
-                            //    this.domElement.hide();
-                            //}
-                        }
+                        //if (prop === 'length') {
+                        //    // Hide or show control
+                        //    if (this.items.length > 0) {
+                        //        this.domElement.show();
+                        //    }
+                        //    else {
+                        //        this.domElement.hide();
+                        //    }
+                        //}
                     };
                     this.itemsRegistar.subscribe((<INotifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
                     // Handle length for the first time
