@@ -25,8 +25,6 @@
          * Applies initializers that were defined outside.
          */
         protected applyInitializers() {
-            if (this instanceof Window) {
-            }
             var inits = Initializers.get(<any>this['constructor']);
             if (inits) {
                 inits.forEach((init) => {

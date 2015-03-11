@@ -82,16 +82,6 @@
                     initAttributes(el);
                 };
             }
-
-
-            return (el) => {
-                // Seems to be namespace bug
-                //var dom = $(markup.prop('outerHTML')); // Bug in IE
-                var dom = $($('<div>').append(markup).prop('innerHTML'));
-                el.setHtml(dom);
-
-                initAttributes(el);
-            };
         }
     }
 

@@ -87,13 +87,16 @@ module xp {
      */
     export class ObservableCollection<T> extends ObservableObject implements Array<T>, ICollectionNotifier, INotifier {
         protected inner: Array<T>;
+        private convertItems: boolean;
 
         /**
          * Creates a collection which notifies of it's changes.
          * @param [collection] Source collection.
+         * @param [convertItems=true] Specifies whether to convert collection items into observables.
          */
-        constructor(collection?: Array<T>) {
+        constructor(collection?: Array<T>, convertItems = true) {
             super(collection);
+            this.convertItems = convertItems;
         }
 
         protected initProperties() {
@@ -219,7 +222,7 @@ module xp {
         }
 
         protected createNotifierIfPossible(item): any {
-            if (ObservableObject.isConvertable(item)) {
+            if (this.convertItems && ObservableObject.isConvertable(item)) {
                 item = observable(item);
             }
             return item;
