@@ -23,7 +23,7 @@
 
             this.textbox.focus();
 
-            this.textbox.domElement.on('contextmenu',(e) => {
+            this.domElement.on('contextmenu',(e) => {
                 e.preventDefault();
                 xp.UI.ContextMenu.show(e.pageX, e.pageY, [{
                     text: 'Copy',

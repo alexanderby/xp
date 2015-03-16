@@ -53,15 +53,13 @@
             Window.instance.append(this);
 
             // Move if overflows
-            var width = this.domElement.outerWidth();
-            var height = this.domElement.outerHeight();
-            var windowWidth = Window.instance.domElement.outerWidth();
-            var windowHeight = Window.instance.domElement.outerHeight();
-            if (x + width > windowWidth) {
-                this.domElement.css('left', x - width);
+            var menuBox = this.domElement.get(0).getBoundingClientRect();
+            var winBox = document.documentElement.getBoundingClientRect();
+            if (menuBox.right > winBox.right) {
+                this.domElement.css('left',(x - menuBox.width) + 'px');
             }
-            if (y + height > windowHeight) {
-                this.domElement.css('top', y - height);
+            if (menuBox.bottom > winBox.bottom) {
+                this.domElement.css('top',(y - menuBox.height) + 'px');
             }
         }
 
