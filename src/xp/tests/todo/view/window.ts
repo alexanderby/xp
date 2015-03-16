@@ -22,6 +22,24 @@
             this.scope = new xp.Scope(this.data);
 
             this.textbox.focus();
+
+            this.textbox.domElement.on('contextmenu',(e) => {
+                e.preventDefault();
+                xp.UI.ContextMenu.show(e.pageX, e.pageY, [{
+                    text: 'Copy',
+                    action: () => alert('copy')
+                }, {
+                        text: 'Paste',
+                        action: () => alert('paste'),
+                        key: 'Ctrl+V'
+                    }, {
+                        text: 'Delete',
+                        action: () => alert('delete'),
+                        disabled: true,
+                        icon: '../layout/icon-16-white.svg',
+                        key: 'Del'
+                    }]);
+            });
         }
 
         //---------
