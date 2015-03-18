@@ -19,7 +19,7 @@
                 handler: handler,
                 scope: thisArg
             };
-            if (this.handlers.filter((h) => h.handler === handler && h.scope === thisArg)[0]) {
+            if (this.handlers.filter((h) => h.handler === handler/* && h.scope === thisArg*/)[0]) {
                 throw new Error('Duplicate subscription.');
             }
             this.handlers.push(subscription);
@@ -32,25 +32,12 @@
          * @returns Removed handler.
          */
         removeHandler(handler: EventHandler<TEventArgs>): EventHandler<TEventArgs> {
-            var found = null;
-            var index = -1;
-            this.handlers.every((current, i) => {
-                if (current.handler === handler) {
-                    index = i;
-                    found = current.handler;
-                    return false;
-                }
-                else {
-                    return true;
-                }
-            });
-            if (index >= 0) {
-                this.handlers.splice(index, 1);
-            }
-            else {
+            var found = this.handlers.filter((h) => h.handler === handler)[0];
+            if (!found) {
                 throw new Error('Unable to remove event handler :\n' + handler.toString());
             }
-            return found;
+            this.handlers.splice(this.handlers.indexOf(found), 1);
+            return found.handler;
         }
 
         /**
@@ -58,6 +45,14 @@
          */
         removeAllHandlers() {
             this.handlers = [];
+        }
+
+        /**
+         * Determines if the specified handler is already subscribed for an event.
+         * @param handler Event handler.
+         */
+        hasHandler(handler: EventHandler<TEventArgs>): boolean {
+            return this.handlers.filter((h) => h.handler === handler).length >= 0;
         }
 
         /**
