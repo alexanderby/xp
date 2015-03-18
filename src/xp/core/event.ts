@@ -52,7 +52,7 @@
          * @param handler Event handler.
          */
         hasHandler(handler: EventHandler<TEventArgs>): boolean {
-            return this.handlers.filter((h) => h.handler === handler).length >= 0;
+            return this.handlers.filter((h) => h.handler === handler).length > 0;
         }
 
         /**
