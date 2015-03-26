@@ -22,11 +22,10 @@
          * @param scope Scope object.
          * @param path Path to bind to.
          * @param [defaultValue] Value to use is case when source property is unreachable.
-         * @param [defaultValue] Value to use is case when source property is unreachable.
          * @param [sourceConverter] Function which converts source value.
          * @param [targetConverter] Function which converts target value.
          */
-        constructor(target: any, targetPropertyPath: string, scope: Scope, path: string, defaultValue?: any, sourceConverter?: (srcValue) => any, targetConverter?: (targetValue) => void) {
+        constructor(target: any, targetPropertyPath: string, scope: Scope, path: string, defaultValue?: any, sourceConverter?: (srcValue) => any, targetConverter?: (targetValue) => any) {
             //
             // Checks
 

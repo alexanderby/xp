@@ -535,8 +535,11 @@
          * @param controlProperty Control's property name.
          * @param objectPropertyPath Object's property name.
          * @param [source] Binding source object. If not specified the element's scope will be used.
+         * @param [defaultValue] Value to use is case when source property is unreachable.
+         * @param [sourceConverter] Function which converts source value.
+         * @param [targetConverter] Function which converts target value.
          */
-        bind(controlProperty: string, objectPropertyPath: string, source?) {
+        bind(controlProperty: string, objectPropertyPath: string, source?, defaultValue?: any, sourceConverter?: (srcValue) => any, targetConverter?: (targetValue) => any) {
             if (this.bindings[controlProperty]) {
                 // Unsubscribe from prev changes
                 this.bindings[controlProperty].unbind();
@@ -560,7 +563,10 @@
                 this,
                 controlProperty,
                 source || this.scope || new Scope(null),
-                objectPropertyPath);
+                objectPropertyPath,
+                defaultValue,
+                sourceConverter,
+                targetConverter);
         }
 
         /**
