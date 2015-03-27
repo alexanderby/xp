@@ -23,24 +23,32 @@ interface Array<T> {
      */
     detach(index: number): T;
 }
-Array.prototype.move = function (from, to) {
-    if (from < 0) from = this.length + from;
-    if (to < 0) to = this.length + to;
-    if (from > this.length - 1 || to > this.length - 1 || from < 0 || to < 0) {
-        throw new Error('Index was out of range.');
-    }
+Object.defineProperties(Array.prototype, {
+    move: {
+        value: function (from, to) {
+            if (from < 0) from = this.length + from;
+            if (to < 0) to = this.length + to;
+            if (from > this.length - 1 || to > this.length - 1 || from < 0 || to < 0) {
+                throw new Error('Index was out of range.');
+            }
 
-    var picked = this.splice(from, 1)[0];
-    this.splice(to, 0, picked);
-    return this;
-};
-Array.prototype.attach = function (item, index) {
-    this.splice(index, 0, item);
-    return this.length;
-};
-Array.prototype.detach = function (index) {
-    return this.splice(index, 1)[0];
-};
+            var picked = this.splice(from, 1)[0];
+            this.splice(to, 0, picked);
+            return this;
+        }
+    },
+    attach: {
+        value: function (item, index) {
+            this.splice(index, 0, item);
+            return this.length;
+        }
+    },
+    detach: {
+        value: function (index) {
+            return this.splice(index, 1)[0];
+        }
+    }
+});
 
 module xp {
 
@@ -87,7 +95,6 @@ module xp {
      */
     export class ObservableCollection<T> extends ObservableObject implements Array<T>, ICollectionNotifier, INotifier {
         protected inner: Array<T>;
-        private convertItems: boolean;
 
         /**
          * Creates a collection which notifies of it's changes.
@@ -95,23 +102,24 @@ module xp {
          * @param [convertItems=true] Specifies whether to convert collection items into observables.
          */
         constructor(collection?: Array<T>, convertItems = true) {
-            super(collection);
-            this.convertItems = convertItems;
+            super(collection, convertItems);
         }
 
         protected initProperties() {
             super.initProperties();
 
-            Object.defineProperty(this, 'onCollectionChanged', {
-                configurable: true,
-                enumerable: false,
-                value: new Event<CollectionChangeArgs>()
-            });
-            Object.defineProperty(this, 'inner', {
-                configurable: true,
-                enumerable: false,
-                value: []
-            });
+            var definePrivateProperty = (prop: string, value: any, writable?: boolean) => {
+                Object.defineProperty(this, prop, {
+                    configurable: true,
+                    enumerable: false,
+                    writable: !!writable,
+                    value: value
+                });
+            };
+            definePrivateProperty('onCollectionChanged', new Event<CollectionChangeArgs>());
+            definePrivateProperty('inner', [], true);
+            definePrivateProperty('sorting', false, true);
+            definePrivateProperty('splicing', false, true);
         }
 
         protected copySource(collection: Array<T>) {
@@ -140,7 +148,7 @@ module xp {
         // Handling operations
         //--------------------
 
-        private splicing = false; // Prevents multiple property change notifications while splicing
+        private splicing; // Prevents multiple property change notifications while splicing
 
         /**
          * Handles item's addition into collection.
@@ -222,7 +230,7 @@ module xp {
         }
 
         protected createNotifierIfPossible(item): any {
-            if (this.convertItems && ObservableObject.isConvertable(item)) {
+            if (this.__convertNested__ && ObservableObject.isConvertable(item)) {
                 item = observable(item);
             }
             return item;
@@ -311,7 +319,7 @@ module xp {
             return item;
         }
 
-        private sorting = false; // Prevents property changed notifications while sorting
+        private sorting; // Prevents property changed notifications while sorting
 
         sort(compareFn?: (a: T, b: T) => number): T[] {
             var unsorted = this.inner.slice();
@@ -458,4 +466,5 @@ module xp {
 
         [n: number]: T;
     }
+    hidePrototypeProperties(ObservableCollection);
 } 

@@ -24,13 +24,16 @@
      */
     export class ObservableObject implements INotifier {
         onPropertyChanged: xp.Event<string>;
+        protected __convertNested__: boolean;
 
         /**
          * Creates an object, which notifies of it's properties changes.
          * @param source Source object.
+         * @param convertNested Specifies whether to convert nested items into observables. Default is true.
          */
-        constructor(source: Object) {
+        constructor(source: Object, convertNested = true) {
             this.initProperties();
+            this.__convertNested__ = convertNested;
             if (source) {
                 this.copySource(source);
             }
@@ -39,8 +42,12 @@
         protected initProperties() {
             Object.defineProperty(this, 'onPropertyChanged', {
                 configurable: true,
-                enumerable: false,
                 value: new Event<string>()
+            });
+            Object.defineProperty(this, '__convertNested__', {
+                configurable: true,
+                writable: true,
+                value: true
             });
         }
 
@@ -57,7 +64,7 @@
 
             for (var key in source) {
                 // Create notification property
-                ObservableObject.extend(this, key, source[key]);
+                ObservableObject.extend(this, key, source[key], this.__convertNested__);
             }
         }
 
@@ -77,8 +84,9 @@
          * @param obj Notifier.
          * @param name Name of the property to create.
          * @param value Default value.
+         * @param convertToObservable Specifies whether to convert value into observable. Default is true.
          */
-        static extend(obj: INotifier, name: string, value: any) {
+        static extend(obj: INotifier, name: string, value: any, convertToObservable = true) {
             //
             // Ensure property is not already present.
             if (name in obj) {
@@ -96,34 +104,27 @@
             }
 
             //
-            // Check if property is an object.
-            // If so -> make it Observable.
-
-            if (ObservableObject.isConvertable(value)) {
-                value = observable(value);
-                var isNestedObject = true;
-            }
-
-            //
             // Getters/setters
 
             var getter = function () {
                 return value;
             };
 
-            // Simple setter
-            var setter = function (v) {
-                value = v;
-                obj.onPropertyChanged.invoke(name);
-            };
-
-            if (isNestedObject) {
-                // Nested object setter
-                var nestedSetter = function (newObj) {
+            // NOTE: Check if property is an object.
+            // If so -> make it Observable and use observable setter.
+            if (convertToObservable && ObservableObject.isConvertable(value)) {
+                value = observable(value);
+                var setter = function (newObj) {
                     if (ObservableObject.isConvertable(newObj)) {
                         newObj = observable(newObj);
                     }
                     value = newObj;
+                    obj.onPropertyChanged.invoke(name);
+                };
+            }
+            else {
+                var setter = function (v) {
+                    value = v;
                     obj.onPropertyChanged.invoke(name);
                 };
             }
@@ -133,10 +134,11 @@
 
             Object.defineProperty(obj, name, {
                 get: getter,
-                set: isNestedObject ? nestedSetter : setter,
+                set: setter,
                 enumerable: true,
                 configurable: true
             });
         }
     }
+    hidePrototypeProperties(ObservableObject);
 }

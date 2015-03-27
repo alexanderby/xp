@@ -63,7 +63,7 @@
                     return value;
                 },
                 set: (v) => {
-                    if (value && !isNotifier(v)) {
+                    if (xp.ObservableObject.isConvertable(v)) {
                         v = observable(v);
                     }
                     value = v;
@@ -205,9 +205,17 @@
     // COLLECTION
     //-----------
 
+    /**
+     * Collection of models.
+     */
     export class ModelCollection<T extends Model> extends ObservableCollection<T>{
         model: new () => T;
 
+        /**
+         * Creates a collection of models.
+         * @param modelCtor Model type constructor.
+         * @param collection Initial items.
+         */
         constructor(modelCtor: new () => T, collection?: Array<T>) {
             super();
             this.model = modelCtor;
@@ -231,4 +239,5 @@
             return item;
         }
     }
+    hidePrototypeProperties(ModelCollection);
 } 

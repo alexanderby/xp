@@ -153,4 +153,19 @@
             default: throw new Error('Two much arguments to apply to constructor.');
         }
     }
+
+    /**
+     * Hides type's prototype properties (makes them non-enumerable).
+     * @param ctor Type constructor.
+     */
+    export function hidePrototypeProperties(ctor: new (...args) => Object) {
+        var proto = ctor.prototype;
+        for (var prop in proto) {
+            var desc = Object.getOwnPropertyDescriptor(proto, prop);
+            if (desc && desc.configurable) {
+                desc.enumerable = false;
+                Object.defineProperty(proto, prop, desc);
+            }
+        }
+    }
 }
