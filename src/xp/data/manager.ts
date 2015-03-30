@@ -89,6 +89,7 @@
                         (<INotifier>po[i].obj).onPropertyChanged.removeHandler(po[i].handler);
                     }
                 }
+                this.pathObjects.splice(startIndex, po.length - startIndex);
             }
 
             //

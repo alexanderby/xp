@@ -66,6 +66,16 @@
     assertEqual(source['onPropertyChanged']['handlers'].length, 1);
     assertEqual(source.city['onPropertyChanged']['handlers'].length, 1);
 
+    // Nested object replacement
+    var obs = xp.observable({ x: { y: { z: 1 } } });
+    var num: number;
+    var b = new BindingCallManager(new xp.Scope(obs), 'x.y.z',(v) => num = v || 0);
+    assertEqual(num, 1);
+    obs.x = void 0;
+    assertEqual(num, 0);
+    obs.x = { y: { z: 2 } };
+    assertEqual(num, 2);
+
 
     //
     // The End

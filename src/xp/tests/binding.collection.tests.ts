@@ -90,6 +90,21 @@
     assertEqual(nc[3].v, 0);
 
     //
+    // Index subscription
+
+    var col = new xp.ObservableCollection([{ city: { name: 'Gomel' } }, { city: { name: 'Minsk' } }]);
+    var name: string;
+    var bm = new BindingCallManager(new xp.Scope(col), '0.city.name',(v) => name = v || 'Default');
+    assertEqual(name, 'Gomel');
+    col.splice(0, 1);
+    assertEqual(name, 'Minsk');
+    col.splice(0);
+    assertEqual(name, 'Default');
+    col.push({ city: { name: 'New York' } });
+    assertEqual(name, 'New York');
+
+
+    //
     // The End
 
     Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Observable collection. Finish.');

@@ -205,9 +205,7 @@ module xp {
             Object.defineProperty(this, index.toString(), {
                 get: () => this.inner[index],
                 set: (value: T) => {
-                    if (!isNotifier(value)) {
-                        value = observable(value);
-                    }
+                    value = this.createNotifierIfPossible(value);
 
                     // Notify
                     this.onCollectionChanged.invoke({
