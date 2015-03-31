@@ -103,6 +103,8 @@
         unsubscribe<T>(predicate: (s: Subscription<T>) => boolean) {
             var index: number;
             while ((index = this.subscriptions.indexOf(this.subscriptions.filter(predicate)[0])) >= 0) {
+                var s = this.subscriptions[index];
+                s.event.removeHandler(s.handler);
                 this.subscriptions.splice(index, 1);
             }
         }
