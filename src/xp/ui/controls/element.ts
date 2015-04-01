@@ -190,7 +190,7 @@ module xp.UI {
                 this.domElement.classList.add('disabled');
             }
         }
-        private _enabled = true;
+        protected _enabled = true;
 
         /**
          * Gets or sets element's name.

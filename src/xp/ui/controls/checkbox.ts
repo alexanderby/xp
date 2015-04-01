@@ -40,17 +40,17 @@
 
             // On check change input
             this.domElement.addEventListener('change',(e) => {
-                if (!this.readonly || this.enabled) {
+                if (!this.readonly && this.enabled) {
                     this.onInput('checked', this.value);
 
                     var args = <CheckChangeArgs>UI.createEventArgs(this, e);
                     args.checked = this.value;
                     this.onCheckChange.invoke(args);
                 }
-                else {
-                    // Fix for not working "readonly" attribute
-                    this.checkElement.checked = !this.checkElement.checked;
-                }
+                //else {
+                //    // Fix for not working "readonly" attribute
+                //    this.checkElement.checked = !this.checkElement.checked;
+                //}
             });
         }
 
@@ -118,14 +118,42 @@
             this._readonly = readonly;
 
             // DOM
-            if (readonly) {
-                this.checkElement.readOnly = true;
+            if (!readonly && this.enabled) {
+                this.checkElement.readOnly = false;
+                this.domElement.style.pointerEvents = '';
             }
             else {
-                this.checkElement.readOnly = false
+                this.checkElement.readOnly = true; // Doesn't work
+                this.domElement.style.pointerEvents = 'none';
             }
         }
         private _readonly: boolean;
+
+        /**
+         * Gets or sets value indicating control being enabled or disabled.
+         */
+        get enabled() {
+            return this._enabled;
+        }
+        set enabled(value) {
+            this._enabled = value
+
+            // DOM
+            if (value) {
+                this.domElement.classList.remove('disabled');
+            }
+            else {
+                this.domElement.classList.add('disabled');
+            }
+            if (!this.readonly && value) {
+                this.checkElement.readOnly = false;
+                this.domElement.style.pointerEvents = '';
+            }
+            else {
+                this.checkElement.readOnly = true; // Doesn't work
+                this.domElement.style.pointerEvents = 'none';
+            }
+        }
     }
 
     export interface CheckChangeArgs extends UI.EventArgs<gEvent> {

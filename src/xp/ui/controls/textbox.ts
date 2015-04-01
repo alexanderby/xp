@@ -153,14 +153,38 @@
             this._readonly = readonly;
 
             // DOM
-            if (readonly) {
-                this.domElement.readOnly = true;
+            if (!readonly && this.enabled) {
+                this.domElement.readOnly = false;
             }
             else {
-                this.domElement.readOnly = false;
+                this.domElement.readOnly = true;
             }
         }
         private _readonly: boolean;
+
+        /**
+         * Gets or sets value indicating control being enabled or disabled.
+         */
+        get enabled() {
+            return this._enabled;
+        }
+        set enabled(value) {
+            this._enabled = value
+
+            // DOM
+            if (value) {
+                this.domElement.classList.remove('disabled');
+            }
+            else {
+                this.domElement.classList.add('disabled');
+            }
+            if (!this.readonly && value) {
+                this.domElement.readOnly = false;
+            }
+            else {
+                this.domElement.readOnly = true;
+            }
+        }
 
         /**
          * Gets or sets text placeholder.
@@ -180,6 +204,8 @@
             }
         }
         private _placeholder: string;
+
+
 
         /**
          * If enabled, listeners will be notified of changes on every input key is down.
