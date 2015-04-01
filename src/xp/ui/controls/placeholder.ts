@@ -4,8 +4,8 @@
      */
     export class Placeholder extends Element {
 
-        protected getTemplate(): JQuery {
-            return $('<span class="Placeholder">&nbsp;</span>');
+        protected getTemplate(): HTMLElement {
+            return Dom.create('<span class="Placeholder">&nbsp;</span>');
         }
 
         setDefaults() {

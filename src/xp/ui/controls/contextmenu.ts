@@ -17,8 +17,8 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            return $('<div class="ContextMenu VBox"></div>');
+        protected getTemplate(): HTMLElement {
+            return Dom.create('<div class="ContextMenu VBox"></div>');
         }
 
         protected createMenuItem(data: ContextMenuItemData) {
@@ -47,19 +47,20 @@
             window.addEventListener('keydown', onKey);
 
             // Set coordinate
-            this.domElement.css({ left: x, top: y });
+            this.domElement.style.left = x + 'px';
+            this.domElement.style.top = y + 'px';
 
             // Append to Window
             Window.instance.append(this);
 
             // Move if overflows
-            var menuBox = this.domElement.get(0).getBoundingClientRect();
+            var menuBox = this.domElement.getBoundingClientRect();
             var winBox = document.documentElement.getBoundingClientRect();
             if (menuBox.right > winBox.right) {
-                this.domElement.css('left',(x - menuBox.width) + 'px');
+                this.domElement.style.left = (x - menuBox.width) + 'px';
             }
             if (menuBox.bottom > winBox.bottom) {
-                this.domElement.css('top',(y - menuBox.height) + 'px');
+                this.domElement.style.top = (y - menuBox.height) + 'px';
             }
         }
 
@@ -91,17 +92,17 @@
 
         protected initItemData(data: ContextMenuItemData) {
             if (data.icon) {
-                this.iconElement.css('background-image', xp.formatString('url({0})', data.icon));
+                this.iconElement.style.backgroundImage = xp.formatString('url({0})', data.icon);
             }
             if (data.key) {
-                this.keyElement.text(data.key);
+                this.keyElement.innerText = data.key;
             }
             if (data.disabled) {
                 this.enabled = false;
             }
-            this.textElement.text(data.text);
+            this.textElement.innerText = data.text;
             this.onMouseDown.addHandler((e) => {
-                e.stopPropagation();
+                e.domEvent.stopPropagation();
                 this.menu.remove();
                 data.action();
             }, this);
@@ -111,17 +112,24 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            var template = $('<span class="ContextMenuItem" role="button"><span class="wrapper"><span class="icon"></span><span class="text"></span><span class="key"></span></span></button>');
-            this.iconElement = template.find('.icon');
-            this.textElement = template.find('.text');
-            this.keyElement = template.find('.key');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create(`
+                <span class="ContextMenuItem" role="button">
+                    <span class="wrapper">
+                        <span class="icon"></span>
+                        <span class="text"></span>
+                        <span class="key"></span>
+                    </span>
+                </button>`);
+            this.iconElement = Dom.select('.icon', template);
+            this.textElement = Dom.select('.text', template);
+            this.keyElement = Dom.select('.key', template);
             return template;
         }
 
-        protected iconElement: JQuery;
-        protected textElement: JQuery;
-        protected keyElement: JQuery;
+        protected iconElement: HTMLElement;
+        protected textElement: HTMLElement;
+        protected keyElement: HTMLElement;
     }
 
     export interface ContextMenuItemData {

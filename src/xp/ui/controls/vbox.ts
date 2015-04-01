@@ -8,20 +8,14 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            //var template = $('<div class="VBox"><div class="content"></div></div>');
-            var template = $('<div class="VBox"></div>');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create('<div class="VBox"></div>');
             return template;
         }
 
-        protected getContainerElement(): JQuery {
-            //return this.domElement.closest('.content'); // Bug with <body>
-
-            // Get only nearest '.content'.
-            //return $(this.domElement.find('.content').get(0));
-
-            return this.domElement;
-        }
+        //protected getContainerElement(): HTMLElement {
+        //    return this.domElement;
+        //}
 
 
         //-----------
@@ -47,15 +41,15 @@
             switch (align) {
                 case VContentAlignment.Top:
                     this.removeContentAlignmentClasses();
-                    this.domElement.addClass('contentAlign-Top');
+                    this.domElement.classList.add('contentAlign-Top');
                     break;
                 case VContentAlignment.Middle:
                     this.removeContentAlignmentClasses();
-                    this.domElement.addClass('contentAlign-Middle');
+                    this.domElement.classList.add('contentAlign-Middle');
                     break;
                 case VContentAlignment.Bottom:
                     this.removeContentAlignmentClasses();
-                    this.domElement.addClass('contentAlign-Bottom');
+                    this.domElement.classList.add('contentAlign-Bottom');
                     break;
                 default:
                     throw new Error('Unknown content alignment value: ' + align);
@@ -63,7 +57,9 @@
         }
         private _contentAlignment: VContentAlignment;
         private removeContentAlignmentClasses() {
-            this.domElement.removeClass('contentAlign-Top contentAlign-Middle contentAlign-Bottom');
+            this.domElement.classList.remove('contentAlign-Top');
+            this.domElement.classList.remove('contentAlign-Middle');
+            this.domElement.classList.remove('contentAlign-Bottom');
         }
 
         /**
@@ -79,19 +75,19 @@
             switch (align) {
                 case VItemsAlignment.Left:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Left');
+                    this.domElement.classList.add('itemsAlign-Left');
                     break;
                 case VItemsAlignment.Center:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Center');
+                    this.domElement.classList.add('itemsAlign-Center');
                     break;
                 case VItemsAlignment.Right:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Right');
+                    this.domElement.classList.add('itemsAlign-Right');
                     break;
                 case VItemsAlignment.Stretch:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Stretch');
+                    this.domElement.classList.add('itemsAlign-Stretch');
                     break;
                 default:
                     throw new Error('Unknown items alignment value: ' + align);
@@ -99,7 +95,10 @@
         }
         private _itemsAlignment: VItemsAlignment;
         private removeItemsAlignmentClasses() {
-            this.domElement.removeClass('itemsAlign-Left itemsAlign-Center itemsAlign-Right itemsAlign-Stretch');
+            this.domElement.classList.remove('itemsAlign-Left');
+            this.domElement.classList.remove('itemsAlign-Center');
+            this.domElement.classList.remove('itemsAlign-Right');
+            this.domElement.classList.remove('itemsAlign-Stretch');
         }
     }
 

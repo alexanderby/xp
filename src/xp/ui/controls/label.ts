@@ -5,14 +5,9 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            //var template = $('<span class="label"><span class="text"></span></span>');
-            //this.textElement = template.find('.text');
-            //return template;
-            return $('<label class="Label"></label>');
+        protected getTemplate(): HTMLElement {
+            return Dom.create('<label class="Label"></label>');
         }
-
-        protected textElement: JQuery;
 
 
         //-----------
@@ -30,8 +25,7 @@
             this._text = text;
 
             // DOM
-            //this.textElement.text(text);
-            this.domElement.text(text);
+            this.domElement.innerText = text;
         }
         private _text: string;
     }

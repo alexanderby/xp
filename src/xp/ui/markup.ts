@@ -9,7 +9,7 @@
         * according to provider markup.
         * @param markup Element's markup.
         */
-        getInitializer(markup: JQuery): UIInitializer<T>;
+        getInitializer(markup: gElement): UIInitializer<T>;
     }
 
 
@@ -85,7 +85,7 @@
      * Creates UI element resolving dependencies.
      * @param markup Element's markup.
      */
-    export function createElement<T extends Element>(markup: JQuery): T {
+    export function createElement<T extends Element>(markup: gElement): T {
         var create = getElementCreator(markup);
         var el = create();
         return <T>el;
@@ -95,15 +95,14 @@
      * Returns a function which creates an element resolving dependencies.
      * @param markup Element's markup.
      */
-    export function getElementCreator(markup: JQuery): () => Element {
-        var rootNode = markup[0];
-        var tag = markup[0].nodeName;
+    export function getElementCreator(markup: gElement): () => Element {
+        var tag = markup.nodeName;
         if (!(tag in MarkupParseInfo)) {
             throw new Error('Markup parse info for element "' + tag + '" is not found.');
         }
 
         var mp = xp.UI.MarkupParseInfo[tag];
-        var init = mp.parser.getInitializer($(rootNode));
+        var init = mp.parser.getInitializer(markup);
         if (mp.dependencies) {
             var instances = mp.dependencies.map((d) => {
                 var inst = xp.UI.DIInstances.get(d)

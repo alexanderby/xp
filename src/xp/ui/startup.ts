@@ -15,9 +15,9 @@
         }
         if (infos.length > 0) {
             var i = 0;
-            var next = (markup: JQuery) => {
+            var next = (markup: gElement) => {
                 // Init markup
-                var markupInit = infos[i].parser.getInitializer($(markup[0]));
+                var markupInit = infos[i].parser.getInitializer(markup);
                 var inits = Initializers.get(infos[i].ctor);
                 if (!inits) {
                     inits = [];
@@ -28,7 +28,7 @@
                 // Set named children 
                 // TODO: Maybe just call by user in constructor? 
                 // Previously was set for Views until View was reached.
-                var names = markup.find('[name]').toArray().map((el) => el.getAttribute('name'));
+                var names = Array.prototype.map.call(markup.querySelectorAll('[name]'),(el) => el.getAttribute('name'));
                 inits.push((el) => {
                     if (el instanceof Container) {
                         names.forEach((n) => {
@@ -61,36 +61,28 @@
      * @param onLoad Function called when markup loading finished.
      * @param [async=true] Specifies whether or not load markup asynchronously.
      */
-    export function loadMarkup(url: string, onLoad: (result: JQuery) => void, async = true): void {
-        $.ajax({
-            url: url,
-            dataType: 'text',
-            async: async,
-            error: (req, text, err) => {
-                Log.write(Log.HeatLevel.Warn, Log.Domain.Misc, 'Unable to load markup from "' + url + '".');
-                throw err;
-            },
-            success: (response: string) => {
+    export function loadMarkup(url: string, onLoad: (result: gElement) => void, async = true): void {
+        var req = new XMLHttpRequest();
+        //req.responseType = 'text/xml';
+        req.responseType = 'text/xml';
+        req.open('GET', url, async);
+        req.onreadystatechange = (e) => {
+            if (req.readyState === XMLHttpRequest.DONE && req.status === 200) {
                 // Remove namespace
-                response = response.replace(/<([a-zA-Z0-9 ]+)(?:xml)ns=\".*?\"(.*)>/g, "<$1$2>");
+                var response = req.responseText.replace(/<([a-zA-Z0-9 ]+)(?:xml)ns=\".*?\"(.*)>/g, "<$1$2>");
+
+                // Parse
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(response, 'text/xml');
 
                 // Get root element
-                var xml = $($.parseXML(response)).children().first();
+                var root = <gElement>doc.firstChild;
 
                 // Call back
-                onLoad(xml);
+                onLoad(root);
             }
-        });
-        //var req = new XMLHttpRequest();
-        //req.responseType = 'text/xml';
-        //req.open('GET', 'view/window.xml');
-        //req.onreadystatechange = (e) => {
-        //    if (req.readyState === XMLHttpRequest.DONE && req.status === 200) {
-        //        var xml = <XMLDocument>req.responseXML.documentElement;
-        //        console.log(xml.childNodes.length);
-        //    }
-        //};
-        //req.send(null);
+        };
+        req.send(null);
     }
 
     /**

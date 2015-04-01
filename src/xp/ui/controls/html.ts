@@ -8,14 +8,15 @@
          * Sets HTML content.
          * @param html HTML content.
          */
-        setHtml(html: JQuery) {
-            if (html.length !== 1) {
+        setHtml(html: HTMLElement) {
+            if (html.nodeType !== 1) {
                 throw new Error('Html control must have one root element.');
             }
 
-            this.domElement.replaceWith(html);
+            if (this.domElement.parentNode) {
+                this.domElement.parentNode.replaceChild(html, this.domElement);
+            }
             this.domElement = html;
-
 
             // Re-init events.
             // TODO: Unsubscribe from prev enents.
@@ -39,27 +40,28 @@
 
     export class HtmlMarkupParser extends ElementMarkupParser<Html>{
 
-        getInitializer(markup: JQuery): UIInitializer<Html> {
+        getInitializer(markup: gElement): UIInitializer<Html> {
 
             // Load from external file, if 'href' attribute specified.
-            var url: string = markup.get(0).getAttribute('href');
-            var attributes = markup.get(0).attributes;
-            markup.get(0).removeAttribute('href');
+            var url: string = markup.getAttribute('href');
+            var attributes = markup.attributes;
+            markup.removeAttribute('href');
             var initAttributes = this.getAttributesInitializer(markup);
 
             if (url) {
                 return (el) => {
                     // Load markup from file
                     xp.UI.loadMarkup(url,(r) => {
-                        markup = r;
+                        var m = <HTMLElement>r;
 
-                        if (markup.length !== 1) {
+                        if (m.nodeType !== 1) {
                             throw new Error('Html control must have one root element.');
                         }
 
                         // Seems to be namespace bug
-                        //var dom = $(markup.prop('outerHTML')); // Bug in IE
-                        var dom = $($('<div>').append(markup).prop('innerHTML'));
+                        var temp = document.createElement('div');
+                        temp.appendChild(m);
+                        var dom = Dom.create(temp.innerHTML);
                         el.setHtml(dom);
 
                         initAttributes(el);
@@ -67,16 +69,13 @@
                 };
             }
             else {
-                markup = markup.children();
-
-                if (markup.length !== 1) {
+                if (markup.childElementCount !== 1) {
                     throw new Error('Html control must have one root element.');
                 }
 
                 return (el) => {
                     // Seems to be namespace bug
-                    //var dom = $(markup.prop('outerHTML')); // Bug in IE
-                    var dom = $($('<div>').append(markup).prop('innerHTML'));
+                    var dom = Dom.create(new XMLSerializer().serializeToString(markup.firstElementChild));
                     el.setHtml(dom);
 
                     initAttributes(el);

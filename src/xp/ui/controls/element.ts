@@ -1,4 +1,6 @@
-﻿module xp.UI {
+﻿type gElement = Element;
+
+module xp.UI {
     /**
      * UI element.
      */
@@ -41,51 +43,36 @@
         /**
          * DOM element of a control.
          */
-        domElement: JQuery;
+        domElement: HTMLElement;
 
         /**
          * Returns element's template.
          */
-        protected getTemplate(): JQuery {
-            return $('<div></div>');
+        protected getTemplate(): HTMLElement {
+            return document.createElement('div');
         }
 
-        /**
-         * Renders control to the HTML element or element with given selector.
-         * @param selector HTML element or selector.
-         */
-        renderTo(elementOrSelector: string|JQuery) {
-            var target: JQuery;
-            if (typeof elementOrSelector === 'string')
-                target = $(elementOrSelector);
-            else
-                target = elementOrSelector;
-            target.replaceWith(this.domElement);
-
-            this.setRenderedState(true);
-        }
-
-        /*internal*/ setRenderedState(rendered) {
-            this.isRendered = rendered;
-            if (rendered)
+        /*internal*/ __setRenderedState__(rendered) {
+            this.__isRendered__ = rendered;
+            if (rendered && this.onRendered)
                 this.onRendered.invoke(this);
         }
-        /*internal*/ isRendered = false;
+        /*internal*/ __isRendered__ = false;
 
 
         //-------
         // EVENTS
         //-------
 
-        onClick: Event<UIEventArgs>;
-        onMouseDown: Event<UIEventArgs>;
-        onMouseUp: Event<UIEventArgs>;
-        onMouseMove: Event<UIEventArgs>;
-        onMouseEnter: Event<UIEventArgs>;
-        onMouseLeave: Event<UIEventArgs>;
-        onKeyPress: Event<UIEventArgs>;
-        onKeyDown: Event<UIEventArgs>;
-        onKeyUp: Event<UIEventArgs>;
+        onClick: Event<EventArgs<MouseEvent>>;
+        onMouseDown: Event<EventArgs<MouseEvent>>;
+        onMouseUp: Event<EventArgs<MouseEvent>>;
+        onMouseMove: Event<EventArgs<MouseEvent>>;
+        onMouseEnter: Event<EventArgs<MouseEvent>>;
+        onMouseLeave: Event<EventArgs<MouseEvent>>;
+        onKeyPress: Event<EventArgs<KeyboardEvent>>;
+        onKeyDown: Event<EventArgs<KeyboardEvent>>;
+        onKeyUp: Event<EventArgs<KeyboardEvent>>;
 
         /**
          * Is invoked when element is being removed.
@@ -135,25 +122,22 @@
             }, this);
 
             // DOM events
-            this.initDomEvent('click', this.onClick);
-            this.initDomEvent('mousedown', this.onMouseDown);
-            this.initDomEvent('mouseup', this.onMouseUp);
-            this.initDomEvent('mousemove', this.onMouseMove);
-            this.initDomEvent('mouseenter', this.onMouseEnter);
-            this.initDomEvent('mouseleave', this.onMouseLeave);
-            this.initDomEvent('keypress', this.onKeyPress);
-            this.initDomEvent('keydown', this.onKeyDown);
-            this.initDomEvent('keyup', this.onKeyUp);
+            this.initSimpleDomEvent('click', this.onClick);
+            this.initSimpleDomEvent('mousedown', this.onMouseDown);
+            this.initSimpleDomEvent('mouseup', this.onMouseUp);
+            this.initSimpleDomEvent('mousemove', this.onMouseMove);
+            this.initSimpleDomEvent('mouseenter', this.onMouseEnter);
+            this.initSimpleDomEvent('mouseleave', this.onMouseLeave);
+            this.initSimpleDomEvent('keypress', this.onKeyPress);
+            this.initSimpleDomEvent('keydown', this.onKeyDown);
+            this.initSimpleDomEvent('keyup', this.onKeyUp);
         }
 
-        protected initDomEvent(eventName: string, event: UIEvent) {
-            this.domElement.on(eventName,(e: UIEventArgs) => {
+        protected initSimpleDomEvent(eventName: string, event: UIEvent<gEvent>) {
+            this.domElement.addEventListener(eventName,(e) => {
                 if (this.enabled) {
                     var args = createEventArgs(this, e);
                     event.invoke(args);
-
-                    // TODO: Stop propagation or not?
-                    //e.stopPropagation();
                 }
             });
         }
@@ -163,7 +147,7 @@
          * @param event Event.
          * @param handlerName Handler name.
          */
-        registerUIHandler(event: Event<UIEventArgs>, handlerName: string) {
+        registerUIHandler(event: Event<EventArgs<gEvent>>, handlerName: string) {
             event.addHandler((args) => {
                 var elementWithHandler = this.bubbleBy((el) => el[handlerName] !== void 0);
                 if (!elementWithHandler) {
@@ -200,10 +184,10 @@
 
             // DOM
             if (value) {
-                this.domElement.removeClass('disabled');
+                this.domElement.classList.remove('disabled');
             }
             else {
-                this.domElement.addClass('disabled');
+                this.domElement.classList.add('disabled');
             }
         }
         private _enabled = true;
@@ -218,7 +202,7 @@
             this._name = value;
 
             // DOM
-            this.domElement.attr('id', value);
+            this.domElement.setAttribute('id', value);
         }
         private _name: string;
 
@@ -243,7 +227,7 @@
             this._width = width;
 
             // DOM
-            this.domElement.css('width', width);
+            this.domElement.style.width = width;
         }
         private _width: string;
 
@@ -257,7 +241,7 @@
             this._height = height;
 
             // DOM
-            this.domElement.css('height', height);
+            this.domElement.style.height = height;
         }
         private _height: string;
 
@@ -271,7 +255,7 @@
             this._margin = margin;
 
             // DOM
-            this.domElement.css('margin', margin);
+            this.domElement.style.margin = margin;
         }
         private _margin: string;
 
@@ -286,8 +270,8 @@
             this._style = cssClass;
 
             // DOM
-            this.domElement.removeClass(old);
-            this.domElement.addClass(cssClass);
+            this.domElement.classList.remove(old);
+            this.domElement.classList.add(cssClass);
         }
         private _style: string;
 
@@ -301,13 +285,14 @@
             this._flex = flex;
 
             // DOM
-            this.domElement.removeClass('flex-None flex-Stretch');
+            this.domElement.classList.remove('flex-None');
+            this.domElement.classList.remove('flex-Stretch');
             switch (flex) {
                 case FlexValue.None:
-                    this.domElement.addClass('flex-None');
+                    this.domElement.classList.add('flex-None');
                     break;
                 case FlexValue.Stretch:
-                    this.domElement.addClass('flex-Stretch');
+                    this.domElement.classList.add('flex-Stretch');
                     break;
                 default:
                     throw new Error('Unknown flex value "' + flex + '".');
@@ -323,36 +308,13 @@
 
             // DOM
             if (v) {
-                this.domElement.removeClass('hidden');
+                this.domElement.classList.remove('hidden');
             }
             else {
-                this.domElement.addClass('hidden');
+                this.domElement.classList.add('hidden');
             }
         }
         private _visible: boolean;
-
-        //get visibility() {
-        //    return this._visibility;
-        //}
-        //set visibility(value) {
-        //    this._visibility = value;
-
-        //    // DOM
-        //    this.domElement.removeClass('visibility-Hidden visibility-Collapsed');
-        //    switch (value) {
-        //        case Visibility.Visible:
-        //            break;
-        //        case Visibility.Hidden:
-        //            this.domElement.addClass('visibility-Hidden');
-        //            break;
-        //        case Visibility.Collapsed:
-        //            this.domElement.addClass('visibility-Collapsed');
-        //            break;
-        //        default:
-        //            throw new Error('Unknown visibility value.');
-        //    }
-        //}
-        //private _visibility: Visibility;
 
 
         //----------
@@ -378,9 +340,9 @@
                 this._parent.onScopeChanged.addHandler(this.parentScopeChangeHandler, this);
                 this.parentScopeChangeHandler();
 
-                if (!this.isRendered && parent.isRendered)
+                if (!this.__isRendered__ && parent.__isRendered__)
                     // Mark as rendered
-                    this.setRenderedState(true);
+                    this.__setRenderedState__(true);
             }
         }
         private _parent: Container;
@@ -420,7 +382,7 @@
             }
 
             // DOM
-            this.domElement.remove();
+            Dom.remove(this.domElement);
 
             this.onRemoved.invoke(this);
             this.onRemoved.removeAllHandlers();
@@ -697,7 +659,7 @@
          * according to provider markup.
          * @param markup Element's markup.
          */
-        getInitializer(markup: JQuery): UIInitializer<T> {
+        getInitializer(markup: gElement): UIInitializer<T> {
             var initAttributes = this.getAttributesInitializer(markup);
             return (el) => {
                 initAttributes(el);
@@ -709,13 +671,13 @@
          * according to provided attributes of root element.
          * @param markup Element's markup.
          */
-        protected getAttributesInitializer(markup: JQuery): UIInitializer<T> {
+        protected getAttributesInitializer(markup: gElement): UIInitializer<T> {
             var actions: UIInitializer<Element>[] = [];
 
             // Get attribute values
-            var attributes = markup.get(0).attributes;
+            var attributes = markup.attributes;
             var values: { [attr: string]: string; } = {};
-            $.each(attributes,(i, attr: Attr) => {
+            Array.prototype.forEach.call(attributes,(attr: Attr) => {
                 // Add attribute's name and value into dictionary
                 values[attr.name] = attr.value;
             });
@@ -724,7 +686,7 @@
             for (var key in values) {
                 // Find attribute
                 if (!map[key]) {
-                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup[0].nodeName));
+                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup.nodeName));
                 }
 
                 // Check for binding
@@ -755,7 +717,7 @@
                 else {
                     // Find value
                     if (!map[key][values[key]] && !map['*']) {
-                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, markup[0].nodeName));
+                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, markup.nodeName));
                     }
                     // Call setter
                     var setter = map[key][values[key]];

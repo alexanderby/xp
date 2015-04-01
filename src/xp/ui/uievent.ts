@@ -7,25 +7,29 @@ module xp.UI {
         y: number;
     }
 
-    export interface UIEventArgs extends JQueryEventObject {
-        targetUIControl: Element;
-        elementX: number;
-        elementY: number;
+    export interface EventArgs<T extends gEvent> {
+        element: Element;
+        elementX?: number;
+        elementY?: number;
+        domEvent: T;
     }
 
-    export function createEventArgs(control: Element, domEventObject: gEvent): UIEventArgs {
-        var e = <UIEventArgs>domEventObject;
+    export function createEventArgs<T extends gEvent>(control: Element, domEventObject: T): EventArgs<T> {
+        var rect = control.domElement.getBoundingClientRect();
 
-        // Target element
-        e.targetUIControl = control;
-
-        // Location relatively element
-        var offset = control.domElement.offset();
-        e.elementX = e.pageX - offset.left;
-        e.elementY = e.pageY - offset.top;
+        var e: EventArgs<T> = {
+            domEvent: domEventObject,
+            element: control
+        };
+        if ('pageX' in domEventObject) {
+            e.elementX = (<any>domEventObject).pageX - rect.left;
+        }
+        if ('pageY' in domEventObject) {
+            e.elementY = (<any>domEventObject).pageY - rect.top;
+        }
 
         return e;
     }
 
-    export class UIEvent extends Event<UIEventArgs> { }
+    export class UIEvent<T extends gEvent> extends Event<EventArgs<T>> { }
 } 

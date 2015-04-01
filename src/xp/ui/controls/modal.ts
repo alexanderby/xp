@@ -42,7 +42,7 @@
         //----
 
         protected getTemplate() {
-            return $('<div class="Modal VBox"></div>');
+            return Dom.create('<div class="Modal VBox"></div>');
         }
     }
 
@@ -51,7 +51,7 @@
      */
     export class ModalTint extends Container {
         protected getTemplate() {
-            return $('<div class="ModalTint"></div>');
+            return Dom.create('<div class="ModalTint"></div>');
         }
 
         // TODO: Closeable tint?

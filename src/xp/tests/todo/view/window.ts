@@ -23,7 +23,7 @@
 
             this.textbox.focus();
 
-            this.domElement.on('contextmenu',(e) => {
+            this.domElement.addEventListener('contextmenu',(e) => {
                 e.preventDefault();
                 xp.UI.ContextMenu.show(e.pageX, e.pageY, [{
                     text: 'Copy',
@@ -45,15 +45,15 @@
         //---------
         // Controls
         //---------
-
-        private onDeleteClick(args: xp.UI.UIEventArgs) {
-            var index = this.data.todos.indexOf(args.targetUIControl.scope['t']); // Hmm...
+        
+        private onDeleteClick(args: xp.UI.EventArgs<MouseEvent>) {
+            var index = this.data.todos.indexOf(args.element.scope['t']); // Hmm...
             if (index >= 0) {
                 this.removeItem(index);
             }
         }
 
-        private onClearDoneClick(args: xp.UI.UIEventArgs) {
+        private onClearDoneClick(args: xp.UI.EventArgs<MouseEvent>) {
             for (var i = this.data.todos.length - 1; i >= 0; i--) {
                 if (this.data.todos[i].isDone) {
                     this.removeItem(i);

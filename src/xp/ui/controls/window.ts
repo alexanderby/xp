@@ -13,10 +13,14 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            var template = $('body')
-                .addClass('Window')
-                .addClass('VBox');
+        protected getTemplate(): HTMLElement {
+            // TODO: When to render?
+            // Replace body or append to it?
+
+            var template = document.body;
+            template.classList.add('Window')
+            template.classList.add('VBox');
+            this.__setRenderedState__(true);
             return template;
         }
 
@@ -26,8 +30,6 @@
             if (Window.instance)
                 throw new Error('There is already another Window.');
             Window.instance = this;
-
-            this.setRenderedState(true);
         }
 
 

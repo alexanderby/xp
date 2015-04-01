@@ -31,19 +31,19 @@
                     break;
                 case ItemsIndent._0_5em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('itemsIndent-05');
+                    this.domElement.classList.add('itemsIndent-05');
                     break;
                 case ItemsIndent._1em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('itemsIndent-1');
+                    this.domElement.classList.add('itemsIndent-1');
                     break;
                 case ItemsIndent._2em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('itemsIndent-2');
+                    this.domElement.classList.add('itemsIndent-2');
                     break;
                 case ItemsIndent._4em:
                     this.removeItemsIndentClasses();
-                    this.domElement.addClass('itemsIndent-4');
+                    this.domElement.classList.add('itemsIndent-4');
                     break;
                 default:
                     throw new Error('Unknown items indent value: ' + indent);
@@ -51,7 +51,10 @@
         }
         private _itemsIndent: ItemsIndent;
         private removeItemsIndentClasses() {
-            this.domElement.removeClass('itemsIndent-05 itemsIndent-1 itemsIndent-2 itemsIndent-4');
+            this.domElement.classList.remove('itemsIndent-05');
+            this.domElement.classList.remove('itemsIndent-1');
+            this.domElement.classList.remove('itemsIndent-2');
+            this.domElement.classList.remove('itemsIndent-4');
         }
 
         /**
@@ -67,19 +70,19 @@
             switch (scroll) {
                 case ScrollBar.None:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollBar-None');
+                    this.domElement.classList.add('scrollBar-None');
                     break;
                 case ScrollBar.Horizontal:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollBar-Horizontal');
+                    this.domElement.classList.add('scrollBar-Horizontal');
                     break;
                 case ScrollBar.Vertical:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollBar-Vertical');
+                    this.domElement.classList.add('scrollBar-Vertical');
                     break;
                 case ScrollBar.Both:
                     this.removeScrollBarClasses();
-                    this.domElement.addClass('scrollBar-Both');
+                    this.domElement.classList.add('scrollBar-Both');
                     break;
                 default:
                     throw new Error('Unknown scroll bar value: ' + scroll);
@@ -87,7 +90,10 @@
         }
         private _scrollBar: ScrollBar;
         private removeScrollBarClasses() {
-            this.domElement.removeClass('scrollBar-None scrollBar-Horizontal scrollBar-Vertical scrollBar-Both');
+            this.domElement.classList.remove('scrollBar-None');
+            this.domElement.classList.remove('scrollBar-Horizontal');
+            this.domElement.classList.remove('scrollBar-Vertical');
+            this.domElement.classList.remove('scrollBar-Both');
         }
 
         /**
@@ -103,11 +109,11 @@
             switch (wrap) {
                 case Wrapping.NoWrap:
                     this.removeWrappingClasses();
-                    this.domElement.addClass('wrapping-NoWrap');
+                    this.domElement.classList.add('wrapping-NoWrap');
                     break;
                 case Wrapping.Wrap:
                     this.removeWrappingClasses();
-                    this.domElement.addClass('wrapping-Wrap');
+                    this.domElement.classList.add('wrapping-Wrap');
                     break;
                 default:
                     throw new Error('Unknown wrapping value: ' + wrap);
@@ -115,7 +121,8 @@
         }
         private _wrapping: Wrapping;
         private removeWrappingClasses() {
-            this.domElement.removeClass('wrapping-NoWrap wrapping-Wrap');
+            this.domElement.classList.remove('wrapping-NoWrap');
+            this.domElement.classList.remove('wrapping-Wrap');
         }
     }
 

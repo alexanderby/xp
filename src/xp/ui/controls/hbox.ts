@@ -8,19 +8,14 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            //var template = $('<div class="HBox"><div class="content"></div></div>');
-            var template = $('<div class="HBox"></div>');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create('<div class="HBox"></div>');
             return template;
         }
 
-        protected getContainerElement(): JQuery {
-            //return this.domElement.closest('.content'); // Bug with <body>
-
-            // Get only nearest '.content'.
-            //return $(this.domElement.find('.content').get(0));
-            return this.domElement;
-        }
+        //protected getContainerElement(): HTMLElement {
+        //    return this.domElement;
+        //}
 
 
         //-----------
@@ -31,7 +26,6 @@
             super.setDefaults();
             this.contentAlignment = HContentAlignment.Left;
             this.itemsAlignment = HItemsAlignment.Stretch;
-            //this.width = '100%';
         }
 
         /**
@@ -47,15 +41,15 @@
             switch (align) {
                 case HContentAlignment.Left:
                     this.removeContentAlignmentClasses();
-                    this.domElement.addClass('contentAlign-Left');
+                    this.domElement.classList.add('contentAlign-Left');
                     break;
                 case HContentAlignment.Center:
                     this.removeContentAlignmentClasses();
-                    this.domElement.addClass('contentAlign-Center');
+                    this.domElement.classList.add('contentAlign-Center');
                     break;
                 case HContentAlignment.Right:
                     this.removeContentAlignmentClasses();
-                    this.domElement.addClass('contentAlign-Right');
+                    this.domElement.classList.add('contentAlign-Right');
                     break;
                 default:
                     throw new Error('Unknown content alignment value: ' + align);
@@ -63,7 +57,9 @@
         }
         private _contentAlignment: HContentAlignment;
         private removeContentAlignmentClasses() {
-            this.domElement.removeClass('contentAlign-Left contentAlign-Center contentAlign-Right');
+            this.domElement.classList.remove('contentAlign-Left');
+            this.domElement.classList.remove('contentAlign-Center');
+            this.domElement.classList.remove('contentAlign-Right');
         }
 
         /**
@@ -79,19 +75,19 @@
             switch (align) {
                 case HItemsAlignment.Top:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Top');
+                    this.domElement.classList.add('itemsAlign-Top');
                     break;
                 case HItemsAlignment.Middle:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Middle');
+                    this.domElement.classList.add('itemsAlign-Middle');
                     break;
                 case HItemsAlignment.Bottom:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Bottom');
+                    this.domElement.classList.add('itemsAlign-Bottom');
                     break;
                 case HItemsAlignment.Stretch:
                     this.removeItemsAlignmentClasses();
-                    this.domElement.addClass('itemsAlign-Stretch');
+                    this.domElement.classList.add('itemsAlign-Stretch');
                     break;
                 default:
                     throw new Error('Unknown items alignment value: ' + align);
@@ -99,7 +95,10 @@
         }
         private _itemsAlignment: HItemsAlignment;
         private removeItemsAlignmentClasses() {
-            this.domElement.removeClass('itemsAlign-Top itemsAlign-Middle itemsAlign-Bottom itemsAlign-Stretch');
+            this.domElement.classList.remove('itemsAlign-Top');
+            this.domElement.classList.remove('itemsAlign-Middle');
+            this.domElement.classList.remove('itemsAlign-Bottom');
+            this.domElement.classList.remove('itemsAlign-Stretch');
         }
     }
 

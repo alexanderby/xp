@@ -8,10 +8,10 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            var template = $('<label class="RadioButton"><input type="radio"/><span class="check"></span><label class="text"></label></label>');
-            this.checkElement = template.find('input');
-            this.textElement = template.find('label');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create('<label class="RadioButton"><input type="radio"/><span class="check"></span><label class="text"></label></label>');
+            this.checkElement = <HTMLInputElement>Dom.select('input', template);
+            this.textElement = Dom.select('label', template);
             return template;
         }
 
@@ -45,7 +45,7 @@
             this._group = group;
 
             // DOM
-            this.checkElement.attr('name', group);
+            this.checkElement.name = group;
         }
         private _group: string;
 

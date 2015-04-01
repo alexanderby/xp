@@ -8,9 +8,8 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            //return $('<div class="List VBox"><div class="content"></div></div>');
-            return $('<div class="List VBox"></div>');
+        protected getTemplate(): HTMLElement {
+            return Dom.create('<div class="List VBox"></div>');
         }
 
 
@@ -209,7 +208,7 @@
 
     export class ListMarkupParser extends VBoxMarkupParser<List>{
 
-        getInitializer(markup: JQuery): UIInitializer<List> {
+        getInitializer(markup: gElement): UIInitializer<List> {
             var initAttributes = this.getAttributesInitializer(markup);
             var initTemplate = this.getTemplateInitializer(markup);
             return (el) => {
@@ -218,13 +217,14 @@
             };
         }
 
-        protected getTemplateInitializer(markup: JQuery): UIInitializer<List> {
-            if (markup.children().length !== 1) {
+        protected getTemplateInitializer(markup: gElement): UIInitializer<List> {
+            var children = Array.prototype.filter.call(markup.childNodes,(n: Node) => n.nodeType === 1);
+            if (children.length !== 1) {
                 throw new Error('List control must have ONE item template.');
             }
 
-            var childXmlNode = markup.children().get(0);
-            var create = xp.UI.getElementCreator($(childXmlNode));
+            var childXmlNode = children[0];
+            var create = xp.UI.getElementCreator(childXmlNode);
 
             return (el) => el.itemCreator = create;
         }

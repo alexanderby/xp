@@ -30,16 +30,16 @@
         /**
          * Returns the DOM-element where children are placed.
          */
-        protected getContainerElement(): JQuery {
+        protected getContainerElement(): HTMLElement {
             return this.domElement;
         }
 
-        /*internal*/ setRenderedState(rendered) {
-            this.isRendered = rendered;
-            this.children.forEach((ch) => {
-                ch.setRenderedState(rendered);
+        /*internal*/ __setRenderedState__(rendered) {
+            this.__isRendered__ = rendered;
+            this.children && this.children.forEach((ch) => {
+                ch.__setRenderedState__(rendered);
             });
-            if (rendered)
+            if (rendered && this.onRendered)
                 this.onRendered.invoke(this);
         }
 
@@ -58,7 +58,7 @@
             this._padding = padding;
 
             // DOM
-            this.domElement.css('padding', padding);
+            this.domElement.style.padding = padding;
         }
         private _padding: string;
 
@@ -95,6 +95,7 @@
          * @param index Index to insert at.
          */
         insert(element: Element, index: number) {
+
             if (element.parent === this && this.children.indexOf(element) == index) {
                 // Don't do anything.
                 return;
@@ -104,16 +105,18 @@
                 throw new Error('Index was out or range.');
             }
 
+            var container = this.getContainerElement();
+
             if (element.parent === this) {
                 var from = this.children.indexOf(element);
 
                 // DOM
                 var target = from < index ? index + 1 : index;
                 if (target === this.children.length) {
-                    element.domElement.appendTo(this.domElement);
+                    container.appendChild(element.domElement);
                 }
                 else {
-                    element.domElement.insertBefore(this.domElement.children().get(target));
+                    container.insertBefore(element.domElement, container.children.item(target));
                 }
 
                 this.children.move(from, index);
@@ -124,55 +127,15 @@
 
                 // DOM
                 if (index === this.children.length) {
-                    element.domElement.appendTo(this.domElement);
+                    container.appendChild(element.domElement);
                 }
                 else {
-                    element.domElement.insertBefore(this.domElement.children().get(index));
+                    container.insertBefore(element.domElement, container.children.item(index));
                 }
 
                 this.children.splice(index, 0, element);
                 element.parent = this;
             }
-            //else {
-            //    //var target = this.children[index];
-            //    //if (!target) {
-            //    //    // Append at end
-            //    //    this.append(element);
-            //    //}
-            //    //else {
-            //    //    // DOM
-            //    //    element.domElement.insertBefore(target.domElement);
-
-            //    //    var targetIndex = (element.parent === this && this.children.indexOf(element) < index) ?
-            //    //        index - 1
-            //    //        : index;
-            //    //    if (element.parent) {
-            //    //        element.parent.detachChild(element);
-            //    //    }
-            //    //    this.children.splice(targetIndex, 0, element);
-            //    //    element.parent = this;
-            //    //}
-            //    if (index > this.children.length)
-            //        throw new Error('Index was out or range.');
-
-            //    if (index === this.children.length) {
-            //        this.append(element);
-            //    }
-            //    else {
-            //        if (element.parent === this) {
-            //            var from=
-            //        }
-            //        if (element.parent) {
-            //            element.parent.detachChild(element);
-            //        }
-
-            //        // DOM
-            //        element.domElement.insertBefore(this.domElement.children().get(index));
-
-            //        this.children.splice(index, 0, element);
-            //        element.parent = this;
-            //    }
-            //}
         }
 
         /**
@@ -188,7 +151,7 @@
             child.parent = null;
 
             // DOM
-            child.domElement.detach();
+            Dom.remove(child.domElement);
         }
 
         /**
@@ -307,7 +270,7 @@
          * according to provider markup.
          * @param markup Element's markup.
          */
-        getInitializer(markup: JQuery): UIInitializer<T> {
+        getInitializer(markup: gElement): UIInitializer<T> {
             var initAttributes = this.getAttributesInitializer(markup);
             var initContent = this.getContentInitializer(markup);
             return (el) => {
@@ -321,23 +284,25 @@
          * according to provided children of root element.
          * @param markup Element's markup.
          */
-        protected getContentInitializer(markup: JQuery): UIInitializer<T> {
+        protected getContentInitializer(markup: gElement): UIInitializer<T> {
             var actions: UIInitializer<Container>[] = [];
 
             // Create children
-            $.each(markup.children(),(i, childXmlNode) => {
-                // Create child
-                var tagName = childXmlNode.nodeName;
-                if (!xp.UI.MarkupParseInfo[tagName]) {
-                    throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
+            Array.prototype.forEach.call(markup.childNodes,(childXmlNode: gElement) => {
+                if (childXmlNode.nodeType === 1) {
+                    // Create child
+                    var tagName = childXmlNode.nodeName;
+                    if (!xp.UI.MarkupParseInfo[tagName]) {
+                        throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
+                    }
+
+                    var create = xp.UI.getElementCreator(childXmlNode);
+
+                    actions.push((el) => {
+                        var child = create();
+                        el.append(child);
+                    });
                 }
-
-                var create = xp.UI.getElementCreator($(childXmlNode));
-
-                actions.push((el) => {
-                    var child = create();
-                    el.append(child);
-                });
             });
 
             return (el) => actions.forEach((init) => init(el));

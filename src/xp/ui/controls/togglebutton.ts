@@ -5,16 +5,16 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            var template = $('<label class="ToggleButton"><input type="radio"/><span class="icon"></span><span class="text"></span></label>');
-            this.checkElement = template.find('input');
-            this.iconElement = template.find('.icon');
-            this.textElement = template.find('.text');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create('<label class="ToggleButton"><input type="radio"/><span class="icon"></span><span class="text"></span></label>');
+            this.checkElement = <HTMLInputElement>Dom.select('input', template);
+            this.iconElement = Dom.select('.icon', template);
+            this.textElement = Dom.select('.text', template);
             return template;
         }
 
-        protected iconElement: JQuery;
-        protected textElement: JQuery;
+        protected iconElement: HTMLElement;
+        protected textElement: HTMLElement;
 
 
         //-----------
@@ -36,12 +36,12 @@
             this._checked = checked;
 
             // DOM
-            this.checkElement.prop('checked', checked);
+            this.checkElement.checked = checked;
             if (checked) {
-                this.domElement.addClass('checked');
+                this.domElement.classList.add('checked');
             }
             else {
-                this.domElement.removeClass('checked');
+                this.domElement.classList.remove('checked');
             }
         }
 
@@ -59,14 +59,12 @@
             if (path !== void 0 && path !== null) {
                 if (path !== '' && path !== '*' && path !== '/') {
                     // Set background image
-                    this.iconElement.css('background-image', xp.formatString('url({0})', path));
+                    this.iconElement.style.backgroundImage = xp.formatString('url({0})', path);
                 }
-                //this.iconElement.show();// NOTE: Replaces inline-block with inline which causes bugs in IE.
-                this.iconElement.removeClass('hidden');
+                this.iconElement.classList.remove('hidden');
             }
             else {
-                //this.iconElement.hide();
-                this.iconElement.addClass('hidden');
+                this.iconElement.classList.add('hidden');
             }
         }
         private _iconPath: string;

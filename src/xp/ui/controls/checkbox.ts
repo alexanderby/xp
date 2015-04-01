@@ -8,15 +8,20 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            var template = $('<label class="CheckBox"><input type="checkbox"/><span class="check"></span><label class="text"></label></label>');
-            this.checkElement = template.find('input');
-            this.textElement = template.find('label');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create(`
+                <label class="CheckBox">
+                    <input type="checkbox"/>
+                    <span class="check"></span>
+                    <label class="text"></label>
+                </label>`);
+            this.checkElement = <HTMLInputElement>Dom.select('input', template);
+            this.textElement = Dom.select('label', template);
             return template;
         }
 
-        protected checkElement: JQuery;
-        protected textElement: JQuery;
+        protected checkElement: HTMLInputElement;
+        protected textElement: HTMLElement;
 
 
         //-------
@@ -30,11 +35,11 @@
 
         protected initEvents() {
             super.initEvents();
-            this.onCheckChange = new Event<CheckChangeArgs>();
+            this.onCheckChange = new Event();
             this.onRemoved.addHandler(() => this.onCheckChange.removeAllHandlers(), this);
 
             // On check change input
-            this.domElement.on('change',(e) => {
+            this.domElement.addEventListener('change',(e) => {
                 if (!this.readonly || this.enabled) {
                     this.onInput('checked', this.value);
 
@@ -44,7 +49,7 @@
                 }
                 else {
                     // Fix for not working "readonly" attribute
-                    this.checkElement.prop('checked', !this.value);
+                    this.checkElement.checked = !this.checkElement.checked;
                 }
             });
         }
@@ -65,7 +70,7 @@
          * Returns the value of the text box according to it's type.
          */
         get value(): boolean {
-            return !!this.checkElement.prop('checked');
+            return !!this.checkElement.checked;
         }
 
         /**
@@ -78,7 +83,7 @@
             this._checked = checked;
 
             // DOM
-            this.checkElement.prop('checked', checked);
+            this.checkElement.checked = checked;
         }
         protected _checked: boolean;
 
@@ -94,13 +99,11 @@
             // DOM
             if (!!text === true) {
                 // Set text
-                this.textElement.text(text);
-                //this.textElement.show(); // NOTE: Replaces inline-block with inline which causes bugs in IE.
-                this.textElement.removeClass('hidden');
+                this.textElement.innerText = text;
+                this.textElement.classList.remove('hidden');
             }
             else {
-                //this.textElement.hide();
-                this.textElement.addClass('hidden');
+                this.textElement.classList.add('hidden');
             }
         }
         private _text: string;
@@ -116,17 +119,16 @@
 
             // DOM
             if (readonly) {
-                this.domElement.attr('readonly', 'readonly');
-                this.checkElement.attr('readonly', 'readonly');
+                this.checkElement.readOnly = true;
             }
             else {
-                this.checkElement.removeAttr('readonly');
+                this.checkElement.readOnly = false
             }
         }
         private _readonly: boolean;
     }
 
-    export interface CheckChangeArgs extends UI.UIEventArgs {
+    export interface CheckChangeArgs extends UI.EventArgs<gEvent> {
         checked: boolean;
     }
 

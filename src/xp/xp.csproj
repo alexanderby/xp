@@ -46,7 +46,6 @@
     <Content Include="tests\layout\icon-16-black.svg" />
     <Content Include="tests\layout\icon-16-white.svg" />
     <Content Include="tests\layout\index.html" />
-    <Content Include="lib\jquery.js" />
     <Content Include="tests\layout\view\window.xml">
       <SubType>Designer</SubType>
     </Content>
@@ -76,7 +75,6 @@
     <TypeScriptCompile Include="tests\assert.ts" />
     <TypeScriptCompile Include="tests\layout\index.ts" />
     <TypeScriptCompile Include="core\event.ts" />
-    <TypeScriptCompile Include="lib\jquery.d.ts" />
     <TypeScriptCompile Include="tests\binding.collection.tests.ts" />
     <TypeScriptCompile Include="tests\binding.manager.tests.ts" />
     <TypeScriptCompile Include="tests\model.tests.ts" />
@@ -104,6 +102,7 @@
     <TypeScriptCompile Include="data\expression.ts" />
     <TypeScriptCompile Include="ui\startup.ts" />
     <TypeScriptCompile Include="ui\uievent.ts" />
+    <TypeScriptCompile Include="utils\dom.ts" />
     <TypeScriptCompile Include="utils\path.ts" />
     <TypeScriptCompile Include="utils\misc.ts" />
     <TypeScriptCompile Include="utils\log.ts" />

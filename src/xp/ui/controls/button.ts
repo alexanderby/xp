@@ -8,15 +8,21 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            var template = $('<button class="Button" type="button"><span class="wrapper"><span class="icon"></span><span class="text"></span></span></button>');
-            this.iconElement = template.find('.icon');
-            this.textElement = template.find('.text');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create(`
+                <button class="Button" type="button">
+                    <span class="wrapper">
+                        <span class="icon"></span>
+                        <span class="text"></span>
+                    </span>
+                </button>`);
+            this.iconElement = Dom.select('.icon', template);
+            this.textElement = Dom.select('.text', template);
             return template;
         }
 
-        protected iconElement: JQuery;
-        protected textElement: JQuery;
+        protected iconElement: HTMLElement;
+        protected textElement: HTMLElement;
 
 
         //-----------
@@ -42,14 +48,12 @@
             if (path !== void 0 && path !== null) {
                 if (path !== '' && path !== '*' && path !== '/') {
                     // Set background image
-                    this.iconElement.css('background-image', xp.formatString('url({0})', path));
+                    this.iconElement.style.backgroundImage = xp.formatString('url({0})', path);
                 }
-                //this.iconElement.show(); // NOTE: Replaces inline-block with inline which causes bugs in IE.
-                this.iconElement.removeClass('hidden');
+                this.iconElement.classList.remove('hidden');
             }
             else {
-                //this.iconElement.hide();
-                this.iconElement.addClass('hidden');
+                this.iconElement.classList.add('hidden');
             }
         }
         private _iconPath: string;
@@ -66,13 +70,11 @@
             // DOM
             if (!!text === true) {
                 // Set text
-                this.textElement.text(text);
-                //this.textElement.show();// NOTE: Replaces inline-block with inline which causes bugs in IE.
-                this.textElement.removeClass('hidden');
+                this.textElement.innerText = text;
+                this.textElement.classList.remove('hidden');
             }
             else {
-                //this.textElement.hide();
-                this.textElement.addClass('hidden');
+                this.textElement.classList.add('hidden');
             }
         }
         private _text: string;

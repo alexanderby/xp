@@ -8,11 +8,13 @@
         // DOM
         //----
 
-        protected getTemplate(): JQuery {
-            var template = $('<input class="TextBox" type="text" />');
+        protected getTemplate(): HTMLElement {
+            var template = Dom.create('<input class="TextBox" type="text" />');
             //template.attr('tabindex', TabIndex++);
             return template;
         }
+
+        domElement: HTMLInputElement;
 
 
         //-------
@@ -29,26 +31,39 @@
             this.onTextChange = new Event<TextChangeArgs>();
             this.onRemoved.addHandler(() => this.onTextChange.removeAllHandlers(), this);
 
-            var onInput = (e: JQueryEventObject) => {
-                var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);
-                args.oldText = this.text;
+            var oldText = '';
+            var onInput = (e: gEvent) => {
                 this.onInput('text', this.value);
-                args.newText = this.value.toString();
+                var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);
+                args.oldText = oldText;
+                var newText = this.value.toString();
+                args.newText = newText
                 this.onTextChange.invoke(args);
+                oldText = newText;
             };
 
             // On text input
-            this.domElement.on('change',(e) => {
-                onInput(e);
-            });
-            this.domElement.on('input',(e) => {
-                if (this.notifyOnKeyDown) {
+            this.domElement.addEventListener('change',(e) => {
+                if (this.enabled) {
                     onInput(e);
+                }
+                else {
+                    this.text = oldText;
+                }
+            });
+            this.domElement.addEventListener('input',(e) => {
+                if (this.enabled) {
+                    if (this.notifyOnKeyDown) {
+                        onInput(e);
+                    }
+                }
+                else {
+                    this.text = oldText;
                 }
             });
 
-            this.domElement.on('keypress',(e) => {
-                if (e.keyCode === 13) {
+            this.domElement.addEventListener('keypress',(e) => {
+                if (this.enabled && e.keyCode === 13) {
                     onInput(e);
                     // Remove focus on 'Enter' key press
                     //(<any>document.activeElement).blur();
@@ -85,9 +100,9 @@
         get value(): any {
             switch (this.type) {
                 case TextBoxType.string:
-                    return this.domElement.val();
+                    return this.domElement.value;
                 case TextBoxType.number:
-                    return parseFloat(this.domElement.val()) || 0;
+                    return parseFloat(this.domElement.value) || 0;
                 default:
                     throw new Error('TextBoxType value is not implemented.');
             }
@@ -100,11 +115,14 @@
             return this._text;
         }
         set text(text) {
+            if (text === void 0 || text === null) {
+                text = '';
+            }
             var old = this._text;
             this._text = text;
 
             // DOM
-            this.domElement.val(text);
+            this.domElement.value = text;
 
             //if (text) text = text.toString();
             //this.onTextChanged.invoke({
@@ -136,10 +154,10 @@
 
             // DOM
             if (readonly) {
-                this.domElement.attr('readonly', 'true');
+                this.domElement.readOnly = true;
             }
             else {
-                this.domElement.removeAttr('readonly');
+                this.domElement.readOnly = false;
             }
         }
         private _readonly: boolean;
@@ -155,10 +173,10 @@
 
             // DOM
             if (placeholder) {
-                this.domElement.attr('placeholder', placeholder);
+                this.domElement.placeholder = placeholder;
             }
             else {
-                this.domElement.removeAttr('placeholder');
+                this.domElement.placeholder = '';
             }
         }
         private _placeholder: string;
@@ -172,7 +190,7 @@
     }
 
 
-    export interface TextChangeArgs extends UIEventArgs {
+    export interface TextChangeArgs extends EventArgs<gEvent> {
         oldText: string;
         newText: string;
     }
