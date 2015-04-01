@@ -609,10 +609,6 @@
             return this._scope;
         }
         set scope(scope) {
-            if (scope && !(scope instanceof xp.Scope))
-                //throw new Error('Object is not an instance of Scope.');
-                scope = new Scope(scope);
-
             if (this.bindings['scope'])
                 scope = new xp.Scope(scope, this.parent.scope);
 
@@ -633,7 +629,7 @@
             }
             this.onScopeChanged.invoke(scope);
         }
-        private _scope: xp.Scope;
+        private _scope: Object;
 
         /**
          * Is invoked when user performs an input action.
@@ -651,7 +647,7 @@
         /**
          * Fires when data scope is changed.
          */
-        onScopeChanged: Event<xp.Scope>;
+        onScopeChanged: Event<Object>;
     }
 
 

@@ -65,7 +65,7 @@
 
                             case CollectionChangeAction.Replace:
                                 if (!this.itemReplacementToken) {
-                                    this.children[args.newIndex].scope.set(this.itemId, args.newItem);
+                                    this.children[args.newIndex].scope[this.itemId] = args.newItem;
                                 }
                                 break;
 
@@ -163,7 +163,7 @@
                         hr.item = hr.holder[prop];
                     }
                 },
-                holder: <xp.INotifier>scope.get('')
+                holder: scope
             };
 
             hr.holder.onPropertyChanged.addHandler(hr.handler, this);

@@ -25,7 +25,7 @@
     };
 
     // Create manager
-    var manager = new xp.BindingManager(target, 'cityName', new Scope(source), 'city.name', 'unknown');
+    var manager = new xp.BindingManager(target, 'cityName', source, 'city.name', 'unknown');
     assertEqual(source.city.name, target.cityName);
     assertEqual(source['onPropertyChanged']['handlers'].length, 1);
     assertEqual(source.city['onPropertyChanged']['handlers'].length, 1);
@@ -69,7 +69,7 @@
     // Nested object replacement
     var obs = xp.observable({ x: { y: { z: 1 } } });
     var num: number;
-    var b = new BindingCallManager(new xp.Scope(obs), 'x.y.z',(v) => num = v || 0);
+    var b = new BindingCallManager(obs, 'x.y.z',(v) => num = v || 0);
     assertEqual(num, 1);
     obs.x = void 0;
     assertEqual(num, 0);

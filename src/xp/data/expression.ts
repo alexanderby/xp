@@ -7,7 +7,7 @@
          * Is invoked when expression result changes.
          */
         onPropertyChanged: Event<string>;
-        private scope: Scope;
+        private scope: Object;
         private func: Function;
         private propsPaths: string[];
         private managers: BindingManager[];
@@ -20,7 +20,9 @@
          * @param expression Expression e.g. "{obj.a} * 2 + Math.round({b})".
          */
         constructor(expression: string) {
-            this.onPropertyChanged = new Event<string>();
+            Object.defineProperty(this, 'onPropertyChanged', {
+                value: new Event()
+            });
 
             // Find paths
             var regex = /\{([^\s\(\)]+?)\}/g;
@@ -136,9 +138,9 @@
 
         /**
          * Resets source and causes expression evaluation.
-         * @param source Source.
+         * @param scope Source.
          */
-        resetWith(scope: Scope) {
+        resetWith(scope: Object) {
             this.sourceSetToken = true;
             this.scope = scope;
             this.managers.forEach((m) => {
@@ -157,4 +159,5 @@
             this.onPropertyChanged.removeAllHandlers();
         }
     }
+    hidePrototypeProperties(Expression);
 } 

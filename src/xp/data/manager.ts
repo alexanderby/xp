@@ -9,7 +9,7 @@
 
         private target: any;
         private targetPropertyPath: string;
-        private scope: Scope;
+        private scope: Object;
         private path: string;
         private defaultValue: any;
         private sourceConverter: (srcValue) => any;
@@ -25,7 +25,7 @@
          * @param [sourceConverter] Function which converts source value.
          * @param [targetConverter] Function which converts target value.
          */
-        constructor(target: any, targetPropertyPath: string, scope: Scope, path: string, defaultValue?: any, sourceConverter?: (srcValue) => any, targetConverter?: (targetValue) => any) {
+        constructor(target: any, targetPropertyPath: string, scope: Object, path: string, defaultValue?: any, sourceConverter?: (srcValue) => any, targetConverter?: (targetValue) => any) {
             //
             // Checks
 
@@ -34,14 +34,6 @@
 
             if (!path)
                 throw new Error('Unable to bind to empty path.');
-
-            if (scope) {
-                if (!(scope instanceof Scope))
-                    throw new Error('Object is not an instance of Scope.');
-            }
-            else {
-                scope = new Scope(null);
-            }
 
             this.target = target;
             this.targetPropertyPath = targetPropertyPath;
@@ -95,16 +87,15 @@
             //
             // Register replacement handlers for path objects
 
-            // WARNING: If property is unreachable then the current scope will be used.
-            // WARNING: If property is reachable then the property holder will be used.
-            var scope = this.scope.getPropertyHolder(this.path) || this.scope;
             var parts = this.pathParts;
 
             if (startIndex === 0) {
                 this.pathObjects = [];
             }
             this.pathObjects[startIndex] = {
-                obj: scope.get(startIndex === 0 ? '' : parts.slice(0, startIndex).join('.'))
+                obj: startIndex === 0 ?
+                    this.scope
+                    : Path.getPropertyByPath(this.scope, parts.slice(0, startIndex).join('.'))
             };
 
             var po: PathObjectInfo[] = this.pathObjects;
@@ -166,16 +157,8 @@
          * Resets binding with new binding source (with the same hierarchy).
          * @param scope Scope to sync with.
          */
-        resetWith(scope: Scope) {
-            if (scope) {
-                if (!(scope instanceof Scope))
-                    throw new Error('Object is not an instance of Scope.');
-            }
-            else {
-                scope = new Scope(null);
-            }
-
-            this.logMessage(xp.formatString('Reset with "{0}".', scope.get('')));
+        resetWith(scope: Object) {
+            this.logMessage(xp.formatString('Reset with "{0}".', this.scope));
             this.scope = scope;
             this.registerPathObjects();
             this.updateTarget();
@@ -185,7 +168,7 @@
          * Updates source property.
          */
         updateSource() {
-            if (this.scope.get(this.path) !== void 0) {
+            if (Path.getPropertyByPath(this.scope, this.path, false) !== void 0) {
                 var value = xp.Path.getPropertyByPath(this.target, this.targetPropertyPath);
                 this.logMessage(xp.formatString('Update source "{0}" property with value "{1}".', this.path, value));
                 var pathLength = this.pathParts.length;
@@ -205,7 +188,7 @@
          * Updates target property.
          */
         updateTarget() {
-            var value = this.scope.get(this.path);
+            var value = Path.getPropertyByPath(this.scope, this.path, false);
             var path = xp.Path.getObjectPath(this.targetPropertyPath);
             var prop = xp.Path.getPropertyName(this.targetPropertyPath);
             var targetObj = xp.Path.getPropertyByPath(this.target, path);

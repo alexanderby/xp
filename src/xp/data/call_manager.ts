@@ -15,7 +15,7 @@
          * @param [getterFn] Getter function.
          * @param [defaultValue] Value to use is case when source property is unreachable.
          */
-        constructor(scope: Scope, path: string, setterFn: (value) => void, getterFn?: () => any, defaultValue?: any) {
+        constructor(scope: Object, path: string, setterFn: (value) => void, getterFn?: () => any, defaultValue?: any) {
             super((function () {
                 // Create an object with getter and setter.
                 var target = {};

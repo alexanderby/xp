@@ -47,7 +47,7 @@
         //---------
 
         private onDeleteClick(args: xp.UI.UIEventArgs) {
-            var index = this.data.todos.indexOf(args.targetUIControl.scope.get('t')); // Hmm...
+            var index = this.data.todos.indexOf(args.targetUIControl.scope['t']); // Hmm...
             if (index >= 0) {
                 this.removeItem(index);
             }
