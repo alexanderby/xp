@@ -78,7 +78,7 @@
                 var po = this.pathObjects;
                 for (var i = startIndex; i < po.length - 1; i++) {
                     if (isNotifier(po[i].obj)) {
-                        (<INotifier>po[i].obj).onPropertyChanged.removeHandler(po[i].handler);
+                        (<Notifier>po[i].obj).onPropertyChanged.removeHandler(po[i].handler);
                     }
                 }
                 this.pathObjects.splice(startIndex, po.length - startIndex);
@@ -145,7 +145,7 @@
                         })(prop, i + 1);
                     }
 
-                    (<INotifier>po[i].obj).onPropertyChanged.addHandler(handler, this);
+                    (<Notifier>po[i].obj).onPropertyChanged.addHandler(handler, this);
                     po[i].handler = handler;
                 }
             }
@@ -216,7 +216,7 @@
                 var po = this.pathObjects;
                 for (var i = 0; i < po.length - 1; i++) {
                     if (isNotifier(po[i].obj)) {
-                        (<INotifier>po[i].obj).onPropertyChanged.removeHandler(po[i].handler);
+                        (<Notifier>po[i].obj).onPropertyChanged.removeHandler(po[i].handler);
                     }
                 }
             }

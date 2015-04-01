@@ -1,12 +1,12 @@
 ﻿module xp.Tests {
     Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Binding manager. Start.');
 
-    interface Person extends INotifier {
+    interface Person extends Notifier {
         name: string;
         city: City;
     }
 
-    interface City extends INotifier {
+    interface City extends Notifier {
         name: string;
     }
 

@@ -2,7 +2,7 @@
     /**
      * Defines an object, which notifies of it's properties changes.
      */
-    export interface INotifier {
+    export interface Notifier {
         /**
          * Is invoked when any object's property is changed.
          * Argument is a property name.
@@ -22,7 +22,7 @@
     /**
      * An object which notifies of it's changes.
      */
-    export class ObservableObject implements INotifier {
+    export class ObservableObject implements Notifier {
         onPropertyChanged: xp.Event<string>;
         protected __convertNested__: boolean;
 
@@ -86,7 +86,7 @@
          * @param value Default value.
          * @param convertToObservable Specifies whether to convert value into observable. Default is true.
          */
-        static extend(obj: INotifier, name: string, value: any, convertToObservable = true) {
+        static extend(obj: Notifier, name: string, value: any, convertToObservable = true) {
             //
             // Ensure property is not already present.
             if (name in obj) {

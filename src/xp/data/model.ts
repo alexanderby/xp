@@ -4,7 +4,7 @@
     /**
      * Base observable model.
      */
-    export class Model implements INotifier {
+    export class Model implements Notifier {
 
         /**
          * Creates an observable model.
@@ -227,7 +227,7 @@
         //
         // Overrides
 
-        protected createNotifierIfPossible(item): INotifier {
+        protected createNotifierIfPossible(item): Notifier {
             if (!(item instanceof this.model)) {
                 // Create model instance and copy values
                 var m = new this.model();

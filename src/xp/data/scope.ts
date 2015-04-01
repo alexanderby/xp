@@ -3,7 +3,7 @@
     /**
      * Data scope. Supports multiple levels and notifies of their changes.
      */
-    export class Scope implements INotifier {
+    export class Scope implements Notifier {
         onPropertyChanged: Event<string>;
         private __registrar__: EventRegistrar;
         
@@ -47,7 +47,7 @@
 
             // Subscribe for changes
             if (isNotifier(source)) {
-                this.__registrar__.subscribe((<INotifier>source).onPropertyChanged,(prop) => {
+                this.__registrar__.subscribe((<Notifier>source).onPropertyChanged,(prop) => {
                     if (!settingProp) {
                         if (ownProps.indexOf(prop) < 0) {
                             createOwnProperty(prop);
@@ -86,7 +86,7 @@
 
                 // Subscribe for changes
                 if (isNotifier(parent)) {
-                    this.__registrar__.subscribe((<INotifier>parent).onPropertyChanged,(prop) => {
+                    this.__registrar__.subscribe((<Notifier>parent).onPropertyChanged,(prop) => {
                         if (!settingProp && ownProps.indexOf(prop) < 0) {
                             if (parentProps.indexOf(prop) < 0) {
                                 createParentProperty(prop);

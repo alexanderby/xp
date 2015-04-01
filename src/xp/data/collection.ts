@@ -55,7 +55,7 @@ module xp {
     /**
      * Defines a collection, which notifies of it's changes.
      */
-    export interface ICollectionNotifier {
+    export interface CollectionNotifier {
         /**
          * Is invoked when collection is changed.
          */
@@ -93,7 +93,7 @@ module xp {
     /**
      * A collection which notifies of it's changes.
      */
-    export class ObservableCollection<T> extends ObservableObject implements Array<T>, ICollectionNotifier, INotifier {
+    export class ObservableCollection<T> extends ObservableObject implements Array<T>, CollectionNotifier, Notifier {
         protected inner: Array<T>;
 
         /**

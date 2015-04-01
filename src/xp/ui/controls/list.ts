@@ -45,7 +45,7 @@
 
                 // Subscribe for changes
                 if (isCollectionNotifier(items)) {
-                    var collection = <ICollectionNotifier><any>items;
+                    var collection = <CollectionNotifier><any>items;
                     this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
                         switch (args.action) {
                             case CollectionChangeAction.Attach:
@@ -90,7 +90,7 @@
                         //    }
                         //}
                     };
-                    this.itemsRegistar.subscribe((<INotifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
+                    this.itemsRegistar.subscribe((<Notifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
                     // Handle length for the first time
                     itemsLengthChangeHandler('length');
                 }
@@ -198,7 +198,7 @@
 
     interface ItemReplacementInfo {
         item: any;
-        holder: xp.INotifier;
+        holder: xp.Notifier;
         handler: (propName: string) => void;
     }
 

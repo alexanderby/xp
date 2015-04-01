@@ -2,7 +2,7 @@
     /**
      * UI control's property bindable expression.
      */
-    export class Expression implements INotifier {
+    export class Expression implements Notifier {
         /**
          * Is invoked when expression result changes.
          */
@@ -11,7 +11,7 @@
         private func: Function;
         private propsPaths: string[];
         private managers: BindingManager[];
-        private params: INotifier;
+        private params: Notifier;
         // Holds change handlers for collection parameters.
         private collectionRegistrations: { [paramName: string]: EventRegistrar };
 
@@ -67,7 +67,7 @@
                         if (value !== void 0 && isCollectionNotifier(value)) {
                             // Subscribe for collection changes
                             var registar = new EventRegistrar();
-                            var cn = <ICollectionNotifier>value;
+                            var cn = <CollectionNotifier>value;
                             registar.subscribe(cn.onCollectionChanged,(args) => {
                                 this.exec();
                             }, this);
