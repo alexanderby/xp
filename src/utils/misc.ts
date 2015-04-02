@@ -126,45 +126,30 @@
     //}
 
     /**
-     * Creates new object and applies arguments to constructor.
+     * Creates new object by passing arguments to constructor.
      * @param ctor Type of object.
      * @param args Arguments to apply.
      * @returns New object.
      */
     export function applyConstructor<T extends Object>(ctor: new (...args) => T, args: any[]): T {
-        // http://stackoverflow.com/a/1608546/4137472
-        //function F(): void {
-        //    constructor.apply(this, args);
-        //}
-        //F.prototype = constructor.prototype;
-        //return new F();
-
-        // http://stackoverflow.com/a/24963721/4137472
-        switch (args.length) {
-            case 0: return new ctor();
-            case 1: return new ctor(args[0]);
-            case 2: return new ctor(args[0], args[1]);
-            case 3: return new ctor(args[0], args[1], args[2]);
-            case 4: return new ctor(args[0], args[1], args[2], args[3]);
-            case 5: return new ctor(args[0], args[1], args[2], args[3], args[4]);
-            case 6: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5]);
-            case 7: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6]);
-            case 8: return new ctor(args[0], args[1], args[2], args[3], args[4], args[5], args[6], args[7]);
-            default: throw new Error('Two much arguments to apply to constructor.');
-        }
+        // http://stackoverflow.com/a/8843181/4137472
+        return new (ctor.bind.apply(ctor, [null].concat(args)));
     }
 
     /**
      * Hides type's prototype properties (makes them non-enumerable).
      * @param ctor Type constructor.
+     * @param propsToHide
      */
-    export function hidePrototypeProperties(ctor: new (...args) => Object) {
+    export function hidePrototypeProperties(ctor: new (...args) => Object, propsToHide?: string[]) {
         var proto = ctor.prototype;
         for (var prop in proto) {
-            var desc = Object.getOwnPropertyDescriptor(proto, prop);
-            if (desc && desc.configurable) {
-                desc.enumerable = false;
-                Object.defineProperty(proto, prop, desc);
+            if (!propsToHide || propsToHide.length === 0 || propsToHide.indexOf(prop) >= 0) {
+                var desc = Object.getOwnPropertyDescriptor(proto, prop);
+                if (desc && desc.configurable) {
+                    desc.enumerable = false;
+                    Object.defineProperty(proto, prop, desc);
+                }
             }
         }
     }

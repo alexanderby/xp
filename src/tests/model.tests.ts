@@ -11,8 +11,8 @@
         constructor() {
             super();
             xp.Model.simpleProperty(this, 'name');
-            xp.Model.modelProperty(this, 'city', City);
-            xp.Model.modelCollection(this, 'books', Book, []);
+            xp.Model.simpleProperty(this, 'city');
+            xp.Model.observableProperty(this, 'books', []);
         }
     }
 
@@ -24,22 +24,19 @@
         }
     }
 
-    class Book extends xp.Model {
+    interface Book {
         title: string;
         pages: number;
-        constructor() {
-            super();
-            xp.Model.simpleProperty(this, 'title');
-            xp.Model.simpleProperty(this, 'pages');
-        }
     }
 
     //
     // Create source
 
     var source = {
+        __xp_model__: 'Person',
         name: 'John',
         city: {
+            __xp_model__: 'City',
             name: 'New York'
         },
         books: [
@@ -52,13 +49,14 @@
     //
     // Parse model
 
-    var model = xp.Model.parseModel(Person, json);
-    assert(json === JSON.stringify(model));
+    var model = xp.deserialize(json, [Person, City]);
     assert(model instanceof Person);
     assert(model.city instanceof City);
-    assert(model.books instanceof ModelCollection);
-    assert(model.books[0] instanceof Book);
-    assert(model.books[1] instanceof Book);
+    assert(model.books instanceof ObservableCollection);
+    assert(model.books[0] instanceof ObservableObject);
+    assert(model.books[1] instanceof ObservableObject);
+    var j = xp.serialize(model, false);
+    assert(j.indexOf('__xp_model__') < 0);
 
     //
     // The End

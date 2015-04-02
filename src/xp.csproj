@@ -103,6 +103,7 @@
     <TypeScriptCompile Include="ui\startup.ts" />
     <TypeScriptCompile Include="ui\uievent.ts" />
     <TypeScriptCompile Include="utils\dom.ts" />
+    <TypeScriptCompile Include="data\serialization.ts" />
     <TypeScriptCompile Include="utils\path.ts" />
     <TypeScriptCompile Include="utils\misc.ts" />
     <TypeScriptCompile Include="utils\log.ts" />
