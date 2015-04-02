@@ -1,6 +1,5 @@
 *.js
 *.map
-!/src/xp/lib/*.js
 *.css
 
 build/xp/

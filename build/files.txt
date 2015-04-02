@@ -1,45 +1,44 @@
-..\src\xp\lib\jquery.d.ts
+..\src\utils\dom.ts
+..\src\utils\log.ts
+..\src\utils\misc.ts
+..\src\utils\path.ts
 
-..\src\xp\utils\log.ts
-..\src\xp\utils\misc.ts
-..\src\xp\utils\path.ts
+..\src\core\defs.ts
+..\src\core\dictionary.ts
+..\src\core\event.ts
 
-..\src\xp\core\defs.ts
-..\src\xp\core\dictionary.ts
-..\src\xp\core\event.ts
+..\src\data\object.ts
+..\src\data\collection.ts
+..\src\data\observable.ts
+..\src\data\expression.ts
+..\src\data\manager.ts
+..\src\data\call_manager.ts
+..\src\data\model.ts
+..\src\data\scope.ts
 
-..\src\xp\data\object.ts
-..\src\xp\data\collection.ts
-..\src\xp\data\observable.ts
-..\src\xp\data\expression.ts
-..\src\xp\data\manager.ts
-..\src\xp\data\call_manager.ts
-..\src\xp\data\model.ts
-..\src\xp\data\scope.ts
+..\src\ui\markup.ts
+..\src\ui\startup.ts
+..\src\ui\uievent.ts
 
-..\src\xp\ui\markup.ts
-..\src\xp\ui\startup.ts
-..\src\xp\ui\uievent.ts
+..\src\ui\controls\element.ts
+..\src\ui\controls\button.ts
+..\src\ui\controls\checkbox.ts
+..\src\ui\controls\label.ts
+..\src\ui\controls\placeholder.ts
+..\src\ui\controls\radiobutton.ts
+..\src\ui\controls\textbox.ts
+..\src\ui\controls\togglebutton.ts
 
-..\src\xp\ui\controls\element.ts
-..\src\xp\ui\controls\button.ts
-..\src\xp\ui\controls\checkbox.ts
-..\src\xp\ui\controls\label.ts
-..\src\xp\ui\controls\placeholder.ts
-..\src\xp\ui\controls\radiobutton.ts
-..\src\xp\ui\controls\textbox.ts
-..\src\xp\ui\controls\togglebutton.ts
+..\src\ui\controls\html.ts
 
-..\src\xp\ui\controls\html.ts
+..\src\ui\controls\container.ts
+..\src\ui\controls\stack.ts
+..\src\ui\controls\hbox.ts
+..\src\ui\controls\vbox.ts
+..\src\ui\controls\list.ts
+..\src\ui\controls\window.ts
+..\src\ui\controls\modal.ts
+..\src\ui\controls\messagebox.ts
+..\src\ui\controls\contextmenu.ts
 
-..\src\xp\ui\controls\container.ts
-..\src\xp\ui\controls\stack.ts
-..\src\xp\ui\controls\hbox.ts
-..\src\xp\ui\controls\vbox.ts
-..\src\xp\ui\controls\list.ts
-..\src\xp\ui\controls\window.ts
-..\src\xp\ui\controls\modal.ts
-..\src\xp\ui\controls\messagebox.ts
-..\src\xp\ui\controls\contextmenu.ts
-
-..\src\xp\tests\assert.ts
+..\src\tests\assert.ts

@@ -8,11 +8,11 @@ ECHO "*** Compiling TS to single 'xp.js'... ***"
 
 ECHO "*** Copying contents... ***"
 MD %outfolder%\schema
-COPY ..\src\xp\schema\markup.xsd %outfolder%\schema\ /d /y
+COPY ..\src\schema\markup.xsd %outfolder%\schema\ /d /y
 MD %outfolder%\style
-COPY ..\src\xp\style\defaultstyle.css %outfolder%\style\ /d /y
-COPY ..\src\xp\style\ie9-layout-fallback.css %outfolder%\style\ /d /y
-COPY ..\src\xp\style\xp.css %outfolder%\style\_xp.less /d /y
-COPY ..\src\xp\style\_variables.less %outfolder%\style\ /d /y
+COPY ..\src\style\defaultstyle.css %outfolder%\style\ /d /y
+COPY ..\src\style\ie9-layout-fallback.css %outfolder%\style\ /d /y
+COPY ..\src\style\xp.css %outfolder%\style\_xp.less /d /y
+COPY ..\src\style\_variables.less %outfolder%\style\ /d /y
 MD %outfolder%\typing
 MOVE /y %outfolder%\xp.d.ts %outfolder%\typing\xp.d.ts

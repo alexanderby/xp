@@ -145,12 +145,6 @@
       <DependentUpon>ie9-layout-fallback.css</DependentUpon>
     </Content>
     <Content Include="style\_contextmenu.less" />
-    <None Include="web.Debug.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
-    <None Include="web.Release.config">
-      <DependentUpon>web.config</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
