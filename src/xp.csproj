@@ -136,6 +136,7 @@
       <DependentUpon>ie9-layout-fallback.css</DependentUpon>
     </Content>
     <Content Include="style\_contextmenu.less" />
+    <Content Include="style\_xp.less" />
   </ItemGroup>
   <ItemGroup />
   <PropertyGroup>
