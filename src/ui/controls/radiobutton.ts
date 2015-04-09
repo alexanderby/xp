@@ -58,8 +58,8 @@
         }
         set item(item) {
             this._item = item;
-            if (this.checked != (item === this.selectedItem))
-                this.checked = item === this.selectedItem;
+            if (this.checked != (item == this.selectedItem))
+                this.checked = item == this.selectedItem;
         }
         private _item: any;
 
@@ -72,8 +72,8 @@
         }
         set selectedItem(item) {
             this._selectedItem = item;
-            if (this.checked != (item === this.item))
-                this.checked = item === this.item;
+            if (this.checked != (item == this.item))
+                this.checked = item == this.item;
         }
         private _selectedItem: any;
 
