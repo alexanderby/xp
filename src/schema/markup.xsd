@@ -216,6 +216,9 @@
         <xs:attribute name="readonly" type="Boolean"/>
         <xs:attribute name="placeholder" type="xs:string"/>
         <xs:attribute name="onTextChange" type="xs:string"/>
+        <xs:attribute name="min" type="xs:float"/>
+        <xs:attribute name="max" type="xs:float"/>
+        <xs:attribute name="step" type="xs:float"/>
       </xs:extension>
     </xs:complexContent>
   </xs:complexType>

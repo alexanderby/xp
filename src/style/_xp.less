@@ -479,7 +479,7 @@
     &::-webkit-scrollbar-track {
         //margin: 1em;
     }
-
+    
     &::-webkit-scrollbar-thumb {
         background-clip: padding-box;
         background-color: @color-control-back;
@@ -536,7 +536,7 @@
     min-width: 2em;
     outline: none;
     overflow: hidden;
-    padding: 0 0.25em;
+    padding: 0 0 0 0.25em;
     width: 100%;
 
     &:hover:not(.disabled) {
@@ -556,10 +556,16 @@
     &.disabled {
         .disabled();
     }
+
+    &::-webkit-inner-spin-button {
+        -webkit-filter: invert(100%);
+    }
 }
 
 .TextArea {
+    line-height: normal;
     overflow: auto;
+    padding: 0.25em;
     resize: none;
 }
 

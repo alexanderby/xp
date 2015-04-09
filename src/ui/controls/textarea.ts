@@ -15,12 +15,13 @@
         }
 
         domElement: HTMLTextAreaElement;
-        protected getDomElementValue(): string {
-            return this.domElement.textContent;
-        }
-        protected setDomElementValue(value: string) {
-            this.domElement.textContent = value;
-        }
+        // Seems to unable to retrieve value
+        //protected getDomElementValue(): string {
+        //    return this.domElement.textContent;
+        //}
+        //protected setDomElementValue(value: string) {
+        //    this.domElement.textContent = value;
+        //}
     }
 
 

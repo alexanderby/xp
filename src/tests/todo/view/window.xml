@@ -78,5 +78,6 @@
     </Html>
     <Html width="100%" href="view/div.html"/>
     <TextArea text="Text area"/>
+    <TextBox type="number" min="0" max="1" step="0.1"/>
   </VBox>
 </Window>

@@ -113,6 +113,9 @@
                     throw new Error('TextBoxType value is not implemented.');
             }
         }
+        set value(value) {
+            this.setDomElementValue(value.toString());
+        }
 
         /**
          * Gets or sets text.
@@ -146,8 +149,50 @@
         }
         set type(type) {
             this._type = type;
+            switch (type) {
+                case TextBoxType.string:
+                    this.domElement.type = 'text'; break;
+                case TextBoxType.number:
+                    this.domElement.type = 'number'; break;
+                default:
+                    throw new Error('TextBoxType value is not implemented.');
+            }
         }
         private _type: TextBoxType;
+
+        /**
+         * Gets or sets minimal numeric value.
+         */
+        get min() {
+            return this._min;
+        }
+        set min(value) {
+            this._min = value;
+            this.domElement.setAttribute('min', value.toString());
+        }
+        private _min: number;
+        /**
+         * Gets or sets maximal numeric value.
+         */
+        get max() {
+            return this._max;
+        }
+        set max(value) {
+            this._max = value;
+            this.domElement.setAttribute('max', value.toString());
+        }
+        private _max: number;
+        /**
+         * Gets or sets maximal numeric value.
+         */
+        get step() {
+            return this._step;
+        }
+        set step(value) {
+            this._step = value;
+            this.domElement.setAttribute('step', value.toString());
+        }
+        private _step: number;
 
         /**
          * Gets or sets value, indicating whether text box is readonly.
@@ -260,7 +305,16 @@
                 },
                 'onTextChange': {
                     '*': (value) => (el: TextBox) => el.registerUIHandler(el.onTextChange, value)
-                }
+                },
+                'min': {
+                    '*': (value) => (el: TextBox) => el.min = parseFloat(value)
+                },
+                'max': {
+                    '*': (value) => (el: TextBox) => el.max = parseFloat(value)
+                },
+                'step': {
+                    '*': (value) => (el: TextBox) => el.step = parseFloat(value)
+                },
             });
         }
     }
