@@ -83,6 +83,7 @@
     <TypeScriptCompile Include="ui\controls\html.ts" />
     <TypeScriptCompile Include="ui\controls\messagebox.ts" />
     <TypeScriptCompile Include="ui\controls\modal.ts" />
+    <TypeScriptCompile Include="ui\controls\textarea.ts" />
     <TypeScriptCompile Include="ui\markup.ts" />
     <TypeScriptCompile Include="ui\controls\placeholder.ts" />
     <TypeScriptCompile Include="ui\controls\label.ts" />
@@ -168,6 +169,7 @@
   <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
     <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
     <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptCompileOnSaveEnabled>True</TypeScriptCompileOnSaveEnabled>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)' == 'Release'">
     <TypeScriptRemoveComments>true</TypeScriptRemoveComments>

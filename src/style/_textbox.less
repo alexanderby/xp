@@ -1,7 +1,7 @@
 ﻿@import "_variables.less";
 
 /*-----------
-    TEXT BOX
+    TEXT BOX (and Text Area)
 -------------*/
 
 .TextBox {
@@ -34,9 +34,14 @@
         cursor: default;
     }
 
-    &.disabled{
+    &.disabled {
         .disabled();
     }
+}
+
+.TextArea {
+    overflow: auto;
+    resize: none;
 }
 
 // Placeholder

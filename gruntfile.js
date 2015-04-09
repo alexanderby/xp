@@ -130,8 +130,9 @@ function getConfig() {
             'src/ui/controls/label.ts',
             'src/ui/controls/placeholder.ts',
             'src/ui/controls/radiobutton.ts',
-            'src/ui/controls/textbox.ts',
             'src/ui/controls/togglebutton.ts',
+            'src/ui/controls/textbox.ts',
+            'src/ui/controls/textarea.ts',
 
             'src/ui/controls/html.ts',
 

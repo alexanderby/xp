@@ -62,6 +62,7 @@
       <xs:element ref="Button"/>
       <xs:element ref="Label"/>
       <xs:element ref="TextBox"/>
+      <xs:element ref="TextArea"/>
       <xs:element ref="List"/>
       <xs:element ref="CheckBox"/>
       <xs:element ref="Placeholder"/>
@@ -225,6 +226,14 @@
       <xs:enumeration value="number"/>
     </xs:restriction>
   </xs:simpleType>
+
+  <xs:complexType name="TextArea">
+    <xs:complexContent>
+      <xs:extension base="TextBox">
+      </xs:extension>
+    </xs:complexContent>
+  </xs:complexType>
+  <xs:element name="TextArea" type="TextArea"/>
 
   <xs:complexType name="CheckBox">
     <xs:complexContent>

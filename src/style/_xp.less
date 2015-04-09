@@ -467,7 +467,7 @@
     SCROLL BARS
 ----------------*/
 
-.VBox, .HBox {
+.VBox, .HBox, .TextArea {
     //
     // WebKit
     &::-webkit-scrollbar {
@@ -520,7 +520,7 @@
 
 
 /*-----------
-    TEXT BOX
+    TEXT BOX (and Text Area)
 -------------*/
 
 .TextBox {
@@ -553,9 +553,14 @@
         cursor: default;
     }
 
-    &.disabled{
+    &.disabled {
         .disabled();
     }
+}
+
+.TextArea {
+    overflow: auto;
+    resize: none;
 }
 
 // Placeholder

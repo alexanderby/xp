@@ -14,7 +14,13 @@
             return template;
         }
 
-        domElement: HTMLInputElement;
+        domElement: HTMLInputElement|HTMLTextAreaElement;
+        protected getDomElementValue(): string {
+            return this.domElement.value;
+        }
+        protected setDomElementValue(value: string) {
+            this.domElement.value = value;
+        }
 
 
         //-------
@@ -100,9 +106,9 @@
         get value(): any {
             switch (this.type) {
                 case TextBoxType.string:
-                    return this.domElement.value;
+                    return this.getDomElementValue();
                 case TextBoxType.number:
-                    return parseFloat(this.domElement.value) || 0;
+                    return parseFloat(this.getDomElementValue()) || 0;
                 default:
                     throw new Error('TextBoxType value is not implemented.');
             }
@@ -122,7 +128,7 @@
             this._text = text;
 
             // DOM
-            this.domElement.value = text;
+            this.setDomElementValue(text);
 
             //if (text) text = text.toString();
             //this.onTextChanged.invoke({

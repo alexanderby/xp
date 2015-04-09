@@ -77,5 +77,6 @@
       </div>
     </Html>
     <Html width="100%" href="view/div.html"/>
+    <TextArea text="Text area"/>
   </VBox>
 </Window>
