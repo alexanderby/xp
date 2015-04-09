@@ -103,7 +103,11 @@
         get result() {
             return this.resultField;
         }
-
+        set result(value) {
+            // TODO: Try set source values,
+            this.resultField = value;
+            this.onPropertyChanged.invoke('result');
+        }
         private resultField;
 
         /**
