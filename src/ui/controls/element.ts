@@ -126,8 +126,11 @@ module xp.UI {
             this.initSimpleDomEvent('mousedown', this.onMouseDown);
             this.initSimpleDomEvent('mouseup', this.onMouseUp);
             this.initSimpleDomEvent('mousemove', this.onMouseMove);
-            this.initSimpleDomEvent('mouseenter', this.onMouseEnter);
-            this.initSimpleDomEvent('mouseleave', this.onMouseLeave);
+            // TODO: Fix mouseenter and mouseleave events.
+            //this.initSimpleDomEvent('mouseenter', this.onMouseEnter);
+            //this.initSimpleDomEvent('mouseleave', this.onMouseLeave);
+            this.initSimpleDomEvent('mouseover', this.onMouseEnter);
+            this.initSimpleDomEvent('mouseout', this.onMouseLeave);
             this.initSimpleDomEvent('keypress', this.onKeyPress);
             this.initSimpleDomEvent('keydown', this.onKeyDown);
             this.initSimpleDomEvent('keyup', this.onKeyUp);
