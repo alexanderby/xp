@@ -13,7 +13,7 @@
          * @param thisArg Context of handler.
          * @returns Subscription.
          */
-        addHandler(handler: EventHandler<TEventArgs>, thisArg: any): Subscription<TEventArgs> {
+        addHandler(handler: EventHandler<TEventArgs>, thisArg?: any): Subscription<TEventArgs> {
             var subscription = {
                 event: this,
                 handler: handler,
@@ -90,7 +90,7 @@
          * @param thisArg Handler's scope.
          * @returns Subscription.
          */
-        subscribe<T>(event: Event<T>, handler: EventHandler<T>, thisArg: any): Subscription<T> {
+        subscribe<T>(event: Event<T>, handler: EventHandler<T>, thisArg?: any): Subscription<T> {
             var subscription = event.addHandler(handler, thisArg);
             this.subscriptions.push(subscription);
             return subscription;
