@@ -65,6 +65,7 @@ module xp.UI {
         //-------
 
         onClick: Event<EventArgs<MouseEvent>>;
+        onDoubleClick: Event<EventArgs<MouseEvent>>;
         onMouseDown: Event<EventArgs<MouseEvent>>;
         onMouseUp: Event<EventArgs<MouseEvent>>;
         onMouseMove: Event<EventArgs<MouseEvent>>;
@@ -96,6 +97,7 @@ module xp.UI {
             this.onRendered = new Event();
 
             this.onClick = new Event();
+            this.onDoubleClick = new Event();
             this.onMouseDown = new Event();
             this.onMouseUp = new Event;
             this.onMouseMove = new Event();
@@ -111,6 +113,7 @@ module xp.UI {
                 this.onScopeChanged.removeAllHandlers();
                 this.onRendered.removeAllHandlers();
                 this.onClick.removeAllHandlers();
+                this.onDoubleClick.removeAllHandlers();
                 this.onMouseDown.removeAllHandlers();
                 this.onMouseUp.removeAllHandlers();
                 this.onMouseMove.removeAllHandlers();
@@ -123,6 +126,7 @@ module xp.UI {
 
             // DOM events
             this.initSimpleDomEvent('click', this.onClick);
+            this.initSimpleDomEvent('dblclick', this.onDoubleClick);
             this.initSimpleDomEvent('mousedown', this.onMouseDown);
             this.initSimpleDomEvent('mouseup', this.onMouseUp);
             this.initSimpleDomEvent('mousemove', this.onMouseMove);
