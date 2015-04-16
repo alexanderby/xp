@@ -70,7 +70,7 @@
             // DOM
             if (!!text === true) {
                 // Set text
-                this.textElement.innerText = text;
+                this.textElement.textContent = text;
                 this.textElement.classList.remove('hidden');
             }
             else {

@@ -25,7 +25,7 @@
             this._text = text;
 
             // DOM
-            this.domElement.innerText = text;
+            this.domElement.textContent = text;
         }
         private _text: string;
     }

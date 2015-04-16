@@ -95,12 +95,12 @@
                 this.iconElement.style.backgroundImage = xp.formatString('url({0})', data.icon);
             }
             if (data.key) {
-                this.keyElement.innerText = data.key;
+                this.keyElement.textContent = data.key;
             }
             if (data.disabled) {
                 this.enabled = false;
             }
-            this.textElement.innerText = data.text;
+            this.textElement.textContent = data.text;
             this.onMouseDown.addHandler((e) => {
                 e.domEvent.stopPropagation();
                 this.menu.remove();
