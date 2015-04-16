@@ -63,9 +63,8 @@
      */
     export function loadMarkup(url: string, onLoad: (result: gElement) => void, async = true): void {
         var req = new XMLHttpRequest();
-        //req.responseType = 'text/xml';
-        req.responseType = 'text/xml';
         req.open('GET', url, async);
+        req.responseType = 'text';
         req.onreadystatechange = (e) => {
             if (req.readyState === XMLHttpRequest.DONE && req.status === 200) {
                 // Remove namespace
