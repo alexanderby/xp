@@ -1,19 +1,4 @@
 ﻿module xp {
-    ///**
-    // * Extends given object with properties from another one.
-    // * @param source Object to extend.
-    // * @param extension Object containing the extensions.
-    // */
-    //export function extendObject<TSrc, TExt>(source: TSrc, extension: TExt): TSrc { // TODO: Mixin.
-    //    var result = {};
-    //    for (var key in source) {
-    //        result[key] = source[key];
-    //    }
-    //    for (var key in extension) {
-    //        result[key] = extension[key];
-    //    }
-    //    return <TSrc>result;
-    //}
 
     /**
      * Replaces each format item in a specified string with values.
@@ -28,21 +13,95 @@
         return s;
     }
 
-    ///**
-    // * Returns current stack trace (maybe works in Chrome only).
-    // */
-    //export function getStackTrace() {
-    //    var msg: string;
-    //    try {
-    //        throw new Error();
-    //    } catch (e) {
-    //        msg = e.stack;
-    //    }
-    //    if (msg.match(/^Error\n/)) {
-    //        msg = msg.replace(/^Error\n/, 'Stack trace:\n');
-    //    }
-    //    return msg;
-    //}
+    /**
+     * Creates a deep copy of an item.
+     * Only enumerable properties will be copied.
+     * @param item Item to copy.
+     */
+    export function clone<T>(item: T): T {
+        var sources = [];
+        var results = [];
+
+        var cloneItem = (item) => {
+            var index = sources.indexOf(item);
+            if (index >= 0) {
+                return results[index];
+            }
+
+            // Simple types
+            var itemType = typeof item;
+            if (item === null
+                || itemType === 'string'
+                || itemType === 'boolean'
+                || itemType === 'number'
+                || itemType === 'undefined'
+            // TODO: Maybe clone anonimous functions
+            // in this way http://stackoverflow.com/a/6772648/4137472
+                || itemType === 'function'
+                ) {
+                return item;
+            }
+            // Complex types
+            else if (item instanceof Object) {
+                var result;
+
+                // Date
+                if (item instanceof Date) {
+                    var d = new Date();
+                    d.setDate((<Date>item).getTime());
+                    result = d;
+                }
+                // Array
+                else if (item instanceof Array) {
+                    var arr = [];
+                    for (var i = 0; i < (<any[]>item).length; i++) {
+                        arr[i] = cloneItem(item[i]);
+                    }
+                    result = arr;
+                }
+                // Observable collection
+                else if (item instanceof xp.ObservableCollection) {
+                    var col = new xp.ObservableCollection();
+                    for (var i = 0; i < (<any[]>item).length; i++) {
+                        col.push(cloneItem(item[i]));
+                    }
+                    result = col;
+                }
+                // Observable object
+                else if (item instanceof xp.ObservableObject) {
+                    var obj = {};
+                    for (var key in item) {
+                        obj[key] = cloneItem(item[key]);
+                    }
+                    result = xp.observable(obj);
+                }
+                // DOM node
+                else if (item instanceof Node) {
+                    result = (<Node>item).cloneNode(true);
+                }
+                // Other objects
+                else {
+                    var ctor = Object.getPrototypeOf(item).constructor;
+                    var instance = new ctor();
+                    for (var key in item) {
+                        if ((<Object>item).hasOwnProperty(key)) {
+                            instance[key] = cloneItem(item[key]);
+                        }
+                    }
+                    result = instance;
+                }
+
+                sources.push(item);
+                results.push(result);
+                return result;
+            }
+            else {
+                throw new Error('Item type is not supported for cloning.');
+            }
+        };
+
+        return cloneItem(item);
+    }
 
     /**
      * Creates unique identifier.
@@ -71,59 +130,6 @@
         var results = funcNameRegex.exec(obj['constructor'].toString());
         return (results && results.length > 1) ? results[1] : '';
     }
-
-    /**
-     * Converts enum into array.
-     * @param en Enum.
-     */
-    export function enumToArray(en: any): string[] {
-        var items = [];
-        for (var key in en) {
-            if (!isNaN(parseInt(key))) {
-                items.push(en[key]);
-            }
-        }
-        return items;
-    }
-
-    //// http://stackoverflow.com/a/728694/4137472
-    ///**
-    // * Creates a deep copy of an object.
-    // * Will infinitely loop on circular references.
-    // */
-    //export function clone(obj: any): any {
-    //    var copy;
-
-    //    // Handle the 3 simple types, and null or undefined
-    //    if (null == obj || "object" != typeof obj) return obj;
-
-    //    // Handle Date
-    //    if (obj instanceof Date) {
-    //        copy = new Date();
-    //        copy.setTime(obj.getTime());
-    //        return copy;
-    //    }
-
-    //    // Handle Array
-    //    if (obj instanceof Array) {
-    //        copy = [];
-    //        for (var i = 0, len = obj.length; i < len; i++) {
-    //            copy[i] = clone(obj[i]);
-    //        }
-    //        return copy;
-    //    }
-
-    //    // Handle Object
-    //    if (obj instanceof Object) {
-    //        copy = {};
-    //        for (var attr in obj) {
-    //            if (obj.hasOwnProperty(attr)) copy[attr] = clone(obj[attr]);
-    //        }
-    //        return copy;
-    //    }
-
-    //    throw new Error("Unable to copy obj! Its type isn't supported.");
-    //}
 
     /**
      * Creates new object by passing arguments to constructor.
