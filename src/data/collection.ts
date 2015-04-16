@@ -55,11 +55,11 @@ module xp {
     /**
      * Defines a collection, which notifies of it's changes.
      */
-    export interface CollectionNotifier {
+    export interface CollectionNotifier<T> {
         /**
          * Is invoked when collection is changed.
          */
-        onCollectionChanged: Event<CollectionChangeArgs>;
+        onCollectionChanged: Event<CollectionChangeArgs<T>>;
     }
 
     export enum CollectionChangeAction {
@@ -73,12 +73,12 @@ module xp {
         Detach
     }
 
-    export interface CollectionChangeArgs {
+    export interface CollectionChangeArgs<T> {
         action: CollectionChangeAction;
         newIndex?: number;
         oldIndex?: number;
-        newItem?: any;
-        oldItem?: any;
+        newItem?: T;
+        oldItem?: T;
     }
 
     /**
@@ -93,7 +93,7 @@ module xp {
     /**
      * A collection which notifies of it's changes.
      */
-    export class ObservableCollection<T> extends ObservableObject implements Array<T>, CollectionNotifier, Notifier {
+    export class ObservableCollection<T> extends ObservableObject implements Array<T>, CollectionNotifier<T>, Notifier {
         protected inner: Array<T>;
 
         /**
@@ -116,7 +116,7 @@ module xp {
                     value: value
                 });
             };
-            definePrivateProperty('onCollectionChanged', new Event<CollectionChangeArgs>());
+            definePrivateProperty('onCollectionChanged', new Event<CollectionChangeArgs<T>>());
             definePrivateProperty('inner', [], true);
             definePrivateProperty('sorting', false, true);
             definePrivateProperty('splicing', false, true);
@@ -141,7 +141,7 @@ module xp {
         //-------
 
         onPropertyChanged: Event<string>;
-        onCollectionChanged: Event<CollectionChangeArgs>;
+        onCollectionChanged: Event<CollectionChangeArgs<T>>;
 
 
         //--------------------

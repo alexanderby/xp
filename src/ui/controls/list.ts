@@ -44,7 +44,7 @@
 
                 // Subscribe for changes
                 if (isCollectionNotifier(items)) {
-                    var collection = <CollectionNotifier><any>items;
+                    var collection = <CollectionNotifier<any>><any>items;
                     this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
                         switch (args.action) {
                             case CollectionChangeAction.Attach:
