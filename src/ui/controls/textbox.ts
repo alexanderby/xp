@@ -68,9 +68,12 @@
                 }
             });
 
+            var isIE = !!navigator.userAgent.match(/Trident\/7\./);
             this.domElement.addEventListener('keypress',(e) => {
                 if (this.enabled && e.keyCode === 13) {
-                    onInput(e);
+                    if (isIE) {
+                        onInput(e);
+                    }
                     // Remove focus on 'Enter' key press
                     //(<any>document.activeElement).blur();
                 }
