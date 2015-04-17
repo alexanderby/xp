@@ -563,7 +563,7 @@ module xp.UI {
             if (this.expressions[controlProperty]) {
                 this.expressions[controlProperty].unbind();
             }
-            this.expressions[controlProperty] = new Expression(expression);
+            this.expressions[controlProperty] = new Expression(expression, source || this.scope);
             this.bindings[controlProperty] = new BindingManager(
                 this,
                 controlProperty,

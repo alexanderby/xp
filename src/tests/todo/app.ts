@@ -1,4 +1,4 @@
-﻿xp.Log.DisplayMessages = 0;
+﻿xp.Log.DisplayMessages = xp.Log.HeatLevel.Warn | xp.Log.Domain.Binding;
 
 module Todo {
     export class App {

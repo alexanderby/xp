@@ -19,7 +19,8 @@
          * Creates control's property bindable expression.
          * @param expression Expression e.g. "{obj.a} * 2 + Math.round({b})".
          */
-        constructor(expression: string) {
+        constructor(expression: string, scope: any) {
+            this.scope = scope;
             Object.defineProperty(this, 'onPropertyChanged', {
                 value: new Event()
             });
@@ -39,8 +40,6 @@
                 }
             }
             this.propsPaths = propsPaths;
-
-            // TODO: eval() ?
 
             // Create function
             var body = expression;
@@ -84,7 +83,20 @@
                     configurable: true
                 });
             });
-            this.func = new Function(params.join(', '), 'return ' + body + ';');
+            // NOTE: new Function() and eval() are forbidden in Chrome apps.
+            //this.func = new Function(params.join(', '), 'return ' + body + ';');
+
+            //
+            // Parse expression
+
+            this.func = function () {
+                var scope = {};
+                for (var i = 0; i < arguments.length; i++) {
+                    scope['p' + i] = arguments[i];
+                }
+                var result = evaluate(body, scope);
+                return result;
+            };
 
             // Create managers
             this.managers = [];
@@ -129,7 +141,7 @@
             }
             try {
                 // Execute
-                this.resultField = this.func.apply(this, params);
+                this.resultField = this.func.apply(null, params);
             }
             catch (e) {
                 Log.write(Log.HeatLevel.Warn, Log.Domain.Binding, 'Expression error: ' + e);
@@ -164,4 +176,484 @@
         }
     }
     hidePrototypeProperties(Expression);
+
+    /**
+     * Evaluates an expression.
+     * Supports the next operators: ||, &&, !==, ===, !=, ==, >=, >, <=, <, -, +, /, *, typeof, !, ().
+     * @param expression Expression string, eg. "x * (arr.indexOf(x) + 1)".
+     * @param scope Object containing expression variables, eg. { x: 2, 
+     */
+    export function evaluate(expression: string, scope: Object): any {
+
+        // TODO: Seems to be weird. Needs refactoring, should behave like eval().
+
+        var hideBrackets = (str: string): string=> {
+            var prev: string;
+            while (prev !== str) {
+                prev = str;
+                str = str.replace(/\([^\(\)]*\)/g,($0) => new Array($0.length + 1).join(' '));
+            }
+            return str;
+        };
+
+        var splitLeftRight = function (expr: string) {
+            // Replace strings with whitespaces
+            var str = expr.replace(/((".*?")|('.*?'))/g,($0, $1) => new Array($1.length + 1).join(' '));
+            // Replace brackets with whitespaces
+            str = hideBrackets(str);
+            var index = str.indexOf(this.op);
+            if (index < 0) {
+                return null;
+            }
+            else {
+                return [
+                    expr.slice(0, index),
+                    expr.slice(index + this.op.length, expr.length)
+                ];
+            }
+        };
+        var splitRight = function (expr: string) {
+            // Replace strings with whitespaces
+            var str = expr.replace(/((".*?")|('.*?'))/g,($0, $1) => new Array($1.length + 1).join(' '));
+            // Replace brackets with whitespaces
+            str = hideBrackets(str);
+            var index = str.indexOf(this.op);
+            if (index < 0) {
+                return null;
+            }
+            else {
+                return [
+                    expr.slice(index + this.op.length, expr.length)
+                ];
+            }
+        };
+        //var splitMiddle = function (expr: string) {
+        //    if (this.op !== '[]' && this.op !== '()') {
+        //        throw new Error('This split fn is not supported for operand "' + this.op + '".');
+        //    }
+        //    // Replace strings with whitespaces
+        //    var str = expr.replace(/((".*?")|('.*?'))/g,($0, $1) => new Array($1.length + 1).join(' '));
+        //    var regex = new RegExp('\\' + this.op[0] + '[^\\' + this.op[0] + '\\' + this.op[1] + ']*?\\' + this.op[1]);
+        //    var match = str.match(regex);
+        //    if (match && match[0]) {
+        //        var index = str.indexOf(match[0]);
+        //        return [
+        //            expr.slice(index + 1, index + match[0].length - 1)
+        //        ];
+        //    }
+        //    else {
+        //        return null;
+        //    }
+        //};
+
+        // Precedence
+        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence#Table
+        var parsers: {
+            op: string;
+            fn: Function;
+            split: (expr: string) => string[];
+        }[] = [
+                //{
+                //    op: '()',
+                //    fn: (a) => a,
+                //    split: splitMiddle
+                //},
+                {
+                    op: '||',
+                    fn: (a, b) => a || b,
+                    split: splitLeftRight
+                }, {
+                    op: '&&',
+                    fn: (a, b) => a && b,
+                    split: splitLeftRight
+                }, {
+                    op: '!==',
+                    fn: (a, b) => a !== b,
+                    split: splitLeftRight
+                }, {
+                    op: '===',
+                    fn: (a, b) => a === b,
+                    split: splitLeftRight
+                }, {
+                    op: '!=',
+                    fn: (a, b) => a != b,
+                    split: splitLeftRight
+                }, {
+                    op: '==',
+                    fn: (a, b) => a == b,
+                    split: splitLeftRight
+                }, {
+                    op: '>=',
+                    fn: (a, b) => a >= b,
+                    split: splitLeftRight
+                }, {
+                    op: '>',
+                    fn: (a, b) => a > b,
+                    split: splitLeftRight
+                }, {
+                    op: '<=',
+                    fn: (a, b) => a <= b,
+                    split: splitLeftRight
+                }, {
+                    op: '<',
+                    fn: (a, b) => a < b,
+                    split: splitLeftRight
+                }, {
+                    op: '-',
+                    fn: (a, b) => a - b,
+                    split: splitLeftRight
+                }, {
+                    op: '+',
+                    fn: (a, b) => a + b,
+                    split: splitLeftRight
+                }, {
+                    op: '/',
+                    fn: (a, b) => a / b,
+                    split: splitLeftRight
+                }, {
+                    op: '*',
+                    fn: (a, b) => a * b,
+                    split: splitLeftRight
+                }, {
+                    op: 'typeof',
+                    fn: (a) => typeof a,
+                    split: splitRight
+                }, {
+                    op: '!',
+                    fn: (a) => !a,
+                    split: splitRight
+                },
+            ];
+
+        var parse = (expr: string, level?: number): any => {
+            expr = expr.trim();
+            if (level === void (0)) {
+                level = 0;
+            }
+            if (level === parsers.length) {
+                if (expr[0] === '(' && expr[expr.length - 1] === ')') {
+                    return parse(expr.slice(1, expr.length - 1), 0);
+                }
+
+                //
+                // Return value
+
+                // Boolean
+                if (expr === 'true') {
+                    return true;
+                }
+                if (expr === 'false') {
+                    return false;
+                }
+                // Number
+                var num = +expr;
+                if (expr !== '' && !isNaN(num)) {
+                    return num;
+                }
+                // String
+                if (/^(".*")|('.*')$/.test(expr)) {
+                    return expr.slice(1, expr.length - 1);
+                }
+                // Scope variable
+                if (expr in scope) {
+                    return scope[expr];
+                }
+                // Global scope variable
+                if (expr in window) {
+                    return window[expr];
+                }
+
+                // Get property
+                var firstDotIndex = expr.indexOf('.');
+                if (firstDotIndex >= 0) {
+                    var varName = expr.slice(0, firstDotIndex);
+                    if (!(varName in scope) && !(varName in window)) {
+                        throw new Error('Expression scope doesn\'t contain "' + varName + '".');
+                    }
+                    var value = varName in scope ? scope[varName] : window[varName];
+                    var propPath = expr.slice(firstDotIndex + 1, expr.length);
+                    var objPath = Path.getObjectPath(propPath);
+                    var lastObj = Path.getPropertyByPath(value, objPath);
+                    var propName = Path.getPropertyName(propPath);
+                    var funcMatch = propName.match(/\((.*)\)$/);
+                    if (funcMatch && funcMatch[1]) {
+                        // Call function
+                        propName = propName.slice(0, funcMatch.index);
+                        var paramsStr = funcMatch[1];
+                        var params = paramsStr.split(',').map((p) => parse(p));
+                        return lastObj[propName].apply(lastObj, params);
+                    }
+                    else {
+                        return lastObj[propName];
+                    }
+                }
+                else {
+                    // Is function?
+                    var funcMatch = expr.match(/\((.*)\)$/);
+                    if (funcMatch && funcMatch[1]) {
+                        // Call function
+                        var propName = expr.slice(0, funcMatch.index);
+                        var paramsStr = funcMatch[1];
+                        var params = paramsStr.split(',').map((p) => parse(p));
+                        return lastObj[propName].apply(lastObj, params);
+                    }
+                }
+
+                // Couldn't resolve
+                throw new Error('Expression scope doesn\'t contain "' + expr + '".');
+            }
+
+            // Get parser at current level
+            var parser = parsers[level];
+
+            // Split expression
+            var parts = parser.split(expr);
+            if (!parts) {
+                // Not found -> parse at next level
+                return parse(expr, level + 1);
+            }
+            else {
+                // Parse parts and evaluate
+                var args = [];
+                for (var i = 0; i < parts.length; i++) {
+                    var arg = parse(parts[i], level);
+                    args.push(arg);
+                }
+                return parser.fn.apply(null, args);
+            }
+        };
+
+        var result = parse(expression);
+        return result;
+    }
+
+    //class Operator {
+    //    symbol: string;
+    //    exec: Function;
+    //    getParts(expr: string): string[]{
+
+    //    }
+
+    //}
+
+    //
+    // TODO: Parse complex expressions, parse into functions.
+
+
+    ////----------
+    //// Operators
+    ////----------
+    
+    //// TODO: Support all operators.
+    //// https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators
+    //class Expr {
+    //    value;
+
+    //    //take(x) {
+    //    //    this.value = x;
+    //    //    return this;
+    //    //}
+
+    //    constructor(value) {
+    //        this.value = value;
+    //    }
+
+    //    static parse(expr: string) {
+    //        // Precedence
+    //        // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence#Table
+    //        var parts=expr.split('
+    //    }
+
+    //    member(x) {
+    //        this.value = this.value[x];
+    //        return this;
+    //    }
+    //    new(x, p) {
+    //        this.value = xp.applyConstructor(x, p);
+    //        return this;
+    //    }
+    //    call(x, p) {
+    //        this.value = this.value[x].apply(this.value, p);
+    //    }
+
+    //    //
+    //    // Assignment operators
+
+    //    //
+    //    // Comparison operators
+
+    //    equal(x) {
+    //        this.value = this.value == x;
+    //        return this;
+    //    }
+    //    notEqual(x) {
+    //        this.value = this.value != x;
+    //        return this;
+    //    }
+    //    strictEqual(x) {
+    //        this.value = this.value === x;
+    //        return this;
+    //    }
+    //    strictNotEqual(x) {
+    //        this.value = this.value !== x;
+    //        return this;
+    //    }
+    //    greaterThan(x) {
+    //        this.value = this.value > x;
+    //        return this;
+    //    }
+    //    greaterThanOrEqual(x) {
+    //        this.value = this.value >= x;
+    //        return this;
+    //    }
+    //    lessThan(x) {
+    //        this.value = this.value < x;
+    //        return this;
+    //    }
+    //    lessThanOrEqual(x) {
+    //        this.value = this.value <= x;
+    //        return this;
+    //    }
+
+    //    //
+    //    // Arithmetic operators
+
+    //    add(x) {
+    //        this.value = this.value + x;
+    //        return this;
+    //    }
+    //    subtract(x) {
+    //        this.value = this.value - x;
+    //        return this;
+    //    }
+    //    multiply(x) {
+    //        this.value = this.value * x;
+    //        return this;
+    //    }
+    //    divide(x) {
+    //        this.value = this.value / x;
+    //        return this;
+    //    }
+    //    remainder(x) {
+    //        this.value = this.value % x;
+    //        return this;
+    //    }
+    //    preIncrement() {
+    //        this.value = ++this.value;
+    //        return this;
+    //    }
+    //    preDecrement() {
+    //        this.value = --this.value;
+    //        return this;
+    //    }
+    //    postIncrement() {
+    //        this.value = this.value++;
+    //        return this;
+    //    }
+    //    postDecrement() {
+    //        this.value = this.value--;
+    //        return this;
+    //    }
+    //    unaryNegation() {
+    //        this.value = -this.value;
+    //        return this;
+    //    }
+    //    unaryPlus() {
+    //        this.value = +this.value;
+    //        return this;
+    //    }
+          
+
+    //    //
+    //    // Bitwise operators
+
+    //    bitwiseAnd(x) {
+    //        this.value = this.value & x;
+    //        return this;
+    //    }
+    //    bitwiseOr(x) {
+    //        this.value = this.value | x;
+    //        return this;
+    //    }
+    //    bitwiseXor(x) {
+    //        this.value = this.value ^ x;
+    //        return this;
+    //    }
+    //    bitwiseNot() {
+    //        this.value = ~this.value;
+    //        return this;
+    //    }
+    //    leftShift(x) {
+    //        this.value = this.value << x;
+    //        return this;
+    //    }
+    //    rightShift(x) {
+    //        this.value = this.value >> x;
+    //        return this;
+    //    }
+    //    zeroFillRightShift(x) {
+    //        this.value = this.value >> x;
+    //        return this;
+    //    }
+
+    //    //
+    //    // Logical operators
+
+    //    and(x) {
+    //        this.value = this.value && x;
+    //        return this;
+    //    }
+    //    or(x) {
+    //        this.value = this.value || x;
+    //        return this;
+    //    }
+    //    not() {
+    //        this.value = !this.value;
+    //        return this;
+    //    }
+
+    //    //
+    //    // Conditional (ternary) operator
+
+    //    condition(t, f) {
+    //        this.value = this.value ? t : f;
+    //        return this;
+    //    }
+
+    //    //
+    //    // Comma operator
+
+    //    comma(x) {
+    //        this.value = x;
+    //        return this;
+    //    }
+
+    //    //
+    //    // Unary operators
+
+    //    delete(x) {
+    //        delete this.value[x];
+    //        return this;
+    //    }
+    //    typeof() {
+    //        this.value = typeof this.value;
+    //        return this;
+    //    }
+    //    void() {
+    //        this.value = void (this.value);
+    //        return this;
+    //    }
+
+    //    //
+    //    // Relational operators
+
+    //    in(x) {
+    //        this.value = x in this.value;
+    //        return this;
+    //    }
+    //    instanceof(x) {
+    //        this.value = this.value instanceof x;
+    //        return this;
+    //    }
+    //}
 } 
