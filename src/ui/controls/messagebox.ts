@@ -14,7 +14,7 @@
 
             // TODO: Separate style and markup file?
 
-            this.padding = '1em';
+            this.padding = '1em 1.5em';
             this.width = '32em';
             this.margin = '-40% 0 0 0';
 

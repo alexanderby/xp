@@ -179,7 +179,7 @@
 
     /**
      * Evaluates an expression.
-     * Supports the next operators: ||, &&, !==, ===, !=, ==, >=, >, <=, <, -, +, /, *, typeof, !, ().
+     * Supports the next operators: ?:, ||, &&, !==, ===, !=, ==, >=, >, <=, <, -, +, /, *, typeof, !, ().
      * @param expression Expression string, eg. "x * (arr.indexOf(x) + 1)".
      * @param scope Object containing expression variables, eg. { x: 2, 
      */
@@ -258,6 +258,33 @@
                 //    fn: (a) => a,
                 //    split: splitMiddle
                 //},
+                {
+                    op: '?:',
+                    fn: (a, b, c) => a ? b : c,
+                    split: function (expr: string) {
+                        // Replace strings with whitespaces
+                        var str = expr.replace(/((".*?")|('.*?'))/g,($0, $1) => new Array($1.length + 1).join(' '));
+                        // Replace brackets with whitespaces
+                        str = hideBrackets(str);
+                        var index1 = str.indexOf(this.op[0]);
+                        if (index1 < 0) {
+                            return null;
+                        }
+                        else {
+                            var index2 = str.indexOf(this.op[1], index1 + 1);
+                            if (index2 < 0) {
+                                return null;
+                            }
+                            else {
+                                return [
+                                    expr.slice(0, index1),
+                                    expr.slice(index1 + 1, index2),
+                                    expr.slice(index2 + 1, expr.length)
+                                ];
+                            }
+                        }
+                    }
+                },
                 {
                     op: '||',
                     fn: (a, b) => a || b,
