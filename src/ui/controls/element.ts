@@ -184,12 +184,9 @@ module xp.UI {
          * Gets or sets value indicating control being enabled or disabled.
          */
         get enabled() {
-            return this._enabled;
+            return !this.domElement.classList.contains('disabled');
         }
         set enabled(value) {
-            this._enabled = value
-
-            // DOM
             if (value) {
                 this.domElement.classList.remove('disabled');
             }
@@ -197,21 +194,16 @@ module xp.UI {
                 this.domElement.classList.add('disabled');
             }
         }
-        protected _enabled = true;
 
         /**
          * Gets or sets element's name.
          */
         get name() {
-            return this._name;
+            return this.domElement.id;
         }
         set name(value: string) {
-            this._name = value;
-
-            // DOM
-            this.domElement.setAttribute('id', value);
+            this.domElement.id = value;
         }
-        private _name: string;
 
         /**
          * Gets or sets element's key.
@@ -228,57 +220,88 @@ module xp.UI {
          * Gets or sets width of the element (using CSS syntax).
          */
         get width() {
-            return this._width;
+            return this.domElement.offsetWidth + 'px';
         }
         set width(width: string) {
-            this._width = width;
-
-            // DOM
             this.domElement.style.width = width;
         }
-        private _width: string;
 
         /**
          * Gets or sets height of the element (using CSS syntax).
          */
         get height() {
-            return this._height;
+            return this.domElement.offsetHeight + 'px';
         }
         set height(height: string) {
-            this._height = height;
-
-            // DOM
             this.domElement.style.height = height;
         }
-        private _height: string;
+
+        /**
+         * Gets or sets minimal width of the element (using CSS syntax).
+         */
+        get minWidth() {
+            return this.domElement.style.minWidth;
+        }
+        set minWidth(width: string) {
+            this.domElement.style.minWidth = width;
+        }
+
+        /**
+         * Gets or sets minimal height of the element (using CSS syntax).
+         */
+        get minHeight() {
+            return this.domElement.style.minHeight;
+        }
+        set minHeight(height: string) {
+            this.domElement.style.minHeight = height;
+        }
+
+        /**
+         * Gets or sets maximal width of the element (using CSS syntax).
+         */
+        get maxWidth() {
+            return this.domElement.style.maxWidth;
+        }
+        set maxWidth(width: string) {
+            this.domElement.style.maxWidth = width;
+        }
+
+        /**
+         * Gets or sets maximal height of the element (using CSS syntax).
+         */
+        get maxHeight() {
+            return this.domElement.style.maxHeight;
+        }
+        set maxHeight(height: string) {
+            this.domElement.style.maxHeight = height;
+        }
 
         /**
          * Gets or sets margin of the element (using CSS syntax).
          */
         get margin() {
-            return this._margin;
+            return this.domElement.style.margin;
         }
         set margin(margin: string) {
-            this._margin = margin;
-
-            // DOM
             this.domElement.style.margin = margin;
         }
-        private _margin: string;
 
         /**
-         * Gets or sets element's CSS class.
+         * Gets or sets element's CSS class (or multiple separated by white space).
          */
         get style() {
             return this._style;
         }
         set style(cssClass) {
-            var old = this._style;
+            // Remove prev
+            if (this._style) {
+                var classes = this._style.split(' ');
+                classes.forEach((c) => this.domElement.classList.remove(c));
+            }
+            // Set new
             this._style = cssClass;
-
-            // DOM
-            this.domElement.classList.remove(old);
-            this.domElement.classList.add(cssClass);
+            var classes = cssClass.split(' ');
+            classes.forEach((c) => this.domElement.classList.add(c));
         }
         private _style: string;
 
@@ -308,12 +331,10 @@ module xp.UI {
         private _flex: FlexValue;
 
         get visible() {
-            return this._visible;
+            // TODO: Determine if element is really visible?
+            return !this.domElement.classList.contains('hidden');
         }
         set visible(v) {
-            this._visible = v;
-
-            // DOM
             if (v) {
                 this.domElement.classList.remove('hidden');
             }
@@ -321,7 +342,6 @@ module xp.UI {
                 this.domElement.classList.add('hidden');
             }
         }
-        private _visible: boolean;
 
 
         //----------
@@ -759,6 +779,18 @@ module xp.UI {
                 },
                 'height': {
                     '*': (height) => (el) => el.height = height
+                },
+                'minWidth': {
+                    '*': (width) => (el) => el.minWidth = width
+                },
+                'minHeight': {
+                    '*': (height) => (el) => el.minHeight = height
+                },
+                'maxWidth': {
+                    '*': (width) => (el) => el.maxWidth = width
+                },
+                'maxHeight': {
+                    '*': (height) => (el) => el.maxHeight = height
                 },
                 'margin': {
                     '*': (margin) => (el) => el.margin = margin

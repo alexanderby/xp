@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
-<Window xmlns="http://tempuri.org/Markup.xsd" title="Layout Test">
+<Window xmlns="http://tempuri.org/markup.xsd" title="Layout Test">
 
   <!-- VBox layout test -->
   <HBox name="v-red" style="back-red" flex="None" height="2em"></HBox>

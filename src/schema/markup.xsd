@@ -1,9 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <xs:schema id="Markup"
-    targetNamespace="http://tempuri.org/Markup.xsd"
+    targetNamespace="http://tempuri.org/markup.xsd"
     elementFormDefault="qualified"
-    xmlns="http://tempuri.org/Markup.xsd"
-    xmlns:mstns="http://tempuri.org/Markup.xsd"
+    xmlns="http://tempuri.org/markup.xsd"
     xmlns:xs="http://www.w3.org/2001/XMLSchema"
 >
   <!-- BASE -->
@@ -14,6 +13,10 @@
     <xs:attribute name="style" type="xs:string"/>
     <xs:attribute name="width" type="xs:string"/>
     <xs:attribute name="height" type="xs:string"/>
+    <xs:attribute name="minWidth" type="xs:string"/>
+    <xs:attribute name="minHeight" type="xs:string"/>
+    <xs:attribute name="maxWidth" type="xs:string"/>
+    <xs:attribute name="maxHeight" type="xs:string"/>
     <xs:attribute name="margin" type="xs:string"/>
     <xs:attribute name="flex" type="FlexValue"/>
     <xs:attribute name="enabled">

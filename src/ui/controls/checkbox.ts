@@ -133,12 +133,9 @@
          * Gets or sets value indicating control being enabled or disabled.
          */
         get enabled() {
-            return this._enabled;
+            return !this.domElement.classList.contains('disabled');
         }
         set enabled(value) {
-            this._enabled = value
-
-            // DOM
             if (value) {
                 this.domElement.classList.remove('disabled');
             }

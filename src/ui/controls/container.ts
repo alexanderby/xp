@@ -49,6 +49,29 @@
         //-----------
 
         /**
+         * Gets or sets value indicating control being enabled or disabled.
+         */
+        get enabled() {
+            return !this.domElement.classList.contains('disabled');
+        }
+        set enabled(value) {
+            if (value) {
+                this.domElement.classList.remove('disabled');
+            }
+            else {
+                this.domElement.classList.add('disabled');
+            }
+            this.children.forEach((c) => {
+                if (value) {
+                    c.scope = c.scope;
+                }
+                else {
+                    c.enabled = false;
+                }
+            });
+        }
+
+        /**
          * Gets or sets padding of the element (using CSS syntax).
          */
         get padding() {
