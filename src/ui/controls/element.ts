@@ -598,7 +598,7 @@ module xp.UI {
             return this._scope;
         }
         set scope(scope) {
-            if (this.bindings['scope'])
+            if (this.bindings['scope'] && scope !== this.parent.scope)
                 scope = new xp.Scope(scope, this.parent.scope);
 
             Log.write(Log.HeatLevel.Log, Log.Domain.UI | Log.Domain.Binding, '{0}:{1}: Set data scope "{2}".', xp.getClassName(this), this.name || '-', scope);

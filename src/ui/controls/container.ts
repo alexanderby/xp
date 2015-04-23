@@ -63,12 +63,16 @@
             }
             this.children.forEach((c) => {
                 if (value) {
-                    c.scope = c.scope;
+                    c.enabled = true;
+                    if (!c.useParentScope) {
+                        c.scope = c.scope;
+                    }
                 }
                 else {
                     c.enabled = false;
                 }
             });
+            this.scope = this.scope;
         }
 
         /**
