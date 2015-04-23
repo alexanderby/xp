@@ -9,14 +9,14 @@
          * @param message Message.
          * @param title Title.
          */
-        constructor(message?: string, title?: string) {
+        constructor(message?: string, title?: string, actions?: { [text: string]: () => void }) {
             super();
 
             // TODO: Separate style and markup file?
 
             this.padding = '1em 1.5em';
             this.width = '32em';
-            this.margin = '-40% 0 0 0';
+            this.margin = '-15% 0 0 0';
 
             // Title element
             if (title !== void 0) {
@@ -37,14 +37,24 @@
                 messageEl.appendTo(this);
             }
 
-            // Button element
+            // Create buttons
+            actions = actions || {
+                'OK': () => { }
+            };
             var hbox = new HBox();
             hbox.contentAlignment = HContentAlignment.Right;
-            var okButton = new Button();
-            okButton.text = 'OK';
-            okButton.width = '4em';
-            okButton.onClick.addHandler(() => this.close(), this);
-            okButton.appendTo(hbox);
+            for (var key in actions) {
+                ((key) => {
+                    var button = new Button();
+                    button.text = key;
+                    button.minWidth = '4em';
+                    button.onClick.addHandler(() => {
+                        actions[key]();
+                        this.close();
+                    }, this);
+                    button.appendTo(hbox);
+                })(key);
+            }
             hbox.appendTo(this);
         }
 
@@ -53,8 +63,8 @@
          * @param message Message.
          * @param title Title.
          */
-        static show(message?: string, title?: string) {
-            var box = new MessageBox(message, title);
+        static show(message?: string, title?: string, actions?: { [text: string]: () => void }) {
+            var box = new MessageBox(message, title, actions);
             box.show();
         }
     }
