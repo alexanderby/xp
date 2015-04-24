@@ -304,6 +304,8 @@
     <xs:restriction base="xs:string">
       <xs:enumeration value="None"/>
       <xs:enumeration value="Stretch"/>
+      <xs:enumeration value="Grow"/>
+      <xs:enumeration value="Shrink"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="FlexNumber">

@@ -317,12 +317,20 @@ module xp.UI {
             // DOM
             this.domElement.classList.remove('flex-None');
             this.domElement.classList.remove('flex-Stretch');
+            this.domElement.classList.remove('flex-Grow');
+            this.domElement.classList.remove('flex-Shrink');
             switch (flex) {
                 case FlexValue.None:
                     this.domElement.classList.add('flex-None');
                     break;
                 case FlexValue.Stretch:
                     this.domElement.classList.add('flex-Stretch');
+                    break;
+                case FlexValue.Grow:
+                    this.domElement.classList.add('flex-Grow');
+                    break;
+                case FlexValue.Shrink:
+                    this.domElement.classList.add('flex-Shrink');
                     break;
                 default:
                     throw new Error('Unknown flex value "' + flex + '".');
@@ -659,7 +667,9 @@ module xp.UI {
      */
     export enum FlexValue {
         None,
-        Stretch
+        Stretch,
+        Grow,
+        Shrink
     }
 
     ///**
@@ -797,7 +807,9 @@ module xp.UI {
                 },
                 'flex': {
                     'None': (flex) => (el) => el.flex = FlexValue.None,
-                    'Stretch': (flex) => (el) => el.flex = FlexValue.Stretch
+                    'Stretch': (flex) => (el) => el.flex = FlexValue.Stretch,
+                    'Grow': (flex) => (el) => el.flex = FlexValue.Grow,
+                    'Shrink': (flex) => (el) => el.flex = FlexValue.Shrink
                 },
                 'visible': {
                     'true': () => (el) => el.visible = true,
