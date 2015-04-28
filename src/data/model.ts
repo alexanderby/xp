@@ -19,6 +19,16 @@
         }
 
         /**
+         * Defines a property which notifies of it's change.
+         * @param prop Property name.
+         * @param value Default value. If observable then setted values will be converted to observable.
+         * @param opts Model property options. Convertors can be defined here. Enumerable by default.
+         */
+        defineProperty(prop: string, value?, opts?: ModelPropertyOptions) {
+            Model.property(this, prop, value, opts);
+        }
+
+        /**
          * Is invoked when any property is changed.
          */
         onPropertyChanged: Event<string>;
@@ -32,22 +42,20 @@
          * Defines a getter and setter for a model instance, which notifies of it's change.
          * @param obj Model instance.
          * @param prop Property name.
-         * @param dtor Model property descriptor. Convertors can be defined here. Enumerable by default.
+         * @param value Default value. If observable then setted values will be converted to observable.
+         * @param opts Model property options. Convertors can be defined here. Enumerable by default.
          */
-        static property(obj: Notifier, prop: string, dtor?: ModelPropertyDescriptor) {
-            dtor = dtor || {};
-            var value = dtor.value;
-            var convertNested = dtor.convertNested === void 0 ? true : dtor.convertNested;
-            if (dtor.convertToObservable && ObservableObject.isConvertable(value)) {
-                value = observable(value, convertNested);
-            }
-            if (dtor.enumerable === void 0) {
-                dtor.enumerable = true;
+        static property(obj: Notifier, prop: string, value?, opts?: ModelPropertyOptions) {
+            opts = opts || {};
+            var convertToObservable = isNotifier(value);
+            var convertNested = value instanceof ObservableObject ? value['__convertNested__'] : false;
+            if (opts.enumerable === void 0) {
+                opts.enumerable = true;
             }
 
             // Getter
-            if (dtor.getterConvertor) {
-                var getterConvertor = dtor.getterConvertor;
+            if (opts.getterConvertor) {
+                var getterConvertor = opts.getterConvertor;
                 var getter = () => getterConvertor(value);
             }
             else {
@@ -55,9 +63,9 @@
             }
 
             // Setter
-            if (dtor.setterConvertor) {
-                var setterConvertor = dtor.setterConvertor;
-                if (dtor.convertToObservable) {
+            if (opts.setterConvertor) {
+                var setterConvertor = opts.setterConvertor;
+                if (convertToObservable) {
                     var setter = (v) => {
                         if (ObservableObject.isConvertable) {
                             v = observable(v, convertNested);
@@ -74,7 +82,7 @@
                 }
             }
             else {
-                if (dtor.convertToObservable) {
+                if (convertToObservable) {
                     var setter = (v) => {
                         if (ObservableObject.isConvertable) {
                             v = observable(v, convertNested);
@@ -96,7 +104,7 @@
                 get: getter,
                 set: setter,
                 configurable: true,
-                enumerable: dtor.enumerable
+                enumerable: opts.enumerable
             });
         }
 
@@ -115,16 +123,14 @@
             });
         }
     }
+    hidePrototypeProperties(Model);
 
     /**
-     * Describes the property of a model.
+     * Options of a model property.
      */
-    export interface ModelPropertyDescriptor {
-        value?: any;
+    export interface ModelPropertyOptions {
         setterConvertor?: (v) => any;
         getterConvertor?: (v) => any;
         enumerable?: boolean;
-        convertToObservable?: boolean;
-        convertNested?: boolean;
     }
 } 

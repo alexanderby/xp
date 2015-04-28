@@ -12,7 +12,7 @@
             super();
             xp.Model.property(this, 'name');
             xp.Model.property(this, 'city');
-            xp.Model.property(this, 'books', { value: [], convertToObservable: true, convertNested: true });
+            xp.Model.property(this, 'books', new xp.ObservableCollection());
         }
     }
 
