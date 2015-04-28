@@ -852,5 +852,18 @@ module xp.UI {
                 }
             };
         }
+        
+        /**
+         * Extends markup parser's attribute map.
+         * @param parser Type of markup parser.
+         * @param extMap Attribute map extension.
+         */
+        static extendAttributeMap<T extends Element>(parser: Constructor<ElementMarkupParser<T>>, extMap: AttributeMap<T>) {
+            var map = parser.prototype['getAttributeMap']();
+            for (var key in extMap) {
+                map[key] = extMap[key];
+            }
+            parser.prototype['getAttributeMap'] = () => map;
+        }
     }
 }

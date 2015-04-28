@@ -65,7 +65,7 @@
     <Label text="Selected" style="title"/>
     <TextBox text="{selected.name}" name="tb_selected" notifyOnKeydown="true"/>
     <List items="{todos}">
-      <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}"/>
+      <RadioButton item="{item}" text="{item.name}" selectedItem="{selected}" tooltip="{item.name}"/>
     </List>
     <List items="{todos}">
       <ToggleButton  item="{item}" text="{item.name}" selectedItem="{selected}"/>

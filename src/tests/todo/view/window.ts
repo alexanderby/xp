@@ -113,4 +113,116 @@
         markupUrl: 'view/window.xml',
         dependencies: [App]
     };
-} 
+
+
+    xp.UI.ElementMarkupParser.extendAttributeMap(xp.UI.RadioButtonMarkupParser, {
+        'tooltip': {
+            '*': (v) => (el) => el.domElement.setAttribute('title', v)
+        }
+    });
+}
+
+// TODO: Do not use XML.
+//module xp.newUI {
+//    interface ElementMarkup {
+//        width?: string;
+//        height?: string;
+//    }
+
+//    class Element extends xp.Model implements ElementMarkup {
+//        width: string;
+//        height: string;
+
+//        constructor(markup?: ElementMarkup) {
+//            super();
+//            this.initElement();
+//            if (markup) {
+//                this.applyMarkup(markup);
+//            }
+//        }
+
+//        protected initElement() {
+//            this.defineProperties();
+//        }
+
+//        domElement: HTMLElement;
+//        protected getTemplate() {
+//            return '<div></div>';
+//        }
+//        protected defineProperties() {
+//            this.defineProperty('width', {
+//                setter: (v) => this.domElement.style.width = v
+//            });
+//            this.defineProperty('height', {
+//                setter: (v) => this.domElement.style.height = v
+//            });
+//        }
+//        protected defineProperty(name: string, options: ElementPropertyOptions) {
+//            //if(options
+//        }
+//        applyMarkup(markup: ElementMarkup) {
+//            for (var key in markup) {
+//                this[key] = markup[key];
+//            }
+//        }
+//    }
+
+//    interface ElementPropertyOptions {
+//        setter?: (v) => void;
+//        acceptedValues?: any[];
+//        bindable?: boolean;
+//        observable?: boolean;
+//    }
+
+//    interface ButtonMarkup extends ElementMarkup {
+//        text?: string;
+//        icon?: string;
+//    }
+
+//    class Button extends Element implements ButtonMarkup {
+//        text: string;
+//        icon: string;
+
+//        constructor(markup: ButtonMarkup) {
+//            super(markup);
+//        }
+
+//        protected defineProperties() {
+//            super.defineProperties();
+//            this.defineProperty('text', { setter: (v) => this.domElement.textContent = v });
+//            this.defineProperty('icon', { setter: (v) => this.domElement.textContent = v });
+//        }
+//    }
+
+//    interface ContainerMarkup {
+//        alignItems?: string;
+//        alignContent?: string;
+//        children?: Element[];
+//    }
+
+//    class Container extends Element implements ContainerMarkup {
+//        alignItems: string;
+//        alignContent: string;
+//        children: Element[];
+
+//        constructor(markup?: ContainerMarkup, children?: Element[]) {
+//            super(markup);
+//            if (children) {
+//                Array.prototype.push.apply(this.children, children);
+//            }
+//        }
+
+//        protected initElement() {
+//            this.children = [];
+//            this.defineProperties();
+//        }
+//    }
+
+
+//    var box = new Container({ alignContent: 'center', alignItems: 'stretch' }, [
+//        new Container({}, [
+//            new Button({ text: 'Click me' }),
+//            new Button({ text: 'Button 1' })
+//        ])
+//    ]);
+//}

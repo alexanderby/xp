@@ -72,7 +72,7 @@
     }
 
     /**
-     * Contains info for parsing elemnents.
+     * Contains info for parsing elements.
      */
     export var MarkupParseInfo: { [tag: string]: MarkupItemParseInfo<Element> } = {};
 
