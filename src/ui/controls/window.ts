@@ -1,8 +1,17 @@
-﻿module xp.UI {
+﻿module xp.ui {
+    export interface WindowMarkup extends VBoxMarkup {
+        title?: string;
+    }
+
     /**
      * Window.
      */
     export class Window extends VBox {
+        title: string;
+
+        constructor(markup?: WindowMarkup, children?: Element[]) {
+            super(markup, children);
+        }
 
         /**
          * Instance of Window.
@@ -47,17 +56,14 @@
             this.title = 'XP Application';
         }
 
-        /**
-         * Gets or sets app title.
-         */
-        get title() {
-            return this._title;
+        protected defineProperties() {
+            super.defineProperties();
+            this.defineProperty('title', {
+                getter: () => document.title,
+                setter: (title) => document.title = title,
+                observable: true
+            });
         }
-        set title(title: string) {
-            this._title = title;
-            document.title = title;
-        }
-        private _title: string;
 
 
         //-----------------------
@@ -94,25 +100,5 @@
             this.tint = null;
         }
     }
-
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    export class WindowMarkupParser<T extends Window> extends VBoxMarkupParser<Window>{
-
-        protected getAttributeMap(): AttributeMap<Window> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'title': {
-                    '*': (value) => (el: Window) => el.title = value
-                }
-            });
-        }
-    }
-
-    MarkupParseInfo['Window'] = {
-        ctor: Window,
-        parser: new WindowMarkupParser()
-    };
+    Window['isView'] = true;
 } 

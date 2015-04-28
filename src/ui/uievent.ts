@@ -1,23 +1,24 @@
-﻿type gEvent = Event;
+﻿type domEvent = Event;
+type domMouseEvent = MouseEvent;
+type domKeyboardEvent = KeyboardEvent;
 
-module xp.UI {
+module xp.ui {
 
-    export interface Coordinates {
-        x: number;
-        y: number;
-    }
-
-    export interface EventArgs<T extends gEvent> {
+    export interface UIEventArgs<T extends domEvent> {
         element: Element;
         elementX?: number;
         elementY?: number;
         domEvent: T;
     }
 
-    export function createEventArgs<T extends gEvent>(control: Element, domEventObject: T): EventArgs<T> {
+    export interface EventArgs extends UIEventArgs<domEvent> { }
+    export interface MouseEventArgs extends UIEventArgs<domMouseEvent> { }
+    export interface KeyboardEventArgs extends UIEventArgs<domKeyboardEvent> { }
+
+    export function createEventArgs<T extends domEvent>(control: Element, domEventObject: T): EventArgs {
         var rect = control.domElement.getBoundingClientRect();
 
-        var e: EventArgs<T> = {
+        var e: EventArgs = {
             domEvent: domEventObject,
             element: control
         };
@@ -31,5 +32,20 @@ module xp.UI {
         return e;
     }
 
-    export class UIEvent<T extends gEvent> extends Event<EventArgs<T>> { }
+    //export interface Event {
+    //    new (): xp.Event<EventArgs<domEvent>>;
+    //};
+    //declare var Event: typeof Event;
+    //export interface MouseEvent {
+    //    new (): xp.Event<EventArgs<domMouseEvent>>;
+    //};
+    //declare var MouseEvent: typeof MouseEvent;
+    //export interface KeyboardEvent {
+    //    new (): xp.Event<EventArgs<domKeyboardEvent>>;
+    //};
+    //declare var KeyboardEvent: typeof KeyboardEvent;
+
+    //export class Event extends xp.Event<EventArgs<domEvent>> { }
+    //export class MouseEvent extends xp.Event<EventArgs<domMouseEvent>> { }
+    //export class KeyboardEvent extends xp.Event<EventArgs<domKeyboardEvent>> { }
 } 

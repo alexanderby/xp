@@ -1,4 +1,4 @@
-﻿module xp.UI {
+﻿module xp.ui {
     /**
      * Dummy placeholder.
      */
@@ -15,13 +15,4 @@
         }
 
     }
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    MarkupParseInfo['Placeholder'] = {
-        ctor: Placeholder,
-        parser: new ElementMarkupParser<Placeholder>()
-    };
 }

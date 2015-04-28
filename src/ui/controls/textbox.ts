@@ -1,8 +1,31 @@
-﻿module xp.UI {
+﻿module xp.ui {
+    export interface TextBoxMarkup extends ElementMarkup {
+        text?: string;
+        notifiOnKeyDown?: boolean;
+        type?: string;
+        readonly?: boolean;
+        placeholder?: string;
+        min?: number;
+        max?: number;
+        step?: number;
+    }
+
     /**
      * Text input.
      */
     export class TextBox extends Element {
+        text: string;
+        notifiOnKeyDown: boolean;
+        type: string;
+        readonly: boolean;
+        placeholder: string;
+        min: number;
+        max: number;
+        step: number;
+
+        constructor(markup?: TextBoxMarkup) {
+            super(markup);
+        }
 
         //----
         // DOM
@@ -15,12 +38,6 @@
         }
 
         domElement: HTMLInputElement|HTMLTextAreaElement;
-        protected getDomElementValue(): string {
-            return this.domElement.value;
-        }
-        protected setDomElementValue(value: string) {
-            this.domElement.value = value;
-        }
 
 
         //-------
@@ -38,9 +55,9 @@
             this.onRemoved.addHandler(() => this.onTextChange.removeAllHandlers(), this);
 
             var oldText = '';
-            var onInput = (e: gEvent) => {
+            var onInput = (e: domEvent) => {
                 this.onInput('text', this.value);
-                var args = <TextChangeArgs>xp.UI.createEventArgs(this, e);
+                var args = <TextChangeArgs>xp.ui.createEventArgs(this, e);
                 args.oldText = oldText;
                 var newText = this.value.toString();
                 args.newText = newText
@@ -98,9 +115,81 @@
 
         protected setDefaults() {
             super.setDefaults();
-            this.type = TextBoxType.string;
+            this.type = 'string';
             this.readonly = false;
             this.placeholder = '';
+        }
+
+        protected defineProperties() {
+            super.defineProperties();
+            this.defineProperty('text', {
+                getter: () => this.domElement.value,
+                setter: (text: string) => this.domElement.value = text,
+                observable: true
+            });
+            this.defineProperty('type', {
+                setter: (value: string) => {
+                    switch (value) {
+                        case 'string':
+                            this.domElement.type = 'text';
+                            break;
+                        case 'number':
+                            this.domElement.type = 'number';
+                            break;
+                        default:
+                            throw new Error('TextBoxType value is not implemented.');
+                    }
+                },
+                acceptedValues: ['string', 'number']
+            });
+            this.defineProperty('min', {
+                setter: (value: number) => this.domElement.setAttribute('min', value.toString())
+            });
+            this.defineProperty('max', {
+                setter: (value: number) => this.domElement.setAttribute('max', value.toString())
+            });
+            this.defineProperty('step', {
+                setter: (value: number) => this.domElement.setAttribute('step', value.toString())
+            });
+            this.defineProperty('readonly', {
+                getter: () => this.domElement.readOnly,
+                setter: (readonly: boolean) => {
+                    if (!readonly && this.enabled) {
+                        this.domElement.readOnly = false;
+                    }
+                    else {
+                        this.domElement.readOnly = true;
+                    }
+                }
+            });
+            this.defineProperty('enabled', {
+                setter: (value: boolean) => {
+                    if (value) {
+                        this.domElement.classList.remove('disabled');
+                    }
+                    else {
+                        this.domElement.classList.add('disabled');
+                    }
+                    if (!this.readonly && value) {
+                        this.domElement.readOnly = false;
+                    }
+                    else {
+                        this.domElement.readOnly = true;
+                    }
+                },
+                observable: true
+            });
+            this.defineProperty('placeholder', {
+                getter: () => this.domElement.placeholder,
+                setter: (placeholder: string) => {
+                    if (placeholder) {
+                        this.domElement.placeholder = placeholder;
+                    }
+                    else {
+                        this.domElement.placeholder = '';
+                    }
+                }
+            });
         }
 
         /**
@@ -108,219 +197,27 @@
          */
         get value(): any {
             switch (this.type) {
-                case TextBoxType.string:
-                    return this.getDomElementValue();
-                case TextBoxType.number:
-                    return parseFloat(this.getDomElementValue()) || 0;
+                case 'string':
+                    return this.text;
+                case 'number':
+                    return parseFloat(this.text) || 0;
                 default:
-                    throw new Error('TextBoxType value is not implemented.');
+                    throw new Error('TextBox type value is not implemented.');
             }
         }
         set value(value) {
-            this.setDomElementValue(value.toString());
+            this.text = value.toString();
         }
 
         /**
-         * Gets or sets text.
-         */
-        get text() {
-            return this._text;
-        }
-        set text(text) {
-            if (text === void 0 || text === null) {
-                text = '';
-            }
-            var old = this._text;
-            this._text = text;
-
-            // DOM
-            this.setDomElementValue(text);
-
-            //if (text) text = text.toString();
-            //this.onTextChanged.invoke({
-            //    oldText: old,
-            //    newText: text
-            //});
-        }
-        private _text: string;
-
-        /**
-         * Gets or sets textbox type.
-         */
-        get type() {
-            return this._type;
-        }
-        set type(type) {
-            this._type = type;
-            switch (type) {
-                case TextBoxType.string:
-                    this.domElement.type = 'text'; break;
-                case TextBoxType.number:
-                    this.domElement.type = 'number'; break;
-                default:
-                    throw new Error('TextBoxType value is not implemented.');
-            }
-        }
-        private _type: TextBoxType;
-
-        /**
-         * Gets or sets minimal numeric value.
-         */
-        get min() {
-            return this._min;
-        }
-        set min(value) {
-            this._min = value;
-            this.domElement.setAttribute('min', value.toString());
-        }
-        private _min: number;
-        /**
-         * Gets or sets maximal numeric value.
-         */
-        get max() {
-            return this._max;
-        }
-        set max(value) {
-            this._max = value;
-            this.domElement.setAttribute('max', value.toString());
-        }
-        private _max: number;
-        /**
-         * Gets or sets maximal numeric value.
-         */
-        get step() {
-            return this._step;
-        }
-        set step(value) {
-            this._step = value;
-            this.domElement.setAttribute('step', value.toString());
-        }
-        private _step: number;
-
-        /**
-         * Gets or sets value, indicating whether text box is readonly.
-         */
-        get readonly() {
-            return this._readonly;
-        }
-        set readonly(readonly) {
-            this._readonly = readonly;
-
-            // DOM
-            if (!readonly && this.enabled) {
-                this.domElement.readOnly = false;
-            }
-            else {
-                this.domElement.readOnly = true;
-            }
-        }
-        private _readonly: boolean;
-
-        /**
-         * Gets or sets value indicating control being enabled or disabled.
-         */
-        get enabled() {
-            return !this.domElement.classList.contains('disabled');
-        }
-        set enabled(value) {
-            if (value) {
-                this.domElement.classList.remove('disabled');
-            }
-            else {
-                this.domElement.classList.add('disabled');
-            }
-            if (!this.readonly && value) {
-                this.domElement.readOnly = false;
-            }
-            else {
-                this.domElement.readOnly = true;
-            }
-        }
-
-        /**
-         * Gets or sets text placeholder.
-         */
-        get placeholder() {
-            return this._placeholder;
-        }
-        set placeholder(placeholder) {
-            this._placeholder = placeholder;
-
-            // DOM
-            if (placeholder) {
-                this.domElement.placeholder = placeholder;
-            }
-            else {
-                this.domElement.placeholder = '';
-            }
-        }
-        private _placeholder: string;
-
-
-
-        /**
-         * If enabled, listeners will be notified of changes on every input key is down.
+         * If enabled, listeners will be notified of changes when every input key is down.
          */
         notifyOnKeyDown;
-
-
     }
 
 
-    export interface TextChangeArgs extends EventArgs<gEvent> {
+    export interface TextChangeArgs extends EventArgs {
         oldText: string;
         newText: string;
     }
-
-    export enum TextBoxType {
-        string,
-        number
-    }
-
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    export class TextBoxMarkupParser extends ElementMarkupParser<TextBox>{
-        protected getAttributeMap(): AttributeMap<TextBox> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'text': {
-                    '*': (value) => (el: TextBox) => el.text = value
-                },
-                'notifyOnKeydown': {
-                    'true': () => (el: TextBox) => el.notifyOnKeyDown = true,
-                    'false': () => (el: TextBox) => el.notifyOnKeyDown = false
-                },
-                'type': {
-                    'string': () => (el: TextBox) => el.type = TextBoxType.string,
-                    'number': () => (el: TextBox) => el.type = TextBoxType.number
-                },
-                'readonly': {
-                    'true': () => (el: TextBox) => el.readonly = true,
-                    'false': () => (el: TextBox) => el.readonly = false
-                },
-                'placeholder': {
-                    '*': (value) => (el: TextBox) => el.placeholder = value
-                },
-                'onTextChange': {
-                    '*': (value) => (el: TextBox) => el.registerUIHandler(el.onTextChange, value)
-                },
-                'min': {
-                    '*': (value) => (el: TextBox) => el.min = parseFloat(value)
-                },
-                'max': {
-                    '*': (value) => (el: TextBox) => el.max = parseFloat(value)
-                },
-                'step': {
-                    '*': (value) => (el: TextBox) => el.step = parseFloat(value)
-                },
-            });
-        }
-    }
-
-    MarkupParseInfo['TextBox'] = {
-        ctor: TextBox,
-        parser: new TextBoxMarkupParser()
-    };
 } 

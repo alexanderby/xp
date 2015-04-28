@@ -1,25 +1,38 @@
-﻿module xp.UI {
+﻿module xp.ui {
+
+    export interface ContainerMarkup extends ElementMarkup {
+        padding?: string;
+    }
+
     /**
      * UI container.
      */
     export /*abstract*/ class Container extends Element {
+        padding: string;
+
+        constructor(markup?: ContainerMarkup, children?: Element[]) {
+            super(markup);
+            children && children.forEach((c) => this.append(c));
+
+            // Set named children
+            if (Object.getPrototypeOf(this).isView) {
+                this.cascadeBy((el) => {
+                    if (el !== this && el.name) {
+                        if (el.name in this) {
+                            throw new Error(xp.formatString('Unable to set named child "{0}". Container\'s property is already defined.', el.name));
+                        }
+                        this[el.name] = el;
+                    }
+                });
+            }
+        }
 
         /**
          * Initializes UI container.
          */
         protected initElement() {
-            this.domElement = this.getTemplate();
-            this.initEvents();
-            this.initContent();
-            this.setDefaults();
-            this.applyInitializers();
-        }
-
-        /**
-         * Initializes empty content.
-         */
-        protected initContent() {
             this.children = [];
+            super.initElement();
         }
 
 
@@ -48,46 +61,38 @@
         // PROPERTIES
         //-----------
 
-        /**
-         * Gets or sets value indicating control being enabled or disabled.
-         */
-        get enabled() {
-            return !this.domElement.classList.contains('disabled');
-        }
-        set enabled(value) {
-            if (value) {
-                this.domElement.classList.remove('disabled');
-            }
-            else {
-                this.domElement.classList.add('disabled');
-            }
-            this.children.forEach((c) => {
-                if (value) {
-                    c.enabled = true;
-                    if (!c.useParentScope) {
-                        c.scope = c.scope;
+        protected defineProperties() {
+            super.defineProperties();
+            this.defineProperty('enabled', {
+                setter: (value) => {
+                    if (value) {
+                        this.domElement.classList.remove('disabled');
                     }
-                }
-                else {
-                    c.enabled = false;
-                }
+                    else {
+                        this.domElement.classList.add('disabled');
+                    }
+                    this.children.forEach((c) => {
+                        if (value) {
+                            c.enabled = true;
+                            if (!c.useParentScope) {
+                                // Cause binding value reset
+                                c.scope = c.scope;
+                            }
+                        }
+                        else {
+                            c.enabled = false;
+                        }
+                    });
+                    // Cause binding value reset
+                    this.scope = this.scope;
+                },
+                observable: true
             });
-            this.scope = this.scope;
+            this.defineProperty('padding', {
+                setter: (value) => this.domElement.style.padding = value,
+                getter: () => this.domElement.style.padding
+            });
         }
-
-        /**
-         * Gets or sets padding of the element (using CSS syntax).
-         */
-        get padding() {
-            return this._padding;
-        }
-        set padding(padding: string) {
-            this._padding = padding;
-
-            // DOM
-            this.domElement.style.padding = padding;
-        }
-        private _padding: string;
 
 
         //----------
@@ -210,54 +215,24 @@
         }
 
         /**
-         * Searches for the first element with given name, key or selector.
-         * @param selector Element's selector (e.g. "#name", ".key" "ClassName").
+         * Searches for the first matched.
+         * @param predicate Predicate.
          */
-        find(selector: string): Element {
-            if (selector[0] === '#') {
-                var name = selector.substring(1);
-                return this.cascadeBy((e) => e.name === name);
-            }
-            else if (selector[0] === '.') {
-                var key = selector.substring(1);
-                return this.cascadeBy((e) => e.key === key);
-            }
-            else {
-                var className = selector.toLowerCase();
-                return this.cascadeBy((e) => xp.getClassName(e).toLowerCase() === className);
-            }
+        find(predicate: (el) => boolean): Element {
+            return this.cascadeBy((el) => predicate(el));
         }
 
         /**
          * Searches for all element with given name, key or selector.
-         * @param selector Elements' selector (e.g. "#name", ".key" "ClassName").
+         * @param predicate Predicate.
          */
-        findAll(selector: string): Element[] {
+        findAll(predicate: (el) => boolean): Element[] {
             var results: Element[] = [];
-            if (selector[0] === '#') {
-                var name = selector.substring(1);
-                this.cascadeBy((e) => {
-                    if (e.name === name) {
-                        results.push(e);
-                    }
-                });
-            }
-            else if (selector[0] === '.') {
-                var key = selector.substring(1);
-                this.cascadeBy((e) => {
-                    if (e.key === key) {
-                        results.push(e);
-                    }
-                });
-            }
-            else {
-                var className = selector.toLowerCase();
-                this.cascadeBy((e) => {
-                    if (xp.getClassName(e).toLowerCase() === className) {
-                        results.push(e);
-                    }
-                });
-            }
+            this.cascadeBy((el) => {
+                if (predicate(el)) {
+                    results.push(el);
+                }
+            });
             return results;
         }
 
@@ -280,74 +255,6 @@
                 this.children[i].remove();
             }
             this.children = [];
-        }
-    }
-
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    /**
-     * Containers markup parser base.
-     */
-    export class ContainerMarkupParser<T extends Container> extends ElementMarkupParser<Container>{
-        /**
-         * Returns function which initializes control
-         * according to provider markup.
-         * @param markup Element's markup.
-         */
-        getInitializer(markup: gElement): UIInitializer<T> {
-            var initAttributes = this.getAttributesInitializer(markup);
-            var initContent = this.getContentInitializer(markup);
-            return (el) => {
-                initAttributes(el);
-                initContent(el);
-            };
-        }
-
-        /**
-         * Returns function whilch initializes control
-         * according to provided children of root element.
-         * @param markup Element's markup.
-         */
-        protected getContentInitializer(markup: gElement): UIInitializer<T> {
-            var actions: UIInitializer<Container>[] = [];
-
-            // Create children
-            Array.prototype.forEach.call(markup.childNodes,(childXmlNode: gElement) => {
-                if (childXmlNode.nodeType === 1) {
-                    // Create child
-                    var tagName = childXmlNode.nodeName;
-                    if (!xp.UI.MarkupParseInfo[tagName]) {
-                        throw new Error('Tags dictionary has no matches for tag "' + tagName + '".');
-                    }
-
-                    var create = xp.UI.getElementCreator(childXmlNode);
-
-                    actions.push((el) => {
-                        var child = create();
-                        el.append(child);
-                    });
-                }
-            });
-
-            return (el) => actions.forEach((init) => init(el));
-        }
-
-        /**
-         * Returns markup attributes mapping to control's properties.
-         */
-        protected getAttributeMap(): AttributeMap<T> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                //'enabled': {
-                //    'true': () => (el: Container) => el.cascadeBy((e) => e.enabled = true),
-                //    'false': () => (el: Container) => el.cascadeBy((e) => e.enabled = true)
-                //},
-                'padding': {
-                    '*': (padding) => (el: Container) => el.padding = padding
-                }
-            });
         }
     }
 } 

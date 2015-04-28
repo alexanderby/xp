@@ -1,38 +1,76 @@
-﻿type gElement = Element;
+﻿type domElement = Element;
 
-module xp.UI {
+module xp.ui {
+
+    export interface ElementMarkup {
+        //onClick: string|{ (e: MouseEvent): void };
+        //onDoubleClick: string|{ (e: MouseEvent): void };
+        //onMouseDown: string|{ (e: MouseEvent): void };
+        //onMouseUp: string|{ (e: MouseEvent): void };
+        //onMouseMove: string|{ (e: MouseEvent): void };
+        //onMouseEnter: string|{ (e: MouseEvent): void };
+        //onMouseLeave: string|{ (e: MouseEvent): void };
+        //onKeyPress: string|{ (e: KeyboardEvent): void };
+        //onKeyDown: string|{ (e: KeyboardEvent): void };
+        //onKeyUp: string|{ (e: KeyboardEvent): void };
+
+        //onRendered: string|{ (e: Element): void };
+
+        initializer?: (el: Element) => void;
+        enabled?: boolean;
+        name?: string;
+        key?: string;
+        width?: string;
+        height?: string;
+        minWidth?: string;
+        minHeight?: string;
+        maxWidth?: string;
+        maxHeight?: string;
+        margin?: string;
+        style?: string;
+        flex?: string;
+        visible?: boolean;
+    }
+
     /**
      * UI element.
      */
-    export /*abstract*/ class Element {
+    export /*abstract*/ class Element extends Model {
+        initializer: (el: Element) => void;
+        enabled: boolean;
+        name: string;
+        //key: string;
+        width: string;
+        height: string;
+        minWidth: string;
+        minHeight: string;
+        maxWidth: string;
+        maxHeight: string;
+        margin: string;
+        style: string;
+        flex: string;
+        visible: boolean;
 
         /**
          * Creates UI element.
          */
-        constructor() {
+        constructor(markup?: ElementMarkup) {
+            super();
             this.initElement();
+            if (markup) {
+                this.applyMarkup(markup);
+            }
+            this.initializer && this.initializer(this);
         }
 
         /**
          * Initializes UI element.
          */
         protected initElement() {
+            this.defineProperties();
             this.domElement = this.getTemplate();
             this.initEvents();
             this.setDefaults();
-            this.applyInitializers();
-        }
-
-        /**
-         * Applies initializers that were defined outside.
-         */
-        protected applyInitializers() {
-            var inits = Initializers.get(<any>this['constructor']);
-            if (inits) {
-                inits.forEach((init) => {
-                    init(this);
-                });
-            }
         }
 
 
@@ -49,7 +87,8 @@ module xp.UI {
          * Returns element's template.
          */
         protected getTemplate(): HTMLElement {
-            return document.createElement('div');
+            //return document.createElement('div');
+            throw new Error('Unable to create an instance of an abstract element.');
         }
 
         /*internal*/ __setRenderedState__(rendered) {
@@ -64,26 +103,26 @@ module xp.UI {
         // EVENTS
         //-------
 
-        onClick: Event<EventArgs<MouseEvent>>;
-        onDoubleClick: Event<EventArgs<MouseEvent>>;
-        onMouseDown: Event<EventArgs<MouseEvent>>;
-        onMouseUp: Event<EventArgs<MouseEvent>>;
-        onMouseMove: Event<EventArgs<MouseEvent>>;
-        onMouseEnter: Event<EventArgs<MouseEvent>>;
-        onMouseLeave: Event<EventArgs<MouseEvent>>;
-        onKeyPress: Event<EventArgs<KeyboardEvent>>;
-        onKeyDown: Event<EventArgs<KeyboardEvent>>;
-        onKeyUp: Event<EventArgs<KeyboardEvent>>;
+        onClick: Event<MouseEventArgs>;
+        onDoubleClick: Event<MouseEventArgs>;
+        onMouseDown: Event<MouseEventArgs>;
+        onMouseUp: Event<MouseEventArgs>;
+        onMouseMove: Event<MouseEventArgs>;
+        onMouseEnter: Event<MouseEventArgs>;
+        onMouseLeave: Event<MouseEventArgs>;
+        onKeyPress: Event<KeyboardEventArgs>;
+        onKeyDown: Event<KeyboardEventArgs>;
+        onKeyUp: Event<KeyboardEventArgs>;
 
         /**
          * Is invoked when element is being removed.
          */
-        onRemoved: Event<Element>;
+        onRemoved: xp.Event<Element>;
 
         /**
          * Is invoked when element is first time rendered.
          */
-        onRendered: Event<Element>;
+        onRendered: xp.Event<Element>;
 
         /**
          * Initializes control's events.
@@ -93,22 +132,23 @@ module xp.UI {
             this.expressions = {};
 
             // Control's events
-            this.onScopeChanged = new Event();
-            this.onRendered = new Event();
 
-            this.onClick = new Event();
-            this.onDoubleClick = new Event();
-            this.onMouseDown = new Event();
-            this.onMouseUp = new Event;
-            this.onMouseMove = new Event();
-            this.onMouseEnter = new Event();
-            this.onMouseLeave = new Event();
-            this.onKeyPress = new Event();
-            this.onKeyDown = new Event();
-            this.onKeyUp = new Event();
+            this.onScopeChanged = new xp.Event();
+            this.onRendered = new xp.Event();
+
+            this.onClick = new xp.Event();
+            this.onDoubleClick = new xp.Event();
+            this.onMouseDown = new xp.Event();
+            this.onMouseUp = new xp.Event;
+            this.onMouseMove = new xp.Event();
+            this.onMouseEnter = new xp.Event();
+            this.onMouseLeave = new xp.Event();
+            this.onKeyPress = new xp.Event();
+            this.onKeyDown = new xp.Event();
+            this.onKeyUp = new xp.Event();
 
             // Unregister events on remove?
-            this.onRemoved = new Event();
+            this.onRemoved = new xp.Event();
             this.onRemoved.addHandler(() => {
                 this.onScopeChanged.removeAllHandlers();
                 this.onRendered.removeAllHandlers();
@@ -140,7 +180,7 @@ module xp.UI {
             this.initSimpleDomEvent('keyup', this.onKeyUp);
         }
 
-        protected initSimpleDomEvent(eventName: string, event: UIEvent<gEvent>) {
+        protected initSimpleDomEvent(eventName: string, event: Event<EventArgs>) {
             this.domElement.addEventListener(eventName,(e) => {
                 if (this.enabled) {
                     var args = createEventArgs(this, e);
@@ -149,28 +189,170 @@ module xp.UI {
             });
         }
 
-        /**
-         * Registers control's event handler by name.
-         * @param event Event.
-         * @param handlerName Handler name.
-         */
-        registerUIHandler(event: Event<EventArgs<gEvent>>, handlerName: string) {
-            event.addHandler((args) => {
-                var elementWithHandler = this.bubbleBy((el) => el[handlerName] !== void 0);
-                if (!elementWithHandler) {
-                    throw new Error(xp.formatString('{0}:{1}: Unable to find event handler "{2}".', xp.getClassName(this), this.name || '-', handlerName));
-                }
-                if (typeof elementWithHandler[handlerName] !== 'function') {
-                    throw new Error(xp.formatString('{0}:{1}: Property "{2}" is not a function.', xp.getClassName(this), this.name || '-', handlerName));
-                }
-                elementWithHandler[handlerName](args);
-            }, this);
-        }
-
 
         //-----------
         // PROPERTIES
         //-----------
+
+        applyMarkup(markup: ElementMarkup) {
+            for (var prop in markup) {
+                // Check for binding
+                var value = markup[prop];
+                if (typeof value === 'string') {
+                    var binding = (<string>value).match(/^\{(.*)\}$/);
+                    var expression = (<string>value).match(/^\((.*)\)$/);
+                    if (binding && binding[1]) {
+                        this.bind(prop, binding[1]);
+                    }
+                    else if (expression && expression[1]) {
+                        this.express(prop, expression[1]);
+                    }
+                    else {
+                        this[prop] = value;
+                    }
+                }
+                else {
+                    this[prop] = value;
+                }
+            }
+        }
+        
+        /**
+         * Defines a single property.
+         * @param prop Property name.
+         * @param options Property options.
+         */
+        protected defineProperty(prop: string, options: PropertyOptions) {
+            var value;
+            Object.defineProperty(this, prop, {
+                enumerable: true,
+                configurable: true,
+                get: () => {
+                    if (options.getter) {
+                        return options.getter();
+                    }
+                    return value;
+                },
+                set: (v) => {
+                    if (options.acceptedValues && options.acceptedValues.indexOf(v) < 0) {
+                        throw new Error(xp.formatString(
+                            'The value "{0}" is not accepted for a {1}. List of accepted values: {2}.',
+                            v, xp.getClassName(this), options.acceptedValues.join(', ')));
+                    }
+                    if (options.setter) {
+                        options.setter(v);
+                    }
+                    value = v;
+                    if (options.observable) {
+                        this.onPropertyChanged.invoke(prop);
+                    }
+                }
+            });
+        }
+
+        /**
+         * Defines element's properties.
+         */
+        protected defineProperties() {
+            this.defineProperty('enabled', {
+                setter: (value) => {
+                    if (value) {
+                        this.domElement.classList.remove('disabled');
+                    }
+                    else {
+                        this.domElement.classList.add('disabled');
+                    }
+                },
+                observable: true
+            });
+            this.defineProperty('name', {
+                setter: (value) => this.domElement.id = value,
+                getter: () => this.domElement.id
+            });
+            this.defineProperty('key', {});
+            this.defineProperty('width', {
+                setter: (value) => this.domElement.style.width = value,
+                getter: () => this.domElement.offsetWidth + 'px'
+            });
+            this.defineProperty('height', {
+                setter: (value) => this.domElement.style.height = value,
+                getter: () => this.domElement.offsetHeight + 'px'
+            });
+            this.defineProperty('minWidth', {
+                setter: (value) => this.domElement.style.minWidth = value,
+                getter: () => this.domElement.style.minWidth
+            });
+            this.defineProperty('minHeight', {
+                setter: (value) => this.domElement.style.minHeight = value,
+                getter: () => this.domElement.style.minHeight
+            });
+            this.defineProperty('maxWidth', {
+                setter: (value) => this.domElement.style.maxWidth = value,
+                getter: () => this.domElement.style.maxWidth
+            });
+            this.defineProperty('maxHeight', {
+                setter: (value) => this.domElement.style.maxHeight = value,
+                getter: () => this.domElement.style.maxHeight
+            });
+            this.defineProperty('margin', {
+                setter: (value) => this.domElement.style.margin = value,
+                getter: () => this.domElement.style.margin
+            });
+            var style = '';
+            this.defineProperty('style', {
+                getter: () => style,
+                setter: (value: string) => {
+                    // Remove prev
+                    if (style) {
+                        var classes = style.split(' ');
+                        classes.forEach((c) => this.domElement.classList.remove(c));
+                    }
+                    // Set new
+                    style = value;
+                    var classes = value.split(' ');
+                    classes.forEach((c) => this.domElement.classList.add(c));
+                }
+            });
+            this.defineProperty('flex', {
+                setter: (flex: string) => {
+                    this.domElement.classList.remove('flex-None');
+                    this.domElement.classList.remove('flex-Stretch');
+                    this.domElement.classList.remove('flex-Grow');
+                    this.domElement.classList.remove('flex-Shrink');
+                    switch (flex) {
+                        case 'none':
+                            this.domElement.classList.add('flex-None');
+                            break;
+                        case 'stretch':
+                            this.domElement.classList.add('flex-Stretch');
+                            break;
+                        case 'grow':
+                            this.domElement.classList.add('flex-Grow');
+                            break;
+                        case 'shrink':
+                            this.domElement.classList.add('flex-Shrink');
+                            break;
+                        default:
+                            throw new Error('Unknown flex value "' + flex + '".');
+                    }
+                },
+                acceptedValues: ['none', 'shrink', 'grow', 'stretch']
+            });
+
+            this.defineProperty('visible', {
+                setter: (value) => {
+                    if (value) {
+                        this.domElement.classList.remove('hidden');
+                    }
+                    else {
+                        this.domElement.classList.add('hidden');
+                    }
+                },
+                // TODO: Determine if element is really visible?
+                //getter: !this.domElement.classList.contains('hidden');
+                observable: true
+            });
+        }
 
         /**
          * Sets default values.
@@ -178,177 +360,6 @@ module xp.UI {
         protected setDefaults() {
             this.enabled = true;
             this.visible = true;
-        }
-
-        /**
-         * Gets or sets value indicating control being enabled or disabled.
-         */
-        get enabled() {
-            return !this.domElement.classList.contains('disabled');
-        }
-        set enabled(value) {
-            if (value) {
-                this.domElement.classList.remove('disabled');
-            }
-            else {
-                this.domElement.classList.add('disabled');
-            }
-        }
-
-        /**
-         * Gets or sets element's name.
-         */
-        get name() {
-            return this.domElement.id;
-        }
-        set name(value: string) {
-            this.domElement.id = value;
-        }
-
-        /**
-         * Gets or sets element's key.
-         */
-        get key() {
-            return this._key;
-        }
-        set key(key) {
-            this._key = key;
-        }
-        private _key: string;
-
-        /**
-         * Gets or sets width of the element (using CSS syntax).
-         */
-        get width() {
-            return this.domElement.offsetWidth + 'px';
-        }
-        set width(width: string) {
-            this.domElement.style.width = width;
-        }
-
-        /**
-         * Gets or sets height of the element (using CSS syntax).
-         */
-        get height() {
-            return this.domElement.offsetHeight + 'px';
-        }
-        set height(height: string) {
-            this.domElement.style.height = height;
-        }
-
-        /**
-         * Gets or sets minimal width of the element (using CSS syntax).
-         */
-        get minWidth() {
-            return this.domElement.style.minWidth;
-        }
-        set minWidth(width: string) {
-            this.domElement.style.minWidth = width;
-        }
-
-        /**
-         * Gets or sets minimal height of the element (using CSS syntax).
-         */
-        get minHeight() {
-            return this.domElement.style.minHeight;
-        }
-        set minHeight(height: string) {
-            this.domElement.style.minHeight = height;
-        }
-
-        /**
-         * Gets or sets maximal width of the element (using CSS syntax).
-         */
-        get maxWidth() {
-            return this.domElement.style.maxWidth;
-        }
-        set maxWidth(width: string) {
-            this.domElement.style.maxWidth = width;
-        }
-
-        /**
-         * Gets or sets maximal height of the element (using CSS syntax).
-         */
-        get maxHeight() {
-            return this.domElement.style.maxHeight;
-        }
-        set maxHeight(height: string) {
-            this.domElement.style.maxHeight = height;
-        }
-
-        /**
-         * Gets or sets margin of the element (using CSS syntax).
-         */
-        get margin() {
-            return this.domElement.style.margin;
-        }
-        set margin(margin: string) {
-            this.domElement.style.margin = margin;
-        }
-
-        /**
-         * Gets or sets element's CSS class (or multiple separated by white space).
-         */
-        get style() {
-            return this._style;
-        }
-        set style(cssClass) {
-            // Remove prev
-            if (this._style) {
-                var classes = this._style.split(' ');
-                classes.forEach((c) => this.domElement.classList.remove(c));
-            }
-            // Set new
-            this._style = cssClass;
-            var classes = cssClass.split(' ');
-            classes.forEach((c) => this.domElement.classList.add(c));
-        }
-        private _style: string;
-
-        /**
-         * Gets or sets element's flexible behavior.
-         */
-        get flex() {
-            return this._flex;
-        }
-        set flex(flex) {
-            this._flex = flex;
-
-            // DOM
-            this.domElement.classList.remove('flex-None');
-            this.domElement.classList.remove('flex-Stretch');
-            this.domElement.classList.remove('flex-Grow');
-            this.domElement.classList.remove('flex-Shrink');
-            switch (flex) {
-                case FlexValue.None:
-                    this.domElement.classList.add('flex-None');
-                    break;
-                case FlexValue.Stretch:
-                    this.domElement.classList.add('flex-Stretch');
-                    break;
-                case FlexValue.Grow:
-                    this.domElement.classList.add('flex-Grow');
-                    break;
-                case FlexValue.Shrink:
-                    this.domElement.classList.add('flex-Shrink');
-                    break;
-                default:
-                    throw new Error('Unknown flex value "' + flex + '".');
-            }
-        }
-        private _flex: FlexValue;
-
-        get visible() {
-            // TODO: Determine if element is really visible?
-            return !this.domElement.classList.contains('hidden');
-        }
-        set visible(v) {
-            if (v) {
-                this.domElement.classList.remove('hidden');
-            }
-            else {
-                this.domElement.classList.add('hidden');
-            }
         }
 
 
@@ -529,41 +540,45 @@ module xp.UI {
 
         /**
          * Binds control's property to source property.
-         * @param controlProperty Control's property name.
-         * @param objectPropertyPath Object's property name.
-         * @param [source] Binding source object. If not specified the element's scope will be used.
-         * @param [defaultValue] Value to use is case when source property is unreachable.
-         * @param [sourceConverter] Function which converts source value.
-         * @param [targetConverter] Function which converts target value.
+         * @param setter Control's property name or a function.
+         * @param path Source property name.
+         * @param source Binding source object. If not specified the element's scope will be used.
+         * @param defaultValue Value to use is case when source property is null or undefined.
          */
-        bind(controlProperty: string, objectPropertyPath: string, source?, defaultValue?: any, sourceConverter?: (srcValue) => any, targetConverter?: (targetValue) => any) {
-            if (this.bindings[controlProperty]) {
+        bind(setter: string|{ (element: Element, value): void }, path: string, source?, defaultValue?) {
+            var prop = setter.toString();
+
+            if (this.bindings[prop]) {
                 // Unsubscribe from prev changes
-                this.bindings[controlProperty].unbind();
+                this.bindings[prop].unbind();
             }
 
-            if (objectPropertyPath === '') {
+            if (prop === '') {
                 throw new Error('Binding path cannot be empty.');
             }
 
-            if (controlProperty === 'scope' && !source) {
-                if (!this.parent) {
-                    //throw new Error('Unable to bind "scope" property. Element has no parent.');
-                    source = {};
-                }
-                else {
+            if (prop === 'scope' && !source) {
+                if (this.useParentScope && this.parent) {
                     source = this.parent.scope;
                 }
             }
 
-            this.bindings[controlProperty] = new BindingManager(
-                this,
-                controlProperty,
-                source || this.scope || new Scope(null),
-                objectPropertyPath,
-                defaultValue,
-                sourceConverter,
-                targetConverter);
+            if (typeof setter === 'string') {
+                this.bindings[prop] = new BindingManager(
+                    this,
+                    prop,
+                    source,
+                    path,
+                    defaultValue);
+            }
+            else {
+                this.bindings[prop] = new BindingCallManager(
+                    source,
+                    path,
+                    (value) => setter(this, value),
+                    null,
+                    defaultValue);
+            }
         }
 
         /**
@@ -587,16 +602,25 @@ module xp.UI {
          * @param expression Expression e.g. "{obj.a} * 2 + Math.round({b})".
          * @param [source] Binding source object.
          */
-        express(controlProperty: string, expression: string, source?) {
-            if (this.expressions[controlProperty]) {
-                this.expressions[controlProperty].unbind();
+        express(setter: string|{ (element: Element, value): void }, expression: string, source?) {
+            var prop = setter.toString();
+            if (this.expressions[prop]) {
+                this.expressions[prop].unbind();
             }
-            this.expressions[controlProperty] = new Expression(expression, source || this.scope);
-            this.bindings[controlProperty] = new BindingManager(
-                this,
-                controlProperty,
-                new Scope(this.expressions[controlProperty]),
-                'result');
+            this.expressions[prop] = new Expression(expression, source || this.scope);
+            if (typeof setter === 'string') {
+                this.bindings[prop] = new BindingManager(
+                    this,
+                    prop,
+                    new Scope(this.expressions[prop]),
+                    'result');
+            }
+            else {
+                this.bindings[prop] = new BindingCallManager(
+                    new Scope(this.expressions[prop]),
+                    'result',
+                    (result) => setter(this, result));
+            }
         }
 
         /**
@@ -644,7 +668,7 @@ module xp.UI {
         /**
          * Fires when data scope is changed.
          */
-        onScopeChanged: Event<Object>;
+        onScopeChanged: xp.Event<Object>;
     }
 
 
@@ -662,208 +686,10 @@ module xp.UI {
         [controlProperty: string]: Expression;
     }
 
-    /**
-     * Flex values.
-     */
-    export enum FlexValue {
-        None,
-        Stretch,
-        Grow,
-        Shrink
-    }
-
-    ///**
-    // * Visibility values.
-    // */
-    //export enum Visibility {
-    //    Visible,
-    //    Hidden,
-    //    Collapsed
-    //}
-
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    /**
-     * Markup parser base.
-     */
-    export class ElementMarkupParser<T extends Element> implements MarkupParser<T>{
-
-        /**
-         * Returns function which initializes control
-         * according to provider markup.
-         * @param markup Element's markup.
-         */
-        getInitializer(markup: gElement): UIInitializer<T> {
-            var initAttributes = this.getAttributesInitializer(markup);
-            return (el) => {
-                initAttributes(el);
-            };
-        }
-
-        /**
-         * Returns function whilch initializes control
-         * according to provided attributes of root element.
-         * @param markup Element's markup.
-         */
-        protected getAttributesInitializer(markup: gElement): UIInitializer<T> {
-            var actions: UIInitializer<Element>[] = [];
-
-            // Get attribute values
-            var attributes = markup.attributes;
-            var values: { [attr: string]: string; } = {};
-            Array.prototype.forEach.call(attributes,(attr: Attr) => {
-                // Add attribute's name and value into dictionary
-                values[attr.name] = attr.value;
-            });
-
-            var map = this.getAttributeMap();
-            for (var key in values) {
-                // Find attribute
-                if (!map[key]) {
-                    throw new Error(xp.formatString('Illegal attribute "{0}" of element <"{1}">.', key, markup.nodeName));
-                }
-
-                // Check for binding
-                var bindings = values[key].match(/^\{(.*)\}$/);
-                var expressions = values[key].match(/^\((.*)\)$/);
-                if (bindings && bindings[1] !== void 0) {
-                    var path = bindings[1];
-                    // Bind control property
-                    var act = ((k, p) => {
-                        return (el: Element) => el.bind(k, p);
-                    })(key, path);
-                    actions.push(act);
-                }
-                else if (expressions && expressions[1] !== void 0) {
-                    var expr = expressions[1];
-                    // Register expression
-                    var act = ((k, ex) => {
-                        return (el: Element) => el.express(k, ex);
-                    })(key, expr);
-                    actions.push(act);
-                }
-                else if (map[key]['*']) {
-                    // If accepts any value -> call setter with value
-                    var setter = map[key]['*'];
-                    var init = setter(values[key]);
-                    actions.push(init);
-                }
-                else {
-                    // Find value
-                    if (!map[key][values[key]] && !map['*']) {
-                        throw new Error(xp.formatString('Illegal value "{0}" for attribute "{1}" of element "{2}".', values[key], key, markup.nodeName));
-                    }
-                    // Call setter
-                    var setter = map[key][values[key]];
-                    var init = setter()
-                    actions.push(init);
-                }
-            }
-
-            return (el) => actions.forEach((init) => init(el));
-        }
-
-        /**
-         * Returns markup attributes mapping to control's properties.
-         */
-        protected getAttributeMap(): AttributeMap<T> {
-            return {
-                'enabled': {
-                    'true': () => (el) => el.enabled = true,
-                    'false': () => (el) => el.enabled = false
-                },
-                'name': {
-                    '*': (name) => (el) => el.name = name,
-                },
-                'key': {
-                    '*': (key) => (el) => el.key = key,
-                },
-                'style': {
-                    '*': (cssClass) => (el) => el.style = cssClass,
-                },
-                'width': {
-                    '*': (width) => (el) => el.width = width
-                },
-                'height': {
-                    '*': (height) => (el) => el.height = height
-                },
-                'minWidth': {
-                    '*': (width) => (el) => el.minWidth = width
-                },
-                'minHeight': {
-                    '*': (height) => (el) => el.minHeight = height
-                },
-                'maxWidth': {
-                    '*': (width) => (el) => el.maxWidth = width
-                },
-                'maxHeight': {
-                    '*': (height) => (el) => el.maxHeight = height
-                },
-                'margin': {
-                    '*': (margin) => (el) => el.margin = margin
-                },
-                'flex': {
-                    'None': (flex) => (el) => el.flex = FlexValue.None,
-                    'Stretch': (flex) => (el) => el.flex = FlexValue.Stretch,
-                    'Grow': (flex) => (el) => el.flex = FlexValue.Grow,
-                    'Shrink': (flex) => (el) => el.flex = FlexValue.Shrink
-                },
-                'visible': {
-                    'true': () => (el) => el.visible = true,
-                    'false': () => (el) => el.visible = false
-                },
-                //'visibility': {
-                //    'Visible': (v) => (el) => el.visibility = Visibility.Visible,
-                //    'Hidden': (v) => (el) => el.visibility = Visibility.Hidden,
-                //    'Collapsed': (v) => (el) => el.visibility = Visibility.Collapsed
-                //},
-                'scope': {}, // TODO: Deserialize JSON?
-
-                // Events
-                'onClick': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onClick, name)
-                },
-                'onMouseDown': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onMouseDown, name)
-                },
-                'onMouseUp': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onMouseUp, name)
-                },
-                'onMouseMove': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onMouseMove, name)
-                },
-                'onMouseEnter': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onMouseEnter, name)
-                },
-                'onMouseLeave': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onMouseLeave, name)
-                },
-                'onKeyPress': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onKeyPress, name)
-                },
-                'onKeyDown': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onKeyDown, name)
-                },
-                'onKeyUp': {
-                    '*': (name) => (el) => el.registerUIHandler(el.onKeyUp, name)
-                }
-            };
-        }
-        
-        /**
-         * Extends markup parser's attribute map.
-         * @param parser Type of markup parser.
-         * @param extMap Attribute map extension.
-         */
-        static extendAttributeMap<T extends Element>(parser: Constructor<ElementMarkupParser<T>>, extMap: AttributeMap<T>) {
-            var map = parser.prototype['getAttributeMap']();
-            for (var key in extMap) {
-                map[key] = extMap[key];
-            }
-            parser.prototype['getAttributeMap'] = () => map;
-        }
+    export interface PropertyOptions {
+        setter?: (v) => void;
+        getter?: () => void;
+        observable?: boolean;
+        acceptedValues?: any[];
     }
 }

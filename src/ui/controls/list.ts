@@ -1,8 +1,21 @@
-﻿module xp.UI {
+﻿module xp.ui {
+    export interface ListMarkup extends VBoxMarkup {
+        items?: any[];
+        itemId?: string;
+        itemCreator?: () => Element
+    }
+
     /**
      * List container.
      */
     export class List extends VBox {
+        items: any[];
+        itemId: string;
+        itemCreator: () => Element;
+
+        constructor(markup?: ListMarkup) {
+            super(markup);
+        }
 
         //----
         // DOM
@@ -22,86 +35,80 @@
             this.itemId = 'item';
         }
 
-        /**
-         * Gets or sets items collection.
-         */
-        get items() {
-            return this._items;
-        }
-        set items(items) {
-            this._items = items;
+        protected defineProperties() {
+            super.defineProperties();
+            this.defineProperty('items', {
+                setter: (items: any[]) => {
+                    // Remove current children
+                    this.removeReplacementHandlers();
+                    this.removeChildren();
+                    this.itemsRegistar.unsubscribeAll();
 
-            // Remove current children
-            this.removeReplacementHandlers();
-            this.removeChildren();
-            this.itemsRegistar.unsubscribeAll();
+                    if (items && this.itemCreator) {
+                        // Create new children
+                        items.forEach((item, i) => {
+                            this.addItem(i, item);
+                        });
 
-            if (items) {
-                // Create new children
-                items.forEach((item, i) => {
-                    this.addItem(i, item);
-                });
+                        // Subscribe for changes
+                        if (isCollectionNotifier(items)) {
+                            var collection = <CollectionNotifier<any>><any>items;
+                            this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
+                                switch (args.action) {
+                                    case CollectionChangeAction.Attach:
+                                    case CollectionChangeAction.Create:
+                                        this.addItem(args.newIndex, args.newItem);
+                                        break;
 
-                // Subscribe for changes
-                if (isCollectionNotifier(items)) {
-                    var collection = <CollectionNotifier<any>><any>items;
-                    this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
-                        switch (args.action) {
-                            case CollectionChangeAction.Attach:
-                            case CollectionChangeAction.Create:
-                                this.addItem(args.newIndex, args.newItem);
-                                break;
+                                    case CollectionChangeAction.Detach:
+                                    case CollectionChangeAction.Delete:
+                                        // Remove replacement handler
+                                        var found = this.itemReplacementHandlers.filter((h) => h.item === args.oldItem)[0];
+                                        found.holder.onPropertyChanged.removeHandler(found.handler);
+                                        this.itemReplacementHandlers.splice(this.itemReplacementHandlers.indexOf(found), 1);
 
-                            case CollectionChangeAction.Detach:
-                            case CollectionChangeAction.Delete:
-                                // Remove replacement handler
-                                var found = this.itemReplacementHandlers.filter((h) => h.item === args.oldItem)[0];
-                                found.holder.onPropertyChanged.removeHandler(found.handler);
-                                this.itemReplacementHandlers.splice(this.itemReplacementHandlers.indexOf(found), 1);
+                                        this.children[args.oldIndex].remove();
+                                        break;
 
-                                this.children[args.oldIndex].remove();
-                                break;
+                                    case CollectionChangeAction.Replace:
+                                        if (!this.itemReplacementToken) {
+                                            this.children[args.newIndex].scope[this.itemId] = args.newItem;
+                                        }
+                                        break;
 
-                            case CollectionChangeAction.Replace:
-                                if (!this.itemReplacementToken) {
-                                    this.children[args.newIndex].scope[this.itemId] = args.newItem;
+                                    case CollectionChangeAction.Move:
+                                        this.insert(this.children[args.oldIndex], args.newIndex);
+                                        break;
+
+                                    default:
+                                        throw new Error('Not implemented.');
                                 }
-                                break;
-
-                            case CollectionChangeAction.Move:
-                                this.insert(this.children[args.oldIndex], args.newIndex);
-                                break;
-
-                            default:
-                                throw new Error('Not implemented.');
+                            }, this);
                         }
-                    }, this);
+                        if (isNotifier(items)) {
+                            var itemsLengthChangeHandler = (prop: string) => {
+                                //if (prop === 'length') {
+                                //    // Hide or show control
+                                //    if (this.items.length > 0) {
+                                //        this.domElement.show();
+                                //    }
+                                //    else {
+                                //        this.domElement.hide();
+                                //    }
+                                //}
+                            };
+                            this.itemsRegistar.subscribe((<Notifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
+                            // Handle length for the first time
+                            itemsLengthChangeHandler('length');
+                        }
+                    }
                 }
-                if (isNotifier(items)) {
-                    var itemsLengthChangeHandler = (prop: string) => {
-                        //if (prop === 'length') {
-                        //    // Hide or show control
-                        //    if (this.items.length > 0) {
-                        //        this.domElement.show();
-                        //    }
-                        //    else {
-                        //        this.domElement.hide();
-                        //    }
-                        //}
-                    };
-                    this.itemsRegistar.subscribe((<Notifier><any>items).onPropertyChanged, itemsLengthChangeHandler, this);
-                    // Handle length for the first time
-                    itemsLengthChangeHandler('length');
-                }
-            }
+            });
+            this.defineProperty('itemCreator', {
+                // Re-create items
+                setter: () => this.items = this.items
+            });
         }
-        private _items: any[];
-        private itemsRegistar: EventRegistrar;
-
-        /**
-         * Gets or sets list-item identifier for item's scope.
-         */
-        itemId: string;
 
 
         //-------
@@ -118,10 +125,7 @@
         // RELATIONS
         //----------
 
-        /**
-         * Gets or sets list item creator function.
-         */
-        itemCreator: () => Element;
+        private itemsRegistar: EventRegistrar;
 
         protected addItem(index: number, item) {
             // Create child
@@ -200,47 +204,4 @@
         holder: xp.Notifier;
         handler: (propName: string) => void;
     }
-
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    export class ListMarkupParser extends VBoxMarkupParser<List>{
-
-        getInitializer(markup: gElement): UIInitializer<List> {
-            var initAttributes = this.getAttributesInitializer(markup);
-            var initTemplate = this.getTemplateInitializer(markup);
-            return (el) => {
-                initAttributes(el);
-                initTemplate(el);
-            };
-        }
-
-        protected getTemplateInitializer(markup: gElement): UIInitializer<List> {
-            var children = Array.prototype.filter.call(markup.childNodes,(n: Node) => n.nodeType === 1);
-            if (children.length !== 1) {
-                throw new Error('List control must have ONE item template.');
-            }
-
-            var childXmlNode = children[0];
-            var create = xp.UI.getElementCreator(childXmlNode);
-
-            return (el) => el.itemCreator = create;
-        }
-
-        protected getAttributeMap(): AttributeMap<List> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'items': {}, // Parse JSON ?
-                'itemId': {
-                    '*': (id) => (el: List) => el.itemId = id
-                }
-            });
-        }
-    }
-
-    MarkupParseInfo['List'] = {
-        ctor: List,
-        parser: new ListMarkupParser()
-    };
 }

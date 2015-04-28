@@ -1,4 +1,4 @@
-﻿module xp.UI {
+﻿module xp.ui {
     /**
      * Modal dialog base.
      */
@@ -15,8 +15,8 @@
          * @param onClose If returns 'true', the dialog will be closed.
          * Otherwise the dialog will not be closed.
          */
-        constructor(onClose?: () => boolean) {
-            super();
+        constructor(onClose?: () => boolean, markup?: VBoxMarkup, children?: Element[]) {
+            super(markup, children);
             this.onClose = onClose || function () { return true; };
         }
 

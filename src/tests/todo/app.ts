@@ -2,7 +2,7 @@
 
 module Todo {
     export class App {
-        window: xp.UI.Window;
+        window: xp.ui.Window;
     }
 }
 
@@ -10,9 +10,5 @@ var todoApp: Todo.App;
 
 window.onload = () => {
     todoApp = new Todo.App();
-    //xp.UI.DIInstances.set(Todo.App, todoApp);
-
-    xp.UI.init(() => {
-        todoApp.window = new Todo.Window(todoApp);
-    });
+    todoApp.window = new Todo.Window(todoApp);
 };

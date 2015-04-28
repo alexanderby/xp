@@ -1,5 +1,14 @@
-﻿module xp.UI {
+﻿module xp.ui {
+    export interface LabelMarkup extends ElementMarkup {
+        text?: string;
+    }
+
     export class Label extends Element {
+        text: string;
+
+        constructor(markup?: LabelMarkup) {
+            super(markup);
+        }
 
         //----
         // DOM
@@ -9,44 +18,19 @@
             return Dom.create('<label class="Label"></label>');
         }
 
-
+        
         //-----------
         // PROPERTIES
         //-----------
 
-        /**
-         * Gets or sets label's text.
-         */
-        get text() {
-            return this._text;
-        }
-        set text(text) {
-            Log.write(Log.HeatLevel.Log, Log.Domain.UI, 'Set text: ' + text);
-            this._text = text;
-
-            // DOM
-            this.domElement.textContent = text;
-        }
-        private _text: string;
-    }
-
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    export class LabelMarkupParser extends ElementMarkupParser<Label>{
-        protected getAttributeMap(): AttributeMap<Label> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'text': {
-                    '*': (value) => (el: Label) => el.text = value
-                }
+        protected defineProperties() {
+            super.defineProperties();
+            this.defineProperty('text', {
+                setter: (text: string) => {
+                    this.domElement.textContent = text;
+                },
+                observable: true
             });
         }
     }
-
-    MarkupParseInfo['Label'] = {
-        ctor: Label,
-        parser: new LabelMarkupParser()
-    };
 } 

@@ -4,10 +4,25 @@
         isDone: boolean;
     }
 
-    export class Window extends xp.UI.Window {
+    export class Window extends xp.ui.Window {
 
         constructor(app: App) {
-            super();
+            super({ title: 'Test App', itemsAlign: 'center', padding: '0.5em', itemsIndent: '2em' }, [
+                new xp.ui.HBox({ width: '40em', itemsIndent: '2em', scrollBar: 'both' }, [
+                    new xp.ui.VBox({ itemsIndent: '1em', flex: 'stretch', width: '50%' }, [
+                        new xp.ui.Label({ text: 'TODO APP', style: 'title' }),
+                        new xp.ui.HBox({ itemsIndent: '0.5em' }, [
+                            new xp.ui.Label({ text: 'Input:' }),
+                            new xp.ui.TextBox({
+                                name: 'textbox', placeholder: 'What to do?', initializer: (tb: xp.ui.TextBox) => {
+                                    tb.onTextChange.addHandler(() => xp.ui.MessageBox.show('Text changed.', 'Hello'));
+                                }
+                            })
+                        ]),
+                        //new xp.ui.List({ name: 'list', itemCreator: () => new xp.ui.HBox({ })})
+                    ])
+                ])
+            ]);
 
             console.info('Main dependency (app):');
             console.log(app);
@@ -25,7 +40,7 @@
 
             this.domElement.addEventListener('contextmenu',(e) => {
                 e.preventDefault();
-                xp.UI.ContextMenu.show(e.pageX, e.pageY, [{
+                xp.ui.ContextMenu.show(e.pageX, e.pageY, [{
                     text: 'Copy',
                     action: () => alert('copy')
                 }, {
@@ -46,14 +61,14 @@
         // Controls
         //---------
         
-        private onDeleteClick(args: xp.UI.EventArgs<MouseEvent>) {
+        private onDeleteClick(args: xp.ui.MouseEventArgs) {
             var index = this.data.todos.indexOf(args.element.scope['t']); // Hmm...
             if (index >= 0) {
                 this.removeItem(index);
             }
         }
 
-        private onClearDoneClick(args: xp.UI.EventArgs<MouseEvent>) {
+        private onClearDoneClick(args: xp.ui.MouseEventArgs) {
             for (var i = this.data.todos.length - 1; i >= 0; i--) {
                 if (this.data.todos[i].isDone) {
                     this.removeItem(i);
@@ -61,7 +76,7 @@
             }
         }
 
-        private onTextInput(args: xp.UI.TextChangeArgs) {
+        private onTextInput(args: xp.ui.TextChangeArgs) {
             if (args.newText) {
                 this.addItem(args.newText);
                 this.textbox.text = '';
@@ -73,13 +88,13 @@
             this.data.done = this.data.todos.filter((t) => t.isDone);
         }
 
-        private onDoneToggle(args: xp.UI.CheckChangeArgs) {
+        private onDoneToggle(args: xp.ui.CheckChangeArgs) {
             this.refreshFiltered();
         }
 
-        private textbox: xp.UI.TextBox;
-        private list: xp.UI.List;
-        private button_ClearCompleted: xp.UI.Button;
+        private textbox: xp.ui.TextBox;
+        private list: xp.ui.List;
+        private button_ClearCompleted: xp.ui.Button;
 
         //----------------
         // Data management
@@ -106,20 +121,7 @@
             this.refreshFiltered();
         }
     }
-
-    xp.UI.MarkupParseInfo['Window'] = {
-        ctor: Window,
-        parser: new xp.UI.WindowMarkupParser(),
-        markupUrl: 'view/window.xml',
-        dependencies: [App]
-    };
-
-
-    xp.UI.ElementMarkupParser.extendAttributeMap(xp.UI.RadioButtonMarkupParser, {
-        'tooltip': {
-            '*': (v) => (el) => el.domElement.setAttribute('title', v)
-        }
-    });
+    Window['isView'] = true;
 }
 
 // TODO: Do not use XML.

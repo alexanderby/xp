@@ -1,8 +1,21 @@
-﻿module xp.UI {
+﻿module xp.ui {
+    export interface CheckBoxMarkup extends ElementMarkup {
+        checked?: boolean;
+        text?: string;
+        readonly?: boolean;
+    }
+
     /**
      * Check box input.
      */
-    export class CheckBox extends Element {
+    export class CheckBox extends Element implements CheckBoxMarkup {
+        checked: boolean;
+        text: string;
+        readonly: boolean;
+
+        constructor(markup?: CheckBoxMarkup) {
+            super(markup);
+        }
 
         //----
         // DOM
@@ -31,7 +44,7 @@
         /**
          * Fires when check box value is changed.
          */
-        onCheckChange: Event<CheckChangeArgs>;
+        onCheckChange: xp.Event<CheckChangeArgs>;
 
         protected initEvents() {
             super.initEvents();
@@ -41,10 +54,10 @@
             // On check change input
             this.domElement.addEventListener('change',(e) => {
                 if (!this.readonly && this.enabled) {
-                    this.onInput('checked', this.value);
+                    this.onInput('checked', this.checked);
 
-                    var args = <CheckChangeArgs>UI.createEventArgs(this, e);
-                    args.checked = this.value;
+                    var args = <CheckChangeArgs>createEventArgs(this, e);
+                    args.checked = this.checked;
                     this.onCheckChange.invoke(args);
                 }
                 //else {
@@ -66,126 +79,61 @@
             this.text = '';
         }
 
-        /**
-         * Returns the value of the text box according to it's type.
-         */
-        get value(): boolean {
-            return !!this.checkElement.checked;
-        }
-
-        /**
-         * Gets or sets check state.
-         */
-        get checked() {
-            return this._checked;
-        }
-        set checked(checked) {
-            this._checked = checked;
-
-            // DOM
-            this.checkElement.checked = checked;
-        }
-        protected _checked: boolean;
-
-        /**
-         * Gets or sets button's text.
-         */
-        get text() {
-            return this._text;
-        }
-        set text(text) {
-            this._text = text;
-
-            // DOM
-            if (!!text === true) {
-                // Set text
-                this.textElement.textContent = text;
-                this.textElement.classList.remove('hidden');
-            }
-            else {
-                this.textElement.classList.add('hidden');
-            }
-        }
-        private _text: string;
-
-        /**
-         * Gets or sets value, indicating whether text box is readonly.
-         */
-        get readonly() {
-            return this._readonly;
-        }
-        set readonly(readonly) {
-            this._readonly = readonly;
-
-            // DOM
-            if (!readonly && this.enabled) {
-                this.checkElement.readOnly = false;
-                this.domElement.style.pointerEvents = '';
-            }
-            else {
-                this.checkElement.readOnly = true; // Doesn't work
-                this.domElement.style.pointerEvents = 'none';
-            }
-        }
-        private _readonly: boolean;
-
-        /**
-         * Gets or sets value indicating control being enabled or disabled.
-         */
-        get enabled() {
-            return !this.domElement.classList.contains('disabled');
-        }
-        set enabled(value) {
-            if (value) {
-                this.domElement.classList.remove('disabled');
-            }
-            else {
-                this.domElement.classList.add('disabled');
-            }
-            if (!this.readonly && value) {
-                this.checkElement.readOnly = false;
-                this.domElement.style.pointerEvents = '';
-            }
-            else {
-                this.checkElement.readOnly = true; // Doesn't work
-                this.domElement.style.pointerEvents = 'none';
-            }
-        }
-    }
-
-    export interface CheckChangeArgs extends UI.EventArgs<gEvent> {
-        checked: boolean;
-    }
-
-
-    //---------------
-    // MARKUP PARSING
-    //---------------
-
-    export class CheckBoxMarkupParser extends ElementMarkupParser<CheckBox>{
-
-        protected getAttributeMap(): AttributeMap<CheckBox> {
-            return extendAttributeMap(super.getAttributeMap(), {
-                'checked': {
-                    'true': () => (el: CheckBox) => el.checked = true,
-                    'false': () => (el: CheckBox) => el.checked = false
-                },
-                'text': {
-                    '*': (value) => (el: CheckBox) => el.text = value
-                },
-                'readonly': {
-                    'true': () => (el: CheckBox) => el.readonly = true,
-                    'false': () => (el: CheckBox) => el.readonly = false
-                },
-                'onCheckChange': {
-                    '*': (value) => (el: CheckBox) => el.registerUIHandler(el.onCheckChange, value)
+        protected defineProperties() {
+            super.defineProperties();
+            this.defineProperty('checked', {
+                getter: () => this.checkElement.checked,
+                setter: (value) => this.checkElement.checked = value,
+                observable: true
+            });
+            this.defineProperty('text', {
+                setter: (text: string) => {
+                    if (!!text === true) {
+                        // Set text
+                        this.textElement.textContent = text;
+                        this.textElement.classList.remove('hidden');
+                    }
+                    else {
+                        this.textElement.classList.add('hidden');
+                    }
                 }
+            });
+            this.defineProperty('readonly', {
+                getter: () => this.checkElement.readOnly,
+                setter: (readonly: boolean) => {
+                    if (!readonly && this.enabled) {
+                        this.checkElement.readOnly = false;
+                        this.domElement.style.pointerEvents = '';
+                    }
+                    else {
+                        this.checkElement.readOnly = true; // Doesn't work
+                        this.domElement.style.pointerEvents = 'none';
+                    }
+                }
+            });
+            this.defineProperty('enabled', {
+                setter: (value: string) => {
+                    if (value) {
+                        this.domElement.classList.remove('disabled');
+                    }
+                    else {
+                        this.domElement.classList.add('disabled');
+                    }
+                    if (!this.readonly && value) {
+                        this.checkElement.readOnly = false;
+                        this.domElement.style.pointerEvents = '';
+                    }
+                    else {
+                        this.checkElement.readOnly = true; // Doesn't work
+                        this.domElement.style.pointerEvents = 'none';
+                    }
+                },
+                observable: true
             });
         }
     }
 
-    MarkupParseInfo['CheckBox'] = {
-        ctor: CheckBox,
-        parser: new CheckBoxMarkupParser()
-    };
+    export interface CheckChangeArgs extends EventArgs {
+        checked: boolean;
+    }
 } 

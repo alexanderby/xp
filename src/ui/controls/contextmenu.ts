@@ -1,4 +1,4 @@
-﻿module xp.UI {
+﻿module xp.ui {
     /**
      * Context menu.
      */
@@ -33,7 +33,7 @@
          */
         show(x: number, y: number) {
             // Subscribe for outer events for cancel
-            var cancel = (e: gEvent) => {
+            var cancel = (e: domEvent) => {
                 this.remove();
                 window.removeEventListener('mousedown', cancel);
                 window.removeEventListener('keydown', onKey);

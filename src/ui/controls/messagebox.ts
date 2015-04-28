@@ -1,4 +1,4 @@
-﻿module xp.UI {
+﻿module xp.ui {
     /**
      * Simple dialog that displays a message.
      */
@@ -10,30 +10,32 @@
          * @param title Title.
          */
         constructor(message?: string, title?: string, actions?: { [text: string]: () => void }) {
-            super();
+            super(null, {
+                padding: '1em 1.5em',
+                width: '32em',
+                margin: '-15% 0 0 0'
+            });
 
-            // TODO: Separate style and markup file?
-
-            this.padding = '1em 1.5em';
-            this.width = '32em';
-            this.margin = '-15% 0 0 0';
-
+            // TODO: Separate style file?
+            
             // Title element
             if (title !== void 0) {
-                var titleEl = new Label();
-                titleEl.text = title;
-                titleEl.style = 'title';
-                titleEl.margin = '0 0 1rem 0';
+                var titleEl = new Label({
+                    text: title,
+                    style: 'title',
+                    margin: '0 0 1rem 0'
+                });
                 //titleEl.domElement.css('font-size', '1.5em');
                 titleEl.appendTo(this);
             }
 
             // Message element
             if (message !== void 0) {
-                var messageEl = new Label();
-                messageEl.margin = '0 0 2em 0';
-                messageEl.text = message;
-                messageEl.style = 'message';
+                var messageEl = new Label({
+                    margin: '0 0 2em 0',
+                    text: message,
+                    style: 'message'
+                });
                 messageEl.appendTo(this);
             }
 
@@ -41,17 +43,19 @@
             actions = actions || {
                 'OK': () => { }
             };
-            var hbox = new HBox();
-            hbox.contentAlignment = HContentAlignment.Right;
+            var hbox = new HBox({
+                contentAlign: 'right'
+            });
             for (var key in actions) {
                 ((key) => {
-                    var button = new Button();
-                    button.text = key;
-                    button.minWidth = '4em';
-                    button.onClick.addHandler(() => {
-                        actions[key]();
-                        this.close();
-                    }, this);
+                    var button = new Button({
+                        text: key,
+                        minWidth: '4em',
+                        initializer: (el) => el.onClick.addHandler(() => {
+                            actions[key]();
+                            this.close();
+                        })
+                    });
                     button.appendTo(hbox);
                 })(key);
             }
