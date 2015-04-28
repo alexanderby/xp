@@ -3,21 +3,22 @@
 module xp.ui {
 
     export interface ElementMarkup {
-        //onClick: string|{ (e: MouseEvent): void };
-        //onDoubleClick: string|{ (e: MouseEvent): void };
-        //onMouseDown: string|{ (e: MouseEvent): void };
-        //onMouseUp: string|{ (e: MouseEvent): void };
-        //onMouseMove: string|{ (e: MouseEvent): void };
-        //onMouseEnter: string|{ (e: MouseEvent): void };
-        //onMouseLeave: string|{ (e: MouseEvent): void };
-        //onKeyPress: string|{ (e: KeyboardEvent): void };
-        //onKeyDown: string|{ (e: KeyboardEvent): void };
-        //onKeyUp: string|{ (e: KeyboardEvent): void };
+        onClick?: (e: MouseEventArgs) => void;
+        onDoubleClick?: (e: MouseEventArgs) => void;
+        onMouseDown?: (e: MouseEventArgs) => void;
+        onMouseUp?: (e: MouseEventArgs) => void;
+        onMouseMove?: (e: MouseEventArgs) => void;
+        onMouseEnter?: (e: MouseEventArgs) => void;
+        onMouseLeave?: (e: MouseEventArgs) => void;
+        onKeyPress?: (e: KeyboardEvent) => void;
+        onKeyDown?: (e: KeyboardEvent) => void;
+        onKeyUp?: (e: KeyboardEvent) => void;
 
-        //onRendered: string|{ (e: Element): void };
+        onRendered?: (e: Element) => void;
+        onRemoved?: (e: Element) => void;
 
         initializer?: (el: Element) => void;
-        enabled?: boolean;
+        enabled?: boolean|string;
         name?: string;
         key?: string;
         width?: string;
@@ -29,7 +30,7 @@ module xp.ui {
         margin?: string;
         style?: string;
         flex?: string;
-        visible?: boolean;
+        visible?: boolean|string;
     }
 
     /**
@@ -212,7 +213,12 @@ module xp.ui {
                     }
                 }
                 else {
-                    this[prop] = value;
+                    if (this[prop] instanceof xp.Event) {
+                        (<xp.Event<any>>this[prop]).addHandler(markup[prop], this);
+                    }
+                    else {
+                        this[prop] = value;
+                    }
                 }
             }
         }

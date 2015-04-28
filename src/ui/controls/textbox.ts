@@ -1,9 +1,11 @@
 ﻿module xp.ui {
     export interface TextBoxMarkup extends ElementMarkup {
+        onTextChange?: (e: EventArgs) => void;
+
         text?: string;
-        notifiOnKeyDown?: boolean;
+        notifiOnKeyDown?: boolean|string;
         type?: string;
-        readonly?: boolean;
+        readonly?: boolean|string;
         placeholder?: string;
         min?: number;
         max?: number;

@@ -14,12 +14,35 @@
                         new xp.ui.HBox({ itemsIndent: '0.5em' }, [
                             new xp.ui.Label({ text: 'Input:' }),
                             new xp.ui.TextBox({
-                                name: 'textbox', placeholder: 'What to do?', initializer: (tb: xp.ui.TextBox) => {
-                                    tb.onTextChange.addHandler(() => xp.ui.MessageBox.show('Text changed.', 'Hello'));
-                                }
+                                name: 'textbox', placeholder: 'What to do?', onTextChange: this.onTextInput
                             })
                         ]),
-                        //new xp.ui.List({ name: 'list', itemCreator: () => new xp.ui.HBox({ })})
+                        new xp.ui.List({
+                            name: 'list', items: '{todos}', itemId: 't', height: '12em', itemsIndent: '0.5em',
+                            itemCreator: () => new xp.ui.HBox({
+                                visible: '({filter}==="All" || ({t.isDone}&&{filter}==="Done") || (!{t.isDone}&&{filter}==="Undone"))'
+                            }, [
+                                    new xp.ui.Label({ text: '({todos}.indexOf({t}) + 1)', margin: '0 1em 0 0' }),
+                                    new xp.ui.CheckBox({
+                                        checked: '{t.isDone}', text: '{t.name}', onCheckChange: this.onDoneToggle
+                                    }),
+                                    new xp.ui.Placeholder(),
+                                    new xp.ui.Button({
+                                        text: 'Delete', icon: '../layout/icon-16-white.svg', onClick: this.onDeleteClick
+                                    })
+                                ])
+                        }),
+                        new xp.ui.HBox({}, [
+                            new xp.ui.Label({ text: '({undone.length} + " items left")' }),
+                            new xp.ui.Placeholder(),
+                            new xp.ui.Button({ text: 'Clear done', onClick: this.onClearDoneClick })
+                        ]),
+                        new xp.ui.HBox({}, [
+                            new xp.ui.Label({ text: 'view', margin: '0 0.5em 0 0' }),
+                            new xp.ui.ToggleButton({ text: 'All', item: 'All', selectedItem: '{filter}', flex: 'stretch' }),
+                            new xp.ui.ToggleButton({ text: 'Done', item: 'Done', selectedItem: '{filter}', flex: 'stretch' }),
+                            new xp.ui.ToggleButton({ text: 'Undone', item: 'Undone', selectedItem: '{filter}', flex: 'stretch' })
+                        ])
                     ])
                 ])
             ]);

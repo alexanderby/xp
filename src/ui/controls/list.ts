@@ -1,6 +1,6 @@
 ﻿module xp.ui {
     export interface ListMarkup extends VBoxMarkup {
-        items?: any[];
+        items?: any[]|string;
         itemId?: string;
         itemCreator?: () => Element
     }
@@ -191,10 +191,12 @@
         }
 
         protected removeReplacementHandlers() {
-            this.itemReplacementHandlers.forEach((hr) => {
-                hr.holder.onPropertyChanged.removeHandler(hr.handler);
-            });
-            this.itemReplacementHandlers = [];
+            if (this.itemReplacementHandlers) {
+                this.itemReplacementHandlers.forEach((hr) => {
+                    hr.holder.onPropertyChanged.removeHandler(hr.handler);
+                });
+                this.itemReplacementHandlers = [];
+            }
         }
     }
 

@@ -1,14 +1,15 @@
 ﻿module xp.ui {
     export interface CheckBoxMarkup extends ElementMarkup {
-        checked?: boolean;
+        onCheckChange?: (e: CheckChangeArgs) => void;
+        checked?: boolean|string;
         text?: string;
-        readonly?: boolean;
+        readonly?: boolean|string;
     }
 
     /**
      * Check box input.
      */
-    export class CheckBox extends Element implements CheckBoxMarkup {
+    export class CheckBox extends Element {
         checked: boolean;
         text: string;
         readonly: boolean;

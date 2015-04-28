@@ -15,7 +15,7 @@
             children && children.forEach((c) => this.append(c));
 
             // Set named children
-            if (Object.getPrototypeOf(this).isView) {
+            if (Object.getPrototypeOf(this).constructor.isView) {
                 this.cascadeBy((el) => {
                     if (el !== this && el.name) {
                         if (el.name in this) {
@@ -192,8 +192,8 @@
          * @param fn Function to execute on each element.
          * @returns Element which lead to returning 'truthy' value.
          */
-        cascadeBy(fn: (el: Element) => any): Element {
-            if (!!fn(this) === true) {
+        cascadeBy(fn: (el: Element) => any, checkRoot = false): Element {
+            if (checkRoot && !!fn(this) === true) {
                 return this;
             }
             else {
@@ -203,7 +203,7 @@
                     }
                     else {
                         if (this.children[i] instanceof Container) {
-                            var result = (<Container>this.children[i]).cascadeBy(fn);
+                            var result = (<Container>this.children[i]).cascadeBy(fn, false);
                             if (result != null) {
                                 return result;
                             }

@@ -1,19 +1,19 @@
 ﻿module xp.ui {
-    export interface TextAreaMarkup extends ElementMarkup {
-        text?: string;
-        notifiOnKeyDown?: boolean;
-        readonly?: boolean;
-        placeholder?: string;
-    }
+    //export interface TextAreaMarkup extends ElementMarkup {
+    //    text?: string;
+    //    notifiOnKeyDown?: boolean;
+    //    readonly?: boolean|string;
+    //    placeholder?: string;
+    //}
 
     /**
      * Text input.
      */
     export class TextArea extends TextBox {
 
-        constructor(markup: TextAreaMarkup) {
-            super(markup);
-        }
+        //constructor(markup: TextAreaMarkup) {
+        //    super(markup);
+        //}
 
         //----
         // DOM
