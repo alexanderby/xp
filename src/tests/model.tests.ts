@@ -10,9 +10,9 @@
         books: Book[];
         constructor() {
             super();
-            xp.Model.simpleProperty(this, 'name');
-            xp.Model.simpleProperty(this, 'city');
-            xp.Model.observableProperty(this, 'books', []);
+            xp.Model.property(this, 'name');
+            xp.Model.property(this, 'city');
+            xp.Model.property(this, 'books', { value: [], convertToObservable: true, convertNested: true });
         }
     }
 
@@ -20,7 +20,7 @@
         name: string;
         constructor() {
             super();
-            xp.Model.simpleProperty(this, 'name');
+            xp.Model.property(this, 'name');
         }
     }
 

@@ -98,8 +98,8 @@ module xp {
 
         /**
          * Creates a collection which notifies of it's changes.
-         * @param [collection] Source collection.
-         * @param [convertItems=true] Specifies whether to convert collection items into observables.
+         * @param collection Source collection.
+         * @param convertItems Specifies whether to convert collection items into observables. Default is true.
          */
         constructor(collection?: Array<T>, convertItems = true) {
             super(collection, convertItems);

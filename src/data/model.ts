@@ -12,7 +12,7 @@
         constructor() {
             Object.defineProperty(this, 'onPropertyChanged', {
                 enumerable: false,
-                configurable: false,
+                configurable: true,
                 writable: false,
                 value: new Event()
             });
@@ -29,54 +29,74 @@
         //-----------------
 
         /**
-         * Defines a simple getter and setter for a model instance.
+         * Defines a getter and setter for a model instance, which notifies of it's change.
          * @param obj Model instance.
          * @param prop Property name.
-         * @param value Default value.
-         * @param setterConvertor Performs conversion before a value is set.
-         * @param getterConvertor Performs conversion before returning a value.
+         * @param dtor Model property descriptor. Convertors can be defined here. Enumerable by default.
          */
-        static simpleProperty(obj: Model, prop: string, value?: any, setterConvertor?: (v) => any, getterConvertor?: (v) => any) {
-            Object.defineProperty(obj, prop, {
-                get: () => {
-                    return setterConvertor ?
-                        getterConvertor(value)
-                        : value;
-                },
-                set: (v) => {
-                    value = setterConvertor ?
-                        setterConvertor(v)
-                        : v;
-                    obj.onPropertyChanged.invoke(prop);
-                },
-                configurable: true,
-                enumerable: true
-            });
-        }
-
-        /**
-         * Defines an observable getter and setter for a model instance.
-         * @param obj Model instance.
-         * @param prop Property name.
-         * @param value Default value.
-         */
-        static observableProperty(obj: Model, prop: string, value?: any) {
-            if (ObservableObject.isConvertable(value)) {
-                value = observable(value);
+        static property(obj: Notifier, prop: string, dtor?: ModelPropertyDescriptor) {
+            dtor = dtor || {};
+            var value = dtor.value;
+            var convertNested = dtor.convertNested === void 0 ? true : dtor.convertNested;
+            if (dtor.convertToObservable && ObservableObject.isConvertable(value)) {
+                value = observable(value, convertNested);
             }
+            if (dtor.enumerable === void 0) {
+                dtor.enumerable = true;
+            }
+
+            // Getter
+            if (dtor.getterConvertor) {
+                var getterConvertor = dtor.getterConvertor;
+                var getter = () => getterConvertor(value);
+            }
+            else {
+                var getter = () => value;
+            }
+
+            // Setter
+            if (dtor.setterConvertor) {
+                var setterConvertor = dtor.setterConvertor;
+                if (dtor.convertToObservable) {
+                    var setter = (v) => {
+                        if (ObservableObject.isConvertable) {
+                            v = observable(v, convertNested);
+                        }
+                        value = setterConvertor(v);
+                        obj.onPropertyChanged.invoke(prop);
+                    };
+                }
+                else {
+                    var setter = (v) => {
+                        value = setterConvertor(v);
+                        obj.onPropertyChanged.invoke(prop);
+                    };
+                }
+            }
+            else {
+                if (dtor.convertToObservable) {
+                    var setter = (v) => {
+                        if (ObservableObject.isConvertable) {
+                            v = observable(v, convertNested);
+                        }
+                        value = v;
+                        obj.onPropertyChanged.invoke(prop);
+                    };
+                }
+                else {
+                    var setter = (v) => {
+                        value = v;
+                        obj.onPropertyChanged.invoke(prop);
+                    };
+                }
+            }
+
+            // Define property
             Object.defineProperty(obj, prop, {
-                get: () => {
-                    return value;
-                },
-                set: (v) => {
-                    if (ObservableObject.isConvertable(v)) {
-                        v = observable(v);
-                    }
-                    value = v;
-                    obj.onPropertyChanged.invoke(prop);
-                },
+                get: getter,
+                set: setter,
                 configurable: true,
-                enumerable: true
+                enumerable: dtor.enumerable
             });
         }
 
@@ -94,5 +114,17 @@
                 value: value
             });
         }
+    }
+
+    /**
+     * Describes the property of a model.
+     */
+    export interface ModelPropertyDescriptor {
+        value?: any;
+        setterConvertor?: (v) => any;
+        getterConvertor?: (v) => any;
+        enumerable?: boolean;
+        convertToObservable?: boolean;
+        convertNested?: boolean;
     }
 } 
