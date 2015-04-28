@@ -168,11 +168,11 @@
          * Updates source property.
          */
         updateSource() {
-            if (Path.getPropertyByPath(this.scope, this.path, false) !== void 0) {
-                var value = xp.Path.getPropertyByPath(this.target, this.targetPropertyPath);
-                this.logMessage(xp.formatString('Update source "{0}" property with value "{1}".', this.path, value));
-                var pathLength = this.pathParts.length;
-                var sourceObj = this.pathObjects[pathLength - 1].obj;
+            var value = xp.Path.getPropertyByPath(this.target, this.targetPropertyPath);
+            var pathLength = this.pathParts.length;
+            var sourceObj = this.pathObjects[pathLength - 1].obj;
+            if (typeof sourceObj === 'object' && sourceObj !== null) {
+                this.logMessage(xp.formatString('Update source "{0}" property with value "{1}".{2}', this.path, value, this.targetConverter ? ' Value convertor is used.' : ''));
                 var sourceProp = this.pathParts[pathLength - 1];
                 if (this.targetConverter) {
                     value = this.targetConverter(value)
