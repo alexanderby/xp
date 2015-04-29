@@ -1,7 +1,7 @@
 ﻿module xp {
 
     export interface VBoxMarkup extends StackMarkup {
-        contentAlignment?: string;
+        contentAlign?: string;
         itemsAlign?: string;
     }
 
@@ -9,8 +9,8 @@
      * Vertical stack panel.
      */
     export class VBox extends Stack {
-        contentAlignment: string;
-        itemsAlignment: string;
+        contentAlign: string;
+        itemsAlign: string;
 
         constructor(markup?: VBoxMarkup, children?: Element[]) {
             super(markup, children);
@@ -36,8 +36,8 @@
 
         protected setDefaults() {
             super.setDefaults();
-            this.contentAlignment = 'top';
-            this.itemsAlignment = 'stretch';
+            this.contentAlign = 'top';
+            this.itemsAlign = 'stretch';
         }
 
         protected defineProperties() {

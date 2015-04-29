@@ -559,13 +559,21 @@ module xp {
                 this.bindings[prop].unbind();
             }
 
-            if (prop === '') {
+            if (prop === '' || path === '') {
                 throw new Error('Binding path cannot be empty.');
             }
 
-            if (prop === 'scope' && !source) {
-                if (this.useParentScope && this.parent) {
-                    source = this.parent.scope;
+            if (prop === 'scope' && !this.useParentScope && !source) {
+                throw new Error('Unable to bind element\'s scope to itself.');
+            }
+            if (!source) {
+                if (this.useParentScope) {
+                    if (this.parent) {
+                        source = this.parent.scope;
+                    }
+                }
+                else {
+                    source = this.scope;
                 }
             }
 
