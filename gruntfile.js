@@ -56,16 +56,6 @@ module.exports = function (grunt) {
                 expand: true, flatten: true,
                 src: 'src/style/_variables.less',
                 dest: 'build/xp/style/'
-            })
-
-
-            //
-            // XSD SCHEMA
-
-            .sub('copy', {
-                expand: true, flatten: true,
-                src: 'src/schema/markup.xsd',
-                dest: 'build/xp/schema/'
             });
 
 
@@ -120,8 +110,6 @@ function getConfig() {
             'src/data/model.ts',
             'src/data/scope.ts',
 
-            'src/ui/markup.ts',
-            'src/ui/startup.ts',
             'src/ui/uievent.ts',
 
             'src/ui/controls/element.ts',
