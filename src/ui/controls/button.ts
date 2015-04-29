@@ -48,6 +48,7 @@
         }
 
         protected defineProperties() {
+            super.defineProperties();
             this.defineProperty('icon', {
                 setter: (path: string) => {
                     if (typeof path === 'string') {

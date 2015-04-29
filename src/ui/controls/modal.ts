@@ -1,4 +1,12 @@
 ﻿module xp {
+    export interface ModalMarkup extends VBoxMarkup {
+        /**
+         * If returns 'true', the dialog will be closed.
+         * Otherwise the dialog will not be closed.
+         */
+        onClose?: () => boolean;
+    }
+
     /**
      * Modal dialog base.
      */
@@ -12,12 +20,9 @@
 
         /**
          * Creates a modal dialog.
-         * @param onClose If returns 'true', the dialog will be closed.
-         * Otherwise the dialog will not be closed.
          */
-        constructor(onClose?: () => boolean, markup?: VBoxMarkup, children?: Element[]) {
+        constructor(markup?: ModalMarkup, children?: Element[]) {
             super(markup, children);
-            this.onClose = onClose || function () { return true; };
         }
 
         /**
@@ -31,7 +36,9 @@
          * Closes the dialog.
          */
         close() {
-            var result = this.onClose();
+            var result = this.onClose ?
+                this.onClose()
+                : true;
             if (result)
                 Window.instance.closeModal();
         }

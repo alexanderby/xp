@@ -6,7 +6,7 @@
     export class ToggleButton extends RadioButton {
         icon: string;
 
-        constructor(markup: ToggleButtonMarkup) {
+        constructor(markup?: ToggleButtonMarkup) {
             super(markup);
         }
 

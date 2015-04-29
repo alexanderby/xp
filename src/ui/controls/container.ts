@@ -15,7 +15,10 @@
             children && children.forEach((c) => this.append(c));
 
             // Set named children
-            if (Object.getPrototypeOf(this).constructor.isView) {
+            if (true/*Object.getPrototypeOf(this).constructor.isView*/) {
+                //
+                // TODO: Prevent name collision and unnecessary named children properties set.
+                // Maybe use TypeScript 1.5 metadata.
                 this.cascadeBy((el) => {
                     if (el !== this && el.name) {
                         if (el.name in this) {

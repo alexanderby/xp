@@ -15,10 +15,10 @@ module xp {
     export interface MouseEventArgs extends UIEventArgs<domMouseEvent> { }
     export interface KeyboardEventArgs extends UIEventArgs<domKeyboardEvent> { }
 
-    export function createEventArgs<T extends domEvent>(control: Element, domEventObject: T): EventArgs {
+    export function createEventArgs<T extends domEvent>(control: Element, domEventObject: T): UIEventArgs<T> {
         var rect = control.domElement.getBoundingClientRect();
 
-        var e: EventArgs = {
+        var e: UIEventArgs<T> = {
             domEvent: domEventObject,
             element: control
         };

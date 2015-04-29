@@ -10,7 +10,7 @@
          * @param title Title.
          */
         constructor(message?: string, title?: string, actions?: { [text: string]: () => void }) {
-            super(null, {
+            super({
                 padding: '1em 1.5em',
                 width: '32em',
                 margin: '-15% 0 0 0'
