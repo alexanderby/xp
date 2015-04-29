@@ -1,6 +1,6 @@
 ﻿type domElement = Element;
 
-module xp.ui {
+module xp {
 
     export interface ElementMarkup {
         onClick?: (e: MouseEventArgs) => void;
@@ -551,7 +551,7 @@ module xp.ui {
          * @param source Binding source object. If not specified the element's scope will be used.
          * @param defaultValue Value to use is case when source property is null or undefined.
          */
-        bind(setter: string|{ (element: Element, value): void }, path: string, source?, defaultValue?) {
+        bind(setter: string|{ (value): void }, path: string, source?, defaultValue?) {
             var prop = setter.toString();
 
             if (this.bindings[prop]) {
@@ -581,7 +581,7 @@ module xp.ui {
                 this.bindings[prop] = new BindingCallManager(
                     source,
                     path,
-                    (value) => setter(this, value),
+                    setter,
                     null,
                     defaultValue);
             }

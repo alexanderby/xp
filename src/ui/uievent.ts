@@ -2,7 +2,7 @@
 type domMouseEvent = MouseEvent;
 type domKeyboardEvent = KeyboardEvent;
 
-module xp.ui {
+module xp {
 
     export interface UIEventArgs<T extends domEvent> {
         element: Element;

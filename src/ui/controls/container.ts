@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
 
     export interface ContainerMarkup extends ElementMarkup {
         padding?: string;

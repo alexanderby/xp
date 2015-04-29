@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     /**
      * Simple dialog that displays a message.
      */

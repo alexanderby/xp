@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     /**
      * Modal dialog base.
      */

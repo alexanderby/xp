@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     export interface CheckBoxMarkup extends ElementMarkup {
         onCheckChange?: (e: CheckChangeArgs) => void;
         checked?: boolean|string;

@@ -1,9 +1,9 @@
-﻿module xp.ui {
+﻿module xp {
     export interface TextBoxMarkup extends ElementMarkup {
-        onTextChange?: (e: EventArgs) => void;
+        onTextChange?: (e: TextChangeArgs) => void;
 
         text?: string;
-        notifiOnKeyDown?: boolean|string;
+        notifyOnKeyDown?: boolean|string;
         type?: string;
         readonly?: boolean|string;
         placeholder?: string;
@@ -17,7 +17,7 @@
      */
     export class TextBox extends Element {
         text: string;
-        notifiOnKeyDown: boolean;
+        notifyOnKeyDown: boolean;
         type: string;
         readonly: boolean;
         placeholder: string;
@@ -59,7 +59,7 @@
             var oldText = '';
             var onInput = (e: domEvent) => {
                 this.onInput('text', this.value);
-                var args = <TextChangeArgs>xp.ui.createEventArgs(this, e);
+                var args = <TextChangeArgs>xp.createEventArgs(this, e);
                 args.oldText = oldText;
                 var newText = this.value.toString();
                 args.newText = newText
@@ -126,7 +126,12 @@
             super.defineProperties();
             this.defineProperty('text', {
                 getter: () => this.domElement.value,
-                setter: (text: string) => this.domElement.value = text,
+                setter: (text: string) => {
+                    if (text === void 0 || text === null) {
+                        text = '';
+                    }
+                    this.domElement.value = text;
+                },
                 observable: true
             });
             this.defineProperty('type', {
@@ -208,13 +213,15 @@
             }
         }
         set value(value) {
-            this.text = value.toString();
+            var t = typeof value;
+            if (t === 'number' || t === 'boolean') {
+                value = value.toString();
+            }
+            if (value === void 0 || value === null) {
+                value = '';
+            }
+            this.text = value;
         }
-
-        /**
-         * If enabled, listeners will be notified of changes when every input key is down.
-         */
-        notifyOnKeyDown;
     }
 
 

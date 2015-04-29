@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     export interface StackMarkup extends ContainerMarkup {
         itemsIndent?: string;
         scrollBar?: string;

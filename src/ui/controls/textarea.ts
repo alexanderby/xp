@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     //export interface TextAreaMarkup extends ElementMarkup {
     //    text?: string;
     //    notifiOnKeyDown?: boolean;

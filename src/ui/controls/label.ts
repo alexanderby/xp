@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     export interface LabelMarkup extends ElementMarkup {
         text?: string;
     }

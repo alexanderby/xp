@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
 
     export interface VBoxMarkup extends StackMarkup {
         contentAlignment?: string;

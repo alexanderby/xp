@@ -2,7 +2,7 @@
 
 module Todo {
     export class App {
-        window: xp.ui.Window;
+        window: xp.Window;
     }
 }
 

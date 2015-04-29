@@ -1,5 +1,5 @@
-﻿module xp.ui {
-    export interface HtmlMarkup {
+﻿module xp {
+    export interface HtmlMarkup extends ElementMarkup {
         html?: string;
         url?: string;
     }
@@ -10,6 +10,14 @@
     export class Html extends Element {
         html: string;
         url: string;
+
+        constructor(markup: HtmlMarkup) {
+            super(markup);
+        }
+
+        protected getTemplate() {
+            return document.createElement('div');
+        }
 
         protected defineProperties() {
             super.defineProperties();

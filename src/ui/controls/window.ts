@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     export interface WindowMarkup extends VBoxMarkup {
         title?: string;
     }

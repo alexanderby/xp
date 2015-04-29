@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     export interface ListMarkup extends VBoxMarkup {
         items?: any[]|string;
         itemId?: string;

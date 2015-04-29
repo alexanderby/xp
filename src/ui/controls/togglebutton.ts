@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     export interface ToggleButtonMarkup extends RadioButtonMarkup {
         icon?: string;
     }
@@ -57,7 +57,8 @@
             });
             this.defineProperty('icon', {
                 setter: (path: string) => {
-                    if (path !== void 0 && path !== null) {
+                    if (typeof path === 'string') {
+                        path = path.trim();
                         if (path !== '' && path !== '*' && path !== '/') {
                             // Set background image
                             this.iconElement.style.backgroundImage = xp.formatString('url({0})', path);

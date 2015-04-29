@@ -1,4 +1,4 @@
-﻿module xp.ui {
+﻿module xp {
     export interface RadioButtonMarkup extends CheckBoxMarkup {
         group?: string;
         item?: any|string;
