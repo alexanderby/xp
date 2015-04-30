@@ -159,7 +159,6 @@
                 setter: (value: number) => this.domElement.setAttribute('step', value.toString())
             });
             this.defineProperty('readonly', {
-                getter: () => this.domElement.readOnly,
                 setter: (readonly: boolean) => {
                     if (!readonly && this.enabled) {
                         this.domElement.readOnly = false;

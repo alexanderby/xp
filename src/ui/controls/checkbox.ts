@@ -100,7 +100,6 @@
                 }
             });
             this.defineProperty('readonly', {
-                getter: () => this.checkElement.readOnly,
                 setter: (readonly: boolean) => {
                     if (!readonly && this.enabled) {
                         this.checkElement.readOnly = false;
