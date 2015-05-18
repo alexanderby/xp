@@ -92,7 +92,12 @@
 
         protected initItemData(data: ContextMenuItemData) {
             if (data.icon) {
-                this.iconElement.style.backgroundImage = xp.formatString('url({0})', data.icon);
+                if (data.icon[0] === '.') {
+                    this.iconElement.classList.add(data.icon.slice(1));
+                }
+                else {
+                    this.iconElement.style.backgroundImage = xp.formatString('url({0})', data.icon);
+                }
             }
             if (data.key) {
                 this.keyElement.textContent = data.key;

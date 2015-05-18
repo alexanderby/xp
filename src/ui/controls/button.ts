@@ -49,17 +49,38 @@
 
         protected defineProperties() {
             super.defineProperties();
+            var prevIcon: string;
             this.defineProperty('icon', {
-                setter: (path: string) => {
-                    if (typeof path === 'string') {
-                        path = path.trim();
-                        if (path !== '' && path !== '*' && path !== '/') {
-                            // Set background image
-                            this.iconElement.style.backgroundImage = xp.formatString('url({0})', path);
+                // NOTE: If starts with ".", then class will be added.
+                // Otherwise background image URL will be set.
+                // If "*", then icon element will hold space, but no image will be set.
+                setter: (pathOrClass: string) => {
+                    if (typeof pathOrClass === 'string' && pathOrClass !== '') {
+                        // Remove prev icon
+                        if (prevIcon) {
+                            if (prevIcon[0] === '.') {
+                                this.iconElement.classList.remove(prevIcon.slice(1));
+                            }
+                            else {
+                                this.iconElement.style.backgroundImage = '';
+                            }
+                        }
+
+                        // Set new icon
+                        pathOrClass = pathOrClass.trim();
+                        if (pathOrClass !== '*') {
+                            if (pathOrClass[0] === '.') {
+                                this.iconElement.classList.add(pathOrClass.slice(1));
+                            }
+                            else {
+                                this.iconElement.style.backgroundImage = xp.formatString('url({0})', pathOrClass);
+                            }
+                            prevIcon = pathOrClass;
                         }
                         this.iconElement.classList.remove('hidden');
                     }
                     else {
+                        // Hide icon element
                         this.iconElement.classList.add('hidden');
                     }
                 }
