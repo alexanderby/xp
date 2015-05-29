@@ -417,11 +417,11 @@ module xp {
         // TODO: Return new ObservableCollection?
 
         concat<U extends T[]>(...items: U[]): T[];
-        concat(...items: T[]): T[] { return this.inner.concat(items); }
+        concat(...items: T[]): T[] { return this.inner.concat.apply(this.inner, arguments); }
 
-        join(separator?: string): string { return this.inner.join(separator); }
+        join(separator?: string): string { return this.inner.join.apply(this.inner, arguments); }
 
-        slice(start?: number, end?: number): T[] { return this.inner.slice(start, end); }
+        slice(start?: number, end?: number): T[] { return this.inner.slice.apply(this.inner, arguments); }
 
         /**
          * Method called by JSON.stringify()
@@ -436,30 +436,30 @@ module xp {
 
         toLocaleString(): string { return this.inner.toLocaleString(); }
 
-        indexOf(searchElement: T, fromIndex?: number): number { return this.inner.indexOf(searchElement, fromIndex); }
+        indexOf(searchElement: T, fromIndex?: number): number { return this.inner.indexOf.apply(this.inner, arguments); }
 
-        lastIndexOf(searchElement: T, fromIndex?: number): number { return this.inner.lastIndexOf(searchElement, fromIndex); }
+        lastIndexOf(searchElement: T, fromIndex?: number): number { return this.inner.lastIndexOf.apply(this.inner, arguments); }
 
 
         //------------------
         // Iteration methods
         //------------------
 
-        forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void { return this.inner.forEach(callbackfn, thisArg); }
+        forEach(callbackfn: (value: T, index: number, array: T[]) => void, thisArg?: any): void { return this.inner.forEach.apply(this.inner, arguments); }
 
-        every(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.every(callbackfn, thisArg); }
+        every(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.every.apply(this.inner, arguments); }
 
-        some(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.some(callbackfn, thisArg); }
+        some(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): boolean { return this.inner.some.apply(this.inner, arguments); }
 
-        filter(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): T[] { return this.inner.filter(callbackfn, thisArg); }
+        filter(callbackfn: (value: T, index: number, array: T[]) => boolean, thisArg?: any): T[] { return this.inner.filter.apply(this.inner, arguments); }
 
-        map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] { return this.inner.map(callbackfn, thisArg); }
+        map<U>(callbackfn: (value: T, index: number, array: T[]) => U, thisArg?: any): U[] { return this.inner.map.apply(this.inner, arguments); }
 
         reduce<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
-        reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduce(callbackfn, initialValue); }
+        reduce(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduce.apply(this.inner, arguments); }
 
         reduceRight<U>(callbackfn: (previousValue: U, currentValue: T, currentIndex: number, array: T[]) => U, initialValue: U): U;
-        reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduceRight(callbackfn, initialValue); }
+        reduceRight(callbackfn: (previousValue: T, currentValue: T, currentIndex: number, array: T[]) => T, initialValue?: T): T { return this.inner.reduceRight.apply(this.inner, arguments); }
 
 
         [n: number]: T;
