@@ -66,31 +66,33 @@
 
         protected defineProperties() {
             super.defineProperties();
-            this.defineProperty('enabled', {
-                setter: (value) => {
-                    if (value) {
-                        this.domElement.classList.remove('disabled');
-                    }
-                    else {
-                        this.domElement.classList.add('disabled');
-                    }
-                    this.children.forEach((c) => {
-                        if (value) {
-                            c.enabled = true;
-                            if (!c.useParentScope) {
-                                // Cause binding value reset
-                                c.scope = c.scope;
-                            }
-                        }
-                        else {
-                            c.enabled = false;
-                        }
-                    });
-                    // Cause binding value reset
-                    this.scope = this.scope;
-                },
-                observable: true
-            });
+            var disabledChildren: Element[] = [];
+            //this.defineProperty('enabled', {
+            //    setter: (value) => {
+            //        if (value) {
+            //            this.domElement.classList.remove('disabled');
+            //        }
+            //        else {
+            //            this.domElement.classList.add('disabled');
+            //        }
+            //        this.children.forEach((c) => {
+            //            if (value) {
+            //                if(disabledChildren.indexOf(c)
+            //                c.enabled = true;
+            //                if (!c.useParentScope) {
+            //                    // Cause binding value reset
+            //                    c.scope = c.scope;
+            //                }
+            //            }
+            //            else {
+            //                c.enabled = false;
+            //            }
+            //        });
+            //        // Cause binding value reset
+            //        this.scope = this.scope;
+            //    },
+            //    observable: true
+            //});
             this.defineProperty('padding', {
                 setter: (value) => this.domElement.style.padding = value,
                 getter: () => this.domElement.style.padding

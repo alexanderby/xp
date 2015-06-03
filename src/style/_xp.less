@@ -332,6 +332,14 @@
     &.wrapping-Wrap {
         flex-wrap: wrap;
     }
+
+    &.disabled {
+        pointer-events: none;
+
+        > *:not(.disabled):not(.HBox):not(.VBox) {
+            opacity: 0.5;
+        }
+    }
 }
 
 
@@ -761,6 +769,14 @@
 
     &.wrapping-Wrap {
         flex-wrap: wrap;
+    }
+
+    &.disabled {
+        pointer-events: none;
+
+        > *:not(.disabled):not(.HBox):not(.VBox) {
+            opacity: 0.5;
+        }
     }
 }
 
