@@ -400,7 +400,12 @@
                     var value = varName in scope ? scope[varName] : window[varName];
                     var propPath = expr.slice(firstDotIndex + 1, expr.length);
                     var objPath = Path.getObjectPath(propPath);
-                    var lastObj = Path.getPropertyByPath(value, objPath);
+                    var lastObj = Path.getPropertyByPath(value, objPath, false);
+                    if (typeof lastObj !== 'object' || lastObj === null) {
+                        Log.write(Log.HeatLevel.Info, Log.Domain.Binding, 'Unable to execute expression: Item supposed to be an object.');
+                        // TODO: Throw error?
+                        return;
+                    }
                     var propName = Path.getPropertyName(propPath);
                     var funcMatch = propName.match(/\((.*)\)$/);
                     if (funcMatch && funcMatch[1]) {

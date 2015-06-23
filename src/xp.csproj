@@ -36,9 +36,9 @@
     <Content Include="style\defaultstyle.min.css">
       <DependentUpon>defaultstyle.css</DependentUpon>
     </Content>
-    <Content Include="tests\todo\view\div.html" />
+    <Content Include="tests\todo\ui\div.html" />
     <Content Include="tests\todo\index.html" />
-    <Content Include="tests\todo\view\window.xml">
+    <Content Include="tests\todo\ui\window.xml">
       <SubType>Designer</SubType>
     </Content>
     <Content Include="tests\todo\style\style.css">
@@ -65,7 +65,7 @@
     <TypeScriptCompile Include="tests\binding.manager.tests.ts" />
     <TypeScriptCompile Include="tests\model.tests.ts" />
     <TypeScriptCompile Include="tests\todo\app.ts" />
-    <TypeScriptCompile Include="tests\todo\view\window.ts" />
+    <TypeScriptCompile Include="tests\todo\ui\window.ts" />
     <TypeScriptCompile Include="ui\controls\button.ts" />
     <TypeScriptCompile Include="ui\controls\checkbox.ts" />
     <TypeScriptCompile Include="ui\controls\container.ts" />

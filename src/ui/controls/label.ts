@@ -1,12 +1,12 @@
 ﻿module xp {
-    export interface LabelMarkup extends ElementMarkup {
+    export interface LabelMarkup<T extends Label> extends ElementMarkup<T> {
         text?: string;
     }
 
     export class Label extends Element {
         text: string;
 
-        constructor(markup?: LabelMarkup) {
+        constructor(markup?: LabelMarkup<Label>) {
             super(markup);
         }
 

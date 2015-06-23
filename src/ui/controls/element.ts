@@ -2,7 +2,7 @@
 
 module xp {
 
-    export interface ElementMarkup {
+    export interface ElementMarkup<T extends Element> {
         onClick?: (e: MouseEventArgs) => void;
         onDoubleClick?: (e: MouseEventArgs) => void;
         onMouseDown?: (e: MouseEventArgs) => void;
@@ -14,13 +14,13 @@ module xp {
         onKeyDown?: (e: KeyboardEvent) => void;
         onKeyUp?: (e: KeyboardEvent) => void;
 
-        onRendered?: (e: Element) => void;
-        onRemoved?: (e: Element) => void;
+        onRendered?: (e: T) => void;
+        onRemoved?: (e: T) => void;
 
-        initializer?: (el: Element) => void;
+        init?: (el: T) => void;
         enabled?: boolean|string;
-        name?: string;
-        key?: string;
+        name?: string; // Maybe is obsolete. init() may be used.
+        key?: string; // Maybe is obsolete. init() may be used.
         width?: string;
         height?: string;
         minWidth?: string;
@@ -37,10 +37,10 @@ module xp {
      * UI element.
      */
     export /*abstract*/ class Element extends Model {
-        initializer: (el: Element) => void;
+        init: (el: Element) => void;
         enabled: boolean;
         name: string;
-        //key: string;
+        key: string;
         width: string;
         height: string;
         minWidth: string;
@@ -55,13 +55,13 @@ module xp {
         /**
          * Creates UI element.
          */
-        constructor(markup?: ElementMarkup) {
+        constructor(markup?: ElementMarkup<Element>) {
             super();
             this.initElement();
             if (markup) {
                 this.applyMarkup(markup);
             }
-            this.initializer && this.initializer(this);
+            this.init && this.init(this);
         }
 
         /**
@@ -75,9 +75,9 @@ module xp {
         }
 
 
-        //----
-        // DOM
-        //----
+        //-----------
+        //    DOM
+        //-----------
 
         /**
          * DOM element of a control.
@@ -92,6 +92,15 @@ module xp {
             throw new Error('Unable to create an instance of an abstract element.');
         }
 
+        /**
+         * Renders an element into DOM.
+         * @param domElement Target DOM element to be replaced with control.
+         */
+        renderTo(domElement: HTMLElement) {
+            domElement.parentElement.replaceChild(this.domElement, domElement);
+            this.__setRenderedState__(true);
+        }
+
         /*internal*/ __setRenderedState__(rendered) {
             this.__isRendered__ = rendered;
             if (rendered && this.onRendered)
@@ -100,9 +109,9 @@ module xp {
         /*internal*/ __isRendered__ = false;
 
 
-        //-------
-        // EVENTS
-        //-------
+        //-----------
+        //   EVENTS
+        //-----------
 
         onClick: Event<MouseEventArgs>;
         onDoubleClick: Event<MouseEventArgs>;
@@ -129,8 +138,8 @@ module xp {
          * Initializes control's events.
          */
         protected initEvents() {
-            this.bindings = {};
-            this.expressions = {};
+            this.bindings = new Dictionary<string|{ (value): void }, BindingManager>();
+            this.expressions = new Dictionary<string|{ (value, el?: Element): void }, Expression>();
 
             // Control's events
 
@@ -183,19 +192,17 @@ module xp {
 
         protected initSimpleDomEvent(eventName: string, event: Event<EventArgs>) {
             this.domElement.addEventListener(eventName,(e) => {
-                if (this.enabled) {
-                    var args = createEventArgs(this, e);
-                    event.invoke(args);
-                }
+                var args = createEventArgs(this, e);
+                event.invoke(args);
             });
         }
 
 
-        //-----------
-        // PROPERTIES
-        //-----------
+        //--------------
+        //   PROPERTIES
+        //--------------
 
-        applyMarkup(markup: ElementMarkup) {
+        applyMarkup(markup: ElementMarkup<Element>) {
             for (var prop in markup) {
                 // Check for binding
                 var value = markup[prop];
@@ -264,9 +271,11 @@ module xp {
                 setter: (value) => {
                     if (value) {
                         this.domElement.classList.remove('disabled');
+                        this.domElement.style.pointerEvents = '';
                     }
                     else {
                         this.domElement.classList.add('disabled');
+                        this.domElement.style.pointerEvents = 'none';
                     }
                 },
                 observable: true
@@ -369,18 +378,17 @@ module xp {
         }
 
 
-        //----------
-        // RELATIONS
-        //----------
+        //------------
+        //  RELATIONS
+        //------------
 
         /**
-         * Gets or sets element's parent.
-         * WARNING: Must be set only by parent.
+         * Gets element's parent.
          */
         get parent() {
             return this._parent;
         }
-        /*internal*/set parent(parent) {
+        /*internal*/ __setParent__(parent) {
             if (parent && parent.children.indexOf(this) < 0)
                 throw new Error('The "parent" property must be set only by parent.');
 
@@ -404,13 +412,14 @@ module xp {
          */
         protected parentScopeChangeHandler = () => {
             if (this.useParentScope) {
-                if (!this.bindings['scope']) {
+                var scopeBinding = this.bindings.get('scope');
+                if (!scopeBinding) {
                     // Use parent's scope
                     this.scope = this.parent.scope;
                 }
                 else {
                     // Update context binding
-                    this.bindings['scope'].resetWith(this.parent.scope);
+                    scopeBinding.resetWith(this.parent.scope);
                 }
             }
         };
@@ -424,14 +433,10 @@ module xp {
          */
         remove() {
             this.detach();
-            for (var cp in this.bindings) {
-                this.bindings[cp].unbind();
-                delete this.bindings[cp];
-            }
-            for (var cp in this.expressions) {
-                this.expressions[cp].unbind();
-                delete this.expressions[cp];
-            }
+            this.bindings.pairs.forEach((p) => p.value.unbind());
+            this.bindings.pairs.splice(0);
+            this.expressions.pairs.forEach((p) => p.value.unbind());
+            this.expressions.pairs.splice(0);
 
             // DOM
             Dom.remove(this.domElement);
@@ -531,18 +536,18 @@ module xp {
         }
 
 
-        //--------
-        // BINDING
-        //--------
+        //------------
+        //   BINDING
+        //------------
 
         /**
          * Holds control's properties' bindings.
          */
-        protected bindings: UIBindingDictionary;
+        protected bindings: xp.Dictionary<string|{ (value): void }, BindingManager>;
         /**
          * Holds control's properties' expressions.
          */
-        protected expressions: UIExpressionDictionary;
+        protected expressions: xp.Dictionary<string|{ (value, el?: Element): void }, Expression>;
 
         /**
          * Binds control's property to source property.
@@ -552,18 +557,17 @@ module xp {
          * @param defaultValue Value to use is case when source property is null or undefined.
          */
         bind(setter: string|{ (value): void }, path: string, source?, defaultValue?) {
-            var prop = setter.toString();
+            var binding = this.bindings.get(setter);
 
-            if (this.bindings[prop]) {
+            if (binding) {
                 // Unsubscribe from prev changes
-                this.bindings[prop].unbind();
+                binding.unbind();
             }
-
-            if (prop === '' || path === '') {
+            if (setter === '' || path === '') {
                 throw new Error('Binding path cannot be empty.');
             }
 
-            if (prop === 'scope' && !this.useParentScope && !source) {
+            if (setter === 'scope' && !this.useParentScope && !source) {
                 throw new Error('Unable to bind element\'s scope to itself.');
             }
             if (!source) {
@@ -578,35 +582,37 @@ module xp {
             }
 
             if (typeof setter === 'string') {
-                this.bindings[prop] = new BindingManager(
+                this.bindings.set(setter, new BindingManager(
                     this,
-                    prop,
+                    setter,
                     source,
                     path,
-                    defaultValue);
+                    defaultValue));
             }
             else {
-                this.bindings[prop] = new BindingCallManager(
+                this.bindings.set(setter, new BindingCallManager(
                     source,
                     path,
                     setter,
                     null,
-                    defaultValue);
+                    defaultValue));
             }
         }
 
         /**
          * Unbinds control property from data context.
-         * @param controlProperty Name of the property to unbind.
+         * @param setter Name of the property to unbind, or a reference to a setter.
          */
-        unbind(controlProperty: string) {
-            if (this.bindings[controlProperty]) {
-                this.bindings[controlProperty].unbind();
-                delete this.bindings[controlProperty];
+        unbind(setter: string) {
+            var binding = this.bindings.get(setter);
+            if (binding) {
+                binding.unbind();
+                this.bindings.remove(setter);
             }
-            if (this.expressions[controlProperty]) {
-                this.expressions[controlProperty].unbind();
-                delete this.expressions[controlProperty];
+            var expr = this.expressions.get(setter);
+            if (expr) {
+                expr.unbind();
+                this.expressions.remove(setter);
             }
         }
 
@@ -616,24 +622,25 @@ module xp {
          * @param expression Expression e.g. "{obj.a} * 2 + Math.round({b})".
          * @param [source] Binding source object.
          */
-        express(setter: string|{ (element: Element, value): void }, expression: string, source?) {
-            var prop = setter.toString();
-            if (this.expressions[prop]) {
-                this.expressions[prop].unbind();
+        express(setter: string|{ (value, element?: Element): void }, expression: string, source?) {
+            var expr = this.expressions.get(setter);
+            if (expr) {
+                expr.unbind();
             }
-            this.expressions[prop] = new Expression(expression, source || this.scope);
+            expr = new Expression(expression, source || this.scope);
+            this.expressions.set(setter, expr);
             if (typeof setter === 'string') {
-                this.bindings[prop] = new BindingManager(
+                this.bindings.set(setter, new BindingManager(
                     this,
-                    prop,
-                    new Scope(this.expressions[prop]),
-                    'result');
+                    setter,
+                    expr,
+                    'result'));
             }
             else {
-                this.bindings[prop] = new BindingCallManager(
-                    new Scope(this.expressions[prop]),
+                this.bindings.set(setter, new BindingCallManager(
+                    expr,
                     'result',
-                    (result) => setter(this, result));
+                    (result) => setter(result, this)));
             }
         }
 
@@ -644,38 +651,47 @@ module xp {
             return this._scope;
         }
         set scope(scope) {
-            if (this.bindings['scope'] && scope !== this.parent.scope)
+            if (this.bindings.get('scope') && scope !== this.parent.scope)
                 scope = new xp.Scope(scope, this.parent.scope);
 
             Log.write(Log.HeatLevel.Log, Log.Domain.UI | Log.Domain.Binding, '{0}:{1}: Set data scope "{2}".', xp.getClassName(this), this.name || '-', scope);
             this._scope = scope;
 
-            for (var cp in this.bindings) {
-                if (cp !== 'scope') {
-                    if (!this.expressions[cp]) {
-                        this.bindings[cp].resetWith(scope);
-                    }
+            this.bindings.pairs.forEach((p) => {
+                var setter = p.key;
+                var binding = p.value;
+                if (setter !== 'scope' && !this.expressions.get(setter)) {
+                    binding.resetWith(scope);
                 }
-            }
-            for (var cp in this.expressions) {
-                if (cp !== 'scope') {
-                    this.expressions[cp].resetWith(scope);
+            });
+            this.expressions.pairs.forEach((p) => {
+                var setter = p.key;
+                var expr = p.value;
+                if (setter !== 'scope') {
+                    expr.resetWith(scope);
                 }
-            }
+            });
             this.onScopeChanged.invoke(scope);
         }
         private _scope: Object;
 
         /**
          * Is invoked when user performs an input action.
-         * @param controlProp Target control property.
+         * @param setter Target control property or setter.
          * @param value Value, that user inputs.
          */
-        protected onInput(controlProp: string, value) {
-            Log.write(Log.HeatLevel.Log, Log.Domain.UI, '{0}:{1}.{2}: Input "{3}".', xp.getClassName(this), this.name || '-', controlProp, value);
-            this[controlProp] = value;
-            if (this.bindings[controlProp]) {
-                this.bindings[controlProp].updateSource();
+        protected onInput(setter: string|{ (value): void }, value) {
+            Log.write(Log.HeatLevel.Log, Log.Domain.UI, '{0}:{1}.{2}: Input "{3}".', xp.getClassName(this), this.name || '-', setter, value);
+            if (typeof setter === 'string') {
+                Path.setPropertyByPath(this, setter, value);
+            }
+            else {
+                setter(value);
+            }
+            var binding = this.bindings.get(setter);
+            if (binding) {
+                // TODO: Does it cause double control property change?
+                binding.updateSource();
             }
         }
 
@@ -686,23 +702,9 @@ module xp {
     }
 
 
-    /**
-     * Represents "control property name":"binding manager" dictionary.
-     */
-    export interface UIBindingDictionary {
-        [controlProperty: string]: BindingManager;
-    }
-
-    /**
-     * Represents "control property name":"expression" dictionary.
-     */
-    export interface UIExpressionDictionary {
-        [controlProperty: string]: Expression;
-    }
-
     export interface PropertyOptions {
         setter?: (v) => void;
-        getter?: () => void;
+        getter?: () => any;
         observable?: boolean;
         acceptedValues?: any[];
     }

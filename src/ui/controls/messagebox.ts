@@ -51,7 +51,7 @@
                     var button = new Button({
                         text: key,
                         minWidth: '4em',
-                        initializer: (el) => el.onClick.addHandler(() => {
+                        init: (el) => el.onClick.addHandler(() => {
                             actions[key]();
                             this.close();
                         })

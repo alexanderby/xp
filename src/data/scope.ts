@@ -10,9 +10,9 @@
         /**
          * Creates a scope.
          * @param source Source object. Should be observable.
-         * @param [parent] Parent scope.
+         * @param parent Parent scope. Should be observable.
          */
-        constructor(source: any, parent?: Object) {
+        constructor(source: any, parent: Object) {
             Object.defineProperty(this, 'onPropertyChanged', {
                 value: new Event()
             });

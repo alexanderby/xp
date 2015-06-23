@@ -1,23 +1,23 @@
 ﻿module xp {
 
     /**
-     * Dictionary.
+     * Key/value dictionary.
      */
     export class Dictionary<TKey, TValue> {
         /**
-         * Key-value pairs.
+         * Key/value pairs.
          */
         pairs: KeyValuePair<TKey, TValue>[];
 
         /**
-         * Creates the dictionary.
+         * Creates a dictionary.
          */
         constructor(items?: KeyValuePair<TKey, TValue>[]) {
             this.pairs = items || [];
         }
 
         /**
-         * Gets the value.
+         * Gets a value.
          * @param key Key.
          */
         get(key: TKey) {
@@ -26,7 +26,7 @@
         }
 
         /**
-         * Sets the value.
+         * Sets a value.
          * @param key Key.
          * @param value Value.
          */
@@ -51,10 +51,20 @@
                 });
             }
         }
+
+        /**
+         * Removes a value.
+         */
+        remove(key: TKey) {
+            var found = this.pairs.filter(t=> t.key === key);
+            if (found.length > 0) {
+                this.pairs.splice(this.pairs.indexOf(found[0]), 1);
+            }
+        }
     }
 
     /**
-     * Key-value pair.
+     * Key/value pair.
      */
     export interface KeyValuePair<TKey, TValue> {
         key: TKey;

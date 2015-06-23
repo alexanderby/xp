@@ -1,5 +1,5 @@
 ﻿module xp {
-    export interface ModalMarkup extends VBoxMarkup {
+    export interface ModalMarkup<T extends Modal> extends VBoxMarkup<T> {
         /**
          * If returns 'true', the dialog will be closed.
          * Otherwise the dialog will not be closed.
@@ -21,7 +21,7 @@
         /**
          * Creates a modal dialog.
          */
-        constructor(markup?: ModalMarkup, children?: Element[]) {
+        constructor(markup?: ModalMarkup<Modal>, children?: Element[]) {
             super(markup, children);
         }
 

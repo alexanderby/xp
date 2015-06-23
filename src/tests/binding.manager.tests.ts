@@ -60,7 +60,7 @@
     assertEqual(target.cityName, 'unknown');
 
     // Revert source
-    manager.resetWith(new Scope(source));
+    manager.resetWith(source);
     assertEqual(source.city.name, 'Moscow');
     assertEqual(target.cityName, 'Moscow');
     assertEqual(source['onPropertyChanged']['handlers'].length, 1);

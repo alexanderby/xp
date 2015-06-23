@@ -1,8 +1,9 @@
 ﻿module xp {
-    export interface TextBoxMarkup extends ElementMarkup {
+    export interface TextBoxMarkup<T extends TextBox> extends ElementMarkup<T> {
         onTextChange?: (e: TextChangeArgs) => void;
 
         text?: string;
+        value?: number|string;
         notifyOnKeyDown?: boolean|string;
         type?: string;
         readonly?: boolean|string;
@@ -17,6 +18,7 @@
      */
     export class TextBox extends Element {
         text: string;
+        value: number|string;
         notifyOnKeyDown: boolean;
         type: string;
         readonly: boolean;
@@ -25,7 +27,7 @@
         max: number;
         step: number;
 
-        constructor(markup?: TextBoxMarkup) {
+        constructor(markup?: TextBoxMarkup<TextBox>) {
             super(markup);
         }
 
@@ -58,38 +60,29 @@
 
             var oldText = '';
             var onInput = (e: domEvent) => {
-                this.onInput('text', this.value);
                 var args = <TextChangeArgs>xp.createEventArgs(this, e);
                 args.oldText = oldText;
                 var newText = this.value.toString();
                 args.newText = newText
                 this.onTextChange.invoke(args);
+                this.onInput('text', this.value);
+                this.onInput('value', this.value);
                 oldText = newText;
             };
 
             // On text input
             this.domElement.addEventListener('change',(e) => {
-                if (this.enabled) {
-                    onInput(e);
-                }
-                else {
-                    this.text = oldText;
-                }
+                onInput(e);
             });
             this.domElement.addEventListener('input',(e) => {
-                if (this.enabled) {
-                    if (this.notifyOnKeyDown) {
-                        onInput(e);
-                    }
-                }
-                else {
-                    this.text = oldText;
+                if (this.notifyOnKeyDown) {
+                    onInput(e);
                 }
             });
 
             var isIE = !!navigator.userAgent.match(/Trident\/7\./);
             this.domElement.addEventListener('keypress',(e) => {
-                if (this.enabled && e.keyCode === 13) {
+                if (e.keyCode === 13) {
                     if (isIE) {
                         onInput(e);
                     }
@@ -134,6 +127,29 @@
                 },
                 observable: true
             });
+            this.defineProperty('value', {
+                getter: () => {
+                    switch (this.type) {
+                        case 'string':
+                            return this.text;
+                        case 'number':
+                            return parseFloat(this.text) || 0;
+                        default:
+                            throw new Error('TextBox type value is not implemented.');
+                    }
+                },
+                setter: (value: string|number) => {
+                    var t = typeof value;
+                    if (t === 'number' || t === 'boolean') {
+                        value = value.toString();
+                    }
+                    if (value === void 0 || value === null) {
+                        value = '';
+                    }
+                    this.text = <string>value;
+                },
+                observable: true
+            });
             this.defineProperty('type', {
                 setter: (value: string) => {
                     switch (value) {
@@ -160,30 +176,13 @@
             });
             this.defineProperty('readonly', {
                 setter: (readonly: boolean) => {
-                    if (!readonly && this.enabled) {
+                    if (!readonly) {
                         this.domElement.readOnly = false;
                     }
                     else {
                         this.domElement.readOnly = true;
                     }
                 }
-            });
-            this.defineProperty('enabled', {
-                setter: (value: boolean) => {
-                    if (value) {
-                        this.domElement.classList.remove('disabled');
-                    }
-                    else {
-                        this.domElement.classList.add('disabled');
-                    }
-                    if (!this.readonly && value) {
-                        this.domElement.readOnly = false;
-                    }
-                    else {
-                        this.domElement.readOnly = true;
-                    }
-                },
-                observable: true
             });
             this.defineProperty('placeholder', {
                 getter: () => this.domElement.placeholder,
@@ -196,30 +195,6 @@
                     }
                 }
             });
-        }
-
-        /**
-         * Returns the value of the text box according to it's type.
-         */
-        get value(): any {
-            switch (this.type) {
-                case 'string':
-                    return this.text;
-                case 'number':
-                    return parseFloat(this.text) || 0;
-                default:
-                    throw new Error('TextBox type value is not implemented.');
-            }
-        }
-        set value(value) {
-            var t = typeof value;
-            if (t === 'number' || t === 'boolean') {
-                value = value.toString();
-            }
-            if (value === void 0 || value === null) {
-                value = '';
-            }
-            this.text = value;
         }
     }
 

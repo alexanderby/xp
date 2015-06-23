@@ -15,13 +15,36 @@ module.exports = function (grunt) {
             .sub('typescript', {
                 src: config.tsFiles,
                 dest: 'build/xp/xp.js',
-                options: { module: 'amd', target: 'es5', sourceMap: false, declaration: true }
+                options: { target: 'es5', sourceMap: false, declaration: true }
+            })
+            
+            // Minify
+            .sub('uglify', {
+                src: 'build/xp/xp.js',
+                dest: 'build/xp/xp.min.js',
+                // files: {
+                //     'build/xp/xp.min.js': ['build/xp/xp.js']
+                // },
+                options: {
+                    mangle: {
+                        except: [
+                            'ObservableCollection', 'ObservableObject', 'Model',
+                            'BindingManager', 'BindingCallManager', 'Scope',
+                            'Expression', 'Element', 'Container', 'Stack',
+                            'Button', 'CheckBox', 'ContextMenu', 'HBox', 'Html',
+                            'Label', 'List', 'MessageBox', 'Modal', 'ModalTint',
+                            'Placeholder', 'RadioButton', 'TextArea', 'TextBox',
+                            'ToggleButton', 'VBox', 'Window', 'Modal', 'ModalTint',
+                        ]
+                    },
+                    //banner: getBanner()
+                }
             })
 
             // Move type definition
             .sub('copy', {
-                expand: true, flatten: true,
-                src: 'build/xp/xp.d.ts',
+                expand: true, cwd: 'build/xp/',
+                src: 'xp.d.ts',
                 dest: 'build/xp/typing/'
             })
             .sub('clean', ['build/xp/xp.d.ts'])
@@ -35,8 +58,8 @@ module.exports = function (grunt) {
 
             // Copy concatenated LESS file
             .sub('copy', {
-                expand: true, flatten: true,
-                src: 'src/style/_xp.less',
+                expand: true, cwd: 'src/style/',
+                src: '_xp.less',
                 dest: 'build/xp/style/'
             })
 
@@ -53,8 +76,8 @@ module.exports = function (grunt) {
 
             // Copy variables
             .sub('copy', {
-                expand: true, flatten: true,
-                src: 'src/style/_variables.less',
+                expand: true, cwd: 'src/style/',
+                src: '_variables.less',
                 dest: 'build/xp/style/'
             });
 
@@ -64,11 +87,10 @@ module.exports = function (grunt) {
         // DEBUG
         //------
 
-        create.task('build-debug')
+        create.task('debug')
             .sub('typescript', {
                 src: ['src/**/*.ts/'],
                 options: {
-                    module: 'amd',
                     target: 'es5',
                     sourceMap: true
                 }

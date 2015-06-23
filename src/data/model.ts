@@ -18,16 +18,6 @@
             });
         }
 
-        ///**
-        // * Defines a property which notifies of it's change.
-        // * @param prop Property name.
-        // * @param value Default value. If observable then setted values will be converted to observable.
-        // * @param opts Model property options. Convertors can be defined here. Enumerable by default.
-        // */
-        //defineProperty(prop: string, value?, opts?: ModelPropertyOptions) {
-        //    Model.property(this, prop, value, opts);
-        //}
-
         /**
          * Is invoked when any property is changed.
          */
@@ -38,7 +28,7 @@
         // Static functions
         //-----------------
 
-        // TODO: Use Typescript 1.5 decorators por property definitions?
+        // TODO: Use Typescript 1.5 decorators for property definitions?
 
         /**
          * Defines a getter and setter for a model instance, which notifies of it's change.

@@ -32,14 +32,14 @@
          * @param convertNested Specifies whether to convert nested items into observables. Default is true.
          */
         constructor(source: Object, convertNested = true) {
-            this.initProperties();
+            this.__initProperties__();
             this.__convertNested__ = convertNested;
             if (source) {
-                this.copySource(source);
+                this.__copySource__(source);
             }
         }
 
-        protected initProperties() {
+        protected __initProperties__() {
             Object.defineProperty(this, 'onPropertyChanged', {
                 configurable: true,
                 value: new Event<string>()
@@ -51,7 +51,7 @@
             });
         }
 
-        protected copySource(source: Object) {
+        protected __copySource__(source: Object) {
             if (source instanceof ObservableObject) {
                 throw new Error('Source object is already observable.');
             }

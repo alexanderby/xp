@@ -1,5 +1,5 @@
 ﻿module xp {
-    export interface HtmlMarkup extends ElementMarkup {
+    export interface HtmlMarkup<T extends Html> extends ElementMarkup<T> {
         html?: string;
         url?: string;
     }
@@ -11,7 +11,7 @@
         html: string;
         url: string;
 
-        constructor(markup: HtmlMarkup) {
+        constructor(markup: HtmlMarkup<Html>) {
             super(markup);
         }
 
@@ -19,12 +19,12 @@
             return document.createElement('div');
         }
 
-        applyMarkup(markup: HtmlMarkup) {
+        applyMarkup(markup: HtmlMarkup<Html>) {
 
             //
             // Apply HTML and URL first
 
-            var m = <HtmlMarkup>{};
+            var m = <HtmlMarkup<Html>>{};
             for (var prop in markup) {
                 m[prop] = markup[prop];
             }

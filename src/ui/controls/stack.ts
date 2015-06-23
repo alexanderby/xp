@@ -1,5 +1,5 @@
 ﻿module xp {
-    export interface StackMarkup extends ContainerMarkup {
+    export interface StackMarkup<T extends Stack> extends ContainerMarkup<T> {
         itemsIndent?: string;
         scrollBar?: string;
         wrapping?: string;

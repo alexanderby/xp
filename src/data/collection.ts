@@ -105,8 +105,8 @@ module xp {
             super(collection, convertItems);
         }
 
-        protected initProperties() {
-            super.initProperties();
+        protected __initProperties__() {
+            super.__initProperties__();
 
             var definePrivateProperty = (prop: string, value: any, writable?: boolean) => {
                 Object.defineProperty(this, prop, {
@@ -122,7 +122,7 @@ module xp {
             definePrivateProperty('splicing', false, true);
         }
 
-        protected copySource(collection: Array<T>) {
+        protected __copySource__(collection: Array<T>) {
             if (collection && (!Array.isArray(collection) || collection instanceof ObservableCollection)) {
                 throw new Error('Source must be an array.');
             }
@@ -148,7 +148,7 @@ module xp {
         // Handling operations
         //--------------------
 
-        private splicing; // Prevents multiple property change notifications while splicing
+        private __splicing__; // Prevents multiple property change notifications while splicing
 
         /**
          * Handles item's addition into collection.
@@ -167,7 +167,7 @@ module xp {
                 newItem: item
             });
             this.onPropertyChanged.invoke('length');
-            if (!this.splicing) {
+            if (!this.__splicing__) {
                 for (var i = index; i < this.inner.length; i++) {
                     this.onPropertyChanged.invoke(i.toString());
                 }
@@ -190,7 +190,7 @@ module xp {
                 oldItem: item
             });
             this.onPropertyChanged.invoke('length');
-            if (!this.splicing) {
+            if (!this.__splicing__) {
                 for (var i = index; i < this.inner.length + 1; i++) {
                     this.onPropertyChanged.invoke(i.toString());
                 }
@@ -260,7 +260,7 @@ module xp {
                 oldItem: this.inner[to],
                 newItem: this.inner[to]
             });
-            if (!this.sorting) {
+            if (!this.__sorting__) {
                 for (var i = Math.min(from, to); i <= Math.max(from, to); i++) {
                     this.onPropertyChanged.invoke(i.toString());
                 }
@@ -294,12 +294,12 @@ module xp {
         }
 
         reverse(): T[] {
-            this.sorting = true;
+            this.__sorting__ = true;
             var length = this.inner.length;
             for (var i = 0; i < length - 1; i++) {
                 this.move(0, length - 1 - i); // Collection notifications are inside move()
             }
-            this.sorting = false;
+            this.__sorting__ = false;
 
             // Notify of properties changes
             for (var i = 0; i < length; i++) {
@@ -317,7 +317,7 @@ module xp {
             return item;
         }
 
-        private sorting; // Prevents property changed notifications while sorting
+        private __sorting__; // Prevents property changed notifications while sorting
 
         sort(compareFn?: (a: T, b: T) => number): T[] {
             var unsorted = this.inner.slice();
@@ -337,9 +337,9 @@ module xp {
                     }
                 }
             }
-            this.sorting = true;
+            this.__sorting__ = true;
             indicies.forEach((i) => i.old !== i.new && this.move(i.old, i.new)); // Collection notifications are inside move()
-            this.sorting = false;
+            this.__sorting__ = false;
 
             // Notify of properties changes
             indicies.forEach((i) => {
@@ -373,7 +373,7 @@ module xp {
             // Process
 
             var oldLength = this.inner.length;
-            this.splicing = true;
+            this.__splicing__ = true;
             // Delete
             var deleted = new Array<T>();
             for (var i = 0; i < deleteCount; i++) {
@@ -388,7 +388,7 @@ module xp {
                     index++;
                 })
             }
-            this.splicing = false;
+            this.__splicing__ = false;
 
             // Notify of properties changes
             var addedCount = items ? items.length : 0;

@@ -1,6 +1,6 @@
 ﻿module xp {
 
-    export interface ButtonMarkup extends ElementMarkup {
+    export interface ButtonMarkup<T extends Button> extends ElementMarkup<T> {
         icon?: string;
         text?: string;
     }
@@ -12,7 +12,7 @@
         icon: string;
         text: string;
 
-        constructor(markup?: ButtonMarkup) {
+        constructor(markup?: ButtonMarkup<Button>) {
             super(markup);
         }
 
@@ -21,16 +21,16 @@
         //----
 
         protected getTemplate(): HTMLElement {
-            var template = Dom.create(`
+            return Dom.create(`
                 <button class="Button" type="button">
                     <span class="wrapper">
                         <span class="icon"></span>
                         <span class="text"></span>
                     </span>
-                </button>`);
-            this.iconElement = Dom.select('.icon', template);
-            this.textElement = Dom.select('.text', template);
-            return template;
+                </button>`, {
+                    '.icon': (el) => this.iconElement = el,
+                    '.text': (el) => this.textElement = el
+                });
         }
 
         protected iconElement: HTMLElement;

@@ -1,6 +1,6 @@
 ﻿module xp {
 
-    export interface HBoxMarkup extends StackMarkup {
+    export interface HBoxMarkup<T extends HBox> extends StackMarkup<T> {
         contentAlign?: string;
         itemsAlign?: string;
     }
@@ -12,7 +12,7 @@
         contentAlign: string;
         itemsAlign: string;
 
-        constructor(markup?: HBoxMarkup, children?: Element[]) {
+        constructor(markup?: HBoxMarkup<HBox>, children?: Element[]) {
             super(markup, children);
         }
 

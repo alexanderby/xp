@@ -1,4 +1,6 @@
 ﻿module xp {
+    // TODO: Serialize and restore circular references (e.g. by "id" like in Inker).
+
     /**
      * Serializes item to JSON.
      * @param item Item to serialize.

@@ -1,23 +1,27 @@
 ﻿module Todo {
-    interface TodoItem {
-        name: string;
-        isDone: boolean;
-    }
 
     var squareIcon = '\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill="white" d="M0,0 h16 v16 h-16 z"/></svg>\'';
 
     export class Window extends xp.Window {
+        private app: App;
 
         constructor(app: App) {
+            //
+            // ------- Window markup ------------
+
             super({ title: 'Test App', itemsAlign: 'center', padding: '0.5em', itemsIndent: '2em' }, [
                 new xp.HBox({ width: '40em', itemsIndent: '2em', scrollBar: 'both' }, [
-                    // MAIN TODO
+
+                    //
+                    // -------- Main TODO section -----------
+
                     new xp.VBox({ itemsIndent: '1em', flex: 'stretch', width: '50%' }, [
                         new xp.Label({ text: 'TODO APP', style: 'title' }),
                         new xp.HBox({ itemsIndent: '0.5em' }, [
                             new xp.Label({ text: 'Input:' }),
                             new xp.TextBox({
-                                name: 'textbox', placeholder: 'What to do?', onTextChange: (e) => this.onTextInput(e)
+                                placeholder: 'What to do?', onTextChange: (e) => this.onTextInput(e),
+                                init: (el) => this.textbox = el
                             })
                         ]),
                         new xp.List({
@@ -47,7 +51,10 @@
                             new xp.ToggleButton({ text: 'Undone', item: 'Undone', selectedItem: '{filter}', flex: 'stretch' })
                         ])
                     ]),
-                    // RESULTS
+
+                    //
+                    // --------- Results section ----------
+
                     new xp.VBox({ name: 'view1', flex: 'stretch', width: '50%' }, [
                         new xp.HBox({ flex: 'stretch' }, [
                             new xp.VBox({ width: '50%' }, [
@@ -67,12 +74,18 @@
                         ])
                     ])
                 ]),
-                // LINE
+
+                //
+                // ------- Line ---------
+
                 new xp.Html({
                     width: '40em', height: '0.0625em', html: `
                     <div style="background-color:#aaa;"></div>
                 `}),
-                // EXPERIMENTS
+
+                //
+                // ------ Experiments -------
+
                 new xp.VBox({ width: '10em' }, [
                     new xp.Label({ text: 'Item 0', style: 'title' }),
                     new xp.TextBox({ text: '{todos[0].name}', name: 'tb0', notifyOnKeyDown: true }),
@@ -85,7 +98,7 @@
                         items: '{todos}',
                         itemCreator: () => new xp.RadioButton({
                             item: '{item}', text: '{item.name}', selectedItem: '{selected}',
-                            initializer: (el) => el.bind((v: string) => el.domElement.setAttribute('title', v), 'item.name')
+                            init: (el) => el.bind((v: string) => el.domElement.setAttribute('title', v), 'item.name')
                         })
                     }),
                     new xp.List({
@@ -101,40 +114,48 @@
                              <span style="color:green;">World!</span>
                         </div>
                     `}),
-                    new xp.Html({ width: '100%', url: 'view/div.html' }),
+                    new xp.Html({ width: '100%', url: 'ui/div.html' }),
                     new xp.TextArea({ text: 'Text area' }),
                     new xp.TextBox({ type: 'number', min: 0, max: 1, step: 0.1 })
                 ])
             ]);
 
-            console.info('Main dependency (app):');
-            console.log(app);
+            //
+            // -------- Set Window scope ---------
+
+            this.app = app;
 
             this.data = xp.observable({
-                todos: [],
                 selected: null,
                 filter: 'All',
                 undone: [],
                 done: []
             });
-            this.scope = new xp.Scope(this.data);
+
+            this.scope = new xp.Scope(this.data, this.app);
+
+            //
+            // -------- Focus at text box ---------
 
             this.textbox.focus();
+
+            //
+            // -------- Display context menu ---------
 
             this.domElement.addEventListener('contextmenu',(e) => {
                 e.preventDefault();
                 xp.ContextMenu.show(e.pageX, e.pageY, [{
                     text: 'Copy',
-                    action: () => alert('copy')
+                    action: () => xp.MessageBox.show('Trying to copy', 'MESSAGE')
                 }, {
                         text: 'Paste',
-                        action: () => alert('paste'),
+                        action: () => xp.MessageBox.show('Trying to paste', 'MESSAGE'),
                         key: 'Ctrl+V'
                     }, {
                         text: 'Delete',
-                        action: () => alert('delete'),
+                        action: () => xp.MessageBox.show('Trying to delete', 'MESSAGE'),
                         disabled: true,
-                        icon: '../layout/icon-16-white.svg',
+                        icon: squareIcon,
                         key: 'Del'
                     }]);
             });
@@ -143,17 +164,20 @@
         //---------
         // Controls
         //---------
-        
+
+        private textbox: xp.TextBox;
+        private list: xp.List;
+
         private onDeleteClick(args: xp.MouseEventArgs) {
-            var index = this.data.todos.indexOf(args.element.scope['t']); // Hmm...
+            var index = this.app.todos.indexOf(args.element.scope['t']); // Hmm...
             if (index >= 0) {
                 this.removeItem(index);
             }
         }
 
         private onClearDoneClick(args: xp.MouseEventArgs) {
-            for (var i = this.data.todos.length - 1; i >= 0; i--) {
-                if (this.data.todos[i].isDone) {
+            for (var i = this.app.todos.length - 1; i >= 0; i--) {
+                if (this.app.todos[i].isDone) {
                     this.removeItem(i);
                 }
             }
@@ -167,24 +191,19 @@
         }
 
         private refreshFiltered() {
-            this.data.undone = this.data.todos.filter((t) => !t.isDone);
-            this.data.done = this.data.todos.filter((t) => t.isDone);
+            this.data.undone = this.app.todos.filter((t) => !t.isDone);
+            this.data.done = this.app.todos.filter((t) => t.isDone);
         }
 
         private onDoneToggle(args: xp.CheckChangeArgs) {
             this.refreshFiltered();
         }
 
-        private textbox: xp.TextBox;
-        private list: xp.List;
-        private button_ClearCompleted: xp.Button;
-
         //----------------
         // Data management
         //----------------
 
         private data: {
-            todos: TodoItem[];
             undone: TodoItem[];
             done: TodoItem[];
             filter: string;
@@ -195,119 +214,13 @@
                 name: name,
                 isDone: false
             };
-            this.data.todos.push(item);
+            this.app.todos.push(item);
             this.refreshFiltered();
         }
 
         private removeItem(index: number) {
-            this.data.todos.splice(index, 1);
+            this.app.todos.splice(index, 1);
             this.refreshFiltered();
         }
     }
-    Window['isView'] = true;
 }
-
-// TODO: Do not use XML.
-//module xp.newUI {
-//    interface ElementMarkup {
-//        width?: string;
-//        height?: string;
-//    }
-
-//    class Element extends xp.Model implements ElementMarkup {
-//        width: string;
-//        height: string;
-
-//        constructor(markup?: ElementMarkup) {
-//            super();
-//            this.initElement();
-//            if (markup) {
-//                this.applyMarkup(markup);
-//            }
-//        }
-
-//        protected initElement() {
-//            this.defineProperties();
-//        }
-
-//        domElement: HTMLElement;
-//        protected getTemplate() {
-//            return '<div></div>';
-//        }
-//        protected defineProperties() {
-//            this.defineProperty('width', {
-//                setter: (v) => this.domElement.style.width = v
-//            });
-//            this.defineProperty('height', {
-//                setter: (v) => this.domElement.style.height = v
-//            });
-//        }
-//        protected defineProperty(name: string, options: ElementPropertyOptions) {
-//            //if(options
-//        }
-//        applyMarkup(markup: ElementMarkup) {
-//            for (var key in markup) {
-//                this[key] = markup[key];
-//            }
-//        }
-//    }
-
-//    interface ElementPropertyOptions {
-//        setter?: (v) => void;
-//        acceptedValues?: any[];
-//        bindable?: boolean;
-//        observable?: boolean;
-//    }
-
-//    interface ButtonMarkup extends ElementMarkup {
-//        text?: string;
-//        icon?: string;
-//    }
-
-//    class Button extends Element implements ButtonMarkup {
-//        text: string;
-//        icon: string;
-
-//        constructor(markup: ButtonMarkup) {
-//            super(markup);
-//        }
-
-//        protected defineProperties() {
-//            super.defineProperties();
-//            this.defineProperty('text', { setter: (v) => this.domElement.textContent = v });
-//            this.defineProperty('icon', { setter: (v) => this.domElement.textContent = v });
-//        }
-//    }
-
-//    interface ContainerMarkup {
-//        alignItems?: string;
-//        alignContent?: string;
-//        children?: Element[];
-//    }
-
-//    class Container extends Element implements ContainerMarkup {
-//        alignItems: string;
-//        alignContent: string;
-//        children: Element[];
-
-//        constructor(markup?: ContainerMarkup, children?: Element[]) {
-//            super(markup);
-//            if (children) {
-//                Array.prototype.push.apply(this.children, children);
-//            }
-//        }
-
-//        protected initElement() {
-//            this.children = [];
-//            this.defineProperties();
-//        }
-//    }
-
-
-//    var box = new Container({ alignContent: 'center', alignItems: 'stretch' }, [
-//        new Container({}, [
-//            new Button({ text: 'Click me' }),
-//            new Button({ text: 'Button 1' })
-//        ])
-//    ]);
-//}

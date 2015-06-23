@@ -1,4 +1,9 @@
 ﻿module xp {
+    // TODO: Parameters object.
+    // TODO: Option for not updating source
+    // for the first time (usually element
+    // has no scope when binding occurs)?
+
     /**
      * Manages the scope data binding for a single property.
      * This manager is hold by target and must exist until
@@ -238,4 +243,56 @@
          */
         handler?: (prop: string) => void;
     }
+
+    //------------------------------------------------
+    //
+    // TODO: Use expression chains instead of strings?
+
+    //class Getter<T> {
+    //    item: T;
+    //    private chain: Chain;
+    //    constructor(item: T, chain?: Chain) {
+    //        this.item = item;
+    //    }
+    //    get<K>(getter: (item: T) => K): Getter<K> {
+    //        if (this.chain) {
+    //            chain.getters.push(getter);
+    //        }
+    //        if (this.item === void 0 || this.item === null) {
+    //            return new Getter(null, chain);
+    //        }
+    //        var prop = getter(this.item);
+    //        return new Getter(prop, chain);
+    //    }
+    //}
+
+    //var country = {
+    //    name: 'Hrenland',
+    //    city: {
+    //        name: 'New York',
+    //        street: {
+    //            name: 'Baker str.',
+    //            houses: [
+    //                { num: 1 },
+    //                { num: 3 }
+    //            ]
+    //        }
+    //    }
+    //};
+
+    //class Chain {
+    //    getters: { (item): any }[];
+    //    constructor() {
+    //        this.getters = [];
+    //    }
+    //}
+
+    //var chain = new Chain();
+    //var housesCount = new Getter(country)
+    //    .get(c=> c.city)
+    //    .get(c=> c.street)
+    //    .get(s=> s.name)
+    //    .get(n=> n.toUpperCase());
+
+    // How to handle onPropertyChanged<(item)=>any>?
 } 

@@ -94,7 +94,7 @@
 
     var col = new xp.ObservableCollection([{ city: { name: 'Gomel' } }, { city: { name: 'Minsk' } }]);
     var name: string;
-    var bm = new BindingCallManager(new xp.Scope(col), '0.city.name',(v) => name = v || 'Default');
+    var bm = new BindingCallManager(col, '0.city.name',(v) => name = v || 'Default');
     assertEqual(name, 'Gomel');
     col.splice(0, 1);
     assertEqual(name, 'Minsk');

@@ -1,5 +1,5 @@
 ﻿module xp {
-    export interface ListMarkup extends VBoxMarkup {
+    export interface ListMarkup<T extends List> extends VBoxMarkup<T> {
         items?: any[]|string;
         itemId?: string;
         itemCreator?: () => Element
@@ -13,7 +13,7 @@
         itemId: string;
         itemCreator: () => Element;
 
-        constructor(markup?: ListMarkup) {
+        constructor(markup?: ListMarkup<List>) {
             super(markup);
         }
 

@@ -1,5 +1,5 @@
 ﻿module xp {
-    export interface RadioButtonMarkup extends CheckBoxMarkup {
+    export interface RadioButtonMarkup<T extends RadioButton> extends CheckBoxMarkup<T> {
         group?: string;
         item?: any|string;
         selectedItem?: any|string;
@@ -13,7 +13,7 @@
         item: any;
         selectedItem: any;
 
-        constructor(markup: RadioButtonMarkup) {
+        constructor(markup: RadioButtonMarkup<RadioButton>) {
             super(markup);
         }
 
@@ -22,15 +22,15 @@
         //----
 
         protected getTemplate(): HTMLElement {
-            var template = Dom.create(`
+            return Dom.create(`
                 <label class="RadioButton">
                     <input type="radio"/>
                     <span class="check"></span>
                     <label class="text"></label>
-                </label>`);
-            this.checkElement = <HTMLInputElement>Dom.select('input', template);
-            this.textElement = Dom.select('label', template);
-            return template;
+                </label>`, {
+                    'input': (el) => this.checkElement = el,
+                    '.text': (el) => this.textElement = el
+                });
         }
 
 

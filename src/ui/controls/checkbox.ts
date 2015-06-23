@@ -1,5 +1,5 @@
 ﻿module xp {
-    export interface CheckBoxMarkup extends ElementMarkup {
+    export interface CheckBoxMarkup<T extends CheckBox> extends ElementMarkup<T> {
         onCheckChange?: (e: CheckChangeArgs) => void;
         checked?: boolean|string;
         text?: string;
@@ -14,7 +14,7 @@
         text: string;
         readonly: boolean;
 
-        constructor(markup?: CheckBoxMarkup) {
+        constructor(markup?: CheckBoxMarkup<CheckBox>) {
             super(markup);
         }
 
@@ -23,15 +23,15 @@
         //----
 
         protected getTemplate(): HTMLElement {
-            var template = Dom.create(`
+            return Dom.create(`
                 <label class="CheckBox">
                     <input type="checkbox"/>
                     <span class="check"></span>
                     <label class="text"></label>
-                </label>`);
-            this.checkElement = <HTMLInputElement>Dom.select('input', template);
-            this.textElement = Dom.select('label', template);
-            return template;
+                </label>`, {
+                    'input': (el) => this.checkElement = el,
+                    '.text': (el) => this.textElement = el
+                });
         }
 
         protected checkElement: HTMLInputElement;
@@ -54,17 +54,13 @@
 
             // On check change input
             this.domElement.addEventListener('change',(e) => {
-                if (!this.readonly && this.enabled) {
+                if (!this.readonly) {
                     this.onInput('checked', this.checked);
 
                     var args = <CheckChangeArgs>createEventArgs(this, e);
                     args.checked = this.checked;
                     this.onCheckChange.invoke(args);
                 }
-                //else {
-                //    // Fix for not working "readonly" attribute
-                //    this.checkElement.checked = !this.checkElement.checked;
-                //}
             });
         }
 
@@ -101,7 +97,7 @@
             });
             this.defineProperty('readonly', {
                 setter: (readonly: boolean) => {
-                    if (!readonly && this.enabled) {
+                    if (!readonly) {
                         this.checkElement.readOnly = false;
                         this.domElement.style.pointerEvents = '';
                     }

@@ -1,6 +1,6 @@
 ﻿module xp {
 
-    export interface VBoxMarkup extends StackMarkup {
+    export interface VBoxMarkup<T extends VBox> extends StackMarkup<T> {
         contentAlign?: string;
         itemsAlign?: string;
     }
@@ -12,7 +12,7 @@
         contentAlign: string;
         itemsAlign: string;
 
-        constructor(markup?: VBoxMarkup, children?: Element[]) {
+        constructor(markup?: VBoxMarkup<VBox>, children?: Element[]) {
             super(markup, children);
         }
 

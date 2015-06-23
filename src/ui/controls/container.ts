@@ -1,6 +1,6 @@
 ﻿module xp {
 
-    export interface ContainerMarkup extends ElementMarkup {
+    export interface ContainerMarkup<T extends Container> extends ElementMarkup<T> {
         padding?: string;
     }
 
@@ -10,7 +10,7 @@
     export /*abstract*/ class Container extends Element {
         padding: string;
 
-        constructor(markup?: ContainerMarkup, children?: Element[]) {
+        constructor(markup?: ContainerMarkup<Container>, children?: Element[]) {
             super(markup);
             children && children.forEach((c) => this.append(c));
 
@@ -19,6 +19,8 @@
                 //
                 // TODO: Prevent name collision and unnecessary named children properties set.
                 // Maybe use TypeScript 1.5 metadata.
+                //
+                // Maybe no need in setting names cause variables can be set from markup: { init: (tb) => this.textBox = tb }
                 this.cascadeBy((el) => {
                     if (el !== this && el.name) {
                         if (el.name in this) {
@@ -66,33 +68,6 @@
 
         protected defineProperties() {
             super.defineProperties();
-            var disabledChildren: Element[] = [];
-            //this.defineProperty('enabled', {
-            //    setter: (value) => {
-            //        if (value) {
-            //            this.domElement.classList.remove('disabled');
-            //        }
-            //        else {
-            //            this.domElement.classList.add('disabled');
-            //        }
-            //        this.children.forEach((c) => {
-            //            if (value) {
-            //                if(disabledChildren.indexOf(c)
-            //                c.enabled = true;
-            //                if (!c.useParentScope) {
-            //                    // Cause binding value reset
-            //                    c.scope = c.scope;
-            //                }
-            //            }
-            //            else {
-            //                c.enabled = false;
-            //            }
-            //        });
-            //        // Cause binding value reset
-            //        this.scope = this.scope;
-            //    },
-            //    observable: true
-            //});
             this.defineProperty('padding', {
                 setter: (value) => this.domElement.style.padding = value,
                 getter: () => this.domElement.style.padding
@@ -171,7 +146,7 @@
                 }
 
                 this.children.splice(index, 0, element);
-                element.parent = this;
+                element.__setParent__(this);
             }
         }
 
@@ -185,7 +160,7 @@
                 throw new Error('Element is not a child of this container.');
             }
             this.children.splice(index, 1);
-            child.parent = null;
+            child.__setParent__(null);
 
             // DOM
             Dom.remove(child.domElement);
@@ -195,6 +170,7 @@
          * Cascades through all child elements invoking a function.
          * Stops when function returns 'truthy' value.
          * @param fn Function to execute on each element.
+         * @param checkRoot Specifies whether to process root element.
          * @returns Element which lead to returning 'truthy' value.
          */
         cascadeBy(fn: (el: Element) => any, checkRoot = false): Element {
@@ -223,7 +199,7 @@
          * Searches for the first matched.
          * @param predicate Predicate.
          */
-        find(predicate: (el) => boolean): Element {
+        find(predicate: (el: Element) => boolean): Element {
             return this.cascadeBy((el) => predicate(el));
         }
 
@@ -231,7 +207,7 @@
          * Searches for all element with given name, key or selector.
          * @param predicate Predicate.
          */
-        findAll(predicate: (el) => boolean): Element[] {
+        findAll(predicate: (el: Element) => boolean): Element[] {
             var results: Element[] = [];
             this.cascadeBy((el) => {
                 if (predicate(el)) {

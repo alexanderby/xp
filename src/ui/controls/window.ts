@@ -1,5 +1,5 @@
 ﻿module xp {
-    export interface WindowMarkup extends VBoxMarkup {
+    export interface WindowMarkup<T extends Window> extends VBoxMarkup<T> {
         title?: string;
     }
 
@@ -9,7 +9,7 @@
     export class Window extends VBox {
         title: string;
 
-        constructor(markup?: WindowMarkup, children?: Element[]) {
+        constructor(markup?: WindowMarkup<Window>, children?: Element[]) {
             super(markup, children);
         }
 
@@ -30,6 +30,12 @@
             template.classList.add('Window')
             template.classList.add('VBox');
             this.__setRenderedState__(true);
+
+            //// Remove current content
+            //while (template.firstElementChild) {
+            //    template.removeChild(template.firstElementChild);
+            //}
+
             return template;
         }
 
@@ -100,5 +106,4 @@
             this.tint = null;
         }
     }
-    Window['isView'] = true;
 } 

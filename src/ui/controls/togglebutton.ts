@@ -1,12 +1,12 @@
 ﻿module xp {
-    export interface ToggleButtonMarkup extends RadioButtonMarkup {
+    export interface ToggleButtonMarkup<T extends ToggleButton> extends RadioButtonMarkup<T> {
         icon?: string;
     }
 
     export class ToggleButton extends RadioButton {
         icon: string;
 
-        constructor(markup?: ToggleButtonMarkup) {
+        constructor(markup?: ToggleButtonMarkup<ToggleButton>) {
             super(markup);
         }
 
@@ -15,16 +15,16 @@
         //----
 
         protected getTemplate(): HTMLElement {
-            var template = Dom.create(`
+            return Dom.create(`
                 <label class="ToggleButton">
                     <input type="radio"/>
                     <span class="icon"></span>
                     <span class="text"></span>
-                </label>`);
-            this.checkElement = <HTMLInputElement>Dom.select('input', template);
-            this.iconElement = Dom.select('.icon', template);
-            this.textElement = Dom.select('.text', template);
-            return template;
+                </label>`, {
+                    'input': (el) => this.checkElement = el,
+                    '.icon': (el) => this.iconElement = el,
+                    '.text': (el) => this.textElement = el
+                });
         }
 
         protected iconElement: HTMLElement;
