@@ -38,19 +38,6 @@
         //overflow: hidden;
         width: 100%;
 
-        > .icon {
-            display: inline-block;
-            height: 1em;
-            width: 1em;
-        }
-
-        > .text {
-            color: @color-control-fore;
-            display: inline-block;
-            font-size: 1em;
-            line-height: 1em;
-        }
-
         > span {
             flex: none;
             margin: 0 0.125em;
@@ -60,6 +47,19 @@
                 display: none;
             }
         }
+    }
+
+    .icon {
+        display: inline-block;
+        height: 1em;
+        width: 1em;
+    }
+
+    .text {
+        color: @color-control-fore;
+        display: inline-block;
+        font-size: 1em;
+        line-height: 1em;
     }
 
     &.disabled {

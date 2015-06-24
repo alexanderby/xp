@@ -31,6 +31,9 @@ module xp {
         style?: string;
         flex?: string;
         visible?: boolean|string;
+
+        useParentScope?: boolean;
+        scope?: any;
     }
 
     /**

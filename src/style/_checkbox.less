@@ -51,7 +51,7 @@
         }
     }
 
-    > .check {
+    .check {
         background-color: @color-input-back;
         display: inline-block;
         flex: none;
@@ -62,11 +62,11 @@
         width: 1em;
     }
 
-    &:hover:not(.disabled) > .check {
+    &:hover:not(.disabled) .check {
         background-color: @color-input-active;
     }
 
-    > .text {
+    .text {
         color: @color-fore;
         display: inline-block;
         flex: none;
@@ -76,7 +76,7 @@
         pointer-events: none;
     }
 
-    &.disabled{
+    &.disabled {
         .disabled();
     }
 }

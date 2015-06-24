@@ -21,7 +21,7 @@
     padding: 0 /* 0.5em*/;
     .unselectable();
 
-    > input[type=radio] {
+    input[type=radio] {
         display: none;
 
         &:checked + .check {
@@ -39,7 +39,7 @@
         }
     }
 
-    > .check {
+    .check {
         background-color: @color-input-back;
         border-radius: 0.5em;
         display: inline-block;
@@ -51,11 +51,11 @@
         width: 1em;
     }
 
-    &:hover:not(.disabled) > .check {
+    &:hover:not(.disabled) .check {
         background-color: @color-input-active;
     }
 
-    > .text {
+    .text {
         color: @color-fore;
         display: inline-block;
         flex: none;
@@ -65,7 +65,7 @@
         pointer-events: none;
     }
 
-    &.disabled{
+    &.disabled {
         .disabled();
     }
 }
