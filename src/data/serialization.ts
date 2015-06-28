@@ -12,6 +12,7 @@
         return JSON.stringify(item, function (k, v) {
 
             if (writeModel
+                && v !== null
                 && typeof v === 'object'
                 && !Array.isArray(v)
                 && !(Object.getPrototypeOf(v) === Object)
@@ -49,7 +50,7 @@
             if (reviver) {
                 v = reviver(k, v);
             }
-            if (typeof v === 'object' && '__xp_model__' in v) {
+            if (typeof v === 'object' && v !== null && '__xp_model__' in v) {
 
                 if (v['__xp_model__'] === 'ObservableObject' || v['__xp_model__'] === 'ObservableCollection') {
 
