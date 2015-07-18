@@ -1,4 +1,27 @@
-﻿module Todo {
+﻿/// <reference path="../app.ts"/>
+/// <reference path="../../../ui/uievent.ts"/>
+/// <reference path="../../../ui/controls/element.ts"/>
+/// <reference path="../../../ui/controls/container.ts"/>
+/// <reference path="../../../ui/controls/stack.ts"/>
+/// <reference path="../../../ui/controls/hbox.ts"/>
+/// <reference path="../../../ui/controls/vbox.ts"/>
+/// <reference path="../../../ui/controls/label.ts"/>
+/// <reference path="../../../ui/controls/textbox.ts"/>
+/// <reference path="../../../ui/controls/list.ts"/>
+/// <reference path="../../../ui/controls/placeholder.ts"/>
+/// <reference path="../../../ui/controls/button.ts"/>
+/// <reference path="../../../ui/controls/togglebutton.ts"/>
+/// <reference path="../../../ui/controls/html.ts"/>
+/// <reference path="../../../ui/controls/textarea.ts"/>
+/// <reference path="../../../ui/controls/checkbox.ts"/>
+/// <reference path="../../../ui/controls/radiobutton.ts"/>
+/// <reference path="../../../ui/controls/window.ts"/>
+/// <reference path="../../../ui/controls/messagebox.ts"/>
+/// <reference path="../../../ui/controls/contextmenu.ts"/>
+/// <reference path="../../../data/observable.ts"/>
+/// <reference path="../../../data/scope.ts"/>
+
+module Todo {
 
     var squareIcon = '\'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"><path fill="white" d="M0,0 h16 v16 h-16 z"/></svg>\'';
 

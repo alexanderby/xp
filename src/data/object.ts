@@ -15,7 +15,9 @@
      * @param obj Object.
      */
     export function isNotifier(obj) {
-        return obj && typeof obj === 'object' && 'onPropertyChanged' in obj;
+        return (obj 
+            && typeof obj === 'object' 
+            && 'onPropertyChanged' in obj);
     }
 
 

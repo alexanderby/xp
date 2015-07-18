@@ -1,4 +1,9 @@
-﻿module xp.Tests {
+﻿/// <reference path="../utils/log.ts"/>
+/// <reference path="../data/call_manager.ts"/>
+/// <reference path="../data/collection.ts"/>
+/// <reference path="assert.ts"/>
+
+module xp.Tests {
     Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Observable collection. Start.');
 
     //

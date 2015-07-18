@@ -12,7 +12,7 @@
      */
     export class BindingManager {
 
-        private target: any;
+        private target: Object;
         private targetPropertyPath: string;
         private scope: Object;
         private path: string;
@@ -26,7 +26,7 @@
          * @param path Path to bind to.
          * @param options Options.
          */
-        constructor(target: any, targetPropertyPath: string, scope: Object, path: string, defaultValue?: any) {
+        constructor(target: Object, targetPropertyPath: string, scope: Object, path: string, defaultValue?: any) {
             //
             // Checks
 

@@ -12,7 +12,7 @@
          * @param source Source object. Should be observable.
          * @param parent Parent scope. Should be observable.
          */
-        constructor(source: any, parent: Object) {
+        constructor(source: Object, parent: Object) {
             Object.defineProperty(this, 'onPropertyChanged', {
                 value: new Event()
             });
@@ -47,7 +47,7 @@
 
             // Subscribe for changes
             if (isNotifier(source)) {
-                this.__registrar__.subscribe((<Notifier>source).onPropertyChanged,(prop) => {
+                this.__registrar__.subscribe((<Notifier>source).onPropertyChanged, (prop) => {
                     if (!settingProp) {
                         if (ownProps.indexOf(prop) < 0) {
                             createOwnProperty(prop);
@@ -86,7 +86,7 @@
 
                 // Subscribe for changes
                 if (isNotifier(parent)) {
-                    this.__registrar__.subscribe((<Notifier>parent).onPropertyChanged,(prop) => {
+                    this.__registrar__.subscribe((<Notifier>parent).onPropertyChanged, (prop) => {
                         if (!settingProp && ownProps.indexOf(prop) < 0) {
                             if (parentProps.indexOf(prop) < 0) {
                                 createParentProperty(prop);

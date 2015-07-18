@@ -1,4 +1,9 @@
-﻿xp.Log.DisplayMessages = xp.Log.HeatLevel.Warn | xp.Log.Domain.Binding;
+﻿/// <reference path="../../utils/log.ts"/>
+/// <reference path="../../data/model.ts"/>
+/// <reference path="../../data/collection.ts"/>
+/// <reference path="../../ui/controls/window.ts"/>
+
+xp.Log.DisplayMessages = xp.Log.HeatLevel.Warn | xp.Log.Domain.Binding;
 
 module Todo {
     //

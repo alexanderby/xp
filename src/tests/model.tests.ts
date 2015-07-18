@@ -1,4 +1,10 @@
-﻿/// <reference path="../references.ts" />
+﻿/// <reference path="../utils/log.ts"/>
+/// <reference path="../data/model.ts"/>
+/// <reference path="../data/object.ts"/>
+/// <reference path="../data/serialization.ts"/>
+/// <reference path="../data/observable.ts"/>
+/// <reference path="../data/collection.ts"/>
+/// <reference path="assert.ts"/>
 
 module xp.Tests {
     Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Model. Start.');

@@ -1,31 +1,16 @@
 {
   "name": "xp",
   "version": "0.5.0",
-  "private": true,
-  "description": "JavaScript or TypeScript MVVM presentation framework",
-  "main": "xp.js",
+  "description": "TypeScript MVVM framework",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/alexanderby/xp.git"
+  },
+  "author": "Alexander Shutov",
+  "license": "ISC",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://alexanderby@bitbucket.org/alexanderby/xp.git"
-  },
-  "keywords": [
-    "mvvm",
-    "data",
-    "binding",
-    "data-binding",
-    "typescript",
-    "presentation",
-    "framework",
-    "flexbox",
-    "flex-box",
-    "flexible",
-    "ui"
-  ],
-  "author": "Alexander Shutov",
-  "license": "ISC",
   "devDependencies": {
     "create-grunt-tasks": "^0.7.1",
     "grunt": "^0.4.5",
