@@ -13,6 +13,7 @@ module.exports = function (grunt) {
 
             // Compile
             .sub('typescript', {
+                // TODO: tsconfig.json doesn't work? Waiting for TS1.5 release?
                 src: config.tsFiles,
                 dest: 'build/xp/xp.js',
                 options: { target: 'es5', sourceMap: false, declaration: true }
@@ -131,6 +132,7 @@ function getConfig() {
             'src/data/call_manager.ts',
             'src/data/model.ts',
             'src/data/scope.ts',
+            'src/data/serialization.ts',
 
             'src/ui/uievent.ts',
 

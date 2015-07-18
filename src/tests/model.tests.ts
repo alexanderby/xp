@@ -1,4 +1,6 @@
-﻿module xp.Tests {
+﻿/// <reference path="../references.ts" />
+
+module xp.Tests {
     Log.write(Log.HeatLevel.Info, Log.Domain.Test, 'Test: Model. Start.');
 
     //
