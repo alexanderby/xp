@@ -68,7 +68,7 @@ module.exports = function (grunt) {
             .sub('less', {
                 files: {
                     'build/xp/style/defaultstyle.css': 'src/style/defaultstyle.less',
-                    'build/xp/style/ie9-layout-fallback.css': 'src/style/ie9-layout-fallback.less',
+                    //'build/xp/style/ie9-layout-fallback.css': 'src/style/ie9-layout-fallback.less',
                 },
                 options: {
                     paths: ['src/style/']

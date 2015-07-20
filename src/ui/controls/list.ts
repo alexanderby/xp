@@ -2,7 +2,7 @@
     export interface ListMarkup<T extends List> extends VBoxMarkup<T> {
         items?: any[]|string;
         itemId?: string;
-        itemCreator?: () => Element
+        itemCreator?: (item?: any) => Element
     }
 
     /**
@@ -11,7 +11,7 @@
     export class List extends VBox {
         items: any[];
         itemId: string;
-        itemCreator: () => Element;
+        itemCreator: (item?: any) => Element;
 
         constructor(markup?: ListMarkup<List>) {
             super(markup);
@@ -53,7 +53,7 @@
                         // Subscribe for changes
                         if (isCollectionNotifier(items)) {
                             var collection = <CollectionNotifier<any>><any>items;
-                            this.itemsRegistar.subscribe(collection.onCollectionChanged,(args) => {
+                            this.itemsRegistar.subscribe(collection.onCollectionChanged, (args) => {
                                 switch (args.action) {
                                     case CollectionChangeAction.Attach:
                                     case CollectionChangeAction.Create:
@@ -127,9 +127,9 @@
 
         private itemsRegistar: EventRegistrar;
 
-        protected addItem(index: number, item) {
+        protected addItem(index: number, item: any) {
             // Create child
-            var child = this.itemCreator();
+            var child = this.itemCreator(item);
             child.name = xp.createUuid();
             child.useParentScope = false;
 
