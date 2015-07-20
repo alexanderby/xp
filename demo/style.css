@@ -1,0 +1,699 @@
+/*--------
+    BUTTON
+----------*/
+.Button {
+  background-color: #334455;
+  border: none;
+  box-sizing: border-box;
+  cursor: default;
+  display: flex;
+  flex: none;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1em;
+  min-height: 2em;
+  min-width: 2em;
+  outline: none;
+  padding: 0.5em 0.375em;
+  text-decoration: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.Button:hover:not(.disabled) {
+  background-color: #335577;
+}
+.Button:active:not(.disabled) {
+  background-color: #337799;
+}
+.Button .wrapper {
+  align-items: center;
+  display: inline-flex;
+  flex: none;
+  flex-flow: row nowrap;
+  justify-content: center;
+  width: 100%;
+}
+.Button .wrapper > span {
+  flex: none;
+  margin: 0 0.125em;
+  pointer-events: none;
+}
+.Button .wrapper > span.hidden {
+  display: none;
+}
+.Button .icon {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+}
+.Button .text {
+  color: #dddddd;
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1em;
+}
+.Button.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+/*-----------
+    CHECKBOX
+-------------*/
+.CheckBox {
+  align-items: center;
+  box-sizing: border-box;
+  cursor: default;
+  display: inline-flex;
+  flex: none;
+  flex-flow: row nowrap;
+  font-size: 1em;
+  justify-content: flex-start;
+  line-height: 1em;
+  min-height: 2em;
+  min-width: 2em;
+  padding: 0 /* 0.5em*/;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.CheckBox > input[type=checkbox] {
+  display: none;
+}
+.CheckBox > input[type=checkbox]:checked + .check:before {
+  background-color: #cccccc;
+  content: "";
+  display: inline-block;
+  height: 0.25em;
+  left: 0.125em;
+  position: absolute;
+  top: 0.5em;
+  transform: skewY(45deg);
+  width: 0.25em;
+}
+.CheckBox > input[type=checkbox]:checked + .check:after {
+  background-color: #cccccc;
+  content: "";
+  display: inline-block;
+  height: 0.25em;
+  position: absolute;
+  top: 0.375em;
+  transform: skewY(-45deg);
+  width: 0.5em;
+  left: 0.375em;
+}
+.CheckBox .check {
+  background-color: #444444;
+  display: inline-block;
+  flex: none;
+  font-size: 1em;
+  height: 1em;
+  margin: 0.5em 0;
+  position: relative;
+  width: 1em;
+}
+.CheckBox:hover:not(.disabled) .check {
+  background-color: #555555;
+}
+.CheckBox .text {
+  color: #dddddd;
+  display: inline-block;
+  flex: none;
+  font-size: 1em;
+  line-height: 1em;
+  margin-left: 0.25em;
+  pointer-events: none;
+}
+.CheckBox.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+/*---------------
+    CONTEXT MENU
+-----------------*/
+.ContextMenu {
+  background-color: #222222;
+  margin: 0 !important;
+  min-width: 12em;
+  position: absolute;
+}
+.ContextMenuItem {
+  background-color: #334455;
+  border: none;
+  box-sizing: border-box;
+  cursor: default;
+  display: flex;
+  flex: none;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1em;
+  min-height: 2em;
+  min-width: 2em;
+  outline: none;
+  padding: 0.5em 0.375em;
+  text-decoration: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.ContextMenuItem:hover:not(.disabled) {
+  background-color: #335577;
+}
+.ContextMenuItem:active:not(.disabled) {
+  background-color: #337799;
+}
+.ContextMenuItem .wrapper {
+  align-items: center;
+  display: inline-flex;
+  flex: none;
+  flex-flow: row nowrap;
+  height: 100%;
+  justify-content: center;
+  width: 100%;
+}
+.ContextMenuItem .icon {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+}
+.ContextMenuItem .text {
+  color: #dddddd;
+  flex: 1 0 auto;
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1em;
+}
+.ContextMenuItem .key {
+  color: #dddddd;
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1em;
+  opacity: 0.5;
+}
+.ContextMenuItem span {
+  flex: none;
+  margin: 0 0.125em;
+  pointer-events: none;
+}
+.ContextMenuItem span.hidden {
+  display: none;
+}
+.ContextMenuItem.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+/*-------
+    HBOX
+---------*/
+.HBox {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: row;
+  flex: none;
+}
+.HBox > .flex-None {
+  flex: none;
+}
+.HBox > .flex-Stretch {
+  flex: 1 1 auto;
+}
+.HBox > .flex-Grow {
+  flex: 1 0 auto;
+}
+.HBox > .flex-Shrink {
+  flex: 0 1 auto;
+}
+.HBox.contentAlign-Left {
+  justify-content: flex-start;
+}
+.HBox.contentAlign-Center {
+  justify-content: center;
+}
+.HBox.contentAlign-Right {
+  justify-content: flex-end;
+}
+.HBox.itemsAlign-Top {
+  align-items: flex-start;
+}
+.HBox.itemsAlign-Middle {
+  align-items: center;
+}
+.HBox.itemsAlign-Bottom {
+  align-items: flex-end;
+}
+.HBox.itemsAlign-Stretch {
+  align-items: stretch;
+}
+.HBox.itemsIndent-05 > :not(.hidden) ~ :not(.hidden) {
+  margin-left: 0.5em;
+}
+.HBox.itemsIndent-1 > :not(.hidden) ~ :not(.hidden) {
+  margin-left: 1em;
+}
+.HBox.itemsIndent-2 > :not(.hidden) ~ :not(.hidden) {
+  margin-left: 2em;
+}
+.HBox.itemsIndent-4 > :not(.hidden) ~ :not(.hidden) {
+  margin-left: 4em;
+}
+.HBox.scrollBar-None {
+  overflow: hidden;
+}
+.HBox.scrollBar-Horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.HBox.scrollBar-Vertical {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.HBox.scrollBar-Both {
+  overflow: auto;
+}
+.HBox.wrapping-NoWrap {
+  flex-wrap: nowrap;
+}
+.HBox.wrapping-Wrap {
+  flex-wrap: wrap;
+}
+.HBox.disabled {
+  pointer-events: none;
+}
+.HBox.disabled > *:not(.disabled):not(.HBox):not(.VBox) {
+  opacity: 0.5;
+}
+/*--------
+    LABEL
+----------*/
+.Label {
+  align-items: center;
+  color: #dddddd;
+  cursor: default;
+  display: inline-flex;
+  flex: none;
+  font-size: 1em;
+  justify-content: center;
+  line-height: 1em;
+  min-height: 2em;
+  padding: 0 /* 0.5em*/;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.Label.title {
+  font-size: 1.5em;
+  font-weight: lighter;
+}
+.Label.message {
+  line-height: normal;
+  white-space: pre-wrap;
+}
+/*--------
+    MODAL
+----------*/
+.ModalTint {
+  align-items: center;
+  background-color: rgba(64, 64, 64, 0.75);
+  flex-flow: column nowrap;
+  display: flex;
+  height: 100%;
+  justify-content: center;
+  left: 0;
+  margin: 0 !important;
+  position: absolute;
+  top: 0;
+  width: 100%;
+}
+.Modal {
+  background-color: #222222;
+  flex: none;
+}
+/*--------------
+    PLACEHOLDER
+----------------*/
+.Placeholder {
+  cursor: default;
+  display: inline-block;
+  flex: 1 1 auto;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.VBox > .Placeholder {
+  height: 100%;
+}
+.HBox > .Placeholder {
+  width: 100%;
+}
+/*--------------
+    RADIOBUTTON
+----------------*/
+.RadioButton {
+  align-items: center;
+  box-sizing: border-box;
+  cursor: default;
+  display: inline-flex;
+  flex: none;
+  flex-flow: row nowrap;
+  font-size: 1em;
+  justify-content: flex-start;
+  line-height: 1em;
+  min-height: 2em;
+  min-width: 2em;
+  padding: 0 /* 0.5em*/;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.RadioButton input[type=radio] {
+  display: none;
+}
+.RadioButton input[type=radio]:checked + .check:before {
+  background-color: #cccccc;
+  border-radius: 0.3125em;
+  content: "";
+  display: inline-block;
+  height: 0.625em;
+  left: 0.1875em;
+  position: absolute;
+  top: 0.1875em;
+  width: 0.625em;
+}
+.RadioButton .check {
+  background-color: #444444;
+  border-radius: 0.5em;
+  display: inline-block;
+  flex: none;
+  font-size: 1em;
+  height: 1em;
+  margin: 0.5em 0;
+  position: relative;
+  width: 1em;
+}
+.RadioButton:hover:not(.disabled) .check {
+  background-color: #555555;
+}
+.RadioButton .text {
+  color: #dddddd;
+  display: inline-block;
+  flex: none;
+  font-size: 1em;
+  line-height: 1em;
+  margin-left: 0.25em;
+  pointer-events: none;
+}
+.RadioButton.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+/*--------------
+    SCROLL BARS
+----------------*/
+.VBox,
+.HBox,
+.TextArea {
+  scrollbar-arrow-color: #337799;
+  scrollbar-track-color: #222222;
+  scrollbar-base-color: #335577;
+  scrollbar-3dlight-color: #335577;
+  scrollbar-highlight-color: #335577;
+  scrollbar-face-color: #335577;
+  scrollbar-shadow-color: #335577;
+  scrollbar-darkshadow-color: #335577;
+}
+.VBox::-webkit-scrollbar,
+.HBox::-webkit-scrollbar,
+.TextArea::-webkit-scrollbar {
+  background-color: transparent;
+  height: 1.5em;
+  width: 1.5em;
+}
+.VBox::-webkit-scrollbar-thumb,
+.HBox::-webkit-scrollbar-thumb,
+.TextArea::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  background-color: #334455;
+}
+.VBox::-webkit-scrollbar-thumb:hover,
+.HBox::-webkit-scrollbar-thumb:hover,
+.TextArea::-webkit-scrollbar-thumb:hover {
+  background-color: #335577;
+}
+.VBox::-webkit-scrollbar-thumb:active,
+.HBox::-webkit-scrollbar-thumb:active,
+.TextArea::-webkit-scrollbar-thumb:active {
+  background-color: #337799;
+}
+.VBox::-webkit-scrollbar-thumb:horizontal,
+.HBox::-webkit-scrollbar-thumb:horizontal,
+.TextArea::-webkit-scrollbar-thumb:horizontal {
+  border-top: 0.5em solid transparent;
+}
+.VBox::-webkit-scrollbar-thumb:vertical,
+.HBox::-webkit-scrollbar-thumb:vertical,
+.TextArea::-webkit-scrollbar-thumb:vertical {
+  border-left: 0.5em solid transparent;
+}
+.VBox::-webkit-scrollbar-corner,
+.HBox::-webkit-scrollbar-corner,
+.TextArea::-webkit-scrollbar-corner {
+  background-color: #222222;
+}
+/*-----------
+    TEXT BOX (and Text Area)
+-------------*/
+.TextBox {
+  background-color: #444444;
+  border: none;
+  box-sizing: border-box;
+  color: #cccccc;
+  flex: 1 1 auto;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1em;
+  line-height: 2em;
+  min-height: 2em;
+  min-width: 2em;
+  outline: none;
+  overflow: hidden;
+  padding: 0 0 0 0.25em;
+  width: 100%;
+}
+.TextBox:hover:not(.disabled) {
+  background-color: #4a4a4a;
+}
+.TextBox:focus:not(.disabled) {
+  background-color: #555555;
+  color: #ffffff;
+  outline: none;
+}
+.TextBox[readonly] {
+  cursor: default;
+}
+.TextBox.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+.TextBox::-webkit-inner-spin-button {
+  -webkit-filter: invert(100%);
+}
+.TextArea {
+  line-height: normal;
+  overflow: auto;
+  padding: 0.25em;
+  resize: none;
+}
+::-webkit-input-placeholder {
+  /* WebKit browsers */
+  color: #999999;
+}
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #999999;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #999999;
+}
+/*----------------
+    TOGGLE BUTTON
+------------------*/
+.ToggleButton {
+  align-items: center;
+  background-color: #334455;
+  border: none;
+  box-sizing: border-box;
+  cursor: default;
+  display: inline-flex;
+  flex-flow: row nowrap;
+  flex: none;
+  font-family: 'Segoe UI', sans-serif;
+  font-size: 1em;
+  justify-content: center;
+  min-height: 2em;
+  min-width: 2em;
+  outline: none;
+  padding: 0 0.375em;
+  text-decoration: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.ToggleButton input[type=radio] {
+  display: none;
+}
+.ToggleButton:hover:not(.disabled):not(.checked) {
+  background-color: #335577;
+}
+.ToggleButton:active:not(.disabled),
+.ToggleButton.checked {
+  background-color: #337799;
+}
+.ToggleButton .icon {
+  display: inline-block;
+  height: 1em;
+  width: 1em;
+}
+.ToggleButton .text {
+  color: #dddddd;
+  display: inline-block;
+  font-size: 1em;
+  line-height: 1em;
+}
+.ToggleButton span {
+  flex: none;
+  margin: 0 0.125em;
+  pointer-events: none;
+}
+.ToggleButton span.hidden {
+  display: none;
+}
+.ToggleButton.disabled {
+  opacity: 0.5;
+  pointer-events: none;
+}
+/*-------
+    VBOX
+---------*/
+.VBox {
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  flex: none;
+}
+.VBox > .flex-None {
+  flex: none;
+}
+.VBox > .flex-Stretch {
+  flex: 1 1 auto;
+}
+.VBox > .flex-Grow {
+  flex: 1 0 auto;
+}
+.VBox > .flex-Shrink {
+  flex: 0 1 auto;
+}
+.VBox.contentAlign-Top {
+  justify-content: flex-start;
+}
+.VBox.contentAlign-Middle {
+  justify-content: center;
+}
+.VBox.contentAlign-Bottom {
+  justify-content: flex-end;
+}
+.VBox.itemsAlign-Left {
+  align-items: flex-start;
+}
+.VBox.itemsAlign-Center {
+  align-items: center;
+}
+.VBox.itemsAlign-Right {
+  align-items: flex-end;
+}
+.VBox.itemsAlign-Stretch {
+  align-items: stretch;
+}
+.VBox.itemsIndent-05 > :not(.hidden) ~ :not(.hidden) {
+  margin-top: 0.5em;
+}
+.VBox.itemsIndent-1 > :not(.hidden) ~ :not(.hidden) {
+  margin-top: 1em;
+}
+.VBox.itemsIndent-2 > :not(.hidden) ~ :not(.hidden) {
+  margin-top: 2em;
+}
+.VBox.itemsIndent-4 > :not(.hidden) ~ :not(.hidden) {
+  margin-top: 4em;
+}
+.VBox.scrollBar-None {
+  overflow: hidden;
+}
+.VBox.scrollBar-Horizontal {
+  overflow-x: auto;
+  overflow-y: hidden;
+}
+.VBox.scrollBar-Vertical {
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.VBox.scrollBar-Both {
+  overflow: auto;
+}
+.VBox.wrapping-NoWrap {
+  flex-wrap: nowrap;
+}
+.VBox.wrapping-Wrap {
+  flex-wrap: wrap;
+}
+.VBox.disabled {
+  pointer-events: none;
+}
+.VBox.disabled > *:not(.disabled):not(.HBox):not(.VBox) {
+  opacity: 0.5;
+}
+/*---------
+    WINDOW
+-----------*/
+.Window {
+  background-color: #222222;
+  box-sizing: border-box;
+  font-family: 'Segoe UI', sans-serif;
+  margin: 0;
+  min-height: 100%;
+  min-width: -moz-min-content;
+  min-width: -webkit-min-content;
+  padding: 0;
+}
+html {
+  background-color: #222222;
+  height: 100%;
+  width: 100%;
+}
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  /* IE10+ specific styles go here */
+  .Window {
+    height: 100%;
+  }
+}
+.hidden {
+  display: none;
+}
+/*.visibility-Hidden {
+    visibility: hidden;
+}
+
+.visibility-Collapsed {
+    display: none;
+}*/
+.BooksViewer .title {
+  color: #d42;
+}
+.BooksViewer .content {
+  background-color: white;
+}
