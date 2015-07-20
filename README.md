@@ -11,7 +11,7 @@
 - No directives, providers and other bull$#!t
 
 # Samples
-For simple code sample see [Dark Reader's popup page](https://github.com/alexanderby/darkreader/tree/master/src/popup/ui).
+For some code sample see [Dark Reader's popup page](https://github.com/alexanderby/darkreader/tree/master/src/popup/ui) or [simple demo](http://alexanderby.github.io/xp/demo/) below.
 
 ### HTML
 
