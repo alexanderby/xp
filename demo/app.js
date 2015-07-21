@@ -59,7 +59,7 @@ var AppWindow = (function (_super) {
                 new xp.HBox({ itemsIndent: '1em' }, [
                     new xp.Label({ text: 'student:' }),
                     new xp.TextBox({
-                        placeholder: 'Enter student name',
+                        placeholder: 'enter student name',
                         notifyOnKeyDown: true,
                         text: '{student.name}' // Bind name
                     })
@@ -79,7 +79,7 @@ var AppWindow = (function (_super) {
                             }
                             else {
                                 if (app.student.books.filter(function (b) { return b.title === text; }).length > 0) {
-                                    xp.MessageBox.show('There is already a ' + text + ' book name', 'ERROR');
+                                    xp.MessageBox.show('There is already "' + text + '" book', 'ERROR');
                                 }
                                 else {
                                     app.student.books.push({
@@ -101,8 +101,7 @@ var AppWindow = (function (_super) {
                             text: '({student.books}.indexOf({book}) + 1)'
                         }),
                         new xp.Label({
-                            text: '{book.title}',
-                            flex: 'stretch'
+                            text: '{book.title}'
                         }),
                         new xp.Placeholder(),
                         new xp.Button({
@@ -148,7 +147,7 @@ var BooksViewer = (function (_super) {
     }
     BooksViewer.prototype.getTemplate = function () {
         var _this = this;
-        return xp.Dom.create("\n\t\t\t<div class=\"BooksViewer\">\n\t\t\t  <div class=\"title\">Books viewer</div>\n\t\t\t  <div class=\"content\"></div>\n\t\t\t</div>\n\t\t\t", {
+        return xp.Dom.create("\n            <div class=\"BooksViewer\">\n              <div class=\"title\">Books viewer</div>\n              <div class=\"content\"></div>\n            </div>\n            ", {
             '.content': function (el) { return _this.contentElement = el; }
         });
     };
@@ -212,3 +211,4 @@ window.onload = function () {
     app = new App();
     app.start();
 };
+//# sourceMappingURL=app.js.map
