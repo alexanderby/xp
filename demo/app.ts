@@ -232,7 +232,7 @@ class BooksViewer extends xp.Element {
     }
 }
 interface BooksViewerMarkup extends xp.ElementMarkup<BooksViewer> {
-	books?: xp.ObservableCollection<Book>|string; // string "{*}" is used for binding
+    books?: xp.ObservableCollection<Book>|string; // string "{*}" is used for binding
 }
 
 

@@ -1,5 +1,5 @@
 # Extensible presentation
-**xp** is a TypeScript MVVM framework designed for use in large moredn single-page web applications that consist of many specific components.
+**xp** is a TypeScript MVVM framework designed for use in large modern single-page web applications that consist of many specific components.
 
 # Features
 - Strongly typed controls
