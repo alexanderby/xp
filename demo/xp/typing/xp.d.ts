@@ -562,7 +562,13 @@ declare module xp {
         setterConvertor?: (v) => any;
         getterConvertor?: (v) => any;
         enumerable?: boolean;
+        convertToObservable?: boolean;
+        convertNested?: boolean;
     }
+    /**
+     * Model property decorator.
+     */
+    function property(opts?: ModelPropertyOptions): PropertyDecorator;
 }
 declare module xp {
     /**
@@ -723,7 +729,7 @@ declare module xp {
          * @param prop Property name.
          * @param options Property options.
          */
-        protected defineProperty(prop: string, options: PropertyOptions): void;
+        protected defineProperty(prop: string, options: ElementPropertyOptions): void;
         /**
          * Defines element's properties.
          */
@@ -836,7 +842,7 @@ declare module xp {
          */
         onScopeChanged: xp.Event<Object>;
     }
-    interface PropertyOptions {
+    interface ElementPropertyOptions {
         setter?: (v) => void;
         getter?: () => any;
         observable?: boolean;

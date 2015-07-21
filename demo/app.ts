@@ -3,12 +3,12 @@
 // --- Models ---
 
 class Student extends xp.Model {
+	@xp.property()
 	name: string;
-	books: xp.ObservableCollection<Book>;
+	@xp.property({ convertToObservable: true })
+	books = new xp.ObservableCollection<Book>();
 	constructor() {
 		super();
-		xp.Model.property(this, 'name');
-		xp.Model.property(this, 'books', new xp.ObservableCollection());
 	}
 }
 
@@ -20,12 +20,12 @@ interface Book {
 // --- Some application ---
 
 class App extends xp.Model {
+	@xp.property()
 	student: Student;
 	window: AppWindow;
 
 	constructor() {
 		super();
-		xp.Model.property(this, 'student');
 	}
 
 	start() {

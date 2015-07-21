@@ -16,7 +16,7 @@ module.exports = function (grunt) {
                 // TODO: tsconfig.json doesn't work? Waiting for TS1.5 release?
                 src: config.tsFiles,
                 dest: 'build/xp/xp.js',
-                options: { target: 'es5', sourceMap: false, declaration: true }
+                options: { target: 'es5', sourceMap: false, declaration: true, experimentalDecorators: true }
             })
             
             // Minify

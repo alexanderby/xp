@@ -4,7 +4,8 @@ module.exports = function (grunt) {
 			compile: {
 				src: 'app.ts',
 				options: {
-					target: 'es5'
+					target: 'es5',
+					experimentalDecorators: true
 				}
 			}
 		},

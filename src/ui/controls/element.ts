@@ -238,7 +238,7 @@ module xp {
          * @param prop Property name.
          * @param options Property options.
          */
-        protected defineProperty(prop: string, options: PropertyOptions) {
+        protected defineProperty(prop: string, options: ElementPropertyOptions) {
             var value;
             Object.defineProperty(this, prop, {
                 enumerable: true,
@@ -705,7 +705,7 @@ module xp {
     }
 
 
-    export interface PropertyOptions {
+    export interface ElementPropertyOptions {
         setter?: (v) => void;
         getter?: () => any;
         observable?: boolean;

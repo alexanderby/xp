@@ -39,8 +39,11 @@
          */
         static property(obj: Notifier, prop: string, value?, opts?: ModelPropertyOptions) {
             opts = opts || {};
-            var convertToObservable = isNotifier(value);
-            var convertNested = value instanceof ObservableObject ? value['__convertNested__'] : false;
+            var convertToObservable = opts.convertToObservable || isNotifier(value);
+            var convertNested = opts.convertNested || (
+                value instanceof ObservableObject
+                    ? value['__convertNested__']
+                    : false);
             if (opts.enumerable === void 0) {
                 opts.enumerable = true;
             }
@@ -124,5 +127,82 @@
         setterConvertor?: (v) => any;
         getterConvertor?: (v) => any;
         enumerable?: boolean;
+        convertToObservable?: boolean;
+        convertNested?: boolean;
     }
+    
+    /**
+     * Model property decorator.
+     */
+    export function property(opts?: ModelPropertyOptions): PropertyDecorator {
+        opts = opts || {};
+        return function(proto: Model, propName: string) {
+            var convertToObservable = opts.convertToObservable;
+            var convertNested = opts.convertNested;
+            var enumerable = opts.enumerable === void 0 ? true : opts.enumerable;
+
+            var fieldName = '_' + propName;
+            
+            // Getter
+            if (opts.getterConvertor) {
+                var getterConvertor = opts.getterConvertor;
+                var getter = function() { return getterConvertor(this[fieldName]); };
+            }
+            else {
+                var getter = function() { return this[fieldName]; };
+            }
+
+            // Setter
+            if (opts.setterConvertor) {
+                var setterConvertor = opts.setterConvertor;
+                if (convertToObservable) {
+                    var setter = function(v) {
+                        if (ObservableObject.isConvertable(v)) {
+                            v = observable(v, convertNested);
+                        }
+                        this[fieldName] = setterConvertor(v);
+                        (<Notifier>this).onPropertyChanged.invoke(propName);
+                    };
+                }
+                else {
+                    var setter = function(v) {
+                        this[fieldName] = setterConvertor(v);
+                        (<Notifier>this).onPropertyChanged.invoke(propName);
+                    };
+                }
+            }
+            else {
+                if (convertToObservable) {
+                    var setter = function(v) {
+                        if (ObservableObject.isConvertable(v)) {
+                            v = observable(v, convertNested);
+                        }
+                        this[fieldName] = v;
+                        (<Notifier>this).onPropertyChanged.invoke(propName);
+                    };
+                }
+                else {
+                    var setter = function(v) {
+                        this[fieldName] = v;
+                        (<Notifier>this).onPropertyChanged.invoke(propName);
+                    };
+                }
+            }
+            
+            // Define property
+            Object.defineProperty(proto, propName, {
+                get: getter,
+                set: setter,
+                configurable: true,
+                enumerable: enumerable
+            });
+            
+            // Define field
+            Object.defineProperty(proto, fieldName, {
+                writable: true,
+                configurable: true,
+                enumerable: false
+            });
+        };
+    };
 } 

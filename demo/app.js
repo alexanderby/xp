@@ -5,14 +5,27 @@ var __extends = this.__extends || function (d, b) {
     __.prototype = b.prototype;
     d.prototype = new __();
 };
+if (typeof __decorate !== "function") __decorate = function (decorators, target, key, desc) {
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") return Reflect.decorate(decorators, target, key, desc);
+    switch (arguments.length) {
+        case 2: return decorators.reduceRight(function(o, d) { return (d && d(o)) || o; }, target);
+        case 3: return decorators.reduceRight(function(o, d) { return (d && d(target, key)), void 0; }, void 0);
+        case 4: return decorators.reduceRight(function(o, d) { return (d && d(target, key, o)) || o; }, desc);
+    }
+};
 // --- Models ---
 var Student = (function (_super) {
     __extends(Student, _super);
     function Student() {
         _super.call(this);
-        xp.Model.property(this, 'name');
-        xp.Model.property(this, 'books', new xp.ObservableCollection());
+        this.books = new xp.ObservableCollection();
     }
+    __decorate([
+        xp.property()
+    ], Student.prototype, "name");
+    __decorate([
+        xp.property({ convertToObservable: true })
+    ], Student.prototype, "books");
     return Student;
 })(xp.Model);
 // --- Some application ---
@@ -20,7 +33,6 @@ var App = (function (_super) {
     __extends(App, _super);
     function App() {
         _super.call(this);
-        xp.Model.property(this, 'student');
     }
     App.prototype.start = function () {
         this.reloadData();
@@ -43,6 +55,9 @@ var App = (function (_super) {
             ]
         });
     };
+    __decorate([
+        xp.property()
+    ], App.prototype, "student");
     return App;
 })(xp.Model);
 xp.hidePrototypeProperties(App);
@@ -59,7 +74,7 @@ var AppWindow = (function (_super) {
                 new xp.HBox({ itemsIndent: '1em' }, [
                     new xp.Label({ text: 'student:' }),
                     new xp.TextBox({
-                        placeholder: 'Enter student name',
+                        placeholder: 'enter student name',
                         notifyOnKeyDown: true,
                         text: '{student.name}' // Bind name
                     })
