@@ -1,51 +1,51 @@
 {
-	"compilerOptions": {
-		"target": "es5"
-	},
-	"files": [
-		"utils/dom.ts",
-		"utils/log.ts",
-		"utils/misc.ts",
-		"utils/path.ts",
-		
-		"core/defs.ts",
-		"core/dictionary.ts",
-		"core/event.ts",
-		
-		"data/object.ts",
-		"data/collection.ts",
-		"data/observable.ts",
-		"data/expression.ts",
-		"data/manager.ts",
-		"data/call_manager.ts",
-		"data/model.ts",
-		"data/scope.ts",
-		"data/serialization.ts",
-		
-		"tests/assert.ts",
-		
-		"ui/uievent.ts",
-		
-		"ui/controls/element.ts",
-		"ui/controls/button.ts",
-		"ui/controls/checkbox.ts",
-		"ui/controls/label.ts",
-		"ui/controls/placeholder.ts",
-		"ui/controls/radiobutton.ts",
-		"ui/controls/togglebutton.ts",
-		"ui/controls/textbox.ts",
-		"ui/controls/textarea.ts",
-		
-		"ui/controls/html.ts",
-		
-		"ui/controls/container.ts",
-		"ui/controls/stack.ts",
-		"ui/controls/hbox.ts",
-		"ui/controls/vbox.ts",
-		"ui/controls/contextmenu.ts",
-		"ui/controls/list.ts",
-		"ui/controls/messagebox.ts",
-		"ui/controls/modal.ts",
-		"ui/controls/window.ts"
-	]
+    "compilerOptions": {
+        "target": "es5"
+    },
+    "files": [
+        "utils/dom.ts",
+        "utils/log.ts",
+        "utils/misc.ts",
+        "utils/path.ts",
+        
+        "core/defs.ts",
+        "core/dictionary.ts",
+        "core/event.ts",
+        
+        "data/object.ts",
+        "data/collection.ts",
+        "data/observable.ts",
+        "data/expression.ts",
+        "data/manager.ts",
+        "data/call_manager.ts",
+        "data/model.ts",
+        "data/scope.ts",
+        "data/serialization.ts",
+        
+        "tests/assert.ts",
+        
+        "ui/uievent.ts",
+        
+        "ui/controls/element.ts",
+        "ui/controls/button.ts",
+        "ui/controls/checkbox.ts",
+        "ui/controls/label.ts",
+        "ui/controls/placeholder.ts",
+        "ui/controls/radiobutton.ts",
+        "ui/controls/togglebutton.ts",
+        "ui/controls/textbox.ts",
+        "ui/controls/textarea.ts",
+        
+        "ui/controls/html.ts",
+        
+        "ui/controls/container.ts",
+        "ui/controls/stack.ts",
+        "ui/controls/hbox.ts",
+        "ui/controls/vbox.ts",
+        "ui/controls/contextmenu.ts",
+        "ui/controls/list.ts",
+        "ui/controls/messagebox.ts",
+        "ui/controls/modal.ts",
+        "ui/controls/window.ts"
+    ]
 }

@@ -631,9 +631,9 @@ declare module xp {
         onMouseMove?: (e: MouseEventArgs) => void;
         onMouseEnter?: (e: MouseEventArgs) => void;
         onMouseLeave?: (e: MouseEventArgs) => void;
-        onKeyPress?: (e: KeyboardEvent) => void;
-        onKeyDown?: (e: KeyboardEvent) => void;
-        onKeyUp?: (e: KeyboardEvent) => void;
+        onKeyPress?: (e: KeyboardEventArgs) => void;
+        onKeyDown?: (e: KeyboardEventArgs) => void;
+        onKeyUp?: (e: KeyboardEventArgs) => void;
         onRendered?: (e: T) => void;
         onRemoved?: (e: T) => void;
         init?: (el: T) => void;

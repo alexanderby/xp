@@ -7,6 +7,11 @@ class Student extends xp.Model {
     books: xp.ObservableCollection<Book>;
     constructor() {
         super();
+        // NOTE: xp properties definition.
+        // These properties will invoke model's "onPropertyChanged" event
+        // when the change occurs.
+        // ES7 Decorators may be used in future to avoid
+        // defining observable properties in constructor.
         xp.Model.property(this, 'name');
         xp.Model.property(this, 'books', new xp.ObservableCollection());
     }
@@ -17,7 +22,7 @@ interface Book {
 }
 
 
-// --- Some application ---
+// --- Some random application ---
 
 class App extends xp.Model {
     student: Student;
@@ -36,21 +41,20 @@ class App extends xp.Model {
     }
 
     reloadData() {
+        // NOTE: "__xp_model__" field is used
+        // for restoring model by constructor name.
+        var json = `
+            {
+                "name": "John",
+                "__xp_model__": "Student",
+                "books": [
+                    { "title": "Maths" },
+                    { "title": "Physics" }
+                ]
+            }
+        `;
         // Deserialize data from JSON
-        var json = this.getJsonData();
         this.student = xp.deserialize(json, [Student]);
-    }
-    
-    // Returns string JSON data
-    private getJsonData(): string {
-        return JSON.stringify({
-            name: 'John',
-            __xp_model__: 'Student', // Field for restoring model
-            books: [
-                { title: 'Maths' },
-                { title: 'Physics' }
-            ]
-        });
     }
 }
 xp.hidePrototypeProperties(App);
@@ -58,6 +62,10 @@ xp.hidePrototypeProperties(App);
 
 // --- View ---
 
+// NOTE: xp.Window is a wrapper over <body>.
+// If your view mainly consists of HTML,
+// you may inherit your root component from VBox
+// and render it with "renderTo(domElement)" method.
 class AppWindow extends xp.Window {
     private newBookTextBox: xp.TextBox;
 
@@ -81,25 +89,17 @@ class AppWindow extends xp.Window {
                 new xp.HBox({ itemsIndent: '1em' }, [
                     new xp.TextBox({
                         placeholder: 'enter book name',
+                        onKeyDown: (e) => {
+                            if (e.domEvent.keyCode === 13/*Enter*/) {
+                                this.onAddBook();
+                            }
+                        },
                         init: (tb) => this.newBookTextBox = tb
                     }),
                     new xp.Button({
                         text: 'Add book',
                         onClick: (e) => {
-                            var text = this.newBookTextBox.text.trim();
-                            if (!text) {
-                                xp.MessageBox.show('Please, enter book name', 'ERROR');
-                            } else {
-                                if (app.student.books.filter((b) => b.title === text).length > 0) {
-                                    xp.MessageBox.show('There is already "' + text + '" book', 'ERROR');
-                                } else {
-                                    app.student.books.push({
-                                        title: text
-                                    });
-                                    this.newBookTextBox.text = '';
-                                    this.newBookTextBox.focus();
-                                }
-                            }
+                            this.onAddBook();
                         }
                     })
                 ]),
@@ -129,14 +129,24 @@ class AppWindow extends xp.Window {
             
                 // Expression
                 new xp.Label({ text: '("Student name is " + {student.name} + ". He has " + {student.books.length} + " books.")' }),
-                
-                // Reload button
-                new xp.Button({
-                    text: 'Reload',
-                    onClick: (e) => app.reloadData()
-                }),
 
-                // Custom control
+                new xp.VBox({ itemsIndent: '0.5em' }, [
+                    // Sort button
+                    new xp.Button({
+                        text: 'Sort',
+                        onClick: (e) => app.student.books.sort((a, b) => {
+                            return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
+                        })
+                    }),
+                
+                    // Reload button
+                    new xp.Button({
+                        text: 'Reload',
+                        onClick: (e) => app.reloadData()
+                    }),
+                ]),
+
+                // Custom component
                 new BooksViewer({
                     books: '{student.books}'
                 })
@@ -147,6 +157,7 @@ class AppWindow extends xp.Window {
         this.newBookTextBox.focus();
     }
 
+    // NOTE: You may choose another way of window appearance, eg. fade in.
     protected getTemplate() {
         // Clear body
         while (document.body.childElementCount > 0) {
@@ -154,17 +165,39 @@ class AppWindow extends xp.Window {
         }
         return super.getTemplate();
     }
+
+    private onAddBook() {
+        var text = this.newBookTextBox.text.trim();
+        if (!text) {
+            xp.MessageBox.show('Please, enter book name', 'ERROR', { 'OK': () => this.newBookTextBox.focus() });
+        } else {
+            if (app.student.books.filter((b) => b.title === text).length > 0) {
+                xp.MessageBox.show('There is already "' + text + '" book', 'ERROR', { 'OK': () => this.newBookTextBox.focus() });
+            } else {
+                app.student.books.push({
+                    title: text
+                });
+                this.newBookTextBox.text = '';
+                this.newBookTextBox.focus();
+            }
+        }
+    }
 }
 
 
-// --- Custom control ---
+// --- Custom component ---
 
+// NOTE: For creating a component in most of the cases you may:
+// 1. Override "getTemplate()" method to return HTML element.
+// 2. Override "defineProperties()" to define how properties'
+// values affect DOM.
+// 3. Provide component's Markup interface.
 class BooksViewer extends xp.Element {
     books: xp.ObservableCollection<Book>;
     constructor(markup?: BooksViewerMarkup) {
         super(markup);
     }
-    protected contentElement: HTMLElement;
+
     protected getTemplate() {
         return xp.Dom.create(`
             <div class="BooksViewer">
@@ -175,10 +208,12 @@ class BooksViewer extends xp.Element {
                 '.content': (el) => this.contentElement = el
             });
     }
+    private contentElement: HTMLElement;
+
     protected defineProperties() {
         super.defineProperties();
         
-        // Define property
+        // Define property "books"
         var booksChangeRegistrar = new xp.EventRegistrar();
         this.defineProperty('books', {
             setter: (books: xp.ObservableCollection<Book>) => {
@@ -186,42 +221,59 @@ class BooksViewer extends xp.Element {
                 
                 // Unsubscribe from previous collection changes
                 booksChangeRegistrar.unsubscribeAll();
+                // Remove old items
                 while (content.lastElementChild) {
                     content.removeChild(content.lastElementChild);
                 }
 
                 if (books) {
                     // Add new books
-                    var addBook = (title: string) => {
+                    var addBook = (title: string, index?: number) => {
                         var bookEl = document.createElement('div');
-                        bookEl.style.color = 'rgb('
-                        + Math.round(Math.random() * 255) + ','
-                        + Math.round(Math.random() * 255) + ','
-                        + Math.round(Math.random() * 255) + ')';
-                        bookEl.style.backgroundColor = 'rgb('
-                        + Math.round(Math.random() * 255) + ','
-                        + Math.round(Math.random() * 255) + ','
-                        + Math.round(Math.random() * 255) + ')';
+                        function random() { return Math.round(Math.random() * 255); }
+                        bookEl.style.color = `rgb(${random() },${random() },${random() })`;
+                        bookEl.style.backgroundColor = `rgb(${random() },${random() },${random() })`;
                         bookEl.textContent = title;
-                        content.appendChild(bookEl);
+                        if (index === void (0) || index === content.childElementCount) {
+                            content.appendChild(bookEl);
+                        } else {
+                            content.insertBefore(bookEl, content.children.item(index));
+                        }
                     };
                     books.forEach((b) => addBook(b.title));
                 
                     // Handle collection changes
+                    // NOTE: "Attach" and "detach" actions signalize that collection item
+                    // is not removed, but moved to another collection and that node
+                    // should not be deleted, but moved.
                     booksChangeRegistrar.subscribe(books.onCollectionChanged, (args) => {
                         switch (args.action) {
                             case xp.CollectionChangeAction.Create:
-                                addBook(args.newItem.title);
+                            case xp.CollectionChangeAction.Attach:
+                                addBook(args.newItem.title, args.newIndex);
                                 break;
+
                             case xp.CollectionChangeAction.Delete:
-                                for (var i = 0; i < this.contentElement.children.length; i++) {
-                                    var item = this.contentElement.children.item(i);
-                                    if (item.textContent === args.oldItem.title) {
-                                        this.contentElement.removeChild(item);
-                                        break;
-                                    }
-                                }
+                            case xp.CollectionChangeAction.Detach:
+                                var item = this.contentElement.children.item(args.oldIndex);
+                                this.contentElement.removeChild(item);
                                 break;
+
+                            case xp.CollectionChangeAction.Move:
+                                var moved = content.children.item(args.oldIndex);
+                                var after = content.children.item(
+                                    args.newIndex < args.oldIndex ?
+                                        args.newIndex
+                                        : args.newIndex + 1);
+                                this.contentElement.insertBefore(moved, after);
+                                break;
+
+                            case xp.CollectionChangeAction.Replace:
+                                var oldItem = this.contentElement.children.item(args.oldIndex);
+                                this.contentElement.removeChild(oldItem);
+                                addBook(args.newItem.title, args.newIndex);
+                                break;
+
                             default:
                                 throw new Error('Action is not implemented.');
                         }
