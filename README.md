@@ -16,6 +16,8 @@ See the code sample below (also available [here](https://github.com/alexanderby/
 
 See [Dark Reader's popup page](https://github.com/alexanderby/darkreader/tree/master/src/popup/ui) for more code samples.
 
+For the whole list of **xp** classes and functions see the [type definition](https://github.com/alexanderby/xp/blob/master/demo/xp/typing/xp.d.ts).
+
 ### HTML
 
 ``` html
