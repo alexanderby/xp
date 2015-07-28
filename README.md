@@ -8,12 +8,13 @@
 - JavaScript markup
 - Flexible box layout
 - Customizable style sheet
+- Code completion (intellisense) in Web IDEs
 - No directives, providers and other bull$#!t
 
 # Samples
-For code samples see [Dark Reader's popup page](https://github.com/alexanderby/darkreader/tree/master/src/popup/ui) or [simple demo](https://github.com/alexanderby/xp/tree/master/demo).
+See the code sample below (also available [here](https://github.com/alexanderby/xp/tree/master/demo)). The result of the sample is [here](http://alexanderby.github.io/xp/demo/).
 
-The result of demo is [here](http://alexanderby.github.io/xp/demo/).
+See [Dark Reader's popup page](https://github.com/alexanderby/darkreader/tree/master/src/popup/ui) for more code samples.
 
 ### HTML
 
