@@ -1,4 +1,4 @@
-﻿type domElement = Element;
+﻿type DOMElement = Element;
 
 module xp {
 

@@ -33,7 +33,7 @@
          */
         show(x: number, y: number) {
             // Subscribe for outer events for cancel
-            var cancel = (e: domEvent) => {
+            var cancel = (e: DOMEvent) => {
                 this.remove();
                 window.removeEventListener('mousedown', cancel);
                 window.removeEventListener('keydown', onKey);
