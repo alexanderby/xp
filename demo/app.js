@@ -28,7 +28,7 @@ var Student = (function (_super) {
     ], Student.prototype, "books");
     return Student;
 })(xp.Model);
-// --- Some application ---
+// --- Some random application ---
 var App = (function (_super) {
     __extends(App, _super);
     function App() {
@@ -40,8 +40,10 @@ var App = (function (_super) {
         this.window = new AppWindow(this);
     };
     App.prototype.reloadData = function () {
+        // NOTE: "__xp_model__" field is used
+        // for restoring model by constructor name.
+        var json = "\n            {\n                \"name\": \"John\",\n                \"__xp_model__\": \"Student\",\n                \"books\": [\n                    { \"title\": \"Maths\" },\n                    { \"title\": \"Physics\" }\n                ]\n            }\n        ";
         // Deserialize data from JSON
-        var json = this.getJsonData();
         this.student = xp.deserialize(json, [Student]);
     };
     // Returns string JSON data
@@ -62,6 +64,10 @@ var App = (function (_super) {
 })(xp.Model);
 xp.hidePrototypeProperties(App);
 // --- View ---
+// NOTE: xp.Window is a wrapper over <body>.
+// If your view mainly consists of HTML,
+// you may inherit your root component from VBox
+// and render it with "renderTo(domElement)" method.
 var AppWindow = (function (_super) {
     __extends(AppWindow, _super);
     function AppWindow(app) {
@@ -83,27 +89,17 @@ var AppWindow = (function (_super) {
                 new xp.HBox({ itemsIndent: '1em' }, [
                     new xp.TextBox({
                         placeholder: 'enter book name',
+                        onKeyDown: function (e) {
+                            if (e.domEvent.keyCode === 13 /*Enter*/) {
+                                _this.onAddBook();
+                            }
+                        },
                         init: function (tb) { return _this.newBookTextBox = tb; }
                     }),
                     new xp.Button({
                         text: 'Add book',
                         onClick: function (e) {
-                            var text = _this.newBookTextBox.text.trim();
-                            if (!text) {
-                                xp.MessageBox.show('Please, enter book name', 'ERROR');
-                            }
-                            else {
-                                if (app.student.books.filter(function (b) { return b.title === text; }).length > 0) {
-                                    xp.MessageBox.show('There is already a ' + text + ' book name', 'ERROR');
-                                }
-                                else {
-                                    app.student.books.push({
-                                        title: text
-                                    });
-                                    _this.newBookTextBox.text = '';
-                                    _this.newBookTextBox.focus();
-                                }
-                            }
+                            _this.onAddBook();
                         }
                     })
                 ]),
@@ -116,8 +112,7 @@ var AppWindow = (function (_super) {
                             text: '({student.books}.indexOf({book}) + 1)'
                         }),
                         new xp.Label({
-                            text: '{book.title}',
-                            flex: 'stretch'
+                            text: '{book.title}'
                         }),
                         new xp.Placeholder(),
                         new xp.Button({
@@ -132,12 +127,21 @@ var AppWindow = (function (_super) {
                 }),
                 // Expression
                 new xp.Label({ text: '("Student name is " + {student.name} + ". He has " + {student.books.length} + " books.")' }),
-                // Reload button
-                new xp.Button({
-                    text: 'Reload',
-                    onClick: function (e) { return app.reloadData(); }
-                }),
-                // Custom control
+                new xp.VBox({ itemsIndent: '0.5em' }, [
+                    // Sort button
+                    new xp.Button({
+                        text: 'Sort',
+                        onClick: function (e) { return app.student.books.sort(function (a, b) {
+                            return a.title.toLowerCase().localeCompare(b.title.toLowerCase());
+                        }); }
+                    }),
+                    // Reload button
+                    new xp.Button({
+                        text: 'Reload',
+                        onClick: function (e) { return app.reloadData(); }
+                    }),
+                ]),
+                // Custom component
                 new BooksViewer({
                     books: '{student.books}'
                 })
@@ -146,6 +150,7 @@ var AppWindow = (function (_super) {
         // Set focus
         this.newBookTextBox.focus();
     }
+    // NOTE: You may choose another way of window appearance, eg. fade in.
     AppWindow.prototype.getTemplate = function () {
         // Clear body
         while (document.body.childElementCount > 0) {
@@ -153,9 +158,33 @@ var AppWindow = (function (_super) {
         }
         return _super.prototype.getTemplate.call(this);
     };
+    AppWindow.prototype.onAddBook = function () {
+        var _this = this;
+        var text = this.newBookTextBox.text.trim();
+        if (!text) {
+            xp.MessageBox.show('Please, enter book name', 'ERROR', { 'OK': function () { return _this.newBookTextBox.focus(); } });
+        }
+        else {
+            if (app.student.books.filter(function (b) { return b.title === text; }).length > 0) {
+                xp.MessageBox.show('There is already "' + text + '" book', 'ERROR', { 'OK': function () { return _this.newBookTextBox.focus(); } });
+            }
+            else {
+                app.student.books.push({
+                    title: text
+                });
+                this.newBookTextBox.text = '';
+                this.newBookTextBox.focus();
+            }
+        }
+    };
     return AppWindow;
 })(xp.Window);
-// --- Custom control ---
+// --- Custom component ---
+// NOTE: For creating a component in most of the cases you may:
+// 1. Override "getTemplate()" method to return HTML element.
+// 2. Override "defineProperties()" to define how properties'
+// values affect DOM.
+// 3. Provide component's Markup interface.
 var BooksViewer = (function (_super) {
     __extends(BooksViewer, _super);
     function BooksViewer(markup) {
@@ -163,53 +192,66 @@ var BooksViewer = (function (_super) {
     }
     BooksViewer.prototype.getTemplate = function () {
         var _this = this;
-        return xp.Dom.create("\n\t\t\t<div class=\"BooksViewer\">\n\t\t\t  <div class=\"title\">Books viewer</div>\n\t\t\t  <div class=\"content\"></div>\n\t\t\t</div>\n\t\t\t", {
+        return xp.Dom.create("\n            <div class=\"BooksViewer\">\n              <div class=\"title\">Books viewer</div>\n              <div class=\"content\"></div>\n            </div>\n            ", {
             '.content': function (el) { return _this.contentElement = el; }
         });
     };
     BooksViewer.prototype.defineProperties = function () {
         var _this = this;
         _super.prototype.defineProperties.call(this);
-        // Define property
+        // Define property "books"
         var booksChangeRegistrar = new xp.EventRegistrar();
         this.defineProperty('books', {
             setter: function (books) {
                 var content = _this.contentElement;
                 // Unsubscribe from previous collection changes
                 booksChangeRegistrar.unsubscribeAll();
+                // Remove old items
                 while (content.lastElementChild) {
                     content.removeChild(content.lastElementChild);
                 }
                 if (books) {
                     // Add new books
-                    var addBook = function (title) {
+                    var addBook = function (title, index) {
                         var bookEl = document.createElement('div');
-                        bookEl.style.color = 'rgb('
-                            + Math.round(Math.random() * 255) + ','
-                            + Math.round(Math.random() * 255) + ','
-                            + Math.round(Math.random() * 255) + ')';
-                        bookEl.style.backgroundColor = 'rgb('
-                            + Math.round(Math.random() * 255) + ','
-                            + Math.round(Math.random() * 255) + ','
-                            + Math.round(Math.random() * 255) + ')';
+                        function random() { return Math.round(Math.random() * 255); }
+                        bookEl.style.color = "rgb(" + random() + "," + random() + "," + random() + ")";
+                        bookEl.style.backgroundColor = "rgb(" + random() + "," + random() + "," + random() + ")";
                         bookEl.textContent = title;
-                        content.appendChild(bookEl);
+                        if (index === void (0) || index === content.childElementCount) {
+                            content.appendChild(bookEl);
+                        }
+                        else {
+                            content.insertBefore(bookEl, content.children.item(index));
+                        }
                     };
                     books.forEach(function (b) { return addBook(b.title); });
                     // Handle collection changes
+                    // NOTE: "Attach" and "detach" actions signalize that collection item
+                    // is not removed, but moved to another collection and that node
+                    // should not be deleted, but moved.
                     booksChangeRegistrar.subscribe(books.onCollectionChanged, function (args) {
                         switch (args.action) {
                             case xp.CollectionChangeAction.Create:
-                                addBook(args.newItem.title);
+                            case xp.CollectionChangeAction.Attach:
+                                addBook(args.newItem.title, args.newIndex);
                                 break;
                             case xp.CollectionChangeAction.Delete:
-                                for (var i = 0; i < _this.contentElement.children.length; i++) {
-                                    var item = _this.contentElement.children.item(i);
-                                    if (item.textContent === args.oldItem.title) {
-                                        _this.contentElement.removeChild(item);
-                                        break;
-                                    }
-                                }
+                            case xp.CollectionChangeAction.Detach:
+                                var item = _this.contentElement.children.item(args.oldIndex);
+                                _this.contentElement.removeChild(item);
+                                break;
+                            case xp.CollectionChangeAction.Move:
+                                var moved = content.children.item(args.oldIndex);
+                                var after = content.children.item(args.newIndex < args.oldIndex ?
+                                    args.newIndex
+                                    : args.newIndex + 1);
+                                _this.contentElement.insertBefore(moved, after);
+                                break;
+                            case xp.CollectionChangeAction.Replace:
+                                var oldItem = _this.contentElement.children.item(args.oldIndex);
+                                _this.contentElement.removeChild(oldItem);
+                                addBook(args.newItem.title, args.newIndex);
                                 break;
                             default:
                                 throw new Error('Action is not implemented.');
@@ -227,3 +269,4 @@ window.onload = function () {
     app = new App();
     app.start();
 };
+//# sourceMappingURL=app.js.map

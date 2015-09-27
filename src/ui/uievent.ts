@@ -1,32 +1,38 @@
-﻿type domEvent = Event;
-type domMouseEvent = MouseEvent;
-type domKeyboardEvent = KeyboardEvent;
+﻿type DOMEvent = Event;
+// type domMouseEvent = MouseEvent;
+// type domKeyboardEvent = KeyboardEvent;
 
 module xp {
 
-    export interface UIEventArgs<T extends domEvent> {
+    export interface UIEventArgs<T extends DOMEvent> {
         element: Element;
         elementX?: number;
         elementY?: number;
         domEvent: T;
     }
 
-    export interface EventArgs extends UIEventArgs<domEvent> { }
-    export interface MouseEventArgs extends UIEventArgs<domMouseEvent> { }
-    export interface KeyboardEventArgs extends UIEventArgs<domKeyboardEvent> { }
+    export interface EventArgs extends UIEventArgs<DOMEvent> { }
+    export interface MouseEventArgs extends UIEventArgs<MouseEvent> { }
+    export interface KeyboardEventArgs extends UIEventArgs<KeyboardEvent> { }
 
-    export function createEventArgs<T extends domEvent>(control: Element, domEventObject: T): UIEventArgs<T> {
+    export function createEventArgs<T extends DOMEvent>(control: Element, domEventObject: T, touch?: Touch): UIEventArgs<T> {
         var rect = control.domElement.getBoundingClientRect();
 
         var e: UIEventArgs<T> = {
             domEvent: domEventObject,
             element: control
         };
-        if ('pageX' in domEventObject) {
-            e.elementX = (<any>domEventObject).pageX - rect.left;
-        }
-        if ('pageY' in domEventObject) {
-            e.elementY = (<any>domEventObject).pageY - rect.top;
+        if (domEventObject instanceof TouchEvent) {
+            touch = touch || (<TouchEvent><any>domEventObject).changedTouches[0];
+            e.elementX = touch.pageX - rect.left;
+            e.elementY = touch.pageY - rect.top;
+        } else {
+            if ('pageX' in domEventObject) {
+                e.elementX = (<any>domEventObject).pageX - rect.left;
+            }
+            if ('pageY' in domEventObject) {
+                e.elementY = (<any>domEventObject).pageY - rect.top;
+            }
         }
 
         return e;

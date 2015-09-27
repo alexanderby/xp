@@ -1,4 +1,4 @@
-﻿type domElement = Element;
+﻿type DOMElement = Element;
 
 module xp {
 
@@ -10,9 +10,9 @@ module xp {
         onMouseMove?: (e: MouseEventArgs) => void;
         onMouseEnter?: (e: MouseEventArgs) => void;
         onMouseLeave?: (e: MouseEventArgs) => void;
-        onKeyPress?: (e: KeyboardEvent) => void;
-        onKeyDown?: (e: KeyboardEvent) => void;
-        onKeyUp?: (e: KeyboardEvent) => void;
+        onKeyPress?: (e: KeyboardEventArgs) => void;
+        onKeyDown?: (e: KeyboardEventArgs) => void;
+        onKeyUp?: (e: KeyboardEventArgs) => void;
 
         onRendered?: (e: T) => void;
         onRemoved?: (e: T) => void;
@@ -194,7 +194,7 @@ module xp {
         }
 
         protected initSimpleDomEvent(eventName: string, event: Event<EventArgs>) {
-            this.domElement.addEventListener(eventName,(e) => {
+            this.domElement.addEventListener(eventName, (e) => {
                 var args = createEventArgs(this, e);
                 event.invoke(args);
             });

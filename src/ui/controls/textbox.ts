@@ -59,7 +59,7 @@
             this.onRemoved.addHandler(() => this.onTextChange.removeAllHandlers(), this);
 
             var oldText = '';
-            var onInput = (e: domEvent) => {
+            var onInput = (e: DOMEvent) => {
                 var args = <TextChangeArgs>xp.createEventArgs(this, e);
                 args.oldText = oldText;
                 var newText = this.value.toString();

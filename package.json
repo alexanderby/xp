@@ -9,7 +9,7 @@
   "author": "Alexander Shutov",
   "license": "ISC",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "http-server ./src/ -p 8632"
   },
   "devDependencies": {
     "create-grunt-tasks": "^0.7.1",

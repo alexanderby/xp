@@ -23,7 +23,7 @@
     /**
      * Configures what output messages will be display.
      */
-    export var DisplayMessages: HeatLevel|Domain = HeatLevel.Info | HeatLevel.Warn | HeatLevel.Error
+    export var DisplayMessages: HeatLevel|Domain = HeatLevel.Warn | HeatLevel.Error
         | Domain.Misc | Domain.Binding | Domain.UI | Domain.Test;
 
     /**
