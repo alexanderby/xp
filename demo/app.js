@@ -41,7 +41,6 @@ var App = (function (_super) {
     };
     return App;
 })(xp.Model);
-xp.hidePrototypeProperties(App);
 // --- View ---
 // NOTE: xp.Window is a wrapper over <body>.
 // If your view mainly consists of HTML,

@@ -57,7 +57,6 @@ class App extends xp.Model {
         this.student = xp.deserialize(json, [Student]);
     }
 }
-xp.hidePrototypeProperties(App);
 
 
 // --- View ---

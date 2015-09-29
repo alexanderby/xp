@@ -1,9 +1,11 @@
 # Extensible presentation
 **xp** is a TypeScript MVVM framework designed for use in large modern single-page web applications that consist of many specific components.
+**xp** is used in [Inker](http://inker.co/), vector graphics editor with large complex model.
 
 # Features
 - Strongly typed controls
 - Strongly typed models
+- Strongly typed events
 - Powerful data binding
 - JavaScript markup
 - Flexible box layout
@@ -86,6 +88,8 @@ interface Book {
 
 // --- Some random application ---
 
+// NOTE: App extends Model, so views
+// can observe necessary properties.
 class App extends xp.Model {
     student: Student;
     window: AppWindow;
@@ -105,6 +109,8 @@ class App extends xp.Model {
     reloadData() {
         // NOTE: "__xp_model__" field is used
         // for restoring model by constructor name.
+        // This is suitable for deserializing models
+        // with inheritance.
         var json = `
             {
                 "name": "John",
@@ -119,7 +125,6 @@ class App extends xp.Model {
         this.student = xp.deserialize(json, [Student]);
     }
 }
-xp.hidePrototypeProperties(App);
 
 
 // --- View ---
@@ -132,6 +137,7 @@ class AppWindow extends xp.Window {
     private newBookTextBox: xp.TextBox;
 
     constructor(app: App) {
+        // NOTE: HBox and VBox are basic horizontal and vertical containers.
         super({ scope: app, title: '("xp demo - " + {student.name})', itemsAlign: 'center', padding: '2em' }, [
             new xp.VBox({ itemsIndent: '2em', width: '20em', contentAlign: 'middle' }, [
                 // Title
