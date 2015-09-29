@@ -90,7 +90,7 @@ module.exports = function (grunt) {
 
         create.task('debug')
             .sub('typescript', {
-                src: ['src/**/*.ts/'],
+                src: ['src/**/*.ts'],
                 options: {
                     target: 'es5',
                     sourceMap: true
