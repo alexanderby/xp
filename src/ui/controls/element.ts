@@ -213,7 +213,7 @@ module xp {
                     var binding = (<string>value).match(/^\{(.*)\}$/);
                     var expression = (<string>value).match(/^\((.*)\)$/);
                     if (binding && binding[1]) {
-                        this.bind(prop, binding[1]);
+                        this.bind(prop, { path: binding[1] });
                     }
                     else if (expression && expression[1]) {
                         this.express(prop, expression[1]);
@@ -251,9 +251,7 @@ module xp {
                 },
                 set: (v) => {
                     if (options.acceptedValues && options.acceptedValues.indexOf(v) < 0) {
-                        throw new Error(xp.formatString(
-                            'The value "{0}" is not accepted for a {1}. List of accepted values: {2}.',
-                            v, xp.getClassName(this), options.acceptedValues.join(', ')));
+                        throw new Error(`The value "${v}" is not accepted for a ${xp.getClassName(this) }. List of accepted values: ${options.acceptedValues.join(', ') }.`);
                     }
                     if (options.setter) {
                         options.setter(v);
@@ -442,7 +440,9 @@ module xp {
             this.expressions.pairs.splice(0);
 
             // DOM
-            Dom.remove(this.domElement);
+            if (this.domElement.parentElement) {
+                this.domElement.parentElement.removeChild(this.domElement);
+            }
 
             this.onRemoved.invoke(this);
             this.onRemoved.removeAllHandlers();
@@ -555,24 +555,23 @@ module xp {
         /**
          * Binds control's property to source property.
          * @param setter Control's property name or a function.
-         * @param path Source property name.
-         * @param source Binding source object. If not specified the element's scope will be used.
-         * @param defaultValue Value to use is case when source property is null or undefined.
+         * @param options Binding options.
          */
-        bind(setter: string|{ (value): void }, path: string, source?, defaultValue?) {
+        bind(setter: string|{ (value): void }, options: { scope?: Object, path: string, defaultValue?: any, getter?: () => any }) {
             var binding = this.bindings.get(setter);
 
             if (binding) {
                 // Unsubscribe from prev changes
                 binding.unbind();
             }
-            if (setter === '' || path === '') {
+            if (setter === '' || options.path === '') {
                 throw new Error('Binding path cannot be empty.');
             }
 
-            if (setter === 'scope' && !this.useParentScope && !source) {
+            if (setter === 'scope' && !this.useParentScope && !options.scope) {
                 throw new Error('Unable to bind element\'s scope to itself.');
             }
+            var source = options.scope;
             if (!source) {
                 if (this.useParentScope) {
                     if (this.parent) {
@@ -584,22 +583,19 @@ module xp {
                 }
             }
 
-            if (typeof setter === 'string') {
-                this.bindings.set(setter, new BindingManager(
-                    this,
-                    setter,
-                    source,
-                    path,
-                    defaultValue));
-            }
-            else {
-                this.bindings.set(setter, new BindingCallManager(
-                    source,
-                    path,
-                    setter,
-                    null,
-                    defaultValue));
-            }
+            this.bindings.set(setter, new BindingManager({
+                scope: source,
+                path: options.path,
+                setter: (typeof setter === 'string' ?
+                    (v) => this[setter] = v
+                    : setter),
+                getter: (options.getter
+                    || (typeof setter === 'string' ?
+                        () => { return this[setter]; }
+                        : () => { throw new Error('Getter or property name is not set.'); })
+                    ),
+                defaultValue: options.defaultValue
+            }));
         }
 
         /**
@@ -632,19 +628,14 @@ module xp {
             }
             expr = new Expression(expression, source || this.scope);
             this.expressions.set(setter, expr);
-            if (typeof setter === 'string') {
-                this.bindings.set(setter, new BindingManager(
-                    this,
-                    setter,
-                    expr,
-                    'result'));
-            }
-            else {
-                this.bindings.set(setter, new BindingCallManager(
-                    expr,
-                    'result',
-                    (result) => setter(result, this)));
-            }
+            this.bindings.set(setter, new BindingManager({
+                scope: expr,
+                path: 'result',
+                setter: (typeof setter === 'string' ?
+                    (v) => this[setter] = v
+                    : setter),
+                getter: expr.result
+            }));
         }
 
         /**
@@ -657,7 +648,7 @@ module xp {
             if (this.bindings.get('scope') && scope !== this.parent.scope)
                 scope = new xp.Scope(scope, this.parent.scope);
 
-            Log.write(Log.HeatLevel.Log, Log.Domain.UI | Log.Domain.Binding, '{0}:{1}: Set data scope "{2}".', xp.getClassName(this), this.name || '-', scope);
+            Log.write(Log.HeatLevel.Log, Log.Domain.UI | Log.Domain.Binding, `${xp.getClassName(this) }:${this.name || '-'}: Set data scope "${scope}".`);
             this._scope = scope;
 
             this.bindings.pairs.forEach((p) => {
@@ -684,7 +675,7 @@ module xp {
          * @param value Value, that user inputs.
          */
         protected onInput(setter: string|{ (value): void }, value) {
-            Log.write(Log.HeatLevel.Log, Log.Domain.UI, '{0}:{1}.{2}: Input "{3}".', xp.getClassName(this), this.name || '-', setter, value);
+            Log.write(Log.HeatLevel.Log, Log.Domain.UI, `${xp.getClassName(this) }:${this.name || '-'}.${setter}: Input "${value}".`);
             if (typeof setter === 'string') {
                 Path.setPropertyByPath(this, setter, value);
             }

@@ -1,9 +1,9 @@
 ﻿/// <reference path="../utils/log.ts"/>
 /// <reference path="../data/model.ts"/>
-/// <reference path="../data/object.ts"/>
+/// <reference path="../data/observable_object.ts"/>
 /// <reference path="../data/serialization.ts"/>
 /// <reference path="../data/observable.ts"/>
-/// <reference path="../data/collection.ts"/>
+/// <reference path="../data/observable_collection.ts"/>
 /// <reference path="assert.ts"/>
 
 module xp.Tests {
@@ -13,23 +13,19 @@ module xp.Tests {
     // Define models classes
 
     class Person extends xp.Model {
+        @xp.property
         name: string;
+
+        @xp.property
         city: City;
-        books: Book[];
-        constructor() {
-            super();
-            xp.Model.property(this, 'name');
-            xp.Model.property(this, 'city');
-            xp.Model.property(this, 'books', new xp.ObservableCollection());
-        }
+
+        @xp.property
+        books = new xp.ObservableCollection<Book>();
     }
 
     class City extends xp.Model {
+        @xp.property
         name: string;
-        constructor() {
-            super();
-            xp.Model.property(this, 'name');
-        }
     }
 
     interface Book {
@@ -48,8 +44,8 @@ module xp.Tests {
             name: 'New York'
         },
         books: [
-            { title: 'Maths', pages: 144 },
-            { title: 'Physics', pages: 256 }
+            { title: 'Maths', pages: 144, __xp_model__: 'ObservableObject' },
+            { title: 'Physics', pages: 256, __xp_model__: 'ObservableObject' }
         ]
     };
     var json = JSON.stringify(source);
@@ -63,7 +59,7 @@ module xp.Tests {
     assert(model.books instanceof ObservableCollection);
     assert(model.books[0] instanceof ObservableObject);
     assert(model.books[1] instanceof ObservableObject);
-    var j = xp.serialize(model, false);
+    var j = xp.serialize(model, { writeModel: false });
     assert(j.indexOf('__xp_model__') < 0);
 
     //

@@ -16,7 +16,12 @@ module.exports = function (grunt) {
                 // TODO: tsconfig.json doesn't work? Waiting for TS1.5 release?
                 src: config.tsFiles,
                 dest: 'build/xp/xp.js',
-                options: { target: 'es5', sourceMap: false, declaration: true, experimentalDecorators: true }
+                options: {
+                    target: 'es5',
+                    sourceMap: false,
+                    declaration: true,
+                    experimentalDecorators: true
+                }
             })
             
             // Minify
@@ -30,7 +35,7 @@ module.exports = function (grunt) {
                     mangle: {
                         except: [
                             'ObservableCollection', 'ObservableObject', 'Model',
-                            'BindingManager', 'BindingCallManager', 'Scope',
+                            'BindingManager', 'Scope',
                             'Expression', 'Element', 'Container', 'Stack',
                             'Button', 'CheckBox', 'ContextMenu', 'HBox', 'Html',
                             'Label', 'List', 'MessageBox', 'Modal', 'ModalTint',
@@ -68,7 +73,6 @@ module.exports = function (grunt) {
             .sub('less', {
                 files: {
                     'build/xp/style/defaultstyle.css': 'src/style/defaultstyle.less',
-                    //'build/xp/style/ie9-layout-fallback.css': 'src/style/ie9-layout-fallback.less',
                 },
                 options: {
                     paths: ['src/style/']
@@ -80,6 +84,14 @@ module.exports = function (grunt) {
                 expand: true, cwd: 'src/style/',
                 src: '_variables.less',
                 dest: 'build/xp/style/'
+            })
+            
+            // Copy to Demo folder
+            .sub('clean', ['demo/xp'])
+            .sub('copy', {
+                cwd: 'build/xp',
+                src: '**/*.*',
+                dest: 'demo/xp'
             });
 
 
@@ -90,10 +102,11 @@ module.exports = function (grunt) {
 
         create.task('debug')
             .sub('typescript', {
-                src: ['src/**/*.ts/'],
+                src: ['src/**/*.ts'],
                 options: {
                     target: 'es5',
-                    sourceMap: true
+                    sourceMap: true,
+                    experimentalDecorators: true
                 }
             })
             .sub('concat', config.lessConcatConfig)
@@ -101,7 +114,6 @@ module.exports = function (grunt) {
                 files: {
                     'src/style/defaultstyle.css': 'src/style/defaultstyle.less',
                     'src/style/debug-style.css': 'src/style/debug-style.less',
-                    'src/style/ie9-layout-fallback.css': 'src/style/ie9-layout-fallback.less',
                     'src/tests/todo/style/style.css': 'src/tests/todo/style/style.less'
                 },
                 options: {
@@ -120,16 +132,14 @@ function getConfig() {
             'src/utils/misc.ts',
             'src/utils/path.ts',
 
-            'src/core/defs.ts',
             'src/core/dictionary.ts',
             'src/core/event.ts',
 
-            'src/data/object.ts',
-            'src/data/collection.ts',
+            'src/data/observable_object.ts',
+            'src/data/observable_collection.ts',
             'src/data/observable.ts',
             'src/data/expression.ts',
-            'src/data/manager.ts',
-            'src/data/call_manager.ts',
+            'src/data/binding_manager.ts',
             'src/data/model.ts',
             'src/data/scope.ts',
             'src/data/serialization.ts',

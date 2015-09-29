@@ -1,4 +1,4 @@
-﻿module xp {
+module xp {
     // TODO: Parameters object.
     // TODO: Option for not updating source
     // for the first time (usually element
@@ -12,49 +12,39 @@
      */
     export class BindingManager {
 
-        private target: Object;
-        private targetPropertyPath: string;
         private scope: Object;
         private path: string;
+        private setter: (value) => void;
+        private getter: () => any;
         private defaultValue: any;
 
         /**
          * Creates the scope binding manager.
-         * @param target Target.
-         * @param targetPropertyPath Target property path.
-         * @param scope Scope object.
-         * @param path Path to bind to.
          * @param options Options.
          */
-        constructor(target: Object, targetPropertyPath: string, scope: Object, path: string, defaultValue?: any) {
-            //
-            // Checks
+        constructor(options: BindingManagerOptions) {
 
-            if (!targetPropertyPath)
-                throw new Error('Target property path is not set.');
-
-            if (!path)
+            if (!options.path)
                 throw new Error('Unable to bind to empty path.');
 
-            this.target = target;
-            this.targetPropertyPath = targetPropertyPath;
-            this.scope = scope;
-            this.path = path;
-            this.defaultValue = defaultValue;
+            this.scope = options.scope;
+            this.path = options.path;
+            this.setter = options.setter;
+            this.getter = options.getter;
+            this.defaultValue = options.defaultValue;
 
             //
             // Split path into parts
 
             // TODO: Support for "$parent.path", "$root.path".
-            this.pathParts = xp.Path.replaceIndexers(path).split('.');
+            this.pathParts = xp.Path.replaceIndexers(options.path).split('.');
             if (!this.pathParts || this.pathParts.length < 1) {
-                throw new Error(
-                    xp.formatString('Wrong binding path: "{0}".', path));
+                throw new Error(`Wrong binding path: "${options.path}".`);
             }
             this.pathParts.forEach((part) => {
-                if (part === '')
-                    throw new Error(
-                        xp.formatString('Unable to bind to empty path. Path: "{0}".', path));
+                if (part === '') {
+                    throw new Error(`Unable to bind to empty path. Path: "${options.path}".`);
+                }
             });
 
             // Subscribe for all path changes
@@ -157,7 +147,7 @@
          * @param scope Scope to sync with.
          */
         resetWith(scope: Object) {
-            this.logMessage(xp.formatString('Reset with "{0}".', this.scope));
+            this.logMessage(`'Reset with "${this.scope}".`);
             this.scope = scope;
             this.registerPathObjects();
             this.updateTarget();
@@ -167,16 +157,19 @@
          * Updates source property.
          */
         updateSource() {
-            var value = xp.Path.getPropertyByPath(this.target, this.targetPropertyPath);
+            if (typeof this.getter !== 'function') {
+                throw new Error('Getter is not set.');
+            }
+            var value = this.getter.call(null);
             var pathLength = this.pathParts.length;
             var sourceObj = this.pathObjects[pathLength - 1].obj;
             if (typeof sourceObj === 'object' && sourceObj !== null) {
-                this.logMessage(xp.formatString('Update source "{0}" property with value "{1}".', this.path, value));
+                this.logMessage(`Update source "${this.path}" property with value "${value}".`);
                 var sourceProp = this.pathParts[pathLength - 1];
                 sourceObj[sourceProp] = value;
             }
             else {
-                this.logMessage(xp.formatString('Unable to update source property "{0}". It is unreachable.', this.path));
+                this.logMessage(`Unable to update source property "${this.path}". It is unreachable.`);
             }
         }
 
@@ -185,17 +178,14 @@
          */
         updateTarget() {
             var value = Path.getPropertyByPath(this.scope, this.path, false);
-            var path = xp.Path.getObjectPath(this.targetPropertyPath);
-            var prop = xp.Path.getPropertyName(this.targetPropertyPath);
-            var targetObj = xp.Path.getPropertyByPath(this.target, path);
 
             if (value !== void 0 && value !== null) {
-                this.logMessage(xp.formatString('Update target with "{0}" property value "{1}".', this.path, value));
-                targetObj[prop] = value
+                this.logMessage(`Update target with "${this.path}" property value "${value}".`);
+                this.setter.call(null, value);
             }
             else {
-                this.logMessage(xp.formatString('Unable to reach value "{0}". Using default value "{1}".', this.path, this.defaultValue));
-                targetObj[prop] = this.defaultValue;
+                this.logMessage(`Unable to reach value "${this.path}". Using default value "${this.defaultValue}".`);
+                this.setter.call(null, this.defaultValue);
             }
         }
 
@@ -218,12 +208,17 @@
 
         private logMessage(message: string) {
             Log.write(Log.HeatLevel.Log, Log.Domain.Binding,
-                'BM of "{0}#{1}.{2}": {3}',
-                xp.getClassName(this.target),
-                this.target['name'],
-                this.targetPropertyPath,
-                message);
+                `BindingManager: ${message}`);
         }
+    }
+
+    export interface BindingManagerOptions {
+        scope: Object;
+        path: string;
+        setter: (value) => void;
+        getter?: () => any;
+        defaultValue?: any;
+        immediate?: boolean;
     }
 
     /**

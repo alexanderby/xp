@@ -79,7 +79,7 @@
                                 this.iconElement.classList.add(pathOrClass.slice(1));
                             }
                             else {
-                                this.iconElement.style.backgroundImage = xp.formatString('url({0})', pathOrClass);
+                                this.iconElement.style.backgroundImage = `url(${pathOrClass})`;
                             }
                             prevIcon = pathOrClass;
                         }

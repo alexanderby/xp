@@ -1,19 +1,6 @@
 ﻿module xp {
 
     /**
-     * Replaces each format item in a specified string with values.
-     * @param formatStr A composite format string.
-     * @param args Arguments to insert into formatting string.
-     */
-    export function formatString(format: string, ...ars: any[]): string {
-        var s = format;
-        for (var i = 0; i < ars.length; i++) {
-            s = s.replace(new RegExp("\\{" + i + "\\}", "gm"), ars[i]);
-        }
-        return s;
-    }
-
-    /**
      * Creates a deep copy of an item.
      * Only enumerable properties will be copied.
      * @param item Item to copy.
@@ -125,7 +112,7 @@
      * Gets class name of object.
      * @param obj Object.
      */
-    export function getClassName(obj) {
+    export function getClassName(obj: Object) {
         var funcNameRegex = /function\s+(.+?)\s*\(/;
         var results = funcNameRegex.exec(obj['constructor'].toString());
         return (results && results.length > 1) ? results[1] : '';
@@ -140,23 +127,5 @@
     export function applyConstructor<T extends Object>(ctor: new (...args) => T, args: any[]): T {
         // http://stackoverflow.com/a/8843181/4137472
         return new (ctor.bind.apply(ctor, [null].concat(args)));
-    }
-
-    /**
-     * Hides type's prototype properties (makes them non-enumerable).
-     * @param ctor Type constructor.
-     * @param propsToHide
-     */
-    export function hidePrototypeProperties(ctor: new (...args) => Object, propsToHide?: string[]) {
-        var proto = ctor.prototype;
-        for (var prop in proto) {
-            if (!propsToHide || propsToHide.length === 0 || propsToHide.indexOf(prop) >= 0) {
-                var desc = Object.getOwnPropertyDescriptor(proto, prop);
-                if (desc && desc.configurable) {
-                    desc.enumerable = false;
-                    Object.defineProperty(proto, prop, desc);
-                }
-            }
-        }
     }
 }

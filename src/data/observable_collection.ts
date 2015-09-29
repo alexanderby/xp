@@ -25,7 +25,7 @@ interface Array<T> {
 }
 Object.defineProperties(Array.prototype, {
     move: {
-        value: function (from, to) {
+        value: function(from, to) {
             if (from < 0) from = this.length + from;
             if (to < 0) to = this.length + to;
             if (from > this.length - 1 || to > this.length - 1 || from < 0 || to < 0) {
@@ -38,13 +38,13 @@ Object.defineProperties(Array.prototype, {
         }
     },
     attach: {
-        value: function (item, index) {
+        value: function(item, index) {
             this.splice(index, 0, item);
             return this.length;
         }
     },
     detach: {
-        value: function (index) {
+        value: function(index) {
             return this.splice(index, 1)[0];
         }
     }
@@ -94,6 +94,7 @@ module xp {
      * A collection which notifies of it's changes.
      */
     export class ObservableCollection<T> extends ObservableObject implements Array<T>, CollectionNotifier<T>, Notifier {
+
         protected inner: Array<T>;
 
         /**
@@ -464,5 +465,11 @@ module xp {
 
         [n: number]: T;
     }
-    hidePrototypeProperties(ObservableCollection);
-} 
+    
+    // NOTE: Make ObservableCollection props non-enumerable.
+    Object.keys(ObservableCollection.prototype).forEach((k) => {
+        var descr = Object.getOwnPropertyDescriptor(ObservableCollection.prototype, k);
+        descr.enumerable = false;
+        Object.defineProperty(ObservableCollection.prototype, k, descr);
+    });
+}

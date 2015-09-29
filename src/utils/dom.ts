@@ -9,7 +9,7 @@
         temp.innerHTML = html;
         var result = <HTMLElement>temp.firstElementChild;
         for (var selector in selectorSetters) {
-            var el = select(selector, result);
+            var el = result.querySelector(selector);
             if (!el) {
                 throw new Error('Selector "' + selector + '" didn\'t return anything.');
             }
@@ -17,26 +17,5 @@
             setter(el);
         }
         return result;
-    }
-
-    /**
-     * Returns the first element that matches the selector.
-     * @param selector Selector.
-     * @param parent Element to start the search from.
-     */
-    export function select(selector: string, parent?: NodeSelector): HTMLElement {
-        parent = parent || document;
-        return <HTMLElement>parent.querySelector(selector);
-    }
-
-    /**
-     * Removes a node.
-     * @param node Node to remove.
-     */
-    export function remove(node: Node): Node {
-        if (node.parentNode) {
-            return node.parentNode.removeChild(node);
-        }
-        return node;
     }
 } 

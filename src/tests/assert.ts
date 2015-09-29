@@ -9,7 +9,7 @@
             throw new Error('Assert statement must be boolean but not ' + t + '.');
 
         if (statement !== true) {
-            throw new Error(xp.formatString('Statement is wrong.'));
+            throw new Error('Statement is wrong.');
         }
     }
 
@@ -19,7 +19,7 @@
      */
     export function assertEqual(a, b) {
         if (a !== b) {
-            throw new Error(xp.formatString('"{0}" is not equal to "{1}".', a, b));
+            throw new Error(`"${a}" is not equal to "${b}".`);
         }
     }
 } 

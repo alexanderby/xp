@@ -24,7 +24,7 @@
                 this.cascadeBy((el) => {
                     if (el !== this && el.name) {
                         if (el.name in this) {
-                            throw new Error(xp.formatString('Unable to set named child "{0}". Container\'s property is already defined.', el.name));
+                            throw new Error(`Unable to set named child "${el.name}". Container\'s property is already defined.`);
                         }
                         this[el.name] = el;
                     }
@@ -69,8 +69,8 @@
         protected defineProperties() {
             super.defineProperties();
             this.defineProperty('padding', {
-                setter: (value) => this.domElement.style.padding = value,
-                getter: () => this.domElement.style.padding
+                setter: (value) => this.getContainerElement().style.padding = value,
+                getter: () => this.getContainerElement().style.padding
             });
         }
 
@@ -163,7 +163,7 @@
             child.__setParent__(null);
 
             // DOM
-            Dom.remove(child.domElement);
+            this.getContainerElement().removeChild(child.domElement);
         }
 
         /**

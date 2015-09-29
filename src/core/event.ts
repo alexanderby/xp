@@ -19,7 +19,7 @@
                 handler: handler,
                 scope: thisArg
             };
-            if (this.handlers.filter((h) => h.handler === handler/* && h.scope === thisArg*/)[0]) {
+            if (this.handlers.filter((h) => h.handler === handler && h.scope === thisArg)[0]) {
                 throw new Error('Duplicate subscription.');
             }
             this.handlers.push(subscription);

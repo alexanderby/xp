@@ -1,6 +1,6 @@
 ﻿/// <reference path="../utils/log.ts"/>
-/// <reference path="../data/call_manager.ts"/>
-/// <reference path="../data/collection.ts"/>
+/// <reference path="../data/binding_manager.ts"/>
+/// <reference path="../data/observable_collection.ts"/>
 /// <reference path="assert.ts"/>
 
 module xp.Tests {
@@ -21,10 +21,11 @@ module xp.Tests {
     // Subscribe
 
     nc.onCollectionChanged.addHandler((args) => {
-        Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Collection changed. Type: {0}, new index: {1}, old index: {2}, new item: {3}, old item: {4}.', CollectionChangeAction[args.action], args.newIndex, args.oldIndex, args.newItem, args.oldItem);
+        Log.write(Log.HeatLevel.Log, Log.Domain.Test,
+            `Test: Collection changed. Type: ${CollectionChangeAction[args.action]}, new index: ${args}, old index: {2}, new item: {3}, old item: {4}.`);
     }, window);
     nc.onPropertyChanged.addHandler((prop) => {
-        Log.write(Log.HeatLevel.Log, Log.Domain.Test, 'Test: Collection property changed: "{0}".', prop);
+        Log.write(Log.HeatLevel.Log, Log.Domain.Test, `Test: Collection property changed: "${prop}".`);
     }, window);
 
     //
@@ -99,7 +100,11 @@ module xp.Tests {
 
     var col = new xp.ObservableCollection([{ city: { name: 'Gomel' } }, { city: { name: 'Minsk' } }]);
     var name: string;
-    var bm = new BindingCallManager(col, '0.city.name',(v) => name = v || 'Default');
+    var bm = new BindingManager({
+        scope: col,
+        path: '0.city.name',
+        setter: (v) => name = v || 'Default'
+    });
     assertEqual(name, 'Gomel');
     col.splice(0, 1);
     assertEqual(name, 'Minsk');

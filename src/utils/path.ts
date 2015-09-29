@@ -49,8 +49,7 @@
 
         // TODO: Allow adding properties?
         if (!(propName in obj) && throwErr) {
-            throw new Error(
-                xp.formatString('Unable to set property value "{0}" by path "{1}". Property is unreachable.', value, path));
+            throw new Error(`Unable to set property value "${value}" by path "${path}". Property is unreachable.`);
         }
 
         obj[propName] = value;
@@ -96,10 +95,9 @@
         //var result = path.replace(indexerRegex, '.$1');
 
         // With property identifier validation.
-        var result = path.replace(indexerRegex,(match, m1) => {
+        var result = path.replace(indexerRegex, (match, m1) => {
             if (!identifierRegex.test(m1)) {
-                throw new Error(
-                    xp.formatString('Wrong property identifier. Property: "{0}". Path: "{1}".', path, m1));
+                throw new Error(`Wrong property identifier. Property: "${path}". Path: "${m1}".`);
             }
             return '.' + m1;
         });

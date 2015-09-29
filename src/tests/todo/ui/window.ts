@@ -121,7 +121,7 @@ module Todo {
                         items: '{todos}',
                         itemCreator: () => new xp.RadioButton({
                             item: '{item}', text: '{item.name}', selectedItem: '{selected}',
-                            init: (el) => el.bind((v: string) => el.domElement.setAttribute('title', v), 'item.name')
+                            init: (el) => el.bind((v: string) => el.domElement.setAttribute('title', v), { path: 'item.name' })
                         })
                     }),
                     new xp.List({
@@ -165,7 +165,7 @@ module Todo {
             //
             // -------- Display context menu ---------
 
-            this.domElement.addEventListener('contextmenu',(e) => {
+            this.domElement.addEventListener('contextmenu', (e) => {
                 e.preventDefault();
                 xp.ContextMenu.show(e.pageX, e.pageY, [{
                     text: 'Copy',

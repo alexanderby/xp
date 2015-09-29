@@ -30,34 +30,25 @@
      * Writes a message to console.
      * @param level Importance level.
      * @param domain Domain.
-     * @param msgOrAny Message (composite formatting string) or any other item.
+     * @param msgOrAny Message or other item.
      * @param args Arguments to insert into formatting string.
      */
-    export function write(level: HeatLevel, domain: Domain, msgOrAny: any, ...args: any[]) {
+    export function write(level: HeatLevel, domain: Domain, msgOrAny: any) {
         if ((domain & <Domain>DisplayMessages) > 0
             && (level & <HeatLevel>DisplayMessages) > 0) {
 
-            var output;
-            if (typeof msgOrAny === 'string') {
-                args.unshift(msgOrAny);
-                var output = xp.formatString.apply(null, args);
-            }
-            else {
-                output = msgOrAny;
-            }
-
             switch (level) {
                 case HeatLevel.Log:
-                    console.log(output);
+                    console.log(msgOrAny);
                     break;
                 case HeatLevel.Info:
-                    console.info(output);
+                    console.info(msgOrAny);
                     break;
                 case HeatLevel.Warn:
-                    console.warn(output)
+                    console.warn(msgOrAny)
                     break;
                 case HeatLevel.Error:
-                    console.error(output);
+                    console.error(msgOrAny);
                     break;
                 default:
                     throw new Error('Not implemented.');

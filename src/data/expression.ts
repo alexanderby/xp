@@ -67,7 +67,7 @@
                             // Subscribe for collection changes
                             var registar = new EventRegistrar();
                             var cn = <CollectionNotifier<any>>value;
-                            registar.subscribe(cn.onCollectionChanged,(args) => {
+                            registar.subscribe(cn.onCollectionChanged, (args) => {
                                 this.exec();
                             }, this);
                             this.collectionRegistrations[param] = registar
@@ -89,7 +89,7 @@
             //
             // Parse expression
 
-            this.func = function () {
+            this.func = function() {
                 var scope = {};
                 for (var i = 0; i < arguments.length; i++) {
                     scope['p' + i] = arguments[i];
@@ -101,7 +101,15 @@
             // Create managers
             this.managers = [];
             this.propsPaths.forEach((path, i) => {
-                var manager = new BindingManager(this.params, params[i], this.scope, path);
+                var manager = new BindingManager({
+                    scope: this.params,
+                    path: params[i],
+                    setter: (v) => {
+                        if (this.scope) {
+                            Path.setPropertyByPath(this.scope, path, v);
+                        }
+                    }
+                }/*this.params, params[i], this.scope, path*/);
                 this.managers.push(manager);
             });
 
@@ -175,7 +183,6 @@
             this.onPropertyChanged.removeAllHandlers();
         }
     }
-    hidePrototypeProperties(Expression);
 
     /**
      * Evaluates an expression.
@@ -186,19 +193,20 @@
     export function evaluate(expression: string, scope: Object): any {
 
         // TODO: Seems to be weird. Needs refactoring, should behave like eval().
+        // Maybe replace with expression chain.
 
         var hideBrackets = (str: string): string=> {
             var prev: string;
             while (prev !== str) {
                 prev = str;
-                str = str.replace(/\([^\(\)]*\)/g,($0) => new Array($0.length + 1).join(' '));
+                str = str.replace(/\([^\(\)]*\)/g, ($0) => new Array($0.length + 1).join(' '));
             }
             return str;
         };
 
-        var splitLeftRight = function (expr: string) {
+        var splitLeftRight = function(expr: string) {
             // Replace strings with whitespaces
-            var str = expr.replace(/((".*?")|('.*?'))/g,($0, $1) => new Array($1.length + 1).join(' '));
+            var str = expr.replace(/((".*?")|('.*?'))/g, ($0, $1) => new Array($1.length + 1).join(' '));
             // Replace brackets with whitespaces
             str = hideBrackets(str);
             var index = str.indexOf(this.op);
@@ -212,9 +220,9 @@
                 ];
             }
         };
-        var splitRight = function (expr: string) {
+        var splitRight = function(expr: string) {
             // Replace strings with whitespaces
-            var str = expr.replace(/((".*?")|('.*?'))/g,($0, $1) => new Array($1.length + 1).join(' '));
+            var str = expr.replace(/((".*?")|('.*?'))/g, ($0, $1) => new Array($1.length + 1).join(' '));
             // Replace brackets with whitespaces
             str = hideBrackets(str);
             var index = str.indexOf(this.op);
@@ -261,9 +269,9 @@
                 {
                     op: '?:',
                     fn: (a, b, c) => a ? b : c,
-                    split: function (expr: string) {
+                    split: function(expr: string) {
                         // Replace strings with whitespaces
-                        var str = expr.replace(/((".*?")|('.*?'))/g,($0, $1) => new Array($1.length + 1).join(' '));
+                        var str = expr.replace(/((".*?")|('.*?'))/g, ($0, $1) => new Array($1.length + 1).join(' '));
                         // Replace brackets with whitespaces
                         str = hideBrackets(str);
                         var index1 = str.indexOf(this.op[0]);

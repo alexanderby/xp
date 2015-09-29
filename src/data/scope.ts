@@ -104,9 +104,9 @@
          * Must be called when the scope object is not used anymore.
          * Otherwise source object changes would be reflected.
          */
+        @enumerable(false)
         unsubscribeScopeFromChanges() {
             this.__registrar__.unsubscribeAll();
         }
     }
-    hidePrototypeProperties(Scope);
 }

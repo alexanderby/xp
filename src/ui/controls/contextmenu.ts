@@ -96,7 +96,7 @@
                     this.iconElement.classList.add(data.icon.slice(1));
                 }
                 else {
-                    this.iconElement.style.backgroundImage = xp.formatString('url({0})', data.icon);
+                    this.iconElement.style.backgroundImage = `url(${data.icon})`;
                 }
             }
             if (data.key) {
@@ -125,10 +125,11 @@
                         <span class="text"></span>
                         <span class="key"></span>
                     </span>
-                </button>`);
-            this.iconElement = Dom.select('.icon', template);
-            this.textElement = Dom.select('.text', template);
-            this.keyElement = Dom.select('.key', template);
+                </button>`, {
+                    '.icon': (el) => this.iconElement = el,
+                    '.text': (el) => this.textElement = el,
+                    '.key': (el) => this.keyElement = el
+                });
             return template;
         }
 

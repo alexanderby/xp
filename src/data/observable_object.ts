@@ -15,11 +15,12 @@
      * @param obj Object.
      */
     export function isNotifier(obj) {
-        return (obj 
-            && typeof obj === 'object' 
+        return (obj
+            && typeof obj === 'object'
             && 'onPropertyChanged' in obj);
     }
 
+    // TODO: Handle circular references.
 
     /**
      * An object which notifies of it's changes.
@@ -41,6 +42,7 @@
             }
         }
 
+        @enumerable(false)
         protected __initProperties__() {
             Object.defineProperty(this, 'onPropertyChanged', {
                 configurable: true,
@@ -53,6 +55,7 @@
             });
         }
 
+        @enumerable(false)
         protected __copySource__(source: Object) {
             if (source instanceof ObservableObject) {
                 throw new Error('Source object is already observable.');
@@ -69,6 +72,19 @@
                 ObservableObject.extend(this, key, source[key], this.__convertNested__);
             }
         }
+        
+        // /**
+        //  * Method called by JSON.stringify()
+        //  */
+        // @enumerable(false)
+        // toJSON() {
+        //     var result = {};
+        //     for (var key in this) {
+        //         result[key] = this[key];
+        //     }
+        //     result['__xp_model__'] = getClassName(this);
+        //     return result;
+        // }
 
         /**
          * Determines whether specified object can be converted into an observable object.
@@ -108,7 +124,7 @@
             //
             // Getters/setters
 
-            var getter = function () {
+            var getter = function() {
                 return value;
             };
 
@@ -116,7 +132,7 @@
             // If so -> make it Observable and use observable setter.
             if (convertToObservable && ObservableObject.isConvertable(value)) {
                 value = observable(value);
-                var setter = function (newObj) {
+                var setter = function(newObj) {
                     if (ObservableObject.isConvertable(newObj)) {
                         newObj = observable(newObj);
                     }
@@ -125,7 +141,7 @@
                 };
             }
             else {
-                var setter = function (v) {
+                var setter = function(v) {
                     value = v;
                     obj.onPropertyChanged.invoke(name);
                 };
@@ -142,5 +158,4 @@
             });
         }
     }
-    hidePrototypeProperties(ObservableObject);
 }

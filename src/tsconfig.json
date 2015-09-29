@@ -1,6 +1,6 @@
 {
     "compilerOptions": {
-        "target": "es5",
+        "target": "ES5",
 		"experimentalDecorators": true
     },
     "files": [
@@ -9,16 +9,14 @@
         "utils/misc.ts",
         "utils/path.ts",
         
-        "core/defs.ts",
         "core/dictionary.ts",
         "core/event.ts",
         
-        "data/object.ts",
-        "data/collection.ts",
+        "data/observable_object.ts",
+        "data/observable_collection.ts",
         "data/observable.ts",
+        "data/binding_manager.ts",
         "data/expression.ts",
-        "data/manager.ts",
-        "data/call_manager.ts",
         "data/model.ts",
         "data/scope.ts",
         "data/serialization.ts",
