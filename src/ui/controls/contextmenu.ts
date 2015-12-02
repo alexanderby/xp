@@ -25,6 +25,19 @@
             var menuItem = new ContextMenuItem(data, this);
             menuItem.appendTo(this);
         }
+        
+        /**
+         * Is invoked when context menu is closed.
+         * "true" if action was performed, "false"
+         * if was closed without action.
+         */
+        onClosed: xp.Event<boolean>;
+
+        protected initEvents() {
+            super.initEvents();
+            this.onClosed = new xp.Event();
+            this.onRemoved.addHandler(() => this.onClosed.removeAllHandlers());
+        }
 
         /**
          * Displays the context menu.
@@ -70,8 +83,9 @@
          * @param y Y.
          * @param data Menu-items' data.
          */
-        static show(x: number, y: number, data: ContextMenuItemData[]) {
+        static show(x: number, y: number, data: ContextMenuItemData[], onClosed?: (wasAction: boolean) => void) {
             var menu = new ContextMenu(data);
+            menu.onClosed.addHandler(onClosed);
             menu.show(x, y);
         }
     }
@@ -118,18 +132,18 @@
         //----
 
         protected getTemplate(): HTMLElement {
-            var template = Dom.create(`
+            return Dom.create(`
                 <span class="ContextMenuItem" role="button">
                     <span class="wrapper">
                         <span class="icon"></span>
                         <span class="text"></span>
                         <span class="key"></span>
                     </span>
-                </button>`);
-            this.iconElement = Dom.select('.icon', template);
-            this.textElement = Dom.select('.text', template);
-            this.keyElement = Dom.select('.key', template);
-            return template;
+                </button>`, {
+                    '.icon': (el) => this.iconElement = el,
+                    '.text': (el) => this.textElement = el,
+                    '.key': (el) => this.keyElement = el
+                });
         }
 
         protected iconElement: HTMLElement;

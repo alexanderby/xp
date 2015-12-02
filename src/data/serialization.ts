@@ -9,14 +9,14 @@
      * @param whiteSpace Specifies whether to add white space into output. Default is " ".
      */
     export function serialize(item: any, writeModel = true, replacer?: (k: string, v: any) => any, whiteSpace = ' '): string {
-        return JSON.stringify(item, function (k, v) {
+        return JSON.stringify(item, function(k, v) {
 
             if (writeModel
                 && v !== null
                 && typeof v === 'object'
                 && !Array.isArray(v)
                 && !(Object.getPrototypeOf(v) === Object)
-                ) {
+            ) {
                 // Add model name
                 v['__xp_model__'] = xp.getClassName(v);
             }
@@ -46,7 +46,7 @@
             modelsDictionary[name] = m;
         });
 
-        return JSON.parse(json, function (k, v) {
+        return JSON.parse(json, function(k, v) {
             if (reviver) {
                 v = reviver(k, v);
             }
