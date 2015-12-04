@@ -105,5 +105,21 @@
             this.modal = null;
             this.tint = null;
         }
+        
+        
+        //-----------------------
+        //    Context menu
+        
+        protected __contextMenu__: ContextMenu;
+        
+        //@internal
+        __showContextMenu__(menu: ContextMenu) {
+            if (this.__contextMenu__) {
+                this.__contextMenu__.close();
+            }
+            this.__contextMenu__ = menu;
+            this.append(menu);
+            menu.onClosed.addHandler(() => this.__contextMenu__ = null);
+        }
     }
 } 

@@ -28,10 +28,17 @@
         
         /**
          * Is invoked when context menu is closed.
-         * "true" if action was performed, "false"
-         * if was closed without action.
+         * Argument is action data or null.
          */
-        onClosed: xp.Event<boolean>;
+        onClosed: xp.Event<ContextMenuItemData>;
+
+        /**
+         * Closes the context menu.
+         */
+        close(actionItem?: ContextMenuItemData) {
+            this.onClosed.invoke(actionItem || null);
+            this.remove();
+        }
 
         protected initEvents() {
             super.initEvents();
@@ -40,40 +47,85 @@
         }
 
         /**
-         * Displays the context menu.
+         * Displays the context menu at a point.
          * @param x X.
          * @param y Y.
          */
-        show(x: number, y: number) {
+        show(x: number, y: number);
+        /**
+         * Displays the context menu.
+         * @param target Target element to stick context menu to.
+         * @param direction Direction, "horizontal" or "vertical".
+         */
+        show(target: DOMElement, direction: string);
+        show(xOrTarget, yOrDirection) {
             // Subscribe for outer events for cancel
             var cancel = (e: DOMEvent) => {
-                this.remove();
                 window.removeEventListener('mousedown', cancel);
                 window.removeEventListener('keydown', onKey);
+                this.close();
             };
             var onKey = (e: KeyboardEvent) => {
                 if (e.keyCode === 27) {
                     cancel(e);
                 }
             };
-            window.addEventListener('mousedown', cancel);
+            setTimeout(() => {
+                window.addEventListener('mousedown', cancel);
+            }, 0);
             window.addEventListener('keydown', onKey);
+
+            var target = xOrTarget instanceof EventTarget ? <DOMElement>xOrTarget : null;
+            if (target) {
+                var direction = <string>yOrDirection;
+                var tRect = target.getBoundingClientRect();
+                if (direction === 'vertical') {
+                    var x = tRect.left;
+                    var y = tRect.bottom;
+                } else if (direction === 'horizontal') {
+                    var x = tRect.right;
+                    var y = tRect.top;
+                } else {
+                    throw new Error('Unexpected direction.')
+                }
+            } else {
+                var x = <number>xOrTarget;
+                var y = <number>yOrDirection;
+            }
 
             // Set coordinate
             this.domElement.style.left = x + 'px';
             this.domElement.style.top = y + 'px';
 
             // Append to Window
-            Window.instance.append(this);
+            Window.instance.__showContextMenu__(this);
 
             // Move if overflows
             var menuBox = this.domElement.getBoundingClientRect();
             var winBox = document.documentElement.getBoundingClientRect();
             if (menuBox.right > winBox.right) {
-                this.domElement.style.left = (x - menuBox.width) + 'px';
+                if (target) {
+                    if (direction === 'vertical') {
+                        x -= menuBox.width - tRect.width;
+                    } else {
+                        x -= menuBox.width + tRect.width;
+                    }
+                } else {
+                    x -= menuBox.width;
+                }
+                this.domElement.style.left = x + 'px';
             }
             if (menuBox.bottom > winBox.bottom) {
-                this.domElement.style.top = (y - menuBox.height) + 'px';
+                if (target) {
+                    if (direction === 'vertical') {
+                        y -= menuBox.height + tRect.height;
+                    } else {
+                        y -= menuBox.height - tRect.height;
+                    }
+                } else {
+                    y -= menuBox.height;
+                }
+                this.domElement.style.top = y + 'px';
             }
         }
 
@@ -82,11 +134,24 @@
          * @param x X.
          * @param y Y.
          * @param data Menu-items' data.
+         * @param onClosed Will be invoked when menu is closed.
          */
-        static show(x: number, y: number, data: ContextMenuItemData[], onClosed?: (wasAction: boolean) => void) {
+        static show(x: number, y: number, data: ContextMenuItemData[], onClosed?: (actionData?: ContextMenuItemData) => void): ContextMenu;
+        /**
+         * Displays the context menu.
+         * @param target Target element to stick context menu to.
+         * @param direction Direction, "horizontal" or "vertical".
+         * @param data Menu-items' data.
+         * @param onClosed Will be invoked when menu is closed.
+         */
+        static show(target: DOMElement, direction: string, data: ContextMenuItemData[], onClosed?: (actionData?: ContextMenuItemData) => void): ContextMenu;
+        static show(xOrTarget, yOrDirection, data: ContextMenuItemData[], onClosed?: (actionData?: ContextMenuItemData) => void) {
             var menu = new ContextMenu(data);
-            menu.onClosed.addHandler(onClosed);
-            menu.show(x, y);
+            if (onClosed) {
+                menu.onClosed.addHandler(onClosed);
+            }
+            menu.show(xOrTarget, yOrDirection);
+            return menu;
         }
     }
 
@@ -122,8 +187,8 @@
             this.textElement.textContent = data.text;
             this.onMouseDown.addHandler((e) => {
                 e.domEvent.stopPropagation();
-                this.menu.remove();
                 data.action();
+                this.menu.close(data);
             }, this);
         }
 
@@ -157,5 +222,6 @@
         key?: string;
         icon?: string;
         disabled?: boolean;
+        id?: string | number;
     }
 }
