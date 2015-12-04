@@ -61,7 +61,9 @@
         show(xOrTarget, yOrDirection) {
             // Subscribe for outer events for cancel
             var cancel = (e: DOMEvent) => {
+                window.removeEventListener('click', cancel);
                 window.removeEventListener('mousedown', cancel);
+                window.removeEventListener('touchstart', cancel);
                 window.removeEventListener('keydown', onKey);
                 this.close();
             };
@@ -71,9 +73,11 @@
                 }
             };
             setTimeout(() => {
+                window.addEventListener('click', cancel);
                 window.addEventListener('mousedown', cancel);
+                window.addEventListener('touchstart', cancel);
+                window.addEventListener('keydown', onKey);
             }, 0);
-            window.addEventListener('keydown', onKey);
 
             var target = xOrTarget instanceof EventTarget ? <DOMElement>xOrTarget : null;
             if (target) {
@@ -185,6 +189,8 @@
                 this.enabled = false;
             }
             this.textElement.textContent = data.text;
+            this.domElement.addEventListener('touchstart', (e) => e.stopPropagation());
+            this.domElement.addEventListener('click', (e) => e.stopPropagation());
             this.onMouseDown.addHandler((e) => {
                 e.domEvent.stopPropagation();
                 data.action();
