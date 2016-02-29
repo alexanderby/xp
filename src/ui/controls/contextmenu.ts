@@ -79,7 +79,7 @@
                 window.addEventListener('keydown', onKey);
             }, 0);
 
-            var target = xOrTarget instanceof EventTarget ? <DOMElement>xOrTarget : null;
+            var target: DOMElement = xOrTarget instanceof (<any>window).Element ? xOrTarget : null;
             if (target) {
                 var direction = <string>yOrDirection;
                 var tRect = target.getBoundingClientRect();
