@@ -60,7 +60,7 @@
          * @param args Event arguments.
          */
         invoke(args: TEventArgs) {
-            this.handlers.forEach((item) => {
+            this.handlers.slice(0).forEach((item) => {
                 item.handler.call(item.scope, args);
             });
         }
