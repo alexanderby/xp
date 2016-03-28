@@ -18,7 +18,7 @@ module xp {
         onRemoved?: (e: T) => void;
 
         init?: (el: T) => void;
-        enabled?: boolean | string;
+        enabled?: boolean|string;
         name?: string; // Maybe is obsolete. init() may be used.
         key?: string; // Maybe is obsolete. init() may be used.
         width?: string;
@@ -30,13 +30,10 @@ module xp {
         margin?: string;
         style?: string;
         flex?: string;
-        visible?: boolean | string;
+        visible?: boolean|string;
 
         useParentScope?: boolean;
         scope?: any;
-
-        template?: string;
-        renderElements?: { [selector: string]: Element };
     }
 
     /**
@@ -144,8 +141,8 @@ module xp {
          * Initializes control's events.
          */
         protected initEvents() {
-            this.bindings = new Dictionary<string | { (value): void }, BindingManager>();
-            this.expressions = new Dictionary<string | { (value, el?: Element): void }, Expression>();
+            this.bindings = new Dictionary<string|{ (value): void }, BindingManager>();
+            this.expressions = new Dictionary<string|{ (value, el?: Element): void }, Expression>();
 
             // Control's events
 
@@ -549,11 +546,11 @@ module xp {
         /**
          * Holds control's properties' bindings.
          */
-        protected bindings: xp.Dictionary<string | { (value): void }, BindingManager>;
+        protected bindings: xp.Dictionary<string|{ (value): void }, BindingManager>;
         /**
          * Holds control's properties' expressions.
          */
-        protected expressions: xp.Dictionary<string | { (value, el?: Element): void }, Expression>;
+        protected expressions: xp.Dictionary<string|{ (value, el?: Element): void }, Expression>;
 
         /**
          * Binds control's property to source property.
@@ -562,7 +559,7 @@ module xp {
          * @param source Binding source object. If not specified the element's scope will be used.
          * @param defaultValue Value to use is case when source property is null or undefined.
          */
-        bind(setter: string | { (value): void }, path: string, source?, defaultValue?) {
+        bind(setter: string|{ (value): void }, path: string, source?, defaultValue?) {
             var binding = this.bindings.get(setter);
 
             if (binding) {
@@ -628,7 +625,7 @@ module xp {
          * @param expression Expression e.g. "{obj.a} * 2 + Math.round({b})".
          * @param [source] Binding source object.
          */
-        express(setter: string | { (value, element?: Element): void }, expression: string, source?) {
+        express(setter: string|{ (value, element?: Element): void }, expression: string, source?) {
             var expr = this.expressions.get(setter);
             if (expr) {
                 expr.unbind();
@@ -686,7 +683,7 @@ module xp {
          * @param setter Target control property or setter.
          * @param value Value, that user inputs.
          */
-        protected onInput(setter: string | { (value): void }, value) {
+        protected onInput(setter: string|{ (value): void }, value) {
             Log.write(Log.HeatLevel.Log, Log.Domain.UI, '{0}:{1}.{2}: Input "{3}".', xp.getClassName(this), this.name || '-', setter, value);
             if (typeof setter === 'string') {
                 Path.setPropertyByPath(this, setter, value);
